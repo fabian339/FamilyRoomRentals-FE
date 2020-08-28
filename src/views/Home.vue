@@ -25,9 +25,10 @@
         </h2>
       <v-container class="grey lighten-5">
         <v-row no-gutters>
-          <v-col v-for="item in rooms" :key="item.street1">
-            <Room  fromCountry="USA" toCountry="GBR" :roomData=item />
-          </v-col>
+          <!-- <v-col v-for="item in rooms" :key="item.street1"> -->
+            <!-- <Room :roomData=item /> -->
+            <div>{{message}}</div>
+          <!-- </v-col> -->
         </v-row>
       </v-container>
 
@@ -59,23 +60,18 @@
 
 <script>
 // @ is an alias to /src
-import Room from '@/components/Room.vue'
-import fakeData from '@/components/fakeData.ts'
+// import Room from '@/components/Room.vue'
+// import store from '@/actions/store'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   components: {
-    Room
+    // Room
   },
-  data: () => ({
-    rooms: []
-  }),
-  created() {
-    // console.log(fakeData)
-    this.rooms = fakeData
-  },
-  // methods: {
-  // },
+ computed: mapState([
+    'message'
+  ])
 }
 </script>
 

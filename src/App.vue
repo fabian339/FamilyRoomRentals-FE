@@ -10,13 +10,20 @@
 </template>
 
 <script>
-import Nav from './components/layout/Nav';
+import Nav from '@/components/layout/Nav';
+
 
 export default {
   name: 'App',
 
   components: {
     Nav,
+  },  
+  data: () => ({
+    // rooms: []
+  }),
+  created() {
+    // console.log(fakeData)
   },
 
 };

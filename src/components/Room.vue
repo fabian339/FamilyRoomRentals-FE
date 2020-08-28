@@ -3,15 +3,15 @@
     class="mx-auto"
     max-width="350"
   >
-    <v-img
+    <!-- <v-img
       class="white--text align-end"
       height="200px"
       v-bind:src="this.roomData.images[0]"
     >
       <v-card-title>{{this.roomData.price}}</v-card-title>
-    </v-img>
+    </v-img> -->
 
-    <v-card-subtitle class="pb-0">Location: {{this.roomData.city}}</v-card-subtitle>
+    <v-card-subtitle class="pb-0">Location: {{this.roomData.location.city}}</v-card-subtitle>
 
     <v-card-text class="text--primary">
       <p> Publisher: Mark Smith</p>
@@ -40,8 +40,8 @@
   // import store from '../store.js'
   // import axios from 'axios'
   export default {
-    name: 'MoneyToMoney',
-    props: ['fromCountry', 'toCountry', 'roomData'],
+    name: 'Room',
+    props: ['roomData'],
     data: () => ({
     }),
     created() {
