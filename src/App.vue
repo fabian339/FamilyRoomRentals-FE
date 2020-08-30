@@ -11,7 +11,7 @@
 
 <script>
 import Nav from '@/components/layout/Nav';
-
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -19,12 +19,16 @@ export default {
   components: {
     Nav,
   },  
-  data: () => ({
-    // rooms: []
-  }),
-  created() {
-    // console.log(fakeData)
+  created(){
+    this.fetchData();
   },
-
+  methods: {                                   // Add this:
+    ...mapActions([                  // Add this
+      'fetchRooms'
+    ]),
+    fetchData: function() {    // Add this
+      this.fetchRooms()
+    }
+  }
 };
 </script>

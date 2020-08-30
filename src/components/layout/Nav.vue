@@ -12,7 +12,7 @@
         <span>Home</span>
     </v-btn>
 
-    <v-btn to="/create" text>
+    <v-btn to="/create-room" text>
         <span>Post a Room</span>
     </v-btn>
 
