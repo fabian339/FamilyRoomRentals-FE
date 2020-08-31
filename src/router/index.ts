@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import PostRoom from '@/components/Room/PostRoom.vue'
+import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
+import ViewRoom from '@/components/Room/ViewRoom.vue'
+import LoginForm from '@/components/User/LoginForm.vue'
 
 
 Vue.use(VueRouter)
@@ -27,8 +30,18 @@ Vue.use(VueRouter)
   },
   {
     path: '/rooms',
-    name: 'rooms',
-    component: Home
+    name: 'ViewAllRooms',
+    component: ViewAllRooms
+  },
+  {
+    path: '/room/:id',
+    name: 'ViewRoom',
+    component: ViewRoom
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginForm
   },
 ]
 

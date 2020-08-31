@@ -15,23 +15,13 @@
 
     <v-card-text class="text--primary">
       <p> Publisher: Mark Smith</p>
-      <div>Whitsunday Island, Whitsunday Islands...</div>
+      <div>Description: {{this.roomData.description.substring(0, 50)}}...</div>
     </v-card-text>
 
     <v-card-actions class="justify-center">
-      <v-btn
-        color="#556B2F"
-        text
-      >
-        View Room
-      </v-btn>
 
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
+    <v-btn class="ma-2" tile color="#556B2F" dark @click="viewRoom">View Room</v-btn>
+
     </v-card-actions>
   </v-card>
 </template>
@@ -47,6 +37,9 @@
     created() {
   },
   methods: {
+    viewRoom() {
+      this.$router.push(`room/${this.roomData.objectId}`)
+    }
     // getCountry(code, countryN){
     //   axios.get(`https://restcountries.eu/rest/v2/alpha/${code}`)
     //     .then(res => {

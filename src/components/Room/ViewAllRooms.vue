@@ -1,27 +1,16 @@
 <template>
-  <v-row class="text-center" justify="center">
-    <v-col cols="12" sm="10" md="8" lg="6">
+  <v-container>
+    <v-row class="text-center">
       <div id="logo" >
-        <img style="margin: 10px" :src="require('../assets/logo.png')" alt="logo" width="400">
+        <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
-
-      <v-col class="mb-4">
-        <!-- <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to FamilyRoomRentals
-        </h1> -->
-
-        <p class="subheading font-weight-regular">
-          Money than 50,000 rooms available for occupacy...
-        </p>
-      </v-col>
-
       <v-col
         class="mb-5"
         cols="12"
-        style="marginTop: -30px"
+         style="marginTop: -30px"
       >
       <h2 class="headline font-weight-bold mb-3">
-        Latest Rooms:
+        All Rooms
       </h2>
       <v-progress-circular
         v-if="loadingContent"
@@ -32,7 +21,10 @@
       ></v-progress-circular>
       <v-container v-if="!loadingContent" class="grey lighten-5">
         <v-row no-gutters>
-          <v-col v-for="item in rooms.slice(0, 3)" :key="item.street1">
+          <v-col
+           class="mb-8"
+            cols="16"
+           v-for="item in rooms" :key="item.street1">
             <Room :roomData=item />
           </v-col>
         </v-row>
@@ -44,23 +36,8 @@
           </a>
         </v-row>
       </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What if we know when is the right time to exchange?
-        </h2>
-
-        <v-row justify="center">
-          <a class="subheading mx-3" >
-            Explore More...
-          </a>
-        </v-row>
-      </v-col>
-    </v-col>
     </v-row>
+  </v-container>
 </template>
 
 <script>

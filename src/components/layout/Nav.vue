@@ -13,15 +13,19 @@
     </v-btn>
 
     <v-btn to="/create-room" text>
-        <span>Post a Room</span>
+        <span>Post Your Room</span>
     </v-btn>
 
     <v-btn to="/rooms" text>
         <span>View Rooms</span>
     </v-btn>
 
-    <v-btn to="/vip-rooms" text>
-        <span>VIP Rooms</span>
+    <v-btn to="/signup" text>
+        <span>Signup</span>
+    </v-btn>
+
+    <v-btn to="/login" text>
+        <span>Login</span>
     </v-btn>
 
     <v-btn to="/documentation" text>

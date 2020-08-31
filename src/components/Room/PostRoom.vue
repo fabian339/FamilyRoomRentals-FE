@@ -1,10 +1,12 @@
 <template>
   <v-row class="text-center" justify="center">
     <v-col cols="12" sm="10" md="8" lg="6">
-    <h1 class="display-2 font-weight-bold mb-3">
-        Post A Room
-    </h1>
-
+    <div id="logo" >
+        <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
+    </div>
+    <h2 class="headline font-weight-bold mb-3">
+        Publish Your Room
+    </h2>
     <v-col class="mb-4">
         <form
           @submit="submit"
@@ -53,12 +55,13 @@
                 placeholder="NY"
             ></v-text-field>
             <v-text-field
-                ref="zip"
-                v-model="location.zip"
-                :rules="[() => !!location.zip || 'This field is required']"
+                ref="zipCode"
+                v-model="location.zipCode"
+                :rules="[() => !!location.zipCode || 'This field is required']"
                 label="ZIP / Postal Code"
                 required
-                placeholder=75155
+                type="number"
+                placeholder="75155"
             ></v-text-field>
             <v-autocomplete
                 ref="country"
@@ -73,25 +76,33 @@
             <label> Description </label>
             <v-spacer></v-spacer>
 
-            <div style="display: inline-flex">
+            <!-- <div style="display: inline-flex">
                 <p style="margin: 20px;">Are you the owner of this property?</p>
                 <v-switch v-model="propertyOwner" inset :label="`(${propertyOwner.toString()})`">fsdfsdfsdf</v-switch>
-            </div>  
-            <v-text-field
-                ref="price"
-                v-model="price"
-                :rules="[() => !!price || 'This field is required']"
-                label="Price per month"
-                required
-                placeholder="$500"
-            ></v-text-field>
+            </div>   -->
+
             <v-textarea
                 name="input-7-1"
                 filled
-                label="Details of Property:"
+                label="Details of Property: (include rules)"
                 v-model="description"
             ></v-textarea>    
+            <label> Property Price </label>
 
+            <v-row justify="center">
+                <v-col cols="8">
+                    <v-text-field
+                        ref="price"
+                        v-model="price"
+                        type="number"
+                        :rules="[() => !!price || 'This field is required']"
+                        label="Price per month"
+                        full-width
+                        required
+                        prefix="$"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
 
             <label> Property Images </label>
             <div>
@@ -118,14 +129,7 @@
                 cols="12"
                 style="marginTop: 5px"
             >
-            <input type="submit" value="Submit">
-                <!-- <v-btn
-                    color="success"
-                    class="mr-4"
-                    @click="submit"
-                    >
-                    Post Room
-                </v-btn> -->
+                <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
             </v-col>
   </form>
     </v-col>
@@ -149,7 +153,7 @@ import { mapActions } from 'vuex'
             country: ''
         },
         price: '',
-        propertyOwner: false,
+        // propertyOwner: false,
         description: '',
         images: [],
       }
@@ -171,11 +175,11 @@ import { mapActions } from 'vuex'
         submit(e) {
             e.preventDefault();
             // console.log(this.title)
+            this.location.zipCode = parseInt(this.location.zipCode);
             const room = {
                 title: this.title,
                 location: this.location,
-                price: this.price,
-                propertyOwner: this.propertyOwner,
+                price: parseInt(this.price),
                 description: this.description,
                 images: this.images
             }
