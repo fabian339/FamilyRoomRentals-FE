@@ -12,33 +12,61 @@
         <span>Home</span>
     </v-btn>
 
-    <v-btn to="/create-room" text>
-        <span>Post Your Room</span>
-    </v-btn>
-
     <v-btn to="/rooms" text>
         <span>View Rooms</span>
     </v-btn>
 
-    <v-btn to="/signup" text>
+    <v-btn v-if="isAuthenticated" to="/create-room" text>
+        <span>Post Your Room</span>
+    </v-btn>
+
+    <v-btn v-if="isAuthenticated" to="/my-profile" text>
+        <span>My Profile</span>
+    </v-btn>
+
+    <v-btn v-if="isAuthenticated" to="/my-profile" @click="logoutUser" text>
+        <span>Log out</span>
+    </v-btn>
+
+    <v-btn v-if="!isAuthenticated" to="/signup" text>
         <span>Signup</span>
     </v-btn>
 
-    <v-btn to="/login" text>
+    <v-btn v-if="!isAuthenticated" to="/login" text>
         <span>Login</span>
-    </v-btn>
-
-    <v-btn to="/documentation" text>
-        <span>Documentation</span>
     </v-btn>
     
     <v-btn to="/about" text>
-        <span>About</span>
+        <span>About US</span>
     </v-btn>
       
     </v-app-bar>
 </template>
+<script>
+// @ is an alias to /src
+// import store from '@/actions/store'
+import { mapGetters, mapActions } from 'vuex'
 
+export default {
+  name: 'Nav',
+  computed: {
+      ...mapGetters([
+        'isAuthenticated',
+      ])
+  },
+  methods:{
+      ...mapActions([
+          'logout'
+      ]),
+      logoutUser(e){
+        e.preventDefault();
+        this.logout()
+        this.$router.push("/")
+      }
+
+  }
+}
+</script>
 <style scoped>
     #title {
         font-family: 'Rochester', cursive;

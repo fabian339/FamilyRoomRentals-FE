@@ -13,19 +13,20 @@
         All Rooms
       </h2>
       <v-progress-circular
-        v-if="loadingContent"
+        v-if="contentState.loadingContent"
         color="green"
         :size="100"
         :width="15"
         indeterminate
       ></v-progress-circular>
-      <v-container v-if="!loadingContent" class="grey lighten-5">
+      <v-container v-if="!contentState.loadingContent" class="grey lighten-5">
         <v-row no-gutters>
           <v-col
-           class="mb-8"
+            class="mb-8"
             cols="16"
-           v-for="item in rooms" :key="item.street1">
-            <Room :roomData=item />
+            v-for="item in contentState.rooms" :key="item.street1"
+            >
+              <Room :roomData=item />
           </v-col>
         </v-row>
       </v-container>
@@ -53,8 +54,7 @@ export default {
   },
   computed: {
       ...mapState([
-        'rooms',
-        'loadingContent'
+        'contentState',
       ])
   }
 }

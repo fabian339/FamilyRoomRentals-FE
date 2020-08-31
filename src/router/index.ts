@@ -5,9 +5,18 @@ import PostRoom from '@/components/Room/PostRoom.vue'
 import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
 import LoginForm from '@/components/User/LoginForm.vue'
-
+import RegistrationForm from '@/components/User/RegistrationForm.vue'
+import store from '../store'
 
 Vue.use(VueRouter)
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    next()
+    return
+  }
+  next('/login')
+}
 
   const routes = [
   {
@@ -25,8 +34,9 @@ Vue.use(VueRouter)
   },
   {
     path: '/create-room',
-    name: 'Room',
-    component: PostRoom
+    name: 'postRoom',
+    component: PostRoom,
+    beforeEnter: ifAuthenticated,
   },
   {
     path: '/rooms',
@@ -42,6 +52,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'login',
     component: LoginForm
+  },
+  {
+    path: '/signup',
+    name: 'RegistrationForm',
+    component: RegistrationForm
   },
 ]
 

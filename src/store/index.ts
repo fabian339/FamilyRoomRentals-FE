@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
-// import {setRooms} from './store';
+import ContentActions from './actions/contentActions';
+import UserActions from './actions/userActions';
+import ContentMutations from './mutations/contentMutations';
+import UserMutations from './mutations/userMutations';
+
 
 axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
 axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
@@ -29,22 +33,6 @@ interface Room {
     country: string
   }
 
-  //sample postman Request
-//   {
-//     "title": "New Room in Yonkeers",
-//     "location" : {
-//       "street1": "Yonkeers St",
-//       "street2": "apt: 5g",
-//       "city": "Yonkeer",
-//       "state": "NY",
-//       "zipCode": 10058,
-//       "country": "USA"
-//     },
-//     "price": "$500/mo",
-//     "propertyOwner": true,
-//     "description": "this is a description",
-//     "images": []
-// }
 
 Vue.use(Vuex)
 
@@ -52,72 +40,32 @@ export default new Vuex.Store({
     // IMPORTANT: state must be a function so the module can be
     // instantiated multiple times
     state: () => ({
+      contentState: {
         loadingContent: false,
         rooms: Array<Room>(),
         room: {},
         errors: {},
+      },
+      userState:{
+        user: {},
+        loadingUser: false,
+        // authenticated: false,
+        token: localStorage.getItem('user-token') || '',
+        errors: {}
+      }
     }),
     getters: {
-      // getRoomById: (state) => (id: string) => {
-      //   return state.rooms.find(room => room.objectId === id)
-      // }
+      // Content
+      isContentLoading: state => state.contentState.loadingContent,
+      contentRooms: state => state.contentState.rooms,
+      contentRoom: state => state.contentState.room,
+      contentErrors: state => state.contentState.errors,
+      //USER
+      isUserLoading: state => state.userState.loadingUser,
+      isAuthenticated: state => !!state.userState.token,
+      currentUser: state => state.userState.user,
+      userErrors: state => state.userState.errors,
     },
-    mutations: {
-        SET_ROOMS: (state, rooms) => {
-          state.rooms = rooms
-        },
-        ADD_ROOM: (state, room: Room) => {
-          // console.log("HEREEE", room)
-          state.rooms.push(room)
-        },
-        SET_LOADING_CONTENT: (state, status: boolean) => {
-            state.loadingContent = status
-        },
-        SET_ROOM: (state, room: Room) => {
-          state.room = room
-        },
-        SET_ERROR: (state, errors: object) => {
-            state.errors = errors
-        },
-    },
-
-    actions: {
-      fetchRooms: (context) => {
-          context.commit('SET_LOADING_CONTENT', true);
-          axios.get('https://parseapi.back4app.com/classes/Room')
-          .then((res) => {
-            context.commit('SET_LOADING_CONTENT', false);
-            context.commit('SET_ROOMS', res.data.results);
-          })
-          .catch((err) => {
-            context.commit('SET_ERROR', err);
-          });
-      },
-      addRoom: (context, roomData) => {
-        // console.log('this is a Data', roomData)
-        context.commit('SET_LOADING_CONTENT', true);
-        axios.post('https://parseapi.back4app.com/classes/Room', roomData)
-        .then((res) => {
-          // console.log("Room Response: ", res);
-          roomData.createdAt = res.data.createdAt;
-          roomData.objectId = res.data.objectId;
-          context.commit('SET_LOADING_CONTENT', false);
-          context.commit('ADD_ROOM', roomData)
-        })
-        .catch((err) => {
-          context.commit('SET_ERROR', err);
-        });
-      },
-      setRoom: (context, id) => {
-        console.log('HEREEE')
-        // context.commit('SET_LOADING_CONTENT', true);
-        axios.get(`https://parseapi.back4app.com/classes/Room/${id}`)
-        .then((res) => {
-          context.commit('SET_LOADING_CONTENT', false);
-          context.commit('SET_ROOM', res.data)
-        })
-        .catch((err) => {
-        });
-      }
-    },
+    mutations: {...ContentMutations, ...UserMutations},
+    actions: { ...ContentActions, ...UserActions }
   });
