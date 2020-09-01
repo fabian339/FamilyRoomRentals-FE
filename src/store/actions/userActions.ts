@@ -38,8 +38,7 @@ export default {
         axios.defaults.headers.common['Authorization'] = token;
         delete user.confirmPassword;
         delete user.ACL;
-        console.log("user Response: ", res);
-
+        // console.log("user Response: ", res);
         context.commit('AUTH_SUCCESS', token);
         context.commit('SET_USER', user)
         context.commit('SET_LOADING_USER', false);

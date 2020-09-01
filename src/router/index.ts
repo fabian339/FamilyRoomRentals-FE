@@ -6,12 +6,14 @@ import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
 import LoginForm from '@/components/User/LoginForm.vue'
 import RegistrationForm from '@/components/User/RegistrationForm.vue'
+import UserProfile from '@/components/User/userProfile.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
 
-const ifAuthenticated = (to, from, next) => {
+const ifAuthenticated = (to, from, next: any) => {
   if (store.getters.isAuthenticated) {
+    console.log("IN secure route");
     next()
     return
   }
@@ -36,6 +38,12 @@ const ifAuthenticated = (to, from, next) => {
     path: '/create-room',
     name: 'postRoom',
     component: PostRoom,
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: '/my-profile',
+    name: 'UserProfile',
+    component: UserProfile,
     beforeEnter: ifAuthenticated,
   },
   {

@@ -24,7 +24,7 @@
         <span>My Profile</span>
     </v-btn>
 
-    <v-btn v-if="isAuthenticated" to="/my-profile" @click="logoutUser" text>
+    <v-btn v-if="isAuthenticated" @click="logoutUser" text>
         <span>Log out</span>
     </v-btn>
 
