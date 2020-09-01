@@ -20,7 +20,7 @@
         <span>Post Your Room</span>
     </v-btn>
 
-    <v-btn v-if="isAuthenticated" to="/my-profile" text>
+    <v-btn v-if="isAuthenticated" to="/profile" text>
         <span>My Profile</span>
     </v-btn>
 

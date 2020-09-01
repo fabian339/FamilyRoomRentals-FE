@@ -6,14 +6,16 @@ import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
 import LoginForm from '@/components/User/LoginForm.vue'
 import RegistrationForm from '@/components/User/RegistrationForm.vue'
-import UserProfile from '@/components/User/userProfile.vue'
+import UserProfile from '@/components/User/UserProfile.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
 
-const ifAuthenticated = (to, from, next: any) => {
-  if (store.getters.isAuthenticated) {
-    console.log("IN secure route");
+const ifAuthenticated = (to: any, from: any, next: any) => {
+  // const {isAuthenticated} = store.getters;
+  const token = localStorage.getItem('user-token');
+  // console.log("IN secure route", store.getters.isAuthenticated);
+  if (token) {
     next()
     return
   }
@@ -38,12 +40,15 @@ const ifAuthenticated = (to, from, next: any) => {
     path: '/create-room',
     name: 'postRoom',
     component: PostRoom,
-    beforeEnter: ifAuthenticated,
+    // beforeEnter: ifAuthenticated,
   },
   {
-    path: '/my-profile',
+    path: '/profile',
     name: 'UserProfile',
     component: UserProfile,
+    // meta: {
+    //   requiresAuth: true,
+    // }
     beforeEnter: ifAuthenticated,
   },
   {
@@ -68,8 +73,21 @@ const ifAuthenticated = (to, from, next: any) => {
   },
 ]
 
+
 const router = new VueRouter({
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(route => route.meta.requiresAuth)) {
+//     if (store.getters.isAuthenticated) {
+//       next();
+//     } else {
+//       next({ path: '/login' });
+//     }
+//   }
+//   next();
+// });
+
 
 export default router

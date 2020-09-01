@@ -54,7 +54,7 @@ import {mapActions} from 'vuex'
                 password: this.password,
             }
             this.logInUser(user)
-            this.$router.push("create-room")
+            this.$router.push("/")
         }
      }
   }

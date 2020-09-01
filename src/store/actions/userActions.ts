@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { User } from './../interfaceTypes'
+// import router from '../../router';
 
 const requestURI = 'https://parseapi.back4app.com/users';
 axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
@@ -22,6 +23,7 @@ export default {
         context.commit('SET_USER', user);
         context.commit('SET_USER_AUTHENTICATED', true)
         context.commit('SET_LOADING_USER', false);
+        // router.push('/profile')
       })
       .catch((err) => {
         context.commit('SET_USER_ERROR', err);
