@@ -23,8 +23,12 @@ export default {
     this.fetchData();
     
     const token = localStorage.getItem('user-token');
-    // if(token){
+    // const userToken = temp.split("+")[0];
+    // const userId = temp.split("+")[1];
+    if(token){
       console.log("this token", token)
+      this.fetchCurrentUser(token);
+    }
       // const decodedtoken = jwtDecode(token);
       // console.log(decodedtoken.exp);
       // if(decodedtoken.exp * 1000 < Date.now()){
@@ -46,10 +50,14 @@ export default {
   },
   methods: {                                   // Add this:
     ...mapActions([                  // Add this
-      'fetchRooms'
+      'fetchRooms',
+      'getCurrentUser'
     ]),
     fetchData: function() {    // Add this
       this.fetchRooms();
+    },
+    fetchCurrentUser: function(token) {    // Add this
+      this.getCurrentUser(token);
     }
   }
 };

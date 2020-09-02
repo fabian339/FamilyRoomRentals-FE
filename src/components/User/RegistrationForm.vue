@@ -99,7 +99,6 @@ import {mapActions} from 'vuex'
                 confirmPassword: this.confirmPassword
             }
             this.registerUser(user)
-            this.$router.push("rooms")
         }
      }
   }

@@ -1,37 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios';
 import ContentActions from './actions/contentActions';
 import UserActions from './actions/userActions';
 import ContentMutations from './mutations/contentMutations';
 import UserMutations from './mutations/userMutations';
-
-
-axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
-axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
-axios.defaults.headers.common['Content-Type'] = 'application/json'
-
-interface Room {
-    title: string,
-    location: Location,
-    price: number,
-    createdAt: string,
-    objectId: string,
-    updatedAt: string,
-    // propertyOwnerName: string, 
-    description: string,
-    // propertyType: string,
-    images: string[]
-  }
-
-  interface Location {
-    street1: string,
-    street2: string,
-    city: string,
-    state: string,
-    zipCode: number,
-    country: string
-  }
+import {Room} from './interfaceTypes'
 
 
 Vue.use(Vuex)

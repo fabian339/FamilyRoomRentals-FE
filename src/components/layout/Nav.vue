@@ -24,6 +24,12 @@
         <span>My Profile</span>
     </v-btn>
 
+    <v-btn v-if="isAuthenticated" to="/" text>
+        <v-avatar style="border: 2px solid">
+            <v-icon dark>mdi-account-circle</v-icon>
+        </v-avatar>
+    </v-btn>
+
     <v-btn v-if="isAuthenticated" @click="logoutUser" text>
         <span>Log out</span>
     </v-btn>
@@ -61,9 +67,7 @@ export default {
       logoutUser(e){
         e.preventDefault();
         this.logout()
-        this.$router.push("/")
       }
-
   }
 }
 </script>

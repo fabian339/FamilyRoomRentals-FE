@@ -1,21 +1,55 @@
 <template>
-    <div>
-        <h1>HEYY</h1>
-        <h1>{{currentUser.fName}}</h1>
-        <h1>{{currentUser.lName}}</h1>
-    </div>
+    <v-row class="text-center">
+      <v-col
+        cols="12"
+        md="8"
+      >
+        <h1> Welcome {{currentUser.fName}} {{currentUser.lName}}</h1>
+        <v-progress-circular
+          v-if="isContentLoading"
+          color="green"
+          :size="100"
+          :width="15"
+          indeterminate
+        ></v-progress-circular>
+        <v-container v-if="!isContentLoading" class="grey lighten-5">
+          <v-row no-gutters>
+            <v-col
+            style="margin: 10px auto"  
+            md="6"
+            v-for="item in contentRooms.slice(0,4)" :key="item.street1"
+            >
+              <Room :roomData=item />
+          </v-col>
+        </v-row>
+      </v-container>
+      </v-col>
+      <v-col
+        cols="6"
+        md="4"
+      >
+      <div>My Profile</div>
+      </v-col>
+    </v-row>
+
 </template>
 
 <script>
 // @ is an alias to /src
 // import store from '@/actions/store'
+import Room from '@/components/Room/Room.vue'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Nav',
+  name: 'Profile',
+    components: {
+    Room
+  },
   computed: {
       ...mapGetters([
         'currentUser',
+        'contentRooms',
+        'isContentLoading'
       ])
   },
   methods:{

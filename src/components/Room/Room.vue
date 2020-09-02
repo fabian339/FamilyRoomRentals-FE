@@ -15,7 +15,7 @@
 
     <v-card-text class="text--primary">
       <p> Publisher: Mark Smith</p>
-      <div>Description: {{this.roomData.description.substring(0, 50)}}...</div>
+      <div>Description: {{this.roomData.description.substring(0, 20)}}...</div>
     </v-card-text>
 
     <v-card-actions class="justify-center">
