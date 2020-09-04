@@ -11,6 +11,8 @@
 
 <script>
 import Nav from '@/components/layout/Nav';
+import axios from 'axios'
+
 import { mapActions } from 'vuex'
 
 export default {
@@ -23,41 +25,36 @@ export default {
     this.fetchData();
     
     const token = localStorage.getItem('user-token');
-    // const userToken = temp.split("+")[0];
-    // const userId = temp.split("+")[1];
     if(token){
-      console.log("this token", token)
-      this.fetchCurrentUser(token);
+      let shouldGetUser = true;
+      axios.interceptors.response.use(undefined, function (err) {
+      // eslint-disable-next-line no-unused-vars
+        return new Promise(function (resolve, reject) {
+          if (err.status === 401 && err.config && !err.config.__isRetryRequest) { 
+            console.log('Token expired');
+            this.tokenExpired() 
+            shouldGetUser = false;
+          }
+          throw err;
+        });
+      });
+      if (shouldGetUser) this.fetchCurrentUser(token);
     }
-      // const decodedtoken = jwtDecode(token);
-      // console.log(decodedtoken.exp);
-      // if(decodedtoken.exp * 1000 < Date.now()){
-      //   store.dispatch(logoutUser());
-      //   window.location.href = '/login';
-      // } else {
-      //     if(localStorage.role === "admin") {
-      //       // console.log("settiong headers", window);
-      //       store.dispatch({ type: SET_AUTHENTICATED_ADMIN });
-      //       axios.defaults.headers.common['Authorization'] = token;
-      //       // store.dispatch(getAdminData(localStorage.fullname));
-      //     } else if(localStorage.accType === "regular-user") {
-      //     store.dispatch({ type: SET_AUTHENTICATED_USER });
-      //     axios.defaults.headers.common['Authorization'] = token;
-          // store.dispatch(getUserData());
-        // }
-      // }
-    // }
   },
   methods: {                                   // Add this:
     ...mapActions([                  // Add this
       'fetchRooms',
-      'getCurrentUser'
+      'getCurrentUser',
+      'logout'
     ]),
     fetchData: function() {    // Add this
       this.fetchRooms();
     },
     fetchCurrentUser: function(token) {    // Add this
       this.getCurrentUser(token);
+    },
+    tokenExpired: function() {
+      this.logout()
     }
   }
 };

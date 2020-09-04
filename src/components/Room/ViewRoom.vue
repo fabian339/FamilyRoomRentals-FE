@@ -31,14 +31,21 @@
             <h2>{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
             <div style="width: 80%; margin: auto">{{contentRoom.description}}</div>
             </v-col>
+            <NotificationForm />
         </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import NotificationForm from '@/components/notification/NotificationForm.vue'
+
 // import contentActions from '/.././store/actions/contentActions'
   export default {
+    name: 'viewRoom',
+    components: {
+        NotificationForm
+    },
     computed: {
     ...mapGetters([
         'contentRoom',

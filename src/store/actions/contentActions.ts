@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { Room } from './../interfaceTypes'
+import router from '../../router';
 
 const requestURI = 'https://parseapi.back4app.com/classes/Room';
 axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
@@ -20,7 +20,7 @@ export default {
           context.commit('SET_CONTENT_ERROR', err);
         });
     },
-    addRoom: (context: any, roomData: Room) => {
+    addRoom: (context: any, roomData: any = {}) => {
       // console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
       axios.post(requestURI, roomData)
@@ -30,6 +30,7 @@ export default {
         roomData.objectId = res.data.objectId;
         context.commit('SET_LOADING_CONTENT', false);
         context.commit('ADD_ROOM', roomData)
+        router.push(`/room/${roomData.objectId}`)
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);

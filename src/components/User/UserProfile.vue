@@ -15,11 +15,11 @@
         <v-container v-if="!isContentLoading" class="grey lighten-5">
           <v-row no-gutters>
             <v-col
-            style="margin: 10px auto"  
-            md="6"
-            v-for="item in contentRooms.slice(0,4)" :key="item.street1"
+              style="margin: 10px auto"  
+              md="6"
+              v-for="item in myRooms" :key="item.street1"
             >
-              <Room :roomData=item />
+              <Room :roomData="item" />
           </v-col>
         </v-row>
       </v-container>
@@ -51,6 +51,16 @@ export default {
         'contentRooms',
         'isContentLoading'
       ])
+  },
+  data(){
+    return {
+      myRooms: []
+    }
+  },
+  created(){
+    const { objectId } = this.currentUser;
+    const rooms = this.contentRooms.filter(room => room.ownerId === objectId);
+    this.myRooms = rooms;
   },
   methods:{
     //   ...mapActions([

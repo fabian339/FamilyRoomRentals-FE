@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { User } from './../interfaceTypes'
+// import { User } from '../validators'
 import router from '../../router';
 
 const requestURI = 'https://parseapi.back4app.com';
@@ -10,7 +10,7 @@ axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 
 export default {
-    registerUser: (context: any, user: User) => {
+    registerUser: (context: any, user: {}) => {
       axios.defaults.headers.common['X-Parse-Revocable-Session'] = 1;
       // context.commit('SET_LOADING_USER', true);
       axios.post(`${requestURI}/users`, user)

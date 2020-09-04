@@ -11,81 +11,68 @@
         <form
           @submit="submit"
         >
-
             <v-text-field
                 ref="title"
                 v-model="title"
-                :rules="[() => !!title || 'This field is required']"
                 label="Room Title"
                 placeholder="Special Room Available in the NYC Area"
-                required
+                :error-messages="errors.title"
             ></v-text-field>
-
             <label> Location </label>
             <v-text-field
                 ref="street1"
                 v-model="location.street1"
-                :rules="[() => !!location.street1 || 'This field is required']"
                 label="Street1"
                 placeholder="76 Columbus St"
-                required
+                :error-messages="errors.street1"
             ></v-text-field>
             <v-text-field
                 ref="street2"
                 v-model="location.street2"
-                :rules="[() => !!location.street2 || 'This field is required']"
                 label="Street2"
                 placeholder="Apt: 3b"
-                required
+                :error-messages="errors.street2"
             ></v-text-field>
             <v-text-field
                 ref="city"
                 v-model="location.city"
-                :rules="[() => !!location.city || 'This field is required']"
                 label="City"
                 placeholder="Brooklyn"
-                required
+                :error-messages="errors.city"
             ></v-text-field>
             <v-text-field
                 ref="state"
                 v-model="location.state"
-                :rules="[() => !!location.state || 'This field is required']"
                 label="State/Province/Region"
-                required
                 placeholder="NY"
+                :error-messages="errors.state"   
             ></v-text-field>
             <v-text-field
                 ref="zipCode"
                 v-model="location.zipCode"
-                :rules="[() => !!location.zipCode || 'This field is required']"
                 label="ZIP / Postal Code"
-                required
                 type="number"
                 placeholder="75155"
+                :error-messages="errors.zipCode"
             ></v-text-field>
             <v-autocomplete
                 ref="country"
                 v-model="location.country"
-                :rules="[() => !!location.country || 'This field is required']"
                 :items="countries"
                 label="Country"
                 placeholder="Select..."
-                required
+                :error-messages="errors.country"   
             ></v-autocomplete>
             
             <label> Description </label>
             <v-spacer></v-spacer>
-
-            <!-- <div style="display: inline-flex">
-                <p style="margin: 20px;">Are you the owner of this property?</p>
-                <v-switch v-model="propertyOwner" inset :label="`(${propertyOwner.toString()})`">fsdfsdfsdf</v-switch>
-            </div>   -->
 
             <v-textarea
                 name="input-7-1"
                 filled
                 label="Details of Property: (include rules)"
                 v-model="description"
+                :error-messages="errors.description"   
             ></v-textarea>    
             <label> Property Price </label>
 
@@ -95,11 +82,11 @@
                         ref="price"
                         v-model="price"
                         type="number"
-                        :rules="[() => !!price || 'This field is required']"
                         label="Price per month"
                         full-width
-                        required
                         prefix="$"
+                        suffix="/month"
+                        :error-messages="errors.price"   
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -113,13 +100,18 @@
                         prepend-icon="mdi-camera" 
                         accept="image/*" 
                         :disabled="(6 - images.length) === 0" 
-                        @change=uploadImage>
+                        @change="uploadImage">
                 </div>
                 <div id="imgContainer">
                     <small>({{6 - images.length}} images reminding)</small>
                     <v-row no-gutters>
-                        <v-col v-for="image in images" :key="image.street1">
-                            <img :src="image" alt="img" width="150">
+                        <v-col v-for="(image, index) in images" :key="image.street1">
+                            <div>
+                                <img :src="image" alt="img" width="150" height="100">
+                                <div class="my-2" @click="images.splice(index, 1)">
+                                    <v-btn small color="warning">Remove</v-btn>
+                                </div>
+                            </div>
                         </v-col>
                     </v-row>
                 </div>
@@ -127,7 +119,7 @@
             <v-col
                 class="mb-12"
                 cols="12"
-                style="marginTop: 5px"
+                style="marginTop: 10px"
             >
                 <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
             </v-col>
@@ -137,9 +129,15 @@
   </v-row>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import {validateCreateRoom} from '../../store/validators'
 
   export default {
+    computed: {
+      ...mapGetters([
+        'currentUser',
+      ])
+    },
     data () {
       return {
         countries: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anguilla', 'Antigua &amp; Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia &amp; Herzegovina', 'Botswana', 'Brazil', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Chad', 'Chile', 'China', 'Colombia', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote D Ivoire', 'Croatia', 'Cruise Ship', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Polynesia', 'French West Indies', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Kyrgyz Republic', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Norway', 'Oman', 'Pakistan', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Pierre &amp; Miquelon', 'Samoa', 'San Marino', 'Satellite', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'St Kitts &amp; Nevis', 'St Lucia', 'St Vincent', 'St. Lucia', 'Sudan', 'Suriname', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', "Timor L'Este", 'Togo', 'Tonga', 'Trinidad &amp; Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks &amp; Caicos', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Virgin Islands (US)', 'Yemen', 'Zambia', 'Zimbabwe'],
@@ -156,35 +154,37 @@ import { mapActions } from 'vuex'
         // propertyOwner: false,
         description: '',
         images: [],
+        errors: {}
       }
     }, 
     methods:{
         uploadImage(e){
-            console.log("Calling1..", e);
+            // console.log("Calling1..", e);
             const image = e.target.files[0];
             const reader = new FileReader();
             reader.readAsDataURL(image);
-            reader.onload = e =>{
-                console.log(this.images.length)
-                this.images.push(e.target.result);
-            };
+            reader.onload = e => this.images.push(e.target.result);
+        },
+        removePhoto(index){
+            console.log("Deleting photo",index)
+            this.images.splice(index, 1);
         },
         ...mapActions([                  // Add this
             'addRoom'
         ]),
         submit(e) {
             e.preventDefault();
-            // console.log(this.title)
-            this.location.zipCode = parseInt(this.location.zipCode);
             const room = {
                 title: this.title,
                 location: this.location,
-                price: parseInt(this.price),
+                price: this.price,
                 description: this.description,
+                ownerId: this.currentUser.objectId,
                 images: this.images
             }
-            this.addRoom(room)
-            this.$router.push("rooms")
+            const {valid, errors} = validateCreateRoom(room);
+            if(!valid) this.errors = errors;
+            else this.addRoom(room)
         }
 
     }

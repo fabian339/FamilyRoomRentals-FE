@@ -1,8 +1,8 @@
-import { User } from './../interfaceTypes'
+// import { User } from '../validators'
 
 
 export default {
-    SET_USER: (state: any, user: User) => {
+    SET_USER: (state: any, user: {}) => {
         // console.log("HEREEE", room)
         state.userState.user = user;
     },

@@ -4,7 +4,7 @@ import ContentActions from './actions/contentActions';
 import UserActions from './actions/userActions';
 import ContentMutations from './mutations/contentMutations';
 import UserMutations from './mutations/userMutations';
-import {Room} from './interfaceTypes'
+// import {Room} from './validators'
 
 
 Vue.use(Vuex)
@@ -15,7 +15,7 @@ export default new Vuex.Store({
     state: () => ({
       contentState: {
         loadingContent: false,
-        rooms: Array<Room>(),
+        rooms: [],
         room: {},
         errors: {},
       },
