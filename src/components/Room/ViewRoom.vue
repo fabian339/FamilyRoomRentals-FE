@@ -28,6 +28,10 @@
                 cols="12"
                 style="marginTop: -30px"
             >
+            <div v-if="isOwner">
+                <v-btn type="submit"  rounded color="#2E8B57" dark>Edit Room</v-btn>
+                <v-btn type="submit"  rounded color="#2E8B57" dark>Elminate Room</v-btn>
+            </div>
             <h2>{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
             <div style="width: 80%; margin: auto">{{contentRoom.description}}</div>
             </v-col>
@@ -47,19 +51,30 @@ import NotificationForm from '@/components/notification/NotificationForm.vue'
         NotificationForm
     },
     computed: {
-    ...mapGetters([
-        'contentRoom',
-        'isContentLoading'
-    ]),
+        ...mapGetters([
+            'contentRoom',
+            'isContentLoading',
+            'currentUser',
+            'contentRoom'
+        ]),
+    },
+    data(){
+        return {
+            isOwner: false
+        }
     },
     methods:{
-    ...mapActions([                  // Add this
-        'setRoom'
-    ])
+        ...mapActions([                  // Add this
+            'setRoom'
+        ])
     },
     created(){
         // contentActions.setRoom(this.$route.params.id);
         this.setRoom(this.$route.params.id)
+
+        if(this.contentRoom.ownerId === this.currentUser.objectId){
+            this.isOwner = true;
+        }
     }
 
   }

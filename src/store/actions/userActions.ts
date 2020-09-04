@@ -10,18 +10,25 @@ axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 
 export default {
-    registerUser: (context: any, user: {}) => {
+    registerUser: (context: any, user: object) => {
+
+      console.log("trying to register User", user);
+      
       axios.defaults.headers.common['X-Parse-Revocable-Session'] = 1;
       // context.commit('SET_LOADING_USER', true);
       axios.post(`${requestURI}/users`, user)
       .then((res) => {
-        console.log("user Response: ", res);
+        console.log("register user Response: ", res);
         const token = res.data.sessionToken;
         localStorage.setItem('user-token', token);
         context.dispatch('getCurrentUser', token);
         router.push(`/profile`)
+        context.commit('CLEAR_USER_ERROR')
       })
-      .catch((err) => {
+      .catch(() => {
+        const err = {
+          responseError: "Account already exists for this username or email address."
+        }
         context.commit('SET_USER_ERROR', err);
       });
     },
@@ -64,17 +71,22 @@ export default {
         context.commit('SET_USER', user)
         context.commit('SET_LOADING_USER', false);
         router.push(`/profile`)
+        context.commit('CLEAR_USER_ERROR')
     })
-    .catch((err) => {
+    .catch(() => {
+        const err = {
+          responseError: "Invalid email/password.."
+        }
         context.commit('SET_USER_ERROR', err);
         localStorage.removeItem('user-token')
       });
     },
     
-    logout(context: any){
+    logout(context: any) {
         context.commit('USER_LOGOUT')
         localStorage.removeItem('user-token')
         delete axios.defaults.headers.common['Authorization'];
         router.push('/')
+        context.commit('CLEAR_USER_ERROR')
       }
   }

@@ -18,5 +18,9 @@ export default {
     },
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
+    },
+    CLEAR_USER_ERROR: (state: any) => {
+        state.userState.errors = {}
     }
+
 }

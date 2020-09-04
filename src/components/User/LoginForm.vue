@@ -11,13 +11,13 @@
           @submit="submit"
         >
             <v-text-field
-            label="username"
-            name="login"
-            v-model="username"
+            label="email"
+            name="email"
+            v-model="email"
             prepend-icon="mdi-account"
             type="text"
+            :error-messages="formErrors.email"
             ></v-text-field>
-
             <v-text-field
             id="password"
             label="Password"
@@ -25,9 +25,11 @@
             v-model="password"
             prepend-icon="mdi-lock"
             type="password"
+            :error-messages="formErrors.password"
             ></v-text-field>        
             <v-spacer></v-spacer>
             <v-btn type="submit" color="#66CDAA">Login</v-btn>
+            <p style="color: red">{{userErrors.responseError}}</p>
         </form>
     </v-col>
     </v-row>
@@ -35,12 +37,20 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
+import {validateLoginData} from '../../store/validators'
+
   export default {
+  computed: {
+    ...mapGetters([
+      'userErrors',
+    ])
+  },
    data () {
       return {
-        username: '',
+        email: '',
         password: '',
+        formErrors: {},
       }
     },
      methods:{
@@ -50,10 +60,12 @@ import {mapActions} from 'vuex'
         submit(e) {
             e.preventDefault();
             const user = {
-                username: this.username,
+                email: this.email,
                 password: this.password,
             }
-            this.logInUser(user)
+            const {valid, errors} = validateLoginData(user);
+              if(!valid) this.formErrors = errors;
+              else this.logInUser(user);
             // this.$router.push("/")
         }
      }

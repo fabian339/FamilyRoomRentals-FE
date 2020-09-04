@@ -25,20 +25,23 @@ interface User {
   lName: string,
   username: string,
   email: string,
-  createdAt: string,
-  objectId: string,
   password: string,
   confirmPassword: string,
 }
 
+interface Login {
+  email: string,
+  password: string,
+}
+
 
   //helper function
-// const isEmail = (email: string) => {
-//   const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-//   if(email.match(regEx)) return true;
-//   else return false;
-// }
+const isEmail = (email: string) => {
+  // eslint-disable-next-line no-useless-escape
+  const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if(email.match(regEx)) return true;
+  else return false;
+}
 
 // const isPhoneNumber = (str) => {
 //   return (/^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(str))
@@ -101,22 +104,37 @@ export const validateCreateRoom = (data: Room) => {
   }
 }
 
-
+export const validateUserRegistration = (data: User) => {
+  let errors:any = {};
+  
+  //validation for fname,lname,username
+  if(isEmpty(data.fName)) errors.fName = 'Must not be empty';
+  if(isEmpty(data.lName)) errors.lName = 'Must not be empty';
+  if(isEmpty(data.username)) errors.username = 'Must not be empty';
   //validation for emails
-  // if(isEmpty(data.email)) {
-  //     errors.email = 'Must not be empty'
-  // } else if(!isEmail(data.email)){
-  //     errors.email = 'Must be a valid email address'
-  // }
+  if(isEmpty(data.email)) {
+      errors.email = 'Must not be empty'
+  } else if(!isEmail(data.email)){
+      errors.email = 'Must be a valid email address'
+  }
+  //validation for password
+  if(isEmpty(data.password)) errors.password = 'Must not be empty'
+  //validation for confirn-password
+  if(isEmpty(data.confirmPassword)) errors.confirmPassword = 'Must not be empty';
+  //validation for password & confirn-password if they dont match
+  if(data.password !== data.confirmPassword) errors.confirmPassword = 'Passwords must match';
+
+  return {
+    errors,
+    valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
+
+
 
   // // if (typeof variable !== 'undefined') {
 
-  // //validation for password
-  // if(isEmpty(data.password)) errors.password = 'Must not be empty'
-  // //validation for confirn-password
-  // if(isEmpty(data.confirmPassword)) errors.confirmPassword = 'Must not be empty';
-  // //validation for password & confirn-password if they dont match
-  // if(data.password !== data.confirmPassword) errors.confirmPassword = 'Passwords must match';
+
   // //validation for dob
   // if(isEmpty(data.dob)) errors.dob = 'Must not be empty';
   // //validation for phone
@@ -128,16 +146,20 @@ export const validateCreateRoom = (data: Room) => {
 
 
 
-// exports.validateLoginData = (data) => {
-//   let errors = {};
+export const validateLoginData = (data: Login) => {
+  let errors:any = {};
 
-//   //validation for email
-//   if(isEmpty(data.email)) errors.email = 'Must not be empty';
-//   //validation for password
-//   if(isEmpty(data.password)) errors.password = 'Must not be empty';
-//   //check if errors are registered
-//   return {
-//       errors,
-//       valid: (Object.keys(errors).length === 0) ? true : false
-//   }
-// }
+  //validation for email
+  if(isEmpty(data.email)) {
+    errors.email = 'Must not be empty'
+  } else if(!isEmail(data.email)){
+      errors.email = 'Must be a valid email address'
+  }  
+  //validation for password
+  if(isEmpty(data.password)) errors.password = 'Must not be empty';
+  //check if errors are registered
+  return {
+      errors,
+      valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}

@@ -13,57 +13,52 @@
           <v-text-field
             ref="fName"
             v-model="fName"
-            :rules="[() => !!fName || 'This field is required']"
             label="First Name"
-            required
+            :error-messages="formErrors.fName"   
           ></v-text-field>
 
           <v-text-field
             ref="lName"
             v-model="lName"
-            :rules="[() => !!lName || 'This field is required']"
             label="Last Name"
-            required
+            :error-messages="formErrors.lName"   
           ></v-text-field>
 
           <v-text-field
             ref="username"
             v-model="username"
-            :rules="[() => !!username || 'This field is required']"
             label="Enter an username"
-            required
+            :error-messages="formErrors.username"   
           ></v-text-field>
 
           <v-text-field
             ref="email"
             v-model="email"
-            :rules="[() => !!email || 'This field is required']"
             label="Email: example@email.com"
-            required
+            :error-messages="formErrors.email"
           ></v-text-field>
 
-            <v-text-field
-              id="password"
-              label="Password"
-              name="password"
-              v-model="password"
-              :rules="[() => !!password || 'This field is required']"
-              prepend-icon="mdi-lock"
-              type="password"
-              required
-            ></v-text-field>   
-            <v-text-field
-              id="confirmPassword"
-              v-model="confirmPassword"
-              :rules="[() => !!confirmPassword || 'This field is required']"
-              label="Confirm Password"
-              name="confirmPassword"
-              prepend-icon="mdi-lock"
-              type="password"
-              required
-            ></v-text-field>        
+          <v-text-field
+            id="password"
+            label="Password"
+            name="password"
+            v-model="password"
+            prepend-icon="mdi-lock"
+            type="password"
+            :error-messages="formErrors.password"
+          ></v-text-field>   
+          <v-text-field
+            id="confirmPassword"
+            v-model="confirmPassword"
+            label="Confirm Password"
+            name="confirmPassword"
+            prepend-icon="mdi-lock"
+            type="password"
+            :error-messages="formErrors.confirmPassword"
+          ></v-text-field>        
             <v-spacer></v-spacer>
             <v-btn type="submit" color="#66CDAA">Register</v-btn>
+            <p style="color: red">{{userErrors.responseError}}</p>
         </form>
     </v-col>
     </v-row>
@@ -72,8 +67,15 @@
 
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
+import {validateUserRegistration} from '../../store/validators'
+
   export default {
+    computed: {
+    ...mapGetters([
+      'userErrors',
+    ])
+  },
    data () {
       return {
         fName: '',
@@ -82,6 +84,7 @@ import {mapActions} from 'vuex'
         email: '',
         password: '',
         confirmPassword: '',
+        formErrors: {},
       }
     },
      methods:{
@@ -98,7 +101,13 @@ import {mapActions} from 'vuex'
                 password: this.password,
                 confirmPassword: this.confirmPassword
             }
-            this.registerUser(user)
+            const {valid, errors} = validateUserRegistration(user);
+            if(!valid) this.formErrors = errors;
+            else this.registerUser(user);
+    
+            
+            // else this.addRoom(room)
+            // this.registerUser(user)
         }
      }
   }
