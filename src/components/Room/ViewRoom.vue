@@ -29,14 +29,106 @@
                 style="marginTop: -30px"
             >
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
-                <v-btn class="ma-2" color="#008080" dark>
+                <v-btn class="ma-2" color="#008080" dark @click.stop="updateDialog = true" >
                     Edit Room
                     <v-icon dark>mdi-pencil</v-icon>
-                </v-btn>                  
-                <v-btn class="ma-2" color="red" dark>
+                </v-btn>  
+                <v-dialog
+                    v-model="updateDialog"
+                    max-width="600px"
+                    >
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">User Profile</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field label="Legal first name*" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field
+                                        label="Legal last name*"
+                                        hint="example of persistent helper text"
+                                        persistent-hint
+                                        required
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field label="Email*" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field label="Password*" type="password" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-select
+                                        :items="['0-17', '18-29', '30-54', '54+']"
+                                        label="Age*"
+                                        required
+                                        ></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-autocomplete
+                                        :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                                        label="Interests"
+                                        multiple
+                                        ></v-autocomplete>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                            <small>*indicates required field</small>
+                            </v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="updateDialog = false">Close</v-btn>
+                        <v-btn color="blue darken-1" text @click="updateDialog = false">Save</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+
+                <v-btn class="ma-2" color="red" dark @click.stop="deleteDialog = true">
                     Delete Room
                     <v-icon dark right>mdi-delete</v-icon>
-                </v-btn>     
+                </v-btn>
+
+                <v-dialog
+                    v-model="deleteDialog"
+                    max-width="290"
+                    >
+                    <v-card>
+                        <v-card-title class="headline">Are you sure you want to delete this room?</v-card-title>
+                        <v-card-text>
+                            Once this is done, we cannot recover this data. Do you want to continue?
+                        </v-card-text>
+
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="deleteDialog = false"
+                        >
+                            Cancel
+                        </v-btn>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="deleteRoomData"
+                        >
+                            Continue
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                    </v-dialog>
+
+
             </div>
             <h2>{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
             <div style="width: 80%; margin: auto">{{contentRoom.description}}</div>
@@ -66,12 +158,19 @@ import NotificationForm from '@/components/notification/NotificationForm.vue'
     },
     data(){
         return {
+            deleteDialog: false,
+            updateDialog: false
         }
     },
     methods:{
         ...mapActions([                  // Add this
-            'setRoom'
-        ])
+            'setRoom',
+            'deleteRoom',
+        ]),
+        deleteRoomData(){
+            this.deleteRoom(this.$route.params.id);
+        }
+
     },
     created(){
         // contentActions.setRoom(this.$route.params.id);

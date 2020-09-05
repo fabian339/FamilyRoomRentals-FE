@@ -28,7 +28,7 @@
         cols="6"
         md="4"
       >
-      <div>My Profile</div>
+        <Profile />
       </v-col>
     </v-row>
 
@@ -38,12 +38,14 @@
 // @ is an alias to /src
 // import store from '@/actions/store'
 import Room from '@/components/Room/Room.vue'
+import Profile from '@/components/User/Profile.vue'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Profile',
+  name: 'UserProfile',
     components: {
-    Room
+    Room,
+    Profile
   },
   computed: {
       ...mapGetters([
@@ -59,8 +61,7 @@ export default {
   },
   created(){
     const { objectId } = this.currentUser;
-    const rooms = this.contentRooms.filter(room => room.ownerId === objectId);
-    this.myRooms = rooms;
+    this.myRooms = this.contentRooms.filter(room => room.ownerId === objectId);
   },
   methods:{
     //   ...mapActions([

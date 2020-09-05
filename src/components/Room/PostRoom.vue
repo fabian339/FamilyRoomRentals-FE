@@ -73,11 +73,49 @@
                 label="Details of Property: (include rules)"
                 v-model="description"
                 :error-messages="errors.description"   
-            ></v-textarea>    
+            ></v-textarea>   
+
+            <label> Property Rules </label>
+            <v-row justify="center">
+                <v-col cols="6" style="display: inline-flex;" >
+                    <v-text-field
+                        ref="rule"
+                        v-model="tempRule"
+                        label="Example: No Pets"
+                        outlined
+                    ></v-text-field>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn 
+                                fab 
+                                color="primary"
+                                dark
+                                @click="addRule"
+                                v-bind="attrs"
+                                v-on="on">
+                                    <v-icon dark>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                            <span>Add Rule</span>
+                     </v-tooltip>
+                </v-col>
+            </v-row>
+            <v-row style="margin-top: -35px; margin-bottom: 30px;" justify="center">
+                <div v-for="(item, index) in propertyRules" :key="index +10">
+                    <v-chip
+                        class="ma-2"
+                        close
+                        @click:close="propertyRules.splice(index, 1)"
+                    >
+                        {{item}}
+                    </v-chip>                
+                </div>
+            </v-row>
+
             <label> Property Price </label>
 
             <v-row justify="center">
-                <v-col cols="8">
+                <v-col cols="4">
                     <v-text-field
                         ref="price"
                         v-model="price"
@@ -153,6 +191,8 @@ import {validateCreateRoom} from '../../store/validators'
         price: '',
         // propertyOwner: false,
         description: '',
+        propertyRules: [],
+        tempRule: '',
         images: [],
         errors: {}
       }
@@ -177,6 +217,7 @@ import {validateCreateRoom} from '../../store/validators'
             const room = {
                 title: this.title,
                 location: this.location,
+                propertyRules: this.propertyRules,
                 price: this.price,
                 description: this.description,
                 ownerId: this.currentUser.objectId,
@@ -185,6 +226,10 @@ import {validateCreateRoom} from '../../store/validators'
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;
             else this.addRoom(room)
+        },
+        addRule(){
+            this.propertyRules.push(this.tempRule);
+            this.tempRule = '';
         }
 
     }

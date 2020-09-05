@@ -14,6 +14,11 @@ export default {
     SET_ROOM: (state: any, room: {}) => {
       state.contentState.room = room
     },
+    DELETE_ROOM: (state: any, id: string) => {
+      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === id);
+      state.contentState.rooms.splice(index, 1);
+      state.contentState.room = {};
+    },
     SET_CONTENT_ERROR: (state: any, errors: object) => {
       state.contentState.errors = errors
     }

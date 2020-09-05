@@ -21,6 +21,8 @@ export default {
         });
     },
     addRoom: (context: any, roomData: any = {}) => {
+      // delete axios.defaults.headers.common['Authorization'];
+      // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
       // console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
       axios.post(requestURI, roomData)
@@ -37,12 +39,24 @@ export default {
       });
     },
     setRoom: (context: any, id: string) => {
-      console.log('HEREEE')
-      // context.commit('SET_LOADING_CONTENT', true);
+      // console.log('HEREEE')
+      context.commit('SET_LOADING_CONTENT', true);
       axios.get(`${requestURI}/${id}`)
       .then((res) => {
         context.commit('SET_LOADING_CONTENT', false);
         context.commit('SET_ROOM', res.data)
+      })
+      .catch((err) => {
+        context.commit('SET_CONTENT_ERROR', err);
+      });
+    },
+    deleteRoom: (context: any, id: string) => {
+      context.commit('SET_LOADING_CONTENT', true);
+      axios.delete(`${requestURI}/${id}`)
+      .then((res) => {
+        context.commit('DELETE_ROOM', id);
+        context.commit('SET_LOADING_CONTENT', false);
+        router.push(`/profile`)
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);

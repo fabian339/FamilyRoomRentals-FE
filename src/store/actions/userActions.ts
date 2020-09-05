@@ -40,7 +40,7 @@ export default {
       .then((res) => {
         const user = res.data
         const token = user.sessionToken;
-        axios.defaults.headers.common['Authorization'] = token;
+        // axios.defaults.headers.common['Authorization'] = token;
         delete user.confirmPassword;
         delete user.ACL;
         context.commit('AUTH_SUCCESS', token);
@@ -61,7 +61,7 @@ export default {
       .then((res) => {
         const user = res.data
         const token = user.sessionToken;
-        axios.defaults.headers.common['Authorization'] = token;
+        // axios.defaults.headers.common['Authorization'] = token;
         localStorage.setItem('user-token', token);
         user.className = "_User";
         delete user.confirmPassword;
@@ -85,7 +85,7 @@ export default {
     logout(context: any) {
         context.commit('USER_LOGOUT')
         localStorage.removeItem('user-token')
-        delete axios.defaults.headers.common['Authorization'];
+        // delete axios.defaults.headers.common['Authorization'];
         router.push('/')
         context.commit('CLEAR_USER_ERROR')
       }
