@@ -13,8 +13,8 @@ export default {
         context.commit('SET_LOADING_CONTENT', true);
         axios.get(requestURI)
         .then((res) => {
-          context.commit('SET_LOADING_CONTENT', false);
           context.commit('SET_ROOMS', res.data.results);
+          context.commit('SET_LOADING_CONTENT', false);
         })
         .catch((err) => {
           context.commit('SET_CONTENT_ERROR', err);
@@ -30,8 +30,8 @@ export default {
         // console.log("Room Response: ", res);
         roomData.createdAt = res.data.createdAt;
         roomData.objectId = res.data.objectId;
-        context.commit('SET_LOADING_CONTENT', false);
         context.commit('ADD_ROOM', roomData)
+        context.commit('SET_LOADING_CONTENT', false);
         router.push(`/room/${roomData.objectId}`)
       })
       .catch((err) => {
@@ -43,8 +43,8 @@ export default {
       context.commit('SET_LOADING_CONTENT', true);
       axios.get(`${requestURI}/${id}`)
       .then((res) => {
-        context.commit('SET_LOADING_CONTENT', false);
         context.commit('SET_ROOM', res.data)
+        context.commit('SET_LOADING_CONTENT', false);
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);

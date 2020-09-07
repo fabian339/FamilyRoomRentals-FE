@@ -1,19 +1,19 @@
 <template>
     <v-container>
-        <v-row class="text-center">
+        <v-progress-circular
+            v-if="isContentLoading"
+            color="green"
+            :size="100"
+            :width="15"
+            indeterminate
+        ></v-progress-circular>
+        <v-row class="text-center" v-if="!isContentLoading">
             <v-col
                 class="mb-5"
                 cols="12"
                 style="marginTop: -30px"
             >
-                <v-progress-circular
-                    v-if="isContentLoading"
-                    color="green"
-                    :size="100"
-                    :width="15"
-                    indeterminate
-                ></v-progress-circular>
-                <v-carousel v-if="!isContentLoading" class="RoomImages">
+                <v-carousel class="RoomImages">
                     <v-carousel-item
                         v-for="(image,i) in contentRoom.images"
                         :key="i"
@@ -126,13 +126,42 @@
                         </v-btn>
                         </v-card-actions>
                     </v-card>
-                    </v-dialog>
-
+                 </v-dialog>
 
             </div>
-            <h2>{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
-            <div style="width: 80%; margin: auto">{{contentRoom.description}}</div>
+            <h2 style="margin-bottom: 20px;">{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
+            <v-card
+                class="mx-auto"
+                max-width="800"
+                color="#8fbc8f"
+            >
+                <h4 id="description">Description:</h4>
+                <p> {{contentRoom.description}} </p>
+                <div v-if="contentRoom.propertyRules">
+                    <h4>Rules:</h4>
+                    <div v-for="(rule, index) in contentRoom.propertyRules" :key="index + 10/3">
+                        <span>{{index+1}}) {{rule}}</span>
+                    </div>
+                </div>
+            </v-card>
+            <div style="margin: 25px;">
+                <div>
+                    <v-icon style="font-size: 100px;" large color="green darken-2">mdi-map-marker</v-icon>
+                </div>
+                <p style="margin: 5px 35%;">
+                    {{contentRoom.location.street1}}, 
+                    {{contentRoom.location.street2}},
+                    {{contentRoom.location.city}},
+                    {{contentRoom.location.state}},
+                    {{contentRoom.location.zipCode}},
+                    {{contentRoom.location.country}}
+                </p>
+                <v-btn color="teal" dark @click="openAddress">
+                    Open Address
+                </v-btn>
+            </div>
             </v-col>
+                    
             <NotificationForm />
         </v-row>
     </v-container>
@@ -142,7 +171,6 @@
 import { mapActions, mapGetters } from 'vuex'
 import NotificationForm from '@/components/notification/NotificationForm.vue'
 
-// import contentActions from '/.././store/actions/contentActions'
   export default {
     name: 'viewRoom',
     components: {
@@ -159,31 +187,41 @@ import NotificationForm from '@/components/notification/NotificationForm.vue'
     data(){
         return {
             deleteDialog: false,
-            updateDialog: false
+            updateDialog: false,
+            roomAddress: ''
         }
     },
     methods:{
-        ...mapActions([                  // Add this
+        ...mapActions([
             'setRoom',
             'deleteRoom',
         ]),
         deleteRoomData(){
             this.deleteRoom(this.$route.params.id);
+        },
+        openAddress(){
+            const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom;
+            this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
+            window.open(this.roomAddress, '_blank');
         }
-
     },
-    created(){
-        // contentActions.setRoom(this.$route.params.id);
-        this.setRoom(this.$route.params.id)
-
+    created() {
+        if(Object.keys(this.contentRoom).length === 0) this.setRoom(this.$route.params.id);
     }
-
   }
 </script>
 
-<style>
-.RoomImages{
-    width: 80%;
-    margin: auto 10%;
-}
-</style>v-row>
+<style scoped>
+    .RoomImages{
+        width: 80%;
+        margin: auto 10%;
+    }
+    #description{
+        align-items: center;
+        font-size: 1.25rem;
+        font-weight: 500;
+        letter-spacing: 0.0125em;
+        line-height: 2rem;
+        margin: 10px;
+    }
+</style>

@@ -28,6 +28,8 @@
 
 <script>
   // import store from '../store.js'
+  import { mapActions } from 'vuex'
+
   // import axios from 'axios'
   export default {
     name: 'Room',
@@ -37,7 +39,11 @@
     created() {
   },
   methods: {
+    ...mapActions([
+      'setRoom',
+    ]),
     viewRoom() {
+      this.setRoom(this.roomData.objectId)
       this.$router.push(`room/${this.roomData.objectId}`)
     }
     // getCountry(code, countryN){

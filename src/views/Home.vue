@@ -7,10 +7,9 @@
       <v-col
         class="mb-5"
         cols="12"
-         style="marginTop: -30px"
       >
       <h2 class="headline font-weight-bold mb-3">
-        All Rooms
+        Recent Rooms
       </h2>
       <v-progress-circular
         v-if="contentState.loadingContent"
