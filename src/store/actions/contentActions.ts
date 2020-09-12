@@ -41,15 +41,16 @@ export default {
     updateRoom: (context: any, roomData: any) => {
       // delete axios.defaults.headers.common['Authorization'];
       // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
-      const {objectId} = roomData;
+      // const {objectId} = roomData;
+      // console.log(router.history.current.params.id)
       console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
-      axios.put(`${requestURI}/${objectId}`, roomData)
+      axios.put(`${requestURI}/${router.history.current.params.id}`, roomData)
       .then((res) => {
         console.log("update Room Response: ", res);
         // roomData.createdAt = res.data.createdAt;
         // roomData.objectId = res.data.objectId;
-        context.commit('UPDATE_ROOM', roomData);
+        // context.commit('UPDATE_ROOM', roomData);
         context.commit('SET_LOADING_CONTENT', false);
         router.push(`/profile`)
       })
