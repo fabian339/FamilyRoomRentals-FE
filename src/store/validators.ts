@@ -93,7 +93,7 @@ export const validateCreateRoom = (data: Room) => {
   if(isEmpty(data.location.country)) errors.country = 'Must not be empty';
 
   //validation for price
-  if(data.price < 0 || !data.price) errors.price = 'Must enter a positive ammount';
+  if(data.price < 0 || !data.price) errors.price = 'Must enter a positive amount';
 
   //validation for description
   if(isEmpty(data.description)) errors.description = 'Must not be empty';

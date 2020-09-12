@@ -19,6 +19,11 @@ export default {
       state.contentState.rooms.splice(index, 1);
       state.contentState.room = {};
     },
+    UPDATE_ROOM: (state: any, updatedRoom: any) => {
+      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === updatedRoom.objectId);
+      state.contentState.rooms[index] = updatedRoom;
+      state.contentState.room = updatedRoom;
+    },
     SET_CONTENT_ERROR: (state: any, errors: object) => {
       state.contentState.errors = errors
     }

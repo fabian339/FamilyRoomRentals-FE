@@ -40,5 +40,5 @@ export default new Vuex.Store({
       userErrors: state => state.userState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations},
-    actions: { ...ContentActions, ...UserActions }
+    actions: {...ContentActions, ...UserActions }
   });

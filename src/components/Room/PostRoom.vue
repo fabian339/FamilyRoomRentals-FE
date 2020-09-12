@@ -120,7 +120,7 @@
                         ref="price"
                         v-model="price"
                         type="number"
-                        label="Price per month"
+                        label="Price"
                         full-width
                         prefix="$"
                         suffix="/month"
@@ -240,8 +240,8 @@ import {validateCreateRoom} from '../../store/validators'
 
 
 <style scoped>
-#imgContainer{
-    margin-top: 20px;
-    border: 2px solid gainsboro;
-}
+    #imgContainer{
+        margin-top: 20px;
+        border: 2px solid gainsboro;
+    }
 </style>
