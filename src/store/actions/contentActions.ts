@@ -45,7 +45,7 @@ export default {
       // console.log(router.history.current.params.id)
       console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
-      axios.put(`${requestURI}/${router.history.current.params.id}`, roomData)
+      axios.put(`${requestURI}/${roomData.objectId}`, roomData)
       .then((res) => {
         console.log("update Room Response: ", res);
         // roomData.createdAt = res.data.createdAt;

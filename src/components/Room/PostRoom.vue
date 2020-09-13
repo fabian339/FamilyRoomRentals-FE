@@ -88,7 +88,7 @@
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn 
                                 fab 
-                                color="primary"
+                                color="#008080"
                                 dark
                                 @click="addRule"
                                 v-bind="attrs"
@@ -161,7 +161,7 @@
             >
                 <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
             </v-col>
-  </form>
+        </form>
     </v-col>
     </v-col>
   </v-row>

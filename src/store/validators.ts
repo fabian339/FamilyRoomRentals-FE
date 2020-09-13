@@ -104,6 +104,35 @@ export const validateCreateRoom = (data: Room) => {
   }
 }
 
+export const validateUpdateRoom = (data: any) => {
+  let errors:any = {};
+  for (const property in data) {
+    if(property === 'title' && isEmpty(data.title)) errors.title = 'Must not be empty';
+    if(property === 'location'){
+      // console.log('validate Location => ', data.location.country === undefined)
+      if(data.location.street1 === undefined) errors.street1 = 'Must not be empty';
+      if(data.location.street2 === undefined) errors.street2 = 'Must not be empty';
+      if(data.location.city === undefined) errors.city = 'Must not be empty';
+      if(data.location.state === undefined) errors.state = 'Must not be empty';
+      if(data.location.country === undefined) errors.country = 'Must not be empty';
+      if(!is_usZipCode(data.location.zipCode)) {
+        errors.zipCode = 'Must be a valid zipcode';
+      }
+    }
+    if(property === 'price'){
+      if(data.price < 0 || !data.price) errors.price = 'Must enter a positive amount';
+    }
+    if(property === 'description'){
+      if(isEmpty(data.description)) errors.description = 'Must not be empty';
+    }
+  }
+
+  return {
+    errors,
+    valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
+
 export const validateUserRegistration = (data: User) => {
   let errors:any = {};
   
