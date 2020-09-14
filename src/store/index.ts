@@ -17,6 +17,7 @@ export default new Vuex.Store({
         loadingContent: false,
         rooms: [],
         room: {},
+        roomUpdated: false,
         errors: {},
       },
       userState:{
@@ -33,6 +34,7 @@ export default new Vuex.Store({
       contentRooms: state => state.contentState.rooms,
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
+      isRoomUpdated: state => state.contentState.roomUpdated,
       //USER
       isUserLoading: state => state.userState.loadingUser,
       isAuthenticated: state => !!state.userState.token,

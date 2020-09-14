@@ -13,6 +13,7 @@
                 cols="12"
                 style="marginTop: -30px"
             >
+                <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
                 <v-carousel class="RoomImages">
                     <v-carousel-item
                         v-for="(image,i) in contentRoom.images"
@@ -113,29 +114,33 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import NotificationForm from '@/components/notification/NotificationForm.vue'
+import { mapActions, mapGetters } from 'vuex';
+import NotificationForm from '@/components/notification/NotificationForm.vue';
+import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
 
   export default {
     name: 'viewRoom',
     components: {
         NotificationForm,
-        EditRoomForm
+        EditRoomForm,
+        SuccessAlert
     },
     computed: {
         ...mapGetters([
             'contentRoom',
             'isContentLoading',
             'currentUser',
-            'contentRoom'
+            'contentRoom',
+            'isRoomUpdated'
         ]),
     },
     data(){
         return {
             deleteDialog: false,
             updateDialog: false,
-            roomAddress: ''
+            roomAddress: '',
+            updated: false
         }
     },
     methods:{
@@ -150,7 +155,7 @@ import EditRoomForm from './EditRoomForm.vue'
             const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom;
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
-        }
+        },
     },
     created() {
         if(Object.keys(this.contentRoom).length === 0) this.setRoom(this.$route.params.id);

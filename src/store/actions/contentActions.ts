@@ -50,9 +50,9 @@ export default {
         console.log("update Room Response: ", res);
         // roomData.createdAt = res.data.createdAt;
         // roomData.objectId = res.data.objectId;
-        // context.commit('UPDATE_ROOM', roomData);
+        context.commit('UPDATE_ROOM', roomData);
         context.commit('SET_LOADING_CONTENT', false);
-        router.push(`/profile`)
+        // router.go(0);
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);

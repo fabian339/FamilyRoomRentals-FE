@@ -2,7 +2,6 @@
     <v-dialog
         v-model="show"
         max-width="600px"
-        @click:outside="closeDialog"
         >
             <v-card>
                 <v-card-title>
@@ -114,7 +113,7 @@
                                     <v-chip
                                         class="ma-2"
                                         close
-                                        @click:close="propertyRules.splice(index, 1)"
+                                        @click:close="removeRule(index)"
                                     >
                                         {{item}}
                                     </v-chip>                
@@ -156,7 +155,7 @@
                                         <v-col v-for="(image, index) in images" :key="image.street1">
                                             <div>
                                                 <img :src="image" alt="img" width="150" height="100">
-                                                <div class="my-2" @click="images.splice(index, 1)">
+                                                <div class="my-2" @click="removeImage(index)">
                                                     <v-btn small color="warning">Remove</v-btn>
                                                 </div>
                                             </div>
@@ -175,7 +174,7 @@
                 <p class="errorMsg">{{errors.message}}</p>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click.stop="closeDialog">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click.stop="show = false">Cancel</v-btn>
                 <v-btn color="blue darken-1" type="submit" text @click="saveUpdatedRoomData">Save</v-btn>
                 </v-card-actions>
             </v-card>
@@ -283,14 +282,11 @@ export default {
                 if(!valid) this.errors = errors;
                 else{
                     data.objectId = this.$store.getters.contentRoom.objectId;
-                    this.updateRoom(data)
+                    this.updateRoom(data);
+                    this.show = false;
                     // console.log(this.errors, data);
                 }
             }
-        },
-        closeDialog(){
-            this.show = false;
-            this.errors = {};
         },
         onKeyboardPressed(e){
             this.changes.push(e.target.name);
@@ -303,20 +299,6 @@ export default {
     #imgContainer{
         margin-top: 20px;
         border: 2px solid gainsboro;
-    }
-    /* .input {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-     } */
-     .month {
-        position: absolute;
-        margin: 20px 10px;
-        font-size: 20px;
     }
     .errorMsg{
         color: red;

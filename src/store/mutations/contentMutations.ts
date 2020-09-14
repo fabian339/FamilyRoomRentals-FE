@@ -19,10 +19,18 @@ export default {
       state.contentState.rooms.splice(index, 1);
       state.contentState.room = {};
     },
-    UPDATE_ROOM: (state: any, updatedRoom: any) => {
-      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === updatedRoom.objectId);
-      state.contentState.rooms[index] = updatedRoom;
-      state.contentState.room = updatedRoom;
+    UPDATE_ROOM: (state: any, updatedRoomData: any) => {
+      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === updatedRoomData.objectId);
+      let tempRoom = state.contentState.rooms[index];
+      for (const property in updatedRoomData) {
+        tempRoom[property] = updatedRoomData[property]
+      }
+      state.contentState.rooms[index] = tempRoom;
+      state.contentState.room = tempRoom;
+      state.contentState.roomUpdated = true;
+      setTimeout(() => {
+        state.contentState.roomUpdated = false;
+      }, 5000);
     },
     SET_CONTENT_ERROR: (state: any, errors: object) => {
       state.contentState.errors = errors
