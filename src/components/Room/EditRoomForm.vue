@@ -216,8 +216,8 @@ export default {
             price: this.$store.getters.contentRoom.price,
             // propertyOwner: false,
             description: this.$store.getters.contentRoom.description,
-            propertyRules: [...this.$store.getters.contentRoom.propertyRules],
-            images: [...this.$store.getters.contentRoom.images],
+            propertyRules: this.$store.getters.contentRoom.propertyRules === undefined ? [] : [...this.$store.getters.contentRoom.propertyRules],
+            images: this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images],
             tempRule: '',
             changes: [],
             errors: {}

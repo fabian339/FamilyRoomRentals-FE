@@ -82,7 +82,7 @@
                 color="#8fbc8f"
             >
                 <h4 id="description">Description:</h4>
-                <p> {{contentRoom.description}} </p>
+                <p style="margin: 20px;"> {{contentRoom.description}} </p>
                 <div v-if="contentRoom.propertyRules">
                     <h4>Rules:</h4>
                     <div v-for="(rule, index) in contentRoom.propertyRules" :key="index + 10/3">
