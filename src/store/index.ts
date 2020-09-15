@@ -39,6 +39,7 @@ export default new Vuex.Store({
       isUserLoading: state => state.userState.loadingUser,
       isAuthenticated: state => !!state.userState.token,
       currentUser: state => state.userState.user,
+      currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations},

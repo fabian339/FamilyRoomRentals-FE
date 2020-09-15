@@ -2,7 +2,7 @@
 
 
 export default {
-    SET_USER: (state: any, user: {}) => {
+    SET_USER: (state: any, user: any) => {
         // console.log("HEREEE", room)
         state.userState.user = user;
     },

@@ -59,21 +59,6 @@ const is_usZipCode = (str: string) => {
   else return false;
 }
 
-// exports.validateTimesheetSubmit = (data) => {
-//   let errors = {};
-
-//   //validation for email
-//   if(isEmpty(data.name)) errors.name = 'Must not be empty';
-//   //validation for password
-//   if(data.actType != "Clock-in" && data.actType != "Clock-out") errors.actType = 'Must select to Clock-In or Clock-out!';
-//   //check if errors are registered
-//   return {
-//       errors,
-//       valid: (Object.keys(errors).length === 0) ? true : false
-//   }
-// }
-
-
 
 export const validateCreateRoom = (data: Room) => {
   let errors:any = {};

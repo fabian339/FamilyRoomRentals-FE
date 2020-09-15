@@ -36,7 +36,7 @@
             <div>
                 <small style="color: darkcyan">(Tipically Respond in under 24 hours)</small>
             </div>
-            <v-btn type="submit" color="#2e8b57" dark>
+            <v-btn type="submit" @click="sendMessage" color="#2e8b57" dark>
                     Send
                 <!-- <v-icon large color="#2E8B57">mdi-email</v-icon> -->
             </v-btn>
@@ -49,26 +49,21 @@
 <script>
 // import {mapActions} from 'vuex'
   export default {
-//    data () {
-//       return {
-//         username: '',
-//         password: '',
-//       }
-//     },
-//      methods:{
-//         ...mapActions([                  // Add this
-//             'logInUser'
-//         ]),
-//         submit(e) {
-//             e.preventDefault();
-//             const user = {
-//                 username: this.username,
-//                 password: this.password,
-//             }
-//             this.logInUser(user)
-//             // this.$router.push("/")
-//         }
-//      }
+   data () {
+      return {
+        username: '',
+        password: '',
+      }
+    },
+     methods:{
+        // ...mapActions([                  // Add this
+        //     'logInUser'
+        // ]),
+        sendMessage(e) {
+            e.preventDefault();
+            console.log("sendingg")
+        }
+     }
   }
 
 </script>

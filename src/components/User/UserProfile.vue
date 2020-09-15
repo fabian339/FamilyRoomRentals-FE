@@ -1,10 +1,16 @@
 <template>
     <v-row class="text-center">
       <v-col
+        md="4"
+      >
+        <Profile style="margin: 60px auto;"/>
+      </v-col>
+      <v-col
         cols="12"
         md="8"
       >
-        <h1> Welcome {{currentUser.fName}} {{currentUser.lName}}</h1>
+        <!-- <h1> Welcome {{currentUser.fName}} {{currentUser.lName}}</h1> -->
+        <h2>{{currentUserRooms.length > 0 ? 'Your Rooms:' : 'No Rooms Yet!'}}</h2>
         <v-progress-circular
           v-if="isContentLoading"
           color="green"
@@ -12,23 +18,17 @@
           :width="15"
           indeterminate
         ></v-progress-circular>
-        <v-container v-if="!isContentLoading" class="grey lighten-5">
+        <v-container style="background-color: white !important;" v-if="!isContentLoading" class="grey lighten-5">
           <v-row no-gutters>
             <v-col
               style="margin: 10px auto"  
               md="6"
-              v-for="item in myRooms" :key="item.street1"
+              v-for="item in currentUserRooms" :key="item.street1"
             >
               <Room :roomData="item" />
           </v-col>
         </v-row>
       </v-container>
-      </v-col>
-      <v-col
-        cols="6"
-        md="4"
-      >
-        <Profile />
       </v-col>
     </v-row>
 
@@ -50,28 +50,18 @@ export default {
   computed: {
       ...mapGetters([
         'currentUser',
-        'contentRooms',
-        'isContentLoading'
+        'isContentLoading',
+        'currentUserRooms'
       ])
   },
   data(){
     return {
-      myRooms: []
     }
   },
   created(){
-    const { objectId } = this.currentUser;
-    this.myRooms = this.contentRooms.filter(room => room.ownerId === objectId);
   },
   methods:{
-    //   ...mapActions([
-    //       'logout'
-    //   ]),
-    //   logoutUser(e){
-    //     e.preventDefault();
-    //     this.logout()
-    //     this.$router.push("/")
-    //   }
+
 
   }
 }
