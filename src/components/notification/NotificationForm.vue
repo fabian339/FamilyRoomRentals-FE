@@ -11,25 +11,25 @@
         >
             <v-text-field
                 label="Full Name"
-                name="name"
+                v-model="full_name"
                 type="text"
                 outlined
             ></v-text-field>
 
             <v-text-field
-                ref="email"
+                v-model="email"
                 label="email: example@email.com"
                 outlined
             ></v-text-field>
 
             <v-text-field
-                ref="phone"
+                v-model="phone"
                 label="phone number: (212-222-2222)"
                 outlined
             ></v-text-field>
 
             <v-textarea
-                name="input-7-1"
+                v-model="message"
                 filled
                 label="Enter your message"
             ></v-textarea> 
@@ -47,23 +47,44 @@
 </template>
 
 <script>
-// import {mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
   export default {
+    computed: {
+        ...mapGetters([
+            'contentRoom',
+            'isNotificationSent',
+        ]),
+    },
    data () {
       return {
-        username: '',
-        password: '',
+        full_name: '',
+        email: '',
+        phone: '',
+        message: '',
+        sent: false
       }
     },
-     methods:{
-        // ...mapActions([                  // Add this
-        //     'logInUser'
-        // ]),
+    created() {
+    },
+    methods:{
+        ...mapActions([                  // Add this
+            'sendNotification'
+        ]),
         sendMessage(e) {
             e.preventDefault();
-            console.log("sendingg")
+            const notification = {
+                    full_name: this.full_name,
+                    email: this.email,
+                    phone: this.phone,
+                    message: this.message,
+                    receiverId: this.contentRoom.ownerId,
+                    readByDev: false,
+                    readByReceiver: false
+            }
+            this.sendNotification(notification);
+            console.log("sendingg");
         }
-     }
+    }
   }
 
 </script>

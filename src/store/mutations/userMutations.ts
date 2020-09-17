@@ -19,6 +19,12 @@ export default {
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
     },
+    SET_NOTIFICATION_SENT: (state: any, notificationSent: boolean) => {
+        state.userState.notificationSent = notificationSent
+    },
+    SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
+        state.userState.userNotifications = notifications
+    },
     CLEAR_USER_ERROR: (state: any) => {
         state.userState.errors = {}
     }

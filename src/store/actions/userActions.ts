@@ -44,6 +44,7 @@ export default {
         delete user.confirmPassword;
         delete user.ACL;
         context.commit('AUTH_SUCCESS', token);
+        context.dispatch('fetchUserNotifications', user.objectId);
         // console.log('Getting Current User',user)
         context.commit('SET_USER', user)
         context.commit('SET_LOADING_USER', false);
@@ -67,7 +68,7 @@ export default {
         delete user.confirmPassword;
         delete user.ACL;
         context.commit('AUTH_SUCCESS', token);
-        // console.log('Logging User',user)
+        context.dispatch('fetchUserNotifications', user.objectId);
         context.commit('SET_USER', user)
         context.commit('SET_LOADING_USER', false);
         router.push(`/profile`)
@@ -79,6 +80,33 @@ export default {
         }
         context.commit('SET_USER_ERROR', err);
         localStorage.removeItem('user-token')
+      });
+    },
+
+    sendNotification: (context: any, notification: object) => {
+      axios.post(`https://parseapi.back4app.com/classes/Notifications`, notification)
+      .then((res) => {
+        context.commit('SET_NOTIFICATION_SENT', true);
+        // console.log('Logging User', res)
+    })
+    .catch((err) => {
+        // const err = {
+        //   responseError: "Invalid email/password.."
+        // }
+        context.commit('SET_USER_ERROR', err);
+        // localStorage.removeItem('user-token')
+      });
+    },
+
+    fetchUserNotifications: (context: any, id: string) => {
+      axios.get('https://parseapi.back4app.com/classes/Notifications')
+      .then((res) => {
+        let myNotifications = res.data.results.filter((item: any) => item.receiverId === id);
+        res.data.results
+        context.commit('SET_USER_NOTIFICATIONS', myNotifications);
+      })
+      .catch((err) => {
+        context.commit('SET_CONTENT_ERROR', err);
       });
     },
     
