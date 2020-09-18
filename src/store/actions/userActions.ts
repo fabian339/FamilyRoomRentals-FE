@@ -93,7 +93,7 @@ export default {
       axios.post(`https://parseapi.back4app.com/classes/Notifications`, notification)
       .then((res) => {
         context.commit('SET_NOTIFICATION_SENT', true);
-        // console.log('Logging User', res)
+        console.log('Notification Sent', res)
     })
     .catch((err) => {
         // const err = {

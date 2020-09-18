@@ -43,9 +43,9 @@ const isEmail = (email: string) => {
   else return false;
 }
 
-// const isPhoneNumber = (str) => {
-//   return (/^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(str))
-// }
+const isPhoneNumber = (str: string) => {
+  var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
+  return patt.test(str);}
 
 //helper function
 const isEmpty = (string: string) => {
@@ -146,17 +146,31 @@ export const validateUserRegistration = (data: User) => {
 
 
 
-  // // if (typeof variable !== 'undefined') {
+export const validateNotification = (data: any) => {
+  let errors:any = {};
 
-
-  // //validation for dob
-  // if(isEmpty(data.dob)) errors.dob = 'Must not be empty';
-  // //validation for phone
-  // if(isEmpty(data.phone)) errors.phone = 'Must not be empty';
-  // //validation for user role
-  // if(isEmpty(data.role)) errors.role = 'Must choose a role';
-  
+  //validation for fullname
+  if(isEmpty(data.full_name)) errors.full_name = 'Must not be empty';
+  //validation for email
+  if(isEmpty(data.email)) {
+    errors.email = 'Must not be empty'
+  } else if(!isEmail(data.email)){
+      errors.email = 'Must be a valid email address'
+  }  
+  //validation for phone
+  if(isEmpty(data.phone)) {
+    errors.phone = 'Must not be empty'
+  } else if(!isPhoneNumber(data.phone)){
+    errors.phone = 'Must be a valid phone number'
+  } 
+  //validation for message
+  if(isEmpty(data.message)) errors.message = 'Must not be empty';
   //check if errors are registered
+  return {
+      errors,
+      valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
 
 
 

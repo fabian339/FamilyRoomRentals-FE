@@ -13,18 +13,18 @@
         All Rooms
       </h2>
       <v-progress-circular
-        v-if="contentState.loadingContent"
+        v-if="isContentLoading"
         color="green"
         :size="100"
         :width="15"
         indeterminate
       ></v-progress-circular>
-      <v-container v-if="!contentState.loadingContent" class="grey lighten-5">
+      <v-container v-if="!isContentLoading" class="grey lighten-5">
         <v-row no-gutters>
           <v-col
             class="mb-8"
             cols="16"
-            v-for="item in contentState.rooms" :key="item.street1"
+            v-for="item in contentRooms" :key="item.street1"
             >
               <Room :roomData=item />
           </v-col>
@@ -45,7 +45,7 @@
 // @ is an alias to /src
 import Room from '@/components/Room/Room.vue'
 // import store from '@/actions/store'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
@@ -53,8 +53,9 @@ export default {
     Room
   },
   computed: {
-      ...mapState([
-        'contentState',
+      ...mapGetters([
+        'contentRooms',
+        'isContentLoading'
       ])
   }
 }

@@ -29,6 +29,7 @@
                 cols="12"
                 style="marginTop: -30px"
             >
+            <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}}</small>
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
                 <v-btn class="ma-2" color="#008080" dark @click.stop="updateDialog = true" >
                     Edit Room

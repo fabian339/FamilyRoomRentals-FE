@@ -33,7 +33,7 @@ export default new Vuex.Store({
     getters: {
       // Content
       isContentLoading: state => state.contentState.loadingContent,
-      contentRooms: state => state.contentState.rooms,
+      contentRooms: state => state.contentState.rooms.reverse(),
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
       isRoomUpdated: state => state.contentState.roomUpdated,
@@ -43,7 +43,7 @@ export default new Vuex.Store({
       currentUser: state => state.userState.user,
       isNotificationSent: state => state.userState.notificationSent,
       isNotificationDeleted: state => state.userState.notidicationDeleted,
-      currentUserNotifications: state => state.userState.userNotifications,
+      currentUserNotifications: state => state.userState.userNotifications.reverse(),
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
     },
