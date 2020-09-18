@@ -1,6 +1,8 @@
 
 import axios from 'axios';
 import router from '../../router';
+let appRouter: any = router;
+
 
 const requestURI = 'https://parseapi.back4app.com/classes/Room';
 axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
@@ -32,7 +34,7 @@ export default {
         roomData.objectId = res.data.objectId;
         context.commit('ADD_ROOM', roomData)
         context.commit('SET_LOADING_CONTENT', false);
-        router.push(`/room/${roomData.objectId}`)
+        appRouter.push(`/room/${roomData.objectId}`)
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);
@@ -76,7 +78,9 @@ export default {
       .then((res) => {
         context.commit('DELETE_ROOM', id);
         context.commit('SET_LOADING_CONTENT', false);
-        router.push(`/profile`)
+        if(appRouter.history.current.path !== '/profile'){
+          appRouter.push(`/profile`)
+        }
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);

@@ -33,6 +33,7 @@
                 >
                     <v-badge
                         :content="currentUserNotifications.filter((item) => item.readByReceiver === false).length"
+                        :value="currentUserNotifications.filter((item) => item.readByReceiver === false).length"
                         color="green"  
                         overlap 
                     >
@@ -41,24 +42,32 @@
               </div>
             </template>
 
-            <v-list>
+            <v-list                         
+                max-width="450"
+                max-height="350"
+                rounded
+            >
                 <v-list-item
                     v-for="(item, index) in currentUserNotifications"
                     :key="index"
-                    @click="openNotificationDialog"
+                    @click.stop="openNotificationDialog(item)"
                 >
                     <v-list-item-avatar>
                         <v-img src="https://cdn.vuetifyjs.com/images/lists/1.jpg"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                        <v-list-item-title>Recent Messages</v-list-item-title>
-                        <v-list-item-subtitle v-html="item.message.substring(0, 20) + '...'"></v-list-item-subtitle>
+                        <v-list-item-title :style="`${item.readByReceiver === false ? 'color: green' : 'color: #778899'}`" >
+                            {{`(${new Date(item.createdAt).toLocaleString('en-US')})- ${item.readByReceiver === false ? 'Unread Message' : 'Check Message'}`}}
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-html="`${item.message.substring(0, 35)}...`"></v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
                 
             </v-list>
              <v-divider inset></v-divider>
         </v-menu>
+        <ViewNotification v-model="openNoticicationDialog" :notificationData="notification" />
+
     </div>
 
     <v-btn v-if="isAuthenticated" @click="logoutUser" text>
@@ -80,29 +89,37 @@
     </v-app-bar>
 </template>
 <script>
-// @ is an alias to /src
-// import store from '@/actions/store'
+import ViewNotification from '@/components/notification/ViewNotification.vue'
 import { mapGetters, mapActions } from 'vuex'
-
 export default {
-  name: 'Nav',
-  computed: {
-      ...mapGetters([
-        'isAuthenticated',
-        'currentUserNotifications',
-      ])
-  },
-  data: () => ({
+    name: 'Nav',
+    components: {
+        ViewNotification
+    },
+    computed: {
+        ...mapGetters([
+            'isAuthenticated',
+            'currentUserNotifications',
+        ])
+    },
+    data: () => ({
+        openNoticicationDialog: false,
+        notification: {}
     }),
     methods:{
         ...mapActions([
-            'logout'
+            'logout',
+            'markNotificationRead'
         ]),
         logoutUser(e){
             e.preventDefault();
             this.logout()
         },
-        openNotificationDialog(){
+        openNotificationDialog(item){
+            this.notification = item;
+            this.openNoticicationDialog = true;
+
+            if(item.readByReceiver === false) this.markNotificationRead(item.objectId)
             
         }
     },

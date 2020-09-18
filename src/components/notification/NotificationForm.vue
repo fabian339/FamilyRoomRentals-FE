@@ -78,6 +78,7 @@ import {mapGetters, mapActions} from 'vuex'
                     phone: this.phone,
                     message: this.message,
                     receiverId: this.contentRoom.ownerId,
+                    roomId: this.contentRoom.objectId,
                     readByDev: false,
                     readByReceiver: false
             }

@@ -25,6 +25,18 @@ export default {
     SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
         state.userState.userNotifications = notifications
     },
+    MARK_NOTIFICATION_READ: (state: any, notificationId: any) => {
+        const index = state.userState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.userState.userNotifications[index].readByReceiver = true;
+    },
+    DELETE_NOTIFICATION: (state: any, notificationId: any) => {
+        const index = state.userState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.userState.userNotifications.splice(index, 1);
+        state.userState.notidicationDeleted = true;
+        setTimeout(() => {
+          state.userState.notidicationDeleted = false;
+        }, 5000);
+    },
     CLEAR_USER_ERROR: (state: any) => {
         state.userState.errors = {}
     }

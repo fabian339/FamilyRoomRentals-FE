@@ -9,7 +9,7 @@
         cols="12"
         md="8"
       >
-        <!-- <h1> Welcome {{currentUser.fName}} {{currentUser.lName}}</h1> -->
+        <SuccessAlert v-if="isNotificationDeleted" msg="Notification Successfully Deleted!" />
         <h2>{{currentUserRooms.length > 0 ? 'Your Rooms:' : 'No Rooms Yet!'}}</h2>
         <v-progress-circular
           v-if="isContentLoading"
@@ -39,19 +39,22 @@
 // import store from '@/actions/store'
 import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'UserProfile',
     components: {
     Room,
+    SuccessAlert,
     Profile
   },
   computed: {
       ...mapGetters([
         'currentUser',
         'isContentLoading',
-        'currentUserRooms'
+        'currentUserRooms',
+        'isNotificationDeleted'
       ])
   },
   data(){

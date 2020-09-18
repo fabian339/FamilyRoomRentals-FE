@@ -66,6 +66,9 @@
             <v-spacer></v-spacer>
             <v-btn type="submit" color="#66CDAA">Register</v-btn>
             <p style="color: red">{{userErrors.responseError}}</p>
+            <small>
+                 Already have an account? Log In <router-link to="/login">HERE </router-link>
+            </small>
         </form>
     </v-col>
     </v-row>

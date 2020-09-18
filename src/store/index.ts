@@ -25,6 +25,7 @@ export default new Vuex.Store({
         loadingUser: false,
         userNotifications: [],
         notificationSent: false,
+        notidicationDeleted: false,
         token: localStorage.getItem('user-token') || '',
         errors: {}
       }
@@ -41,6 +42,7 @@ export default new Vuex.Store({
       isAuthenticated: state => !!state.userState.token,
       currentUser: state => state.userState.user,
       isNotificationSent: state => state.userState.notificationSent,
+      isNotificationDeleted: state => state.userState.notidicationDeleted,
       currentUserNotifications: state => state.userState.userNotifications,
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,

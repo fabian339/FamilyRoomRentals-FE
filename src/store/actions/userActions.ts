@@ -2,6 +2,8 @@
 import axios from 'axios';
 // import { User } from '../validators'
 import router from '../../router';
+let appRouter: any = router;
+
 
 const requestURI = 'https://parseapi.back4app.com';
 axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
@@ -22,7 +24,9 @@ export default {
         const token = res.data.sessionToken;
         localStorage.setItem('user-token', token);
         context.dispatch('getCurrentUser', token);
-        router.push(`/profile`)
+        if(appRouter.history.current.path !== '/profile'){
+          appRouter.push(`/profile`)
+        }
         context.commit('CLEAR_USER_ERROR')
       })
       .catch(() => {
@@ -71,7 +75,9 @@ export default {
         context.dispatch('fetchUserNotifications', user.objectId);
         context.commit('SET_USER', user)
         context.commit('SET_LOADING_USER', false);
-        router.push(`/profile`)
+        if(appRouter.history.current.path !== '/profile'){
+          appRouter.push(`/profile`)
+        }
         context.commit('CLEAR_USER_ERROR')
     })
     .catch(() => {
@@ -109,12 +115,39 @@ export default {
         context.commit('SET_CONTENT_ERROR', err);
       });
     },
+
+    markNotificationRead: (context: any, notificationId: {}) => {
+      axios.put(`https://parseapi.back4app.com/classes/Notifications/${notificationId}`, {readByReceiver: true})
+      .then((res) => {
+        // console.log("Updating Notifiction",res)
+        context.commit('MARK_NOTIFICATION_READ', notificationId);
+      })
+      .catch((err) => {
+        context.commit('SET_CONTENT_ERROR', err);
+      });
+    },
+
+    deleteNotification: (context: any, id: string) => {
+      // context.commit('SET_LOADING_CONTENT', true);
+      axios.delete(`https://parseapi.back4app.com/classes/Notifications/${id}`)
+      .then((res) => {
+        context.commit('DELETE_NOTIFICATION', id);
+        // context.commit('SET_LOADING_CONTENT', false);
+        // console.log(appRouter)
+        if(appRouter.history.current.path !== '/profile'){
+          appRouter.push(`/profile`)
+        }
+      })
+      .catch((err) => {
+        context.commit('SET_CONTENT_ERROR', err);
+      });
+    },
     
     logout(context: any) {
         context.commit('USER_LOGOUT')
         localStorage.removeItem('user-token')
         // delete axios.defaults.headers.common['Authorization'];
-        router.push('/')
+        appRouter.push('/')
         context.commit('CLEAR_USER_ERROR')
       }
   }
