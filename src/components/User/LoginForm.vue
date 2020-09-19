@@ -30,9 +30,16 @@
             <v-spacer></v-spacer>
             <v-btn type="submit" color="#66CDAA">Login</v-btn>
             <p style="color: red">{{userErrors.responseError}}</p>
+            <div>
               <small>
-                Do not have an account? Don't wait Sign Up <router-link to="/signup">HERE </router-link>
-            </small>
+                  Forgot your password Reset it <router-link to="/signup">HERE</router-link>
+              </small>
+            </div>
+            <div>
+              <small>
+                  Do not have an account? Don't wait Sign Up <router-link to="/signup">HERE </router-link>
+              </small>
+            </div>
         </form>
     </v-col>
   </v-row>

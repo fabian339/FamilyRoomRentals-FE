@@ -64,6 +64,7 @@ export default {
       context.commit('SET_LOADING_USER', true);
       axios.post(`${requestURI}/login`, user)
       .then((res) => {
+        console.log('loging user', res)
         const user = res.data
         const token = user.sessionToken;
         // axios.defaults.headers.common['Authorization'] = token;
@@ -89,60 +90,28 @@ export default {
       });
     },
 
-    sendNotification: (context: any, notification: object) => {
-      axios.post(`https://parseapi.back4app.com/classes/Notifications`, notification)
+    updateUser: (context: any, userData: any) => {
+      // delete axios.defaults.headers.common['Authorization'];
+      axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
+      // const {objectId} = roomData;
+      // console.log(router.history.current.params.id)
+      console.log('this is a Data', {password: '123456789'})
+      context.commit('SET_LOADING_USER', true);
+      axios.put(`${requestURI}/users/${userData.objectId}`, userData)
       .then((res) => {
-        context.commit('SET_NOTIFICATION_SENT', true);
-        console.log('Notification Sent', res)
-    })
-    .catch((err) => {
-        // const err = {
-        //   responseError: "Invalid email/password.."
-        // }
-        context.commit('SET_USER_ERROR', err);
-        // localStorage.removeItem('user-token')
-      });
-    },
-
-    fetchUserNotifications: (context: any, id: string) => {
-      axios.get('https://parseapi.back4app.com/classes/Notifications')
-      .then((res) => {
-        let myNotifications = res.data.results.filter((item: any) => item.receiverId === id);
-        res.data.results
-        context.commit('SET_USER_NOTIFICATIONS', myNotifications);
-      })
-      .catch((err) => {
-        context.commit('SET_CONTENT_ERROR', err);
-      });
-    },
-
-    markNotificationRead: (context: any, notificationId: {}) => {
-      axios.put(`https://parseapi.back4app.com/classes/Notifications/${notificationId}`, {readByReceiver: true})
-      .then((res) => {
-        // console.log("Updating Notifiction",res)
-        context.commit('MARK_NOTIFICATION_READ', notificationId);
-      })
-      .catch((err) => {
-        context.commit('SET_CONTENT_ERROR', err);
-      });
-    },
-
-    deleteNotification: (context: any, id: string) => {
-      // context.commit('SET_LOADING_CONTENT', true);
-      axios.delete(`https://parseapi.back4app.com/classes/Notifications/${id}`)
-      .then((res) => {
-        context.commit('DELETE_NOTIFICATION', id);
-        // context.commit('SET_LOADING_CONTENT', false);
-        // console.log(appRouter)
+        console.log("update User Response: ", res);
+        context.commit('UPDATE_USER', userData);
+        context.commit('SET_LOADING_USER', false);
+        // router.go(0);
         if(appRouter.history.current.path !== '/profile'){
           appRouter.push(`/profile`)
         }
       })
       .catch((err) => {
-        context.commit('SET_CONTENT_ERROR', err);
+        context.commit('SET_USER_ERROR', err);
       });
     },
-    
+
     logout(context: any) {
         context.commit('USER_LOGOUT')
         localStorage.removeItem('user-token')

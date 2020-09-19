@@ -25,6 +25,8 @@ interface User {
   lName: string,
   username: string,
   email: string,
+  phone: string,
+  notifyBy: string,
   password: string,
   confirmPassword: string,
 }
@@ -131,6 +133,16 @@ export const validateUserRegistration = (data: User) => {
   } else if(!isEmail(data.email)){
       errors.email = 'Must be a valid email address'
   }
+    //validation for phone
+  if(isEmpty(data.phone)) {
+    errors.phone = 'Must not be empty'
+  } else if(!isPhoneNumber(data.phone)){
+    errors.phone = 'Must be a valid phone number'
+  } 
+  
+  //validation for notifyBy
+  if(isEmpty(data.notifyBy)) errors.notifyBy = 'Please make a selection.';
+
   //validation for password
   if(isEmpty(data.password)) errors.password = 'Must not be empty'
   //validation for confirn-password

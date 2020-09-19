@@ -8,21 +8,40 @@
       height="300px"
       dark
     >
+      <EditUserForm v-model="editUser" />
+
       <v-row class="fill-height">
         <v-card-title>
-          <v-btn dark icon>
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                  <v-btn 
+                  dark 
+                  icon 
+                  class="mr-4"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="editUser = true"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+              </template>
+              <span>Edit Profile</span>
+            </v-tooltip>
 
-          <v-spacer></v-spacer>
-
-          <v-btn dark icon class="mr-4">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-
-          <v-btn dark icon>
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                  <v-btn 
+                    dark 
+                    icon 
+                    class="mr-4"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+              </template>
+              <span>Delete User</span>
+            </v-tooltip>
         </v-card-title>
 
         <v-spacer></v-spacer>
@@ -60,17 +79,6 @@
           <v-list-item-title>{{currentUser.email}}</v-list-item-title>
           <v-list-item-subtitle>Personal/Work</v-list-item-subtitle>
         </v-list-item-content>
-        
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon color="indigo">?</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Yes</v-list-item-title>
-          <v-list-item-subtitle>Receive messages about rooms to this email?</v-list-item-subtitle>
-        </v-list-item-content>
-        
       </v-list-item>
 
       <v-divider inset></v-divider>
@@ -85,7 +93,35 @@
           </v-list-item-content>
       </v-list-item>
 
+      <v-divider inset></v-divider>
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon color="indigo">?</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{
+              currentUser.notifyBy === 'both' ? 
+              'both email & phone' : 
+              currentUser.notifyBy === 'none' ?
+              'not email nor phone' : currentUser.notifyBy
+            }}</v-list-item-title>
+          <v-list-item-subtitle>Receive notifications about rooms by </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
+      <v-divider inset></v-divider>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon color="indigo">?</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>({{currentUserRooms.length}})</v-list-item-title>
+          <v-list-item-subtitle>Active Rooms</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
       <v-divider inset></v-divider>
 
       <v-list-item>
@@ -94,8 +130,8 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>({{currentUserRooms.length}})</v-list-item-title>
-          <v-list-item-subtitle>Active Rooms</v-list-item-subtitle>
+          <v-list-item-title>*********</v-list-item-title>
+          <v-list-item-subtitle>Password</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -106,11 +142,14 @@
 // @ is an alias to /src
 // import store from '@/actions/store'
 // import Room from '@/components/Room/Room.vue'
-// import Profile from '@/components/User/Profile.vue'
+import EditUserForm from '@/components/User/EditUserForm.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'UserProfile',
+  components: {
+    EditUserForm
+  },
   computed: {
       ...mapGetters([
         'currentUser',
@@ -120,6 +159,8 @@ export default {
   },
   data(){
     return {
+      editUser: false,
+      deleteUser: false
       // myRooms: []
     }
   },

@@ -16,6 +16,17 @@ export default {
         state.userState.token = '';
         state.userState.user = {};
     },
+    UPDATE_USER: (state: any, updatedUserData: any) => {
+        let tempUser = state.userState.user;
+        for (const property in updatedUserData) {
+            tempUser[property] = updatedUserData[property]
+        }
+        state.userState.tempUser = tempUser;
+        state.userState.userUpdated = true;
+        setTimeout(() => {
+          state.userState.userUpdated = false;
+        }, 5000);
+    },
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
     },

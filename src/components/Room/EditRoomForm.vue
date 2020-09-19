@@ -147,7 +147,8 @@
                                         prepend-icon="mdi-camera" 
                                         accept="image/*" 
                                         :disabled="(6 - images.length) === 0" 
-                                        @change="uploadImage">
+                                        @change="uploadImage"
+                                    >
                                 </div>
                                 <div id="imgContainer">
                                     <small>({{6 - images.length}} images reminding)</small>

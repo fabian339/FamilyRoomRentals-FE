@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import ContentActions from './actions/contentActions';
 import UserActions from './actions/userActions';
+import NotificationActions from './actions/notificationActions';
 import ContentMutations from './mutations/contentMutations';
 import UserMutations from './mutations/userMutations';
 // import {Room} from './validators'
@@ -24,6 +25,7 @@ export default new Vuex.Store({
         user: {},
         loadingUser: false,
         userNotifications: [],
+        userUpdated: false,
         notificationSent: false,
         notidicationDeleted: false,
         token: localStorage.getItem('user-token') || '',
@@ -41,6 +43,7 @@ export default new Vuex.Store({
       isUserLoading: state => state.userState.loadingUser,
       isAuthenticated: state => !!state.userState.token,
       currentUser: state => state.userState.user,
+      isUserUpdated: state => state.userState.userUpdated,
       isNotificationSent: state => state.userState.notificationSent,
       isNotificationDeleted: state => state.userState.notidicationDeleted,
       currentUserNotifications: state => state.userState.userNotifications.reverse(),
@@ -48,5 +51,5 @@ export default new Vuex.Store({
       userErrors: state => state.userState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations},
-    actions: {...ContentActions, ...UserActions }
+    actions: {...ContentActions, ...UserActions, ...NotificationActions }
   });
