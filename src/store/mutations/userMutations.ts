@@ -27,6 +27,18 @@ export default {
           state.userState.userUpdated = false;
         }, 5000);
     },
+    SET_USER_DELETED: (state: any, value: boolean) => {
+        state.userState.userDeleted = true;
+        setTimeout(() => {
+          state.userState.userDeleted = false;
+        }, 8000);
+    },
+    PASSWORD_RESET_EMAIL_SENT: (state: any, emailSent: boolean) => {
+        state.userState.passwordResetEmailSent = true;
+        setTimeout(() => {
+          state.userState.passwordResetEmailSent = false;
+        }, 5000);
+    },
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
     },

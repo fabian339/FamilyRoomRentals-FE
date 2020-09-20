@@ -45,7 +45,7 @@
                 </v-btn>
             </form>
         </v-col>
-        <SuccessAlert v-if="isNotificationSent" msg="Your Message was sent and received. Please kindly wait for a reesponse to the email or phone you privided." />
+        <SuccessAlert v-if="isNotificationSent" msg="Your Message was sent and received. Please kindly wait for a reesponse to the email or phone you provided." />
     </v-row>
     
 </template>

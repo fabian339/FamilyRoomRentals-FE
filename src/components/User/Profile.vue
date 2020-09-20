@@ -9,6 +9,46 @@
       dark
     >
       <EditUserForm v-model="editUser" />
+      <v-dialog
+        v-model="deleteUser"
+        max-width="330"
+        >
+        <v-card>
+            <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
+            <v-card-text>
+                Once this is done, we cannot recover any data.
+                The following will be deleted:
+                <ol>
+                  <li>All account information</li>
+                  <li>All rooms and information related to rooms</li>
+                  <li>All notifications</li>
+                  <li>All messages/conversations</li>
+                  <li>You will no longer receive notifications to email/phone</li>
+                </ol>
+                Do you want to continue?
+            </v-card-text>
+
+            <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+                color="green darken-1"
+                text
+                @click="deleteUser = false"
+            >
+                Cancel
+            </v-btn>
+
+            <v-btn
+                color="green darken-1"
+                text
+                @click="userRemoval"
+            >
+                Continue
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <v-row class="fill-height">
         <v-card-title>
@@ -36,6 +76,7 @@
                     class="mr-4"
                     v-bind="attrs"
                     v-on="on"
+                    @click.stop="deleteUser = true"
                   >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
@@ -55,7 +96,7 @@
     <v-list two-line>
       <v-list-item>
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-phone</v-icon>
+          <v-icon color="green">mdi-phone</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -64,7 +105,7 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon>mdi-message-text</v-icon>
+          <v-icon color="green">mdi-message-text</v-icon>
         </v-list-item-icon>
       </v-list-item>
 
@@ -72,7 +113,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-email</v-icon>
+          <v-icon color="green">mdi-email</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -84,7 +125,7 @@
       <v-divider inset></v-divider>
         <v-list-item>
           <v-list-item-icon>
-            <v-icon>mdi-account-circle</v-icon>
+            <v-icon color="green">mdi-account-circle</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -96,7 +137,7 @@
       <v-divider inset></v-divider>
       <v-list-item>
         <v-list-item-icon>
-          <v-icon color="indigo">?</v-icon>
+          <v-icon color="green">?</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>
@@ -114,11 +155,11 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon color="indigo">?</v-icon>
+          <v-icon color="green">?</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>({{currentUserRooms.length}})</v-list-item-title>
+          <v-list-item-title>({{this.$store.getters.currentUserRooms.length}})</v-list-item-title>
           <v-list-item-subtitle>Active Rooms</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -126,7 +167,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-lock</v-icon>
+          <v-icon color="green">mdi-lock</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -143,7 +184,7 @@
 // import store from '@/actions/store'
 // import Room from '@/components/Room/Room.vue'
 import EditUserForm from '@/components/User/EditUserForm.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'UserProfile',
@@ -153,7 +194,6 @@ export default {
   computed: {
       ...mapGetters([
         'currentUser',
-        'currentUserRooms',
         'isUserLoading'
       ])
   },
@@ -169,14 +209,23 @@ export default {
     // this.myRooms = this.contentRooms.filter(room => room.ownerId === objectId);
   },
   methods:{
-    //   ...mapActions([
-    //       'logout'
-    //   ]),
-    //   logoutUser(e){
-    //     e.preventDefault();
-    //     this.logout()
-    //     this.$router.push("/")
-    //   }
+      ...mapActions([
+          'deleteUserAccount'
+      ]),
+      userRemoval(e){
+        e.preventDefault();
+        const roomIds = [];
+        const notificationIds = [];
+        this.$store.getters.currentUserRooms.forEach(room => roomIds.push(room.objectId));
+        this.$store.getters.currentUserNotifications.forEach(noti => notificationIds.push(noti.objectId));
+        const userData = {
+          userId: this.$store.getters.currentUser.objectId,
+          roomIds,
+          notificationIds,
+        }
+        // console.log(userData)
+        this.deleteUserAccount(userData)
+      }
 
   }
 }

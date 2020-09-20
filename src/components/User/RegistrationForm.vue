@@ -120,7 +120,6 @@ import {validateUserRegistration} from '../../store/validators'
         password: '',
         confirmPassword: '',
         notifyBy: '',
-        notifyByArray: ['email', 'phone/text', 'both', 'none'],
         formErrors: {},
       }
     },
@@ -136,17 +135,13 @@ import {validateUserRegistration} from '../../store/validators'
                 username: this.username,
                 email: this.email,
                 phone: this.phone,
-                notifyBy: this.notifyBy === '' ? this.notifyBy : this.notifyByArray[this.notifyBy],
+                notifyBy: this.notifyBy === '' ? this.notifyBy : ['email', 'phone/text', 'both', 'none'][this.notifyBy],
                 password: this.password,
                 confirmPassword: this.confirmPassword
             }
             const {valid, errors} = validateUserRegistration(user);
             if(!valid) this.formErrors = errors;
             else this.registerUser(user);
-    
-            
-            // else this.addRoom(room)
-            // this.registerUser(user)
         }
      }
   }

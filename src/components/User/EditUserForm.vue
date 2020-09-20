@@ -9,7 +9,7 @@
             <v-toolbar-title>Edit User</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-btn dark text @click="submitUpdateUser">Save User Data</v-btn>
+                <v-btn dark text @click="submitUpdateUser">Save Changes</v-btn>
             </v-toolbar-items>
             </v-toolbar>
                 <v-row class="text-center" justify="center">
@@ -17,18 +17,16 @@
                     <div id="logo" >
                         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
                     </div>
+                    <p class="errorMsg">{{formErrors.message}}</p>
                     <h2 class="headline font-weight-bold mb-3">
                         Update User
                     </h2>
-                        <form
-                        @submit="submitUpdateUser"
-                        >
-
                         <v-text-field
                             name="fName"
                             v-model="fName"
                             label="First Name"
                             @keydown="onKeyboardPressed"
+                            :error-messages="formErrors.fName"   
                         ></v-text-field>
 
                         <v-text-field
@@ -36,6 +34,7 @@
                             v-model="lName"
                             label="Last Name"
                             @keydown="onKeyboardPressed"
+                            :error-messages="formErrors.lName"   
                         ></v-text-field>
 
                         <v-text-field
@@ -43,6 +42,7 @@
                             v-model="username"
                             label="Enter an username"
                             @keydown="onKeyboardPressed"
+                            :error-messages="formErrors.username"
                         ></v-text-field>
 
                         <v-text-field
@@ -50,6 +50,7 @@
                             v-model="email"
                             label="Email: example@email.com"
                             @keydown="onKeyboardPressed"
+                            :error-messages="formErrors.email"
                         ></v-text-field>
 
                         <v-text-field
@@ -57,6 +58,7 @@
                             v-model="phone"
                             label="phone: (222-222-2222)"
                             @keydown="onKeyboardPressed"
+                            :error-messages="formErrors.phone"
                         ></v-text-field>
 
                         <p>How would you like to receive notifications? </p>
@@ -93,30 +95,44 @@
                                 </div>
                         </div>
 
-                        <!-- <v-text-field
-                            id="password"
-                            label="Password"
-                            name="password"
-                            v-model="password"
-                            prepend-icon="mdi-lock"
-                            type="password"
-                            hint="At least 8 characters"
-                        ></v-text-field> 
-                            
-                        <v-text-field
-                            id="confirmPassword"
-                            v-model="confirmPassword"
-                            label="Confirm Password"
-                            name="confirmPassword"
-                            hint="Must match you password"
-                            prepend-icon="mdi-lock"
-                            type="password"
-                        ></v-text-field>         -->
-                            <!-- <v-spacer></v-spacer> -->
-                            <!-- <v-btn type="submit" color="#66CDAA">Register</v-btn> -->
-                            <!-- <p style="color: red">{{userErrors.responseError}}</p> -->
-                        </form>
+                        <v-btn style="margin: 15px auto" small color="#66CDAA" @click.stop="showPasswordDialog = true">
+                            <v-icon color="black">mdi-lock</v-icon>
+                            Change Current Password
+                            <v-icon color="black">mdi-lock</v-icon>
+                        </v-btn>
                     </v-col>
+                <v-dialog
+                    v-model="showPasswordDialog"
+                    max-width="350"
+                    >
+                    <v-card>
+                        <v-card-title class="headline">Request Password Change:</v-card-title>
+                        <v-card-text>
+                            An email will be send with easy instructions on how to change password. 
+                            Check the email address you use to login with us!
+                        </v-card-text>
+
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="showPasswordDialog = false"
+                        >
+                            Cancel
+                        </v-btn>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click.stop="changePassword"
+                        >
+                            Send Email
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                 </v-dialog>
                 </v-row>
         </v-card>
     </v-dialog>
@@ -125,6 +141,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {validateUpdateUser} from '../../store/validators'
 
   export default {
     name: "EditUserForm",
@@ -154,25 +171,36 @@ import {mapActions} from 'vuex'
         // password: this.$store.getters.currentUser.fName,
         // confirmPassword: this.$store.getters.currentUser.fName,
         notifyBy: ['email', 'phone/text', 'both', 'none'].findIndex((item) => item === this.$store.getters.currentUser.notifyBy),
-        notifyByArray: ['email', 'phone/text', 'both', 'none'],
         formErrors: {},
         changes: [],
+        showPasswordDialog: false
       }
     },
      methods:{
         ...mapActions([
-            'updateUser'
+            'updateUser',
+            'changeUserPassword'
         ]),
         submitUpdateUser(e) {
             e.preventDefault();
-            const updatedUserData = {}
-            let properties = [...new Set(this.changes)]
-            properties.forEach(item => {
-                updatedUserData[item] = this[item];
-            });
-            updatedUserData.objectId = this.$store.getters.currentUser.objectId;
-            this.updateUser(updatedUserData);
-            this.show = false;
+            if(this.changes.length !== 0){
+                const updatedUserData = {}
+                let properties = [...new Set(this.changes)]
+                properties.forEach(item => {
+                    if(item === "notifyBy") updatedUserData[item] = ['email', 'phone/text', 'both', 'none'][this[item]];
+                    else updatedUserData[item] = this[item];
+                });
+                updatedUserData.objectId = this.$store.getters.currentUser.objectId;
+                const {valid, errors} = validateUpdateUser(updatedUserData);
+                if(!valid) this.formErrors = errors
+                else this.updateUser(updatedUserData);
+                    this.show = false;
+            }else {
+                let errors = {
+                    message: 'Nothing to update!'
+                }
+                this.formErrors = errors;
+            }
         },
         uploadUserImage(e){
             const image = e.target.files[0];
@@ -188,6 +216,15 @@ import {mapActions} from 'vuex'
         radioChange(){
             this.changes.push('notifyBy');
             // console.log("radio changing", e);
+        },
+        changePassword(){
+            console.log("changing password");
+            const data = {
+                email: this.$store.getters.currentUser.email
+            }
+            this.changeUserPassword(data);
+            this.showPasswordDialog= false;
+            this.show = false;
         }
      }
   }
@@ -198,6 +235,11 @@ import {mapActions} from 'vuex'
         padding: 15px;
         border: 2px solid;
         border-radius: 15px;
+        margin: 10px;
+    }
+    .errorMsg{
+        color: red;
+        text-align: center;
         margin: 10px;
     }
 </style>

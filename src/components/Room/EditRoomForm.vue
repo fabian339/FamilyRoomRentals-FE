@@ -254,40 +254,39 @@ export default {
         },
         saveUpdatedRoomData(e) {
             e.preventDefault();
-            const data = {
-                location: {},
-            };
-            let locationBeingUpdated = false;
-            let properties = [...new Set(this.changes)]
-            properties.forEach(item => {
-                // console.log(item)
-                if(item === 'zipCode' || item === 'street2' || item === 'street1' || 
-                item === 'state' || item === 'country' || item === 'city') {
-                    data.location = this.location;
-                    locationBeingUpdated = true;
-                } else {
-                    data[item] = this[item];
-                }
-            });
-            if(locationBeingUpdated === false){
-                delete data.location
-            }
+            if(this.changes.length !== 0){
+                const data = {
+                    location: {},
+                };
+                let locationBeingUpdated = false;
+                let properties = [...new Set(this.changes)]
+                properties.forEach(item => {
+                    // console.log(item)
+                    if(item === 'zipCode' || item === 'street2' || item === 'street1' || 
+                    item === 'state' || item === 'country' || item === 'city') {
+                        data.location = this.location;
+                        locationBeingUpdated = true;
+                    } else {
+                        data[item] = this[item];
+                    }
+                });
+                if(locationBeingUpdated === false) delete data.location
 
-            if(properties.length === 0 || Object.keys(data).length === 0){
-                let errors = {
-                    message: 'Nothing to update!'
-                }
-                this.errors = errors;
-            } else {
                 const {valid, errors} = validateUpdateRoom(data);
                 if(!valid) this.errors = errors;
-                else{
+                else {
                     data.objectId = this.$store.getters.contentRoom.objectId;
                     this.updateRoom(data);
                     this.show = false;
                     // console.log(this.errors, data);
                 }
+            } else {
+                let errors = {
+                    message: 'Nothing to update!'
+                }
+                this.errors = errors;
             }
+            
         },
         onKeyboardPressed(e){
             this.changes.push(e.target.name);

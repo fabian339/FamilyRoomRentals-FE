@@ -120,6 +120,35 @@ export const validateUpdateRoom = (data: any) => {
   }
 }
 
+export const validateUpdateUser = (data: any) => {
+  let errors:any = {};
+  for (const property in data) {
+    if(property === 'fName' && isEmpty(data.fName)) errors.fName = 'Must not be empty';
+    if(property === 'lName' && isEmpty(data.lName)) errors.lName = 'Must not be empty';
+    if(property === 'username' && isEmpty(data.username)) errors.username = 'Must not be empty';
+
+    if(property === 'email'){
+      if(isEmpty(data.email)) {
+        errors.email = 'Must not be empty'
+      } else if(!isEmail(data.email)){
+        errors.email = 'Must be a valid email address'
+      }
+    }
+    if(property === 'phone'){
+      if(isEmpty(data.phone)) {
+        errors.phone = 'Must not be empty'
+      } else if(!isPhoneNumber(data.phone)){
+        errors.phone = 'Must be a valid phone number'
+      } 
+    }
+  }
+
+  return {
+    errors,
+    valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
+
 export const validateUserRegistration = (data: User) => {
   let errors:any = {};
   

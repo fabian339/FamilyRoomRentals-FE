@@ -8,22 +8,23 @@
         class="mb-5"
         cols="12"
       >
+      <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
       <h2 class="headline font-weight-bold mb-3">
         Recent Rooms
       </h2>
       <v-progress-circular
-        v-if="contentState.loadingContent"
+        v-if="isContentLoading"
         color="green"
         :size="100"
         :width="15"
         indeterminate
       ></v-progress-circular>
-      <v-container v-if="!contentState.loadingContent" class="grey lighten-5">
+      <v-container v-if="!isContentLoading" class="grey lighten-5">
         <v-row no-gutters>
           <v-col
             class="mb-8"
             cols="16"
-            v-for="item in contentState.rooms.slice(0,3)" :key="item.street1"
+            v-for="item in contentRooms.slice(0,3)" :key="item.street1"
             >
               <Room :roomData=item />
           </v-col>
@@ -44,16 +45,20 @@
 // @ is an alias to /src
 import Room from '@/components/Room/Room.vue'
 // import store from '@/actions/store'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
   name: 'Home',
   components: {
-    Room
+    Room,
+    SuccessAlert
   },
   computed: {
-      ...mapState([
-        'contentState',
+      ...mapGetters([
+        'isContentLoading',
+        'contentRooms',
+        'isUserDeleted'
       ])
   }
 }

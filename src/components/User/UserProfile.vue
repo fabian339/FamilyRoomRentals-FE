@@ -11,6 +11,7 @@
       >
         <SuccessAlert v-if="isNotificationDeleted" msg="Notification Successfully Deleted!" />
         <SuccessAlert v-if="isUserUpdated" msg="User data successfully updated!" />
+        <SuccessAlert v-if="isPasswordResetEmailSent" msg="Email sent successfully!" />
         <h2>{{currentUserRooms.length > 0 ? 'Your Rooms:' : 'No Rooms Yet!'}}</h2>
         <v-progress-circular
           v-if="isContentLoading"
@@ -56,7 +57,8 @@ export default {
         'isContentLoading',
         'currentUserRooms',
         'isNotificationDeleted',
-        'isUserUpdated'
+        'isUserUpdated',
+        'isPasswordResetEmailSent'
       ])
   },
   data(){

@@ -112,11 +112,77 @@ export default {
       });
     },
 
+    changeUserPassword: (context: any, data: any) => {
+      // delete axios.defaults.headers.common['Authorization'];
+      // axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
+      // const {objectId} = roomData;
+      // console.log(router.history.current.params.id)
+      // console.log('this is a Data', {password: '123456789'})
+      context.commit('SET_LOADING_USER', true);
+      axios.post(`${requestURI}/requestPasswordReset`, data)
+      .then((res) => {
+        console.log("update password: ", res);
+        context.commit('PASSWORD_RESET_EMAIL_SENT', true);
+        context.commit('SET_LOADING_USER', false);
+        // router.go(0);
+        // if(appRouter.history.current.path !== '/profile'){
+        //   appRouter.push(`/profile`)
+        // }
+      })
+      .catch((err) => {
+        context.commit('SET_USER_ERROR', err);
+      });
+    },
+
+    deleteUserAccount: (context: any, userData: any) => {
+      console.log(userData)
+      context.commit('SET_LOADING_USER', true);
+      axios.delete(`${requestURI}/users/${userData.userId}`)
+      .then((res) => {
+        if(userData.roomIds !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
+        if(userData.notificationIds !== 0) context.dispatch('deleteUserNotifications', userData.notificationIds);
+        context.dispatch('logout');
+        context.commit('SET_USER_DELETED', true);
+        context.commit('SET_LOADING_USER', false);
+      })
+      .catch((err) => {
+        context.commit('SET_USER_ERROR', err);
+      });
+    },
+
+    deleteUserRooms: (context: any, roomIds: []) => {
+      roomIds.forEach(id => {
+        axios.delete(`${requestURI}/classes/Room/${id}`)
+        .then((res) => {
+          context.commit('DELETE_ROOM', id);
+        })
+        .catch((err) => {
+          context.commit('SET_CONTENT_ERROR', err);
+        });
+      })
+      // console.log(roomIds)
+    },
+
+    deleteUserNotifications: (context: any, notificationIds: []) => {
+      notificationIds.forEach(id => {
+        axios.delete(`https://parseapi.back4app.com/classes/Notifications/${id}`)
+        .then((res) => {
+          context.commit('DELETE_NOTIFICATION', id);
+        })
+        .catch((err) => {
+          context.commit('SET_CONTENT_ERROR', err);
+        });
+      })
+      // console.log(notificationIds)
+    },
+
+
     logout(context: any) {
         context.commit('USER_LOGOUT')
         localStorage.removeItem('user-token')
-        // delete axios.defaults.headers.common['Authorization'];
-        appRouter.push('/')
+        if(appRouter.history.current.path !== '/'){
+          appRouter.push(`/`)
+        }
         context.commit('CLEAR_USER_ERROR')
       }
   }
