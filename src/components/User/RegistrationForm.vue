@@ -70,9 +70,10 @@
             label="Password"
             name="password"
             v-model="password"
-            prepend-icon="mdi-lock"
-            type="password"
+            :append-icon="value1 ? 'mdi-lock' : 'mdi-lock-open'"
+            :type="value1 ? 'password' : 'text'"
             hint="At least 8 characters"
+            @click:append="() => (value1 = !value1)"
             :error-messages="formErrors.password"
           ></v-text-field> 
             
@@ -82,9 +83,10 @@
             label="Confirm Password"
             name="confirmPassword"
             hint="Must match you password"
-            prepend-icon="mdi-lock"
-            type="password"
+            :append-icon="value2 ? 'mdi-lock' : 'mdi-lock-open'"
+            :type="value2 ? 'password' : 'text'"
             :error-messages="formErrors.confirmPassword"
+            @click:append="() => (value2 = !value2)"
           ></v-text-field>        
             <v-spacer></v-spacer>
             <v-btn type="submit" color="#66CDAA">Register</v-btn>
@@ -121,6 +123,8 @@ import {validateUserRegistration} from '../../store/validators'
         confirmPassword: '',
         notifyBy: '',
         formErrors: {},
+        value1: String,
+        value2: String
       }
     },
      methods:{

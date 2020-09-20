@@ -3,12 +3,6 @@
     max-width="375"
     class="mx-auto"
   >
-    <v-img
-      :src="currentUser.userPhoto"
-      height="300px"
-      dark
-    >
-      <EditUserForm v-model="editUser" />
       <v-dialog
         v-model="deleteUser"
         max-width="330"
@@ -49,48 +43,51 @@
             </v-card-actions>
         </v-card>
       </v-dialog>
+    <v-img
+      :src="currentUser.userPhoto"
+      height="300px"
+      dark
+    >
+          <EditUserForm v-model="editUser" />
+      <v-card-title>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn 
+                dark 
+                icon 
+                class="mr-4"
+                v-bind="attrs"
+                v-on="on"
+                @click="editUser = true"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+            </template>
+            <span>Edit Profile</span>
+          </v-tooltip>
 
-      <v-row class="fill-height">
-        <v-card-title>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                  <v-btn 
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn 
                   dark 
                   icon 
                   class="mr-4"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editUser = true"
-                  >
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-              </template>
-              <span>Edit Profile</span>
-            </v-tooltip>
+                  @click.stop="deleteUser = true"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+            </template>
+            <span>Delete User</span>
+          </v-tooltip>
+      </v-card-title>
 
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                  <v-btn 
-                    dark 
-                    icon 
-                    class="mr-4"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click.stop="deleteUser = true"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-              </template>
-              <span>Delete User</span>
-            </v-tooltip>
-        </v-card-title>
+      <v-spacer></v-spacer>
 
-        <v-spacer></v-spacer>
-
-        <v-card-title class="white--text pl-12 pt-12">
-          <div class="display-1 pl-12 pt-12">{{currentUser.fName}} {{currentUser.lName}}</div>
-        </v-card-title>
-      </v-row>
+      <v-card-title style="margin: 110px auto; justify-content: center">
+        <div class="display-1 pl-12 pt-12">{{currentUser.fName}} {{currentUser.lName}}</div>
+      </v-card-title>
     </v-img>
 
     <v-list two-line>
@@ -187,7 +184,7 @@ import EditUserForm from '@/components/User/EditUserForm.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'UserProfile',
+  name: 'Profile',
   components: {
     EditUserForm
   },

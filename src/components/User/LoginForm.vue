@@ -11,23 +11,27 @@
           @submit="submit"
         >
             <v-text-field
-            label="email"
-            name="email"
-            v-model="email"
-            prepend-icon="mdi-account"
-            type="text"
-            :error-messages="formErrors.email"
+              label="email"
+              name="email"
+              v-model="email"
+              append-icon="mdi-account"
+              type="text"
+              :error-messages="formErrors.email"
             ></v-text-field>
+
             <v-text-field
-            id="password"
-            label="Password"
-            name="password"
-            v-model="password"
-            prepend-icon="mdi-lock"
-            type="password"
-            :error-messages="formErrors.password"
-            ></v-text-field>        
+              id="password"
+              label="Password"
+              name="password"
+              v-model="password"
+              :append-icon="value ? 'mdi-lock' : 'mdi-lock-open'"
+              :type="value ? 'password' : 'text'"
+              :error-messages="formErrors.password"
+              @click:append="() => (value = !value)"
+            ></v-text-field>  
+
             <v-spacer></v-spacer>
+            
             <v-btn type="submit" color="#66CDAA">Login</v-btn>
             <p style="color: red">{{userErrors.responseError}}</p>
             <div>
@@ -61,6 +65,7 @@ import {validateLoginData} from '../../store/validators'
         email: '',
         password: '',
         formErrors: {},
+        value: String
       }
     },
      methods:{

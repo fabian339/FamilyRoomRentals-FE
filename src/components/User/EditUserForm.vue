@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog v-if="!isUserLoading" v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card>
             <v-toolbar dark color="#2F4F4F">
             <v-btn icon dark @click="show = false">
@@ -18,6 +18,7 @@
                         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
                     </div>
                     <p class="errorMsg">{{formErrors.message}}</p>
+                    <p class="errorMsg">{{userErrors.responseError}}</p>
                     <h2 class="headline font-weight-bold mb-3">
                         Update User
                     </h2>
@@ -140,15 +141,20 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 import {validateUpdateUser} from '../../store/validators'
 
   export default {
     name: "EditUserForm",
     props: {
-    value: Boolean
+        value: Boolean
     },
     computed: {
+        ...mapGetters([
+            'userErrors',
+            'isUserLoading',
+            'currentUser'
+        ]),
         show: {
             get () {
                 return this.value
@@ -158,7 +164,7 @@ import {validateUpdateUser} from '../../store/validators'
                     this.$emit('input', value)
                 }
             }
-        }
+        },
     },
     data () {
       return {
@@ -168,19 +174,18 @@ import {validateUpdateUser} from '../../store/validators'
         email: this.$store.getters.currentUser.email,
         phone: this.$store.getters.currentUser.phone,
         userPhoto: this.$store.getters.currentUser.userPhoto,
-        // password: this.$store.getters.currentUser.fName,
-        // confirmPassword: this.$store.getters.currentUser.fName,
         notifyBy: ['email', 'phone/text', 'both', 'none'].findIndex((item) => item === this.$store.getters.currentUser.notifyBy),
         formErrors: {},
         changes: [],
         showPasswordDialog: false
       }
     },
-     methods:{
+    methods:{
         ...mapActions([
             'updateUser',
             'changeUserPassword'
         ]),
+
         submitUpdateUser(e) {
             e.preventDefault();
             if(this.changes.length !== 0){
@@ -192,10 +197,15 @@ import {validateUpdateUser} from '../../store/validators'
                 });
                 updatedUserData.objectId = this.$store.getters.currentUser.objectId;
                 const {valid, errors} = validateUpdateUser(updatedUserData);
-                if(!valid) this.formErrors = errors
-                else this.updateUser(updatedUserData);
-                    this.show = false;
-            }else {
+                if(!valid) this.formErrors = errors;
+                else {//if(Object.keys(this.userErrors).length === 0) {
+                    this.updateUser(updatedUserData)
+                    // setTimeout(() => {
+                        console.log("HEREEE", this.userErrors, Object.keys(this.userErrors).length) 
+                    // }, 3000)
+                    // this.show = false;
+                }
+            } else {
                 let errors = {
                     message: 'Nothing to update!'
                 }

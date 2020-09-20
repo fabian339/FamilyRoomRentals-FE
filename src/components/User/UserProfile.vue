@@ -53,7 +53,6 @@ export default {
   },
   computed: {
       ...mapGetters([
-        'currentUser',
         'isContentLoading',
         'currentUserRooms',
         'isNotificationDeleted',
