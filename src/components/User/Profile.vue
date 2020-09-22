@@ -3,52 +3,59 @@
     max-width="375"
     class="mx-auto"
   >
-      <v-dialog
-        v-model="deleteUser"
-        max-width="330"
-        >
-        <v-card>
-            <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
-            <v-card-text>
-                Once this is done, we cannot recover any data.
-                The following will be deleted:
-                <ol>
-                  <li>All account information</li>
-                  <li>All rooms and information related to rooms</li>
-                  <li>All notifications</li>
-                  <li>All messages/conversations</li>
-                  <li>You will no longer receive notifications to email/phone</li>
-                </ol>
-                Do you want to continue?
-            </v-card-text>
+    <v-dialog
+      v-model="deleteUser"
+      max-width="330"
+      >
+      <v-card>
+          <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
+          <v-card-text>
+              Once this is done, we cannot recover any data.
+              The following will be deleted:
+              <ol>
+                <li>All account information</li>
+                <li>All rooms and information related to rooms</li>
+                <li>All notifications</li>
+                <li>All messages/conversations</li>
+                <li>You will no longer receive notifications to email/phone</li>
+              </ol>
+              Do you want to continue?
+          </v-card-text>
 
-            <v-card-actions>
-            <v-spacer></v-spacer>
+          <v-card-actions>
+          <v-spacer></v-spacer>
 
-            <v-btn
-                color="green darken-1"
-                text
-                @click="deleteUser = false"
-            >
-                Cancel
-            </v-btn>
+          <v-btn
+              color="green darken-1"
+              text
+              @click="deleteUser = false"
+          >
+              Cancel
+          </v-btn>
 
-            <v-btn
-                color="green darken-1"
-                text
-                @click="userRemoval"
-            >
-                Continue
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-      </v-dialog>
+          <v-btn
+              color="green darken-1"
+              text
+              @click="userRemoval"
+          >
+              Continue
+          </v-btn>
+          </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-alert type="error" v-if="Object.keys(userErrors).length !== 0">
+      Error while updating user information. To view and resolve error click <a style="text-decoration: underline;" @click.stop="editUser = true">here</a>.
+    </v-alert>
+    <SuccessAlert v-if="isNotificationDeleted" msg="Notification Successfully Deleted!" />
+    <SuccessAlert v-if="isUserUpdated" msg="User data successfully updated!" />
+    <SuccessAlert v-if="isPasswordResetEmailSent" msg="Email sent successfully!" />
     <v-img
       :src="currentUser.userPhoto"
       height="300px"
       dark
     >
-          <EditUserForm v-model="editUser" />
+      <EditUserForm v-model="editUser" />
       <v-card-title>
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -182,16 +189,22 @@
 // import Room from '@/components/Room/Room.vue'
 import EditUserForm from '@/components/User/EditUserForm.vue'
 import { mapGetters, mapActions } from 'vuex'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
   name: 'Profile',
   components: {
-    EditUserForm
+    EditUserForm,
+    SuccessAlert
   },
   computed: {
       ...mapGetters([
         'currentUser',
-        'isUserLoading'
+        'isUserLoading',
+        'userErrors',
+        'isNotificationDeleted',
+        'isUserUpdated',
+        'isPasswordResetEmailSent',
       ])
   },
   data(){

@@ -17,10 +17,8 @@ export default {
       context.commit('SET_LOADING_USER', true);
       axios.post(`${requestURI}/users`, user)
       .then((res) => {
-        // console.log("register user Response: ", res);
         const token = res.data.sessionToken;
         localStorage.setItem('user-token', token);
-        // context.dispatch('getCurrentUser', token);
         context.commit('AUTH_SUCCESS', token);
         context.dispatch('fetchUserNotifications', res.data.objectId);
         // console.log('Getting Current User',user)
@@ -55,7 +53,6 @@ export default {
       .then((res) => {
         const user = res.data
         const token = user.sessionToken;
-        // axios.defaults.headers.common['Authorization'] = token;
         delete user.confirmPassword;
         delete user.ACL;
         context.commit('SET_USER', user)
@@ -78,7 +75,6 @@ export default {
         // console.log('loging user', res)
         const user = res.data
         const token = user.sessionToken;
-        // axios.defaults.headers.common['Authorization'] = token;
         localStorage.setItem('user-token', token);
         user.className = "_User";
         delete user.confirmPassword;
@@ -102,18 +98,14 @@ export default {
     },
 
     updateUser: (context: any, userData: any) => {
-      // delete axios.defaults.headers.common['Authorization'];
       axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
-      // const {objectId} = roomData;
-      // console.log(router.history.current.params.id)
-      // console.log('this is a Data', {password: '123456789'})
-      // context.commit('SET_LOADING_USER', true);
+      context.commit('SET_LOADING_USER', true);
       axios.put(`${requestURI}/users/${userData.objectId}`, userData)
       .then(() => {
         // console.log("update User Response: ", res);
         context.commit('UPDATE_USER', userData);
-        // context.commit('SET_LOADING_USER', false);
-        // router.go(0);
+        context.commit('CLEAR_USER_ERROR')
+        context.commit('SET_LOADING_USER', false);
       })
       .catch(() => {
         const err = {
@@ -124,21 +116,12 @@ export default {
     },
 
     changeUserPassword: (context: any, data: any) => {
-      // delete axios.defaults.headers.common['Authorization'];
-      // axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
-      // const {objectId} = roomData;
-      // console.log(router.history.current.params.id)
-      // console.log('this is a Data', {password: '123456789'})
       context.commit('SET_LOADING_USER', true);
       axios.post(`${requestURI}/requestPasswordReset`, data)
       .then((res) => {
         // console.log("update password: ", res);
         context.commit('PASSWORD_RESET_EMAIL_SENT', true);
         context.commit('SET_LOADING_USER', false);
-        // router.go(0);
-        // if(appRouter.history.current.path !== '/profile'){
-        //   appRouter.push(`/profile`)
-        // }
       })
       .catch((err) => {
         context.commit('SET_USER_ERROR', err);

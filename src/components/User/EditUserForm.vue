@@ -18,7 +18,9 @@
                         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
                     </div>
                     <p class="errorMsg">{{formErrors.message}}</p>
-                    <p class="errorMsg">{{userErrors.responseError}}</p>
+                    <p class="errorMsg" v-if="Object.keys(userErrors).length !== 0">
+                        <strong>Error:</strong>
+                        {{userErrors.responseError}} Try using another username or password.</p>
                     <h2 class="headline font-weight-bold mb-3">
                         Update User
                     </h2>
@@ -200,10 +202,7 @@ import {validateUpdateUser} from '../../store/validators'
                 if(!valid) this.formErrors = errors;
                 else {//if(Object.keys(this.userErrors).length === 0) {
                     this.updateUser(updatedUserData)
-                    // setTimeout(() => {
-                        console.log("HEREEE", this.userErrors, Object.keys(this.userErrors).length) 
-                    // }, 3000)
-                    // this.show = false;
+                    this.show = false;
                 }
             } else {
                 let errors = {
