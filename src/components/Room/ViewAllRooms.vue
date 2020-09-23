@@ -9,6 +9,17 @@
         cols="12"
          style="marginTop: -30px"
       >
+      <div id="filterContainer">
+        <h3>Filter by: </h3>
+        <v-radio-group v-model="radios" style="display: contents; margin: -10px 20px;">
+          <v-radio style="margin: auto 10px;" label="Most Recent" value="radio-1"></v-radio>
+          <v-radio style="margin: auto 10px;" label="Price" value="radio-2"></v-radio>
+          <v-radio style="margin: auto 10px;" label="City" value="radio-1"></v-radio>
+          <v-radio style="margin: auto 10px;" label="State" value="radio-1"></v-radio>
+          <v-radio style="margin: auto 10px;" label="Zipcode" value="radio-1"></v-radio>
+          <v-radio style="margin: auto 10px;" label="No Rules" value="radio-1"></v-radio>
+      </v-radio-group>
+      </div>
       <h2 class="headline font-weight-bold mb-3">
         All Rooms
       </h2>
@@ -57,7 +68,10 @@ export default {
         'contentRooms',
         'isContentLoading'
       ])
-  }
+  },
+  data() {
+    return{ radios: 'radio-1'}
+  },
 }
 </script>
 
@@ -66,5 +80,15 @@ export default {
     width: 100%;
     height: 190px;
     margin-top: -25px;
+  }
+
+  #filterContainer{
+    height: 80px;
+    margin: 30px 20%;
+    width: 60%;
+    background-color: yellowgreen;
+    /* margin: 25px; */
+    border-radius: 15px;
+    padding: 10px;
   }
 </style>

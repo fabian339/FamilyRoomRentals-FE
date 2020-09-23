@@ -2,23 +2,22 @@
   <v-container>
     <v-row class="text-center">
       <div id="logo" >
-        <img style="margin: 10px" :src="require('./../assets/logo.png')" alt="logo" width="400">
+        <img style="margin: 10px;" :src="require('./../assets/logo.png')" alt="logo" width="400">
       </div>
-      <v-row style="height: 450px">
-        <!-- <v-col
-          md="6"
-          id="triangle-right"
-        > -->
-        <div class="element">
-          <p>kjnfwekjlfnjk</p>
-        </div>
-        <!-- </v-col>
-        <v-col
-          cols="12"
-          md="6"
-        >
-      </v-col> -->
-      </v-row>
+        <v-row no-gutters class="text-center">
+          <v-col class="element1">
+            <div style="width: 365px;margin: 25px auto;">
+              <h1 style="font-size: 60px">Focus on what you can afford</h1>
+              <p> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
+                Sometimes finding an appartment, or house could result in big debts specially if you are already in debt.
+                FamilyRoomRents allows you to find an accomodate place to stay that will not bring more debt. 
+              </p>
+            </div>
+          </v-col>
+          <v-col class="element2">
+              <img style="margin: 10px" :src="require('./../assets/conversation.png')" alt="conversation" width="325" height="490">
+          </v-col>
+        </v-row>
       <v-col
         class="mb-5"
         cols="12"
@@ -86,17 +85,34 @@ export default {
     margin-top: -25px;
   }
 
-.element {
-  width: 100px;
-  height: 100px;
-  background: red;
-  position: relative;
-  margin: 20px;
-  animation: mymove 5s infinite;
-}
+  .element1 {
+    width: 365px;
+    height: 500px;
+    /* background: red; */
+    position: relative;
+    margin: 20px 0px;
+    padding: 15px;
+    border-right: 10px solid #3CB371;
+    animation: mymove1 5s normal forwards ease-in-out;
+  }
 
-@keyframes mymove {
-  from {left: 40%;}
-  to {left: 80%;}
-}
+  @keyframes mymove1 {
+    from {left: -50%;}
+    to {left: -1.5%;}
+  }
+
+  .element2 {
+    width: 365px;
+    height: 500px;
+    /* background: red; */
+    position: relative;
+    margin: 20px 0px;
+    border-left: 10px solid #3CB371;
+    animation: mymove2 5s normal forwards ease-in-out;
+  }
+
+  @keyframes mymove2 {
+    from {left: 50%;}
+    to {left: -1.5%;}
+  }
 </style>
