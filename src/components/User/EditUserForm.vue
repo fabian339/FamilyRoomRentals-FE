@@ -87,15 +87,15 @@
                         <label for="userPhoto">Change profile picture</label>
                         <div id="profilePhotoContainer">
                             <img :src="userPhoto" alt="img" width="150" height="100">
-                                <div>
-                                    <input 
-                                        type="file" 
-                                        prepend-icon="mdi-camera" 
-                                        accept="image/*" 
-                                        style="margin: 8px 30%;"
-                                        @change="uploadUserImage"
-                                    >
-                                </div>
+                            <div style="width: 60%; margin: auto;">
+                                <v-file-input
+                                    accept="image/*"
+                                    label="Choose Photo"
+                                    @change="uploadUserImage"
+                                    prepend-icon="mdi-camera"
+                                ></v-file-input>
+                            </div>
+                            <p class="errorMsg">{{formErrors.invalidFile}}</p>
                         </div>
 
                         <v-btn style="margin: 15px auto" small color="#66CDAA" @click.stop="showPasswordDialog = true">
@@ -211,12 +211,23 @@ import {validateUpdateUser} from '../../store/validators'
                 this.formErrors = errors;
             }
         },
-        uploadUserImage(e){
-            const image = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = e => this.userPhoto = e.target.result;
-            this.changes.push('userPhoto');
+        uploadUserImage(file){
+            // console.log(file)
+            // const file = e.target.files[0];
+            if(file) {
+                var pattern = /image-*/;
+                if(!file.type.match(pattern)){
+                const error = {
+                    invalidFile: 'File type must be an image.'
+                }
+                this.formErrors = error;
+            } else {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = e => this.userPhoto = e.target.result;
+                this.changes.push('userPhoto');
+            }
+            }
         },
         onKeyboardPressed(e){
             this.changes.push(e.target.name);

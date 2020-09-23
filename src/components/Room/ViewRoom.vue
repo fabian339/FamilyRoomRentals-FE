@@ -4,7 +4,7 @@
             v-if="isContentLoading"
             color="green"
             :size="100"
-            :width="15"
+            :width="50"
             indeterminate
         ></v-progress-circular>
         <v-row class="text-center" v-if="!isContentLoading">
@@ -21,6 +21,7 @@
                         :src="image"
                         reverse-transition="fade-transition"
                         transition="fade-transition"
+                        height="50px"
                     ></v-carousel-item>
                 </v-carousel>
             </v-col>
@@ -84,7 +85,7 @@
             >
                 <h4 id="description">Description:</h4>
                 <p style="margin: 20px;"> {{contentRoom.description}} </p>
-                <div v-if="contentRoom.propertyRules">
+                <div v-if="contentRoom.propertyRules.length > 0">
                     <h4>Rules:</h4>
                     <div v-for="(rule, index) in contentRoom.propertyRules" :key="index + 10/3">
                         <span>{{index+1}}) {{rule}}</span>

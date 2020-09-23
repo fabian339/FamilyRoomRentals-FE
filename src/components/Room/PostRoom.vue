@@ -229,8 +229,10 @@ import {validateCreateRoom} from '../../store/validators'
             else this.addRoom(room)
         },
         addRule(){
-            this.propertyRules.push(this.tempRule);
-            this.tempRule = '';
+            if(this.tempRule !== ''){
+                this.propertyRules.push(this.tempRule);
+                this.tempRule = '';
+            }
         }
 
     }

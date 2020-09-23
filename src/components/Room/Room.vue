@@ -8,10 +8,12 @@
       height="200px"
       v-bind:src="this.roomData.images[0]"
     >
+    <div id="price">
       <v-card-title>${{this.roomData.price}}/month</v-card-title>
+    </div>
     </v-img>
 
-    <v-card-subtitle class="pb-0">Location: {{this.roomData.location.city}}</v-card-subtitle>
+    <v-card-subtitle class="pb-0">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
 
     <v-card-text class="text--primary">
       <p> Publisher: {{this.roomData.ownerName}}</p>
@@ -59,5 +61,10 @@
 </script>
 
 <style scoped>
-
+  #price{
+    width: 45%;
+    height: 55px;
+    background-color: seagreen;
+    border-top-right-radius: 15px;
+  }
 </style>

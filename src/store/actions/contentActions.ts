@@ -22,6 +22,7 @@ export default {
           context.commit('SET_CONTENT_ERROR', err);
         });
     },
+
     addRoom: (context: any, roomData: any = {}) => {
       // delete axios.defaults.headers.common['Authorization'];
       // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
@@ -33,6 +34,7 @@ export default {
         roomData.createdAt = res.data.createdAt;
         roomData.objectId = res.data.objectId;
         context.commit('ADD_ROOM', roomData)
+        context.commit('SET_ROOM', roomData)
         context.commit('SET_LOADING_CONTENT', false);
         appRouter.push(`/room/${roomData.objectId}`)
       })
@@ -40,6 +42,7 @@ export default {
         context.commit('SET_CONTENT_ERROR', err);
       });
     },
+
     updateRoom: (context: any, roomData: any) => {
       // delete axios.defaults.headers.common['Authorization'];
       // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
@@ -60,6 +63,7 @@ export default {
         context.commit('SET_CONTENT_ERROR', err);
       });
     },
+
     setRoom: (context: any, id: string) => {
       // console.log('HEREEE')
       context.commit('SET_LOADING_CONTENT', true);

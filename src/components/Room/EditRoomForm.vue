@@ -248,9 +248,11 @@ export default {
             this.changes.push('propertyRules');
         },
         addRule(){
-            this.propertyRules.push(this.tempRule);
-            this.changes.push('propertyRules');
-            this.tempRule = '';
+            if(this.tempRule !== ''){
+                this.propertyRules.push(this.tempRule);
+                this.changes.push('propertyRules');
+                this.tempRule = '';
+            }
         },
         saveUpdatedRoomData(e) {
             e.preventDefault();
