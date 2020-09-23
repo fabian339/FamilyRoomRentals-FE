@@ -9,10 +9,7 @@
         cols="12"
         md="8"
       >
-        <!-- <SuccessAlert v-if="isNotificationDeleted" msg="Notification Successfully Deleted!" />
-        <SuccessAlert v-if="isUserUpdated" msg="User data successfully updated!" />
-        <SuccessAlert v-if="isPasswordResetEmailSent" msg="Email sent successfully!" /> -->
-        <!-- <p v-if="Object.keys(userErrors).length !== 0">There is an error</p> -->
+        <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
         <h2>{{currentUserRooms.length > 0 ? 'Your Rooms:' : 'No Rooms Yet!'}}</h2>
         <v-progress-circular
           v-if="isContentLoading"
@@ -42,14 +39,14 @@
 // import store from '@/actions/store'
 import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
-// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'UserProfile',
     components: {
     Room,
-    // SuccessAlert,
+    SuccessAlert,
     Profile
   },
   computed: {
@@ -59,6 +56,7 @@ export default {
         'isNotificationDeleted',
         'isUserUpdated',
         'isPasswordResetEmailSent',
+        'isRoomDeleted'
       ])
   },
   data(){

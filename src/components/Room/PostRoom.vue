@@ -168,6 +168,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import noImageForRoom from './noImageForRoom'
 import {validateCreateRoom} from '../../store/validators'
 
   export default {
@@ -222,7 +223,7 @@ import {validateCreateRoom} from '../../store/validators'
                 description: this.description,
                 ownerId: this.currentUser.objectId,
                 ownerName: `${this.currentUser.lName}, ${this.currentUser.fName}`,
-                images: this.images
+                images: this.images.length === 0 ? noImageForRoom : this.images
             }
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;

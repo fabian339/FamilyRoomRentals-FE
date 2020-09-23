@@ -4,6 +4,21 @@
       <div id="logo" >
         <img style="margin: 10px" :src="require('./../assets/logo.png')" alt="logo" width="400">
       </div>
+      <v-row style="height: 450px">
+        <!-- <v-col
+          md="6"
+          id="triangle-right"
+        > -->
+        <div class="element">
+          <p>kjnfwekjlfnjk</p>
+        </div>
+        <!-- </v-col>
+        <v-col
+          cols="12"
+          md="6"
+        >
+      </v-col> -->
+      </v-row>
       <v-col
         class="mb-5"
         cols="12"
@@ -70,4 +85,18 @@ export default {
     height: 190px;
     margin-top: -25px;
   }
+
+.element {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: relative;
+  margin: 20px;
+  animation: mymove 5s infinite;
+}
+
+@keyframes mymove {
+  from {left: 40%;}
+  to {left: 80%;}
+}
 </style>

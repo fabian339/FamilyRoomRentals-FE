@@ -18,6 +18,10 @@ export default {
       const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === id);
       state.contentState.rooms.splice(index, 1);
       state.contentState.room = {};
+      state.contentState.roomDeleted = true;
+      setTimeout(() => {
+        state.contentState.roomDeleted = false;
+      }, 5000);
     },
     UPDATE_ROOM: (state: any, updatedRoomData: any) => {
       const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === updatedRoomData.objectId);
