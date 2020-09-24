@@ -1,12 +1,13 @@
 <template>
     <v-container>
-        <v-progress-circular
+        <ContentLoading  v-if="isContentLoading"/>
+        <!-- <v-progress-circular
             v-if="isContentLoading"
             color="green"
             :size="100"
             :width="50"
             indeterminate
-        ></v-progress-circular>
+        ></v-progress-circular> -->
         <v-row class="text-center" v-if="!isContentLoading">
             <v-col
                 class="mb-5"
@@ -118,6 +119,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import NotificationForm from '@/components/notification/NotificationForm.vue';
+import ContentLoading from '@/components/layout/ContentLoading.vue';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
 
@@ -126,7 +128,8 @@ import EditRoomForm from './EditRoomForm.vue'
     components: {
         NotificationForm,
         EditRoomForm,
-        SuccessAlert
+        SuccessAlert,
+        ContentLoading
     },
     computed: {
         ...mapGetters([

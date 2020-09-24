@@ -24,13 +24,9 @@ export default {
     },
 
     addRoom: (context: any, roomData: any = {}) => {
-      // delete axios.defaults.headers.common['Authorization'];
-      // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
-      // console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
       axios.post(requestURI, roomData)
       .then((res) => {
-        // console.log("Room Response: ", res);
         roomData.createdAt = res.data.createdAt;
         roomData.objectId = res.data.objectId;
         context.commit('ADD_ROOM', roomData)
@@ -44,20 +40,13 @@ export default {
     },
 
     updateRoom: (context: any, roomData: any) => {
-      // delete axios.defaults.headers.common['Authorization'];
-      // axios.defaults.headers.common['X-Parse-Session-Token'] = '';
-      // const {objectId} = roomData;
-      // console.log(router.history.current.params.id)
       console.log('this is a Data', roomData)
       context.commit('SET_LOADING_CONTENT', true);
       axios.put(`${requestURI}/${roomData.objectId}`, roomData)
       .then((res) => {
         console.log("update Room Response: ", res);
-        // roomData.createdAt = res.data.createdAt;
-        // roomData.objectId = res.data.objectId;
         context.commit('UPDATE_ROOM', roomData);
         context.commit('SET_LOADING_CONTENT', false);
-        // router.go(0);
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);
@@ -65,7 +54,6 @@ export default {
     },
 
     setRoom: (context: any, id: string) => {
-      // console.log('HEREEE')
       context.commit('SET_LOADING_CONTENT', true);
       axios.get(`${requestURI}/${id}`)
       .then((res) => {
@@ -76,6 +64,7 @@ export default {
         context.commit('SET_CONTENT_ERROR', err);
       });
     },
+
     deleteRoom: (context: any, id: string) => {
       context.commit('SET_LOADING_CONTENT', true);
       axios.delete(`${requestURI}/${id}`)

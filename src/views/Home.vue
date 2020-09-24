@@ -93,7 +93,7 @@ export default {
     margin: 20px 0px;
     padding: 15px;
     border-right: 10px solid #3CB371;
-    animation: mymove1 5s normal forwards ease-in-out;
+    animation: mymove1 3s normal forwards ease-in-out;
   }
 
   @keyframes mymove1 {
@@ -108,7 +108,7 @@ export default {
     position: relative;
     margin: 20px 0px;
     border-left: 10px solid #3CB371;
-    animation: mymove2 5s normal forwards ease-in-out;
+    animation: mymove2 3s normal forwards ease-in-out;
   }
 
   @keyframes mymove2 {

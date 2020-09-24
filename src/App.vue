@@ -6,11 +6,13 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+    <Footer />
   </v-app>
 </template>
 
 <script>
 import Nav from '@/components/layout/Nav';
+import Footer from '@/components/layout/Footer';
 import axios from 'axios'
 
 import { mapActions } from 'vuex'
@@ -20,6 +22,7 @@ export default {
 
   components: {
     Nav,
+    Footer
   },  
   created(){
     this.fetchData();

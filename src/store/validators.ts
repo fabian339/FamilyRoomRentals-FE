@@ -149,6 +149,21 @@ export const validateUpdateUser = (data: any) => {
   }
 }
 
+export const validatePasswordResetEmail = (data: any) => {
+  let errors:any = {};
+
+  if(isEmpty(data.email)) {
+    errors.email = 'Must not be empty'
+  } else if(!isEmail(data.email)){
+    errors.email = 'Must be a valid email address'
+  }
+
+  return {
+    errors,
+    valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
+
 export const validateUserRegistration = (data: User) => {
   let errors:any = {};
   

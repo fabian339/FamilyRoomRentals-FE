@@ -4,6 +4,7 @@
     <div id="logo" >
         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
     </div>
+    <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
     <h2 class="headline font-weight-bold mb-3">
         Login
     </h2>
@@ -36,7 +37,7 @@
             <p style="color: red">{{userErrors.responseError}}</p>
             <div>
               <small>
-                  Forgot your password Reset it <router-link to="/signup">HERE</router-link>
+                  Forgot your password Reset it <router-link to="/password-reset">HERE</router-link>
               </small>
             </div>
             <div>
@@ -53,11 +54,17 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {validateLoginData} from '../../store/validators'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
   export default {
+  name: "login",
+  components: {
+    SuccessAlert
+  },
   computed: {
     ...mapGetters([
       'userErrors',
+      'isPasswordResetEmailSent'
     ])
   },
    data () {

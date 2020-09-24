@@ -49,7 +49,7 @@
     </v-alert>
     <SuccessAlert v-if="isNotificationDeleted" msg="Notification Successfully Deleted!" />
     <SuccessAlert v-if="isUserUpdated" msg="User data successfully updated!" />
-    <SuccessAlert v-if="isPasswordResetEmailSent" msg="Email sent successfully!" />
+    <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
     <v-img
       :src="currentUser.userPhoto"
       height="300px"

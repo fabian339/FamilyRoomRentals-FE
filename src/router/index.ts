@@ -7,6 +7,8 @@ import ViewRoom from '@/components/Room/ViewRoom.vue'
 import LoginForm from '@/components/User/LoginForm.vue'
 import RegistrationForm from '@/components/User/RegistrationForm.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
+import PasswordReset from '@/components/User/PasswordReset.vue'
+
 
 Vue.use(VueRouter)
 
@@ -67,6 +69,11 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/signup',
     name: 'RegistrationForm',
     component: RegistrationForm
+  },
+  {
+    path: '/password-reset',
+    name: 'PasswordReset',
+    component: PasswordReset
   },
 ]
 

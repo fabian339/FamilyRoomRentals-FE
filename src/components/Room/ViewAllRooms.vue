@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <ContentLoading v-if="isContentLoading"/>
+    <v-row class="text-center" v-if="!isContentLoading">
       <div id="logo" >
         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
@@ -9,73 +10,67 @@
         cols="12"
          style="marginTop: -30px"
       >
-      <div id="filterContainer">
-        <h3>Filter by: </h3>
-          <v-radio-group v-model="filterBy" row style="margin: 10px 0px -36px 90px;">
-          <div v-for="(item, index) in filters" :key="index - 20">
-              <v-radio color="pink" style="margin: auto 10px;" :label="item" @click.stop="radioClick(index)" :value="item"></v-radio> 
-          </div>
-           </v-radio-group>
-      <v-row>
-      <v-col cols="4">
-        <v-text-field
-          label="City"
-           @input="onCityChange"
-           clearable
-        ></v-text-field>
-      </v-col>
-      <v-col cols="4">
-        <v-text-field
-          label="State"
-          @input="onStateChange"
-          clearable
-        ></v-text-field>
-      </v-col>
-      <v-col cols="4">
-        <v-text-field
-          label="Zipcode"
-          @input="onZipcodeChange"
-          clearable
-        ></v-text-field>
-      </v-col>
-      </v-row>
-      </div>
-      <h2 class="headline font-weight-bold mb-3">
-        All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
-      </h2>
-      <v-progress-circular
-        v-if="isContentLoading"
-        color="green"
-        :size="100"
-        :width="15"
-        indeterminate
-      ></v-progress-circular>
-      <v-container v-if="!isContentLoading">
-        <v-row no-gutters v-if="filterBy === 'Most Recent'">
-          <v-col
-            class="mb-8"
-            cols="16"
-            v-for="(item) in contentRooms" :key="item.street1"
+        <div id="filterContainer">
+          <h3>Filter by: </h3>
+            <v-radio-group v-model="filterBy" row style="margin: 10px 0px -36px 90px;">
+            <div v-for="(item, index) in filters" :key="index - 20">
+                <v-radio color="pink" style="margin: auto 10px;" :label="item" @click.stop="radioClick(index)" :value="item"></v-radio> 
+            </div>
+            </v-radio-group>
+        <v-row>
+        <v-col cols="4">
+          <v-text-field
+            label="City"
+            @input="onCityChange"
+            clearable
+          ></v-text-field>
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+            label="State"
+            @input="onStateChange"
+            clearable
+          ></v-text-field>
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+            label="Zipcode"
+            @input="onZipcodeChange"
+            clearable
+          ></v-text-field>
+        </v-col>
+        </v-row>
+        </div>
+        <h2 class="headline font-weight-bold mb-3">
+          All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
+        </h2>
+        <!-- <v-progress-circular
+          v-if="isContentLoading"
+          color="green"
+          :size="100"
+          :width="15"
+          indeterminate
+        ></v-progress-circular> -->
+        <v-container>
+          <v-row no-gutters v-if="filterBy === 'Most Recent'">
+            <v-col
+              class="mb-8"
+              cols="16"
+              v-for="(item) in contentRooms" :key="item.street1"
+              >
+                <Room :roomData=item />
+            </v-col>
+          </v-row>
+          <v-row no-gutters v-else>
+            <v-col
+              class="mb-8"
+              cols="16"
+              v-for="(item) in filteredRooms" :key="item.street1"
             >
-              <Room :roomData=item />
-          </v-col>
-        </v-row>
-        <v-row no-gutters v-else>
-          <v-col
-            class="mb-8"
-            cols="16"
-            v-for="(item) in filteredRooms" :key="item.street1"
-          >
-              <Room :roomData=item />
-          </v-col>
-        </v-row>
-      </v-container>
-
-        <v-row justify="center">
-          <a class="subheading mx-3" href="/#/rooms">
-            View More...
-          </a>
-        </v-row>
+                <Room :roomData=item />
+            </v-col>
+          </v-row>
+        </v-container>
       </v-col>
     </v-row>
   </v-container>
@@ -84,13 +79,16 @@
 <script>
 // @ is an alias to /src
 import Room from '@/components/Room/Room.vue'
+import ContentLoading from '@/components/layout/ContentLoading.vue'
+
 // import store from '@/actions/store'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ViewAllRooms',
   components: {
-    Room
+    Room,
+    ContentLoading
   },
   computed: {
       ...mapGetters([
@@ -112,18 +110,18 @@ export default {
     },
     onCityChange(city){
       this.filterBy = 'City'
-      this.filteredRooms = this.contentRooms.filter((room) => room.location.city.toLowerCase().includes(city.toLowerCase()));
+      this.filteredRooms = city ? this.contentRooms.filter((room) => room.location.city.toLowerCase().includes(city.toLowerCase())) : [];
       if(city === '' || city === null) this.filterBy = "Most Recent"
-      console.log(city)
+      // console.log(city)
     },
     onStateChange(state){
       this.filterBy = 'State'
-      this.filteredRooms = this.contentRooms.filter((room) => room.location.statetoLowerCase().includes(state.toLowerCase()));
+      this.filteredRooms = state ? this.contentRooms.filter((room) => room.location.state.toLowerCase().includes(state.toLowerCase())) : [];
       if(state === '' || state === null) this.filterBy = "Most Recent"
     },   
     onZipcodeChange(zipcode){
       this.filterBy = 'Zipcode'
-      this.filteredRooms = this.contentRooms.filter((room) => room.location.zipCode.includes(zipcode));
+      this.filteredRooms = zipcode ? this.contentRooms.filter((room) => room.location.zipCode.includes(zipcode)) : [];
       if(zipcode === '' || zipcode === null) this.filterBy = "Most Recent"
     },
   }
@@ -140,7 +138,7 @@ export default {
   #filterContainer{
     margin: 30px 20%;
     width: 60%;
-    background-color: darkkhaki;
+    background-color: #c0e4c0;
     border-radius: 15px;
     padding: 10px;
   }
