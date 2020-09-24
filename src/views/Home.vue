@@ -33,7 +33,7 @@
         :width="15"
         indeterminate
       ></v-progress-circular>
-      <v-container v-if="!isContentLoading" class="grey lighten-5">
+      <v-container v-if="!isContentLoading">
         <v-row no-gutters>
           <v-col
             class="mb-8"
