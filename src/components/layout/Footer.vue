@@ -50,9 +50,9 @@
       links: [
         {name: 'Home', path: '/'},
         {name: 'About Us', path: '/about'},
-        {name: 'Team', path: '/team'},
         {name: 'Careers', path: '/careers'},
         {name: 'Contact Us', path: '/contact'},
+        {name: 'Stories', path: '/stories'},
       ],
     icons: [
         'mdi-facebook',

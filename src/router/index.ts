@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+import Career from '../views/Career.vue'
+import Contact from '../views/Contact.vue'
+import Stories from '../views/Stories.vue'
 import PostRoom from '@/components/Room/PostRoom.vue'
 import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
@@ -33,7 +37,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     path: '/create-room',
@@ -74,6 +78,21 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/password-reset',
     name: 'PasswordReset',
     component: PasswordReset
+  },
+  {
+    path: '/careers',
+    name: 'Career',
+    component: Career
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
+  },
+  {
+    path: '/stories',
+    name: 'Stories',
+    component: Stories
   },
 ]
 

@@ -1,12 +1,13 @@
 <template>
-  <v-row class="text-center" justify="center">
-    <v-col lg="4">
-    <div id="logo" >
-        <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
-    </div>
-    <h2 class="headline font-weight-bold mb-3">
-        Reset Password:
-    </h2>
+  <v-container>
+    <v-row class="text-center" justify="center">
+      <div class="logo" >
+          <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
+      </div>
+      <v-col lg="4">
+        <h2 class="headline font-weight-bold mb-3">
+            Reset Password:
+        </h2>
         <form
           @submit="submit"
         >
@@ -25,9 +26,9 @@
             <v-btn type="submit" color="#66CDAA">Send Recovery Email</v-btn>
             <!-- <p style="color: red">{{userErrors.responseError}}</p> -->
         </form>
-    </v-col>
-  </v-row>
-    
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

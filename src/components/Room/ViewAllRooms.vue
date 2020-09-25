@@ -2,13 +2,13 @@
   <v-container>
     <ContentLoading v-if="isContentLoading"/>
     <v-row class="text-center" v-if="!isContentLoading">
-      <div id="logo" >
+      <div class="logo" >
         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
       <v-col
         class="mb-5"
         cols="12"
-         style="marginTop: -30px"
+        style="marginTop: -30px"
       >
         <div id="filterContainer">
           <h3>Filter by: </h3>
@@ -129,12 +129,6 @@ export default {
 </script>
 
 <style scoped>
-  #logo {
-    width: 100%;
-    height: 190px;
-    margin-top: -25px;
-  }
-
   #filterContainer{
     margin: 30px 20%;
     width: 60%;

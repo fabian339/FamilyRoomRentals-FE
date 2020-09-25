@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <div id="logo" >
+      <div class="logo" >
         <img style="margin: 10px;" :src="require('./../assets/logo.png')" alt="logo" width="400">
       </div>
         <v-row no-gutters class="text-center">
@@ -79,12 +79,6 @@ export default {
 </script>
 
 <style scoped>
-  #logo {
-    width: 100%;
-    height: 190px;
-    margin-top: -25px;
-  }
-
   .element1 {
     width: 365px;
     height: 500px;

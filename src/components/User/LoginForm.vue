@@ -1,13 +1,12 @@
 <template>
-  <v-row class="text-center" justify="center">
-    <v-col lg="4">
-    <div id="logo" >
-        <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
-    </div>
-    <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
-    <h2 class="headline font-weight-bold mb-3">
-        Login
-    </h2>
+  <v-container>
+    <v-row class="text-center" justify="center">
+      <div class="logo" >
+          <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
+      </div>
+      <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
+      <v-col lg="4">
+        <h2 class="headline font-weight-bold mb-3">Login</h2>
         <form
           @submit="submit"
         >
@@ -46,9 +45,9 @@
               </small>
             </div>
         </form>
-    </v-col>
-  </v-row>
-    
+      </v-col>
+    </v-row>
+  </v-container> 
 </template>
 
 <script>

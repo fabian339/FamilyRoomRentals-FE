@@ -62,3 +62,11 @@ export default {
   }
 };
 </script>
+
+<style>
+  .logo {
+    width: 100%;
+    height: 190px;
+    margin-top: -25px;
+  }
+</style>
