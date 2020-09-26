@@ -16,7 +16,7 @@
     <v-card-subtitle class="pb-0">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
 
     <v-card-text class="text--primary">
-      <p> Publisher: {{this.roomData.ownerName}}</p>
+      <p> Publisher: {{this.roomData.ownerFname}} {{this.roomData.ownerLname}}</p>
       <div><strong>{{this.roomData.title.substring(0, 35).toUpperCase()}}...</strong></div>
     </v-card-text>
 

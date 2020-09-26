@@ -18,7 +18,7 @@
         cols="12"
         md="8"
       >
-      <div style="padding-left: 100px;padding-right: 100px;">
+      <div style="padding-left: 140px; padding-right: 140px;">
         <h3>Objective:</h3>
         <p>
           The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.

@@ -189,6 +189,7 @@ export const validateUserRegistration = (data: User) => {
 
   //validation for password
   if(isEmpty(data.password)) errors.password = 'Must not be empty'
+  else if(data.password.length <= 7) errors.password = 'Must have at least 8 characters'
   //validation for confirn-password
   if(isEmpty(data.confirmPassword)) errors.confirmPassword = 'Must not be empty';
   //validation for password & confirn-password if they dont match

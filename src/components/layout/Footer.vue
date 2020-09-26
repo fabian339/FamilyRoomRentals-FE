@@ -51,8 +51,8 @@
         {name: 'Home', path: '/'},
         {name: 'About Us', path: '/about'},
         {name: 'Careers', path: '/careers'},
-        {name: 'Contact Us', path: '/contact'},
         {name: 'Stories', path: '/stories'},
+        {name: 'Contact Us', path: '/contact'},
       ],
     icons: [
         'mdi-facebook',

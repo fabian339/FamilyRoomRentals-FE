@@ -222,7 +222,8 @@ import {validateCreateRoom} from '../../store/validators'
                 price: this.price,
                 description: this.description,
                 ownerId: this.currentUser.objectId,
-                ownerName: `${this.currentUser.lName}, ${this.currentUser.fName}`,
+                ownerFname: this.currentUser.fName,
+                ownerLname: this.currentUser.lName,
                 images: this.images.length === 0 ? noImageForRoom : this.images
             }
             const {valid, errors} = validateCreateRoom(room);

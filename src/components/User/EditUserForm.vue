@@ -198,6 +198,12 @@ import {validateUpdateUser} from '../../store/validators'
                     else updatedUserData[item] = this[item];
                 });
                 updatedUserData.objectId = this.$store.getters.currentUser.objectId;
+                //when updating the user, if fname or lname are updated then update the rooms that belongs to that user
+                if(this.$store.getters.currentUserRooms.length !== 0 && (updatedUserData.fName || updatedUserData.lName)){
+                    const roomIds = [];
+                    this.$store.getters.currentUserRooms.forEach(room => roomIds.push(room.objectId));
+                    updatedUserData.roomIdsToUpdate = roomIds;
+                }
                 const {valid, errors} = validateUpdateUser(updatedUserData);
                 if(!valid) this.formErrors = errors;
                 else {//if(Object.keys(this.userErrors).length === 0) {

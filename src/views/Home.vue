@@ -4,25 +4,25 @@
       <div class="logo" >
         <img style="margin: 10px;" :src="require('./../assets/logo.png')" alt="logo" width="400">
       </div>
-        <v-row no-gutters class="text-center">
-          <v-col class="element1">
-            <div style="width: 365px;margin: 25px auto;">
-              <h1 style="font-size: 60px">Focus on what you can afford</h1>
-              <p> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
-                Sometimes finding an appartment, or house could result in big debts specially if you are already in debt.
-                FamilyRoomRents allows you to find an accomodate place to stay that will not bring more debt. 
-              </p>
-            </div>
-          </v-col>
-          <v-col class="element2">
-              <img style="margin: 10px" :src="require('./../assets/conversation.png')" alt="conversation" width="325" height="490">
-          </v-col>
-        </v-row>
+      <v-row no-gutters class="text-center">
+        <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
+        <v-col class="element1">
+          <div style="width: 365px;margin: 25px auto;">
+            <h1 style="font-size: 60px">Focus on what you can afford</h1>
+            <p> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
+              Sometimes finding an appartment, or house could result in big debts specially if you are already in debt.
+              FamilyRoomRents allows you to find an accomodate place to stay that will not bring more debt. 
+            </p>
+          </div>
+        </v-col>
+        <v-col class="element2">
+            <img style="margin: 10px" :src="require('./../assets/conversation.png')" alt="conversation" width="325" height="490">
+        </v-col>
+      </v-row>
       <v-col
         class="mb-5"
         cols="12"
       >
-      <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
       <h2 class="headline font-weight-bold mb-3">
         Recent Rooms
       </h2>

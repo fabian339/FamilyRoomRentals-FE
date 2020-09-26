@@ -20,7 +20,7 @@ export default {
         const token = res.data.sessionToken;
         localStorage.setItem('user-token', token);
         context.commit('AUTH_SUCCESS', token);
-        context.dispatch('fetchUserNotifications', res.data.objectId);
+        // context.dispatch('fetchUserNotifications', res.data.objectId);
         // console.log('Getting Current User',user)
         let currentUser = user;
         delete currentUser.password;
@@ -32,10 +32,10 @@ export default {
         currentUser.userPhoto = res.data.userPhoto;
         currentUser.className = '_User';
         context.commit('SET_USER', currentUser)
-        context.commit('SET_LOADING_USER', false);
         if(appRouter.history.current.path !== '/profile'){
           appRouter.push(`/profile`)
         }
+        context.commit('SET_LOADING_USER', false);
         context.commit('CLEAR_USER_ERROR')
       })
       .catch(() => {
@@ -82,10 +82,10 @@ export default {
         context.commit('AUTH_SUCCESS', token);
         context.dispatch('fetchUserNotifications', user.objectId);
         context.commit('SET_USER', user)
-        context.commit('SET_LOADING_USER', false);
         if(appRouter.history.current.path !== '/profile'){
           appRouter.push(`/profile`)
         }
+        context.commit('SET_LOADING_USER', false);
         context.commit('CLEAR_USER_ERROR')
     })
     .catch(() => {
@@ -98,20 +98,33 @@ export default {
     },
 
     updateUser: (context: any, userData: any) => {
+      // console.log('this is a Data', userData)
       axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
       context.commit('SET_LOADING_USER', true);
       axios.put(`${requestURI}/users/${userData.objectId}`, userData)
       .then(() => {
-        // console.log("update User Response: ", res);
         context.commit('UPDATE_USER', userData);
-        context.commit('CLEAR_USER_ERROR')
+        //updating the necessary rooms
+        if(userData.roomIdsToUpdate){
+          console.log("need to update")
+            const roomData:any = {};
+            if(userData.fName) roomData.ownerFname = userData.fName
+            if(userData.lName) roomData.ownerLname = userData.lName
+            userData.roomIdsToUpdate.forEach((id: String) => {
+              context.dispatch('updateRoom', {
+                ...roomData,
+                objectId: id
+              }) 
+            });
+        }
         context.commit('SET_LOADING_USER', false);
+        context.commit('CLEAR_USER_ERROR')
       })
       .catch(() => {
         const err = {
           responseError: "Account already exists for this username or email address."
         }
-          context.commit('SET_USER_ERROR', err);      
+        context.commit('SET_USER_ERROR', err);      
       });
     },
 
@@ -133,8 +146,8 @@ export default {
       context.commit('SET_LOADING_USER', true);
       axios.delete(`${requestURI}/users/${userData.userId}`)
       .then((res) => {
-        if(userData.roomIds !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
-        if(userData.notificationIds !== 0) context.dispatch('deleteUserNotifications', userData.notificationIds);
+        if(userData.roomIds.length !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
+        if(userData.notificationIds.length !== 0) context.dispatch('deleteUserNotifications', userData.notificationIds);
         context.dispatch('logout');
         context.commit('SET_USER_DELETED', true);
         context.commit('SET_LOADING_USER', false);
@@ -149,6 +162,7 @@ export default {
         axios.delete(`${requestURI}/classes/Room/${id}`)
         .then((res) => {
           context.commit('DELETE_ROOM', id);
+          context.commit('CLEAR_USER_ERROR')
         })
         .catch((err) => {
           context.commit('SET_CONTENT_ERROR', err);

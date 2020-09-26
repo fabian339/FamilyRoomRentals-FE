@@ -84,6 +84,7 @@
                 max-width="800"
                 color="#8fbc8f"
             >
+            <div style="padding: 15px;">
                 <h4 id="description">Description:</h4>
                 <p style="margin: 20px;"> {{contentRoom.description}} </p>
                 <div v-if="contentRoom.propertyRules.length > 0">
@@ -92,6 +93,7 @@
                         <span>{{index+1}}) {{rule}}</span>
                     </div>
                 </div>
+            </div>
             </v-card>
             <div style="margin: 25px;">
                 <div>
