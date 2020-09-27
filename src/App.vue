@@ -13,7 +13,8 @@
 <script>
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
-import axios from 'axios'
+import axios from 'axios';
+import './styles.css'
 
 import { mapActions } from 'vuex'
 
@@ -25,6 +26,10 @@ export default {
     Footer
   },  
   created(){
+    axios.defaults.baseURL = "https://parseapi.back4app.com";
+    axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
+    axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
+    axios.defaults.headers.common['Content-Type'] = 'application/json'
     this.fetchData();
     
     const token = localStorage.getItem('user-token');
@@ -62,11 +67,3 @@ export default {
   }
 };
 </script>
-
-<style>
-  .logo {
-    width: 100%;
-    height: 190px;
-    margin-top: -25px;
-  }
-</style>

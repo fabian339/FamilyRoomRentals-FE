@@ -12,7 +12,7 @@
           @submit="submit"
         >
             <v-text-field
-              label="email"
+              label="Email"
               name="email"
               v-model="email"
               append-icon="mdi-account"

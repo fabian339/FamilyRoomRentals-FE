@@ -9,7 +9,7 @@
         <v-col class="element1">
           <div style="width: 365px;margin: 25px auto;">
             <h1 style="font-size: 60px">Focus on what you can afford</h1>
-            <p> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
+            <p class="font"> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
               Sometimes finding an appartment, or house could result in big debts specially if you are already in debt.
               FamilyRoomRents allows you to find an accomodate place to stay that will not bring more debt. 
             </p>

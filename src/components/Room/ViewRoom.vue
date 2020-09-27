@@ -78,19 +78,19 @@
                  </v-dialog>
 
             </div>
-            <h2 style="margin-bottom: 20px;">{{contentRoom.title}} - ${{contentRoom.price}}/month</h2>
+            <h2 style="margin-bottom: 20px;">{{contentRoom.title.toUpperCase()}} - ${{contentRoom.price}}/month</h2>
             <v-card
                 class="mx-auto"
                 max-width="800"
                 color="#8fbc8f"
             >
             <div style="padding: 15px;">
-                <h4 id="description">Description:</h4>
-                <p style="margin: 20px;"> {{contentRoom.description}} </p>
+                <h3>Description:</h3>
+                <p class="font" style="margin: 20px;"> {{contentRoom.description}} </p>
                 <div v-if="contentRoom.propertyRules.length > 0">
-                    <h4>Rules:</h4>
+                    <h3>Rules:</h3>
                     <div v-for="(rule, index) in contentRoom.propertyRules" :key="index + 10/3">
-                        <span>{{index+1}}) {{rule}}</span>
+                        <span class="font">{{index+1}}) {{rule}}</span>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                 <div>
                     <v-icon style="font-size: 100px;" large color="green darken-2">mdi-map-marker</v-icon>
                 </div>
-                <p style="margin: 5px 35%;">
+                <p class="font" style="margin: 5px 35%;">
                     {{contentRoom.location.street1}}, 
                     {{contentRoom.location.street2}},
                     {{contentRoom.location.city}},

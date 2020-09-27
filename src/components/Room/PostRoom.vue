@@ -18,7 +18,7 @@
                 placeholder="Special Room Available in the NYC Area"
                 :error-messages="errors.title"
             ></v-text-field>
-            <label> Location </label>
+            <label> <strong>Location</strong> </label>
             <v-text-field
                 ref="street1"
                 v-model="location.street1"
@@ -64,7 +64,7 @@
                 :error-messages="errors.country"   
             ></v-autocomplete>
             
-            <label> Description </label>
+            <label> <strong>Description</strong> </label>
             <v-spacer></v-spacer>
 
             <v-textarea
@@ -75,7 +75,7 @@
                 :error-messages="errors.description"   
             ></v-textarea>   
 
-            <label> Property Rules </label>
+            <label> <strong>Property Rules</strong> </label>
             <v-row justify="center">
                 <v-col cols="6" style="display: inline-flex;" >
                     <v-text-field
@@ -112,7 +112,7 @@
                 </div>
             </v-row>
 
-            <label> Property Price </label>
+            <label> <strong>Property Price</strong> </label>
 
             <v-row justify="center">
                 <v-col cols="4">

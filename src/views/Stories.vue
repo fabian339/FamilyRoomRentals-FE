@@ -12,7 +12,7 @@
 
     <div id="container">
       <div class="message">
-          <p class="message-content">
+          <p class="message-content font">
             The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
             We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
             We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
@@ -21,7 +21,7 @@
       </div>
 
       <div class="message">
-          <p class="message-content">
+          <p class="message-content font">
             The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
             We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
             We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
@@ -30,7 +30,7 @@
       </div>
 
       <div class="message">
-        <p class="message-content">
+        <p class="message-content font">
           The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
           We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
           We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
@@ -38,7 +38,7 @@
         <div class="message-timestamp-right">SMS 19:37</div>
       </div>
             <div class="message">
-        <p class="message-content">
+        <p class="message-content font">
           The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
           We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
           We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.

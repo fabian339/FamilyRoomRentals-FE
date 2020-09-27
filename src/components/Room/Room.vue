@@ -13,11 +13,11 @@
     </div>
     </v-img>
 
-    <v-card-subtitle class="pb-0">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
+    <v-card-subtitle class="pb-0 font">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
 
-    <v-card-text class="text--primary">
+    <v-card-text class="text--primary font" style="margin-bottom: -30px;">
       <p> Publisher: {{this.roomData.ownerFname}} {{this.roomData.ownerLname}}</p>
-      <div><strong>{{this.roomData.title.substring(0, 35).toUpperCase()}}...</strong></div>
+      <p class="font" style="font-size: 20px;"><strong>{{this.roomData.title.substring(0, 30).toUpperCase()}}...</strong></p>
     </v-card-text>
 
     <v-card-actions class="justify-center">

@@ -20,12 +20,12 @@
       >
       <div style="padding-left: 140px; padding-right: 140px;">
         <h3>Objective:</h3>
-        <p>
+        <p class="font">
           The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
           We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
           We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
         </p>
-        <p>
+        <p class="font">
           We want to help those going thorugh difficult situation and are in the need of moving quickly and safely.
           Our support goes mostly to minority groups and inmigrants, where opportunities are lacking and service are
           much needed.

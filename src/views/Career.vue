@@ -13,13 +13,11 @@
             <h1>JOIN OUR TEAM</h1>
             <div style="padding-left: 100px;padding-right: 100px;">
             <h3>Available positions:</h3>
-            <p> Opps. It seems like there a no openings for now. Check back later! :(</p>
+            <p class="font"> Opps. It seems like there a no openings for now. Check back later! :(</p>
             </div>
         </v-col>
     </v-row>
   </v-container>
-
-    
 </template>
 
 <style scoped>

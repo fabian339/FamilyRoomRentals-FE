@@ -107,28 +107,28 @@
       <v-list two-line>
         <v-list-item>
           <v-list-item-icon>
-            <v-icon color="green">mdi-phone</v-icon>
+            <v-icon color="#6B8E23">mdi-phone</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{currentUser.phone ? currentUser.phone : 'no phone number'}}</v-list-item-title>
+            <v-list-item-title class="font">{{currentUser.phone ? currentUser.phone : 'no phone number'}}</v-list-item-title>
             <v-list-item-subtitle>Cell/Mobile</v-list-item-subtitle>
           </v-list-item-content>
 
-          <v-list-item-icon>
-            <v-icon color="green">mdi-message-text</v-icon>
-          </v-list-item-icon>
+          <!-- <v-list-item-icon>
+            <v-icon color="#6B8E23">mdi-message-text</v-icon>
+          </v-list-item-icon> -->
         </v-list-item>
 
         <v-divider inset></v-divider>
 
         <v-list-item>
           <v-list-item-icon>
-            <v-icon color="green">mdi-email</v-icon>
+            <v-icon color="#6B8E23">mdi-email</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{currentUser.email}}</v-list-item-title>
+            <v-list-item-title class="font">{{currentUser.email}}</v-list-item-title>
             <v-list-item-subtitle>Personal/Work</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -136,11 +136,11 @@
         <v-divider inset></v-divider>
           <v-list-item>
             <v-list-item-icon>
-              <v-icon color="green">mdi-account-circle</v-icon>
+              <v-icon color="#6B8E23">mdi-account-circle</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>{{currentUser.username}}</v-list-item-title>
+              <v-list-item-title class="font">{{currentUser.username}}</v-list-item-title>
               <v-list-item-subtitle>Username</v-list-item-subtitle>
             </v-list-item-content>
         </v-list-item>
@@ -148,10 +148,10 @@
         <v-divider inset></v-divider>
         <v-list-item>
           <v-list-item-icon>
-            <v-icon color="green">?</v-icon>
+            <v-icon color="#6B8E23">?</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>
+            <v-list-item-title class="font">
               {{
                 currentUser.notifyBy === 'both' ? 
                 'both email & phone' : 
@@ -166,11 +166,11 @@
 
         <v-list-item>
           <v-list-item-icon>
-            <v-icon color="green">?</v-icon>
+            <v-icon color="#6B8E23">?</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>({{this.$store.getters.currentUserRooms.length}})</v-list-item-title>
+            <v-list-item-title class="font">({{this.$store.getters.currentUserRooms.length}})</v-list-item-title>
             <v-list-item-subtitle>Active Rooms</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -178,7 +178,7 @@
 
         <v-list-item>
           <v-list-item-icon>
-            <v-icon color="green">mdi-lock</v-icon>
+            <v-icon color="#6B8E23">mdi-lock</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>

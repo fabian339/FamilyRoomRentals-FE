@@ -5,7 +5,7 @@
             Interested?
         </h2>
         <h5 class="headline font-weight-bold mb-3">
-        Send us a message
+            Don't wait, Send us a message
         </h5>
             <form
             >
@@ -38,7 +38,7 @@
                     :error-messages="errors.message"   
                 ></v-textarea> 
                 <div>
-                    <small style="color: darkcyan">(Tipically Respond in under 24 hours)</small>
+                    <small style="color: darkcyan">(Tipically Respond within 24 hours)</small>
                 </div>
                 <v-btn type="submit" @click="sendMessage" color="#2e8b57" dark>
                     Send
