@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center">
       <div class="logo" >
-        <img style="margin: 10px;" :src="require('./../assets/logo.png')" alt="logo" width="400">
+        <img :src="require('./../assets/logo.png')" alt="logo" width="400">
       </div>
       <v-row no-gutters class="text-center">
         <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />

@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center" justify="center">
       <div class="logo" >
-          <img style="margin: 10px" :src="require('../assets/logo.png')" alt="logo" width="400">
+          <img :src="require('../assets/logo.png')" alt="logo" width="400">
       </div>
     <v-col lg="4">
       <h2 class="headline font-weight-bold mb-3">About Us</h2>

@@ -3,7 +3,7 @@
     <ContentLoading v-if="isContentLoading"/>
     <v-row class="text-center" v-if="!isContentLoading">
       <div class="logo" >
-        <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
+        <img :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
       <v-col
         class="mb-5"
