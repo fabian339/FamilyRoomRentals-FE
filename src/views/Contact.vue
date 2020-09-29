@@ -8,7 +8,7 @@
         <h2 class="headline font-weight-bold mb-3">Contact Us</h2>
         <div style="padding-left: 100px; padding-right: 100px;">
           <p class="font">
-            If you are experiencing concerns or have any questions, please do not hesitate to
+            If you are experiencing problems or have any questions, please do not hesitate to
             reach us out. We are here to help!
           </p>
           <p class="font">

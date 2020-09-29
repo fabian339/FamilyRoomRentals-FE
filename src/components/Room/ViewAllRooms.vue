@@ -44,13 +44,6 @@
         <h2 class="headline font-weight-bold mb-3">
           All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
         </h2>
-        <!-- <v-progress-circular
-          v-if="isContentLoading"
-          color="green"
-          :size="100"
-          :width="15"
-          indeterminate
-        ></v-progress-circular> -->
         <v-container>
           <v-row no-gutters v-if="filterBy === 'Most Recent'">
             <v-col

@@ -14,12 +14,6 @@
 <script>
   export default {
     name: 'SuccessAlert',
-    props: ['msg'],
-    data: () => ({
-    }),
-    created() {
-    },
-    methods: {
-    }   
+    props: ['msg'] 
 }
 </script>

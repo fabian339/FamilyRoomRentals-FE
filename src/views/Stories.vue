@@ -53,14 +53,11 @@
 </template>
 
 <style scoped>
-/* @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400); */
-
 #container {
     width: 100%;
     padding: 10px;
     overflow: auto;
     height: 380px;
-    /* border: 2px solid black; */
     margin-top: -25px;
 }
 
@@ -70,7 +67,6 @@
     padding: 10px;
     background-color: lightblue;
     width: 60%;
-    /* height: 500px; */
     text-align: left;
     font: 400 .9em 'Open Sans', sans-serif;
     border: 1px solid #211755;

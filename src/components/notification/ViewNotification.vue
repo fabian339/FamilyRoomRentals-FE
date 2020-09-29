@@ -91,10 +91,6 @@ export default {
             showWarning: false,
         }
     },
-    created(){
-        // const myRoom = this.contentRoom;
-        // this.room = this.contentState.room;
-    },
     methods: {
         ...mapActions([
             'deleteNotification'

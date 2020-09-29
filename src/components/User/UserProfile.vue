@@ -1,5 +1,5 @@
 <template>
-    <v-row class="text-center">
+    <v-row class="text-center" style="margin-top: -80px;">
       <v-col
         md="4"
       >

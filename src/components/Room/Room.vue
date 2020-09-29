@@ -48,16 +48,8 @@
       this.setRoom(this.roomData.objectId)
       this.$router.push(`room/${this.roomData.objectId}`)
     }
-    // getCountry(code, countryN){
-    //   axios.get(`https://restcountries.eu/rest/v2/alpha/${code}`)
-    //     .then(res => {
-    //       const { } = res.data;
-         
-    //     })
-    //     .catch(err => console.log(err));
-    //   }
-    }   
-  }
+  }   
+}
 </script>
 
 <style scoped>

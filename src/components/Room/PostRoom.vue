@@ -1,7 +1,7 @@
 <template>
   <v-row class="text-center" justify="center">
     <v-col cols="12" sm="10" md="8" lg="6">
-    <div id="logo" >
+    <div class="logo" >
         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
     </div>
     <h2 class="headline font-weight-bold mb-3">

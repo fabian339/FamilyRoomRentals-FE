@@ -9,9 +9,10 @@
         <v-col class="element1">
           <div style="width: 365px;margin: 25px auto;">
             <h1 style="font-size: 60px">Focus on what you can afford</h1>
-            <p class="font"> We enable those who cannot afford big bills, to be able to find a proper property that best fit their budget. 
-              Sometimes finding an appartment, or house could result in big debts specially if you are already in debt.
-              FamilyRoomRents allows you to find an accomodate place to stay that will not bring more debt. 
+            <p class="font"> We service those who are in the need of moving but cannot afford big bills. 
+              Renting an appartment or house is not cheap and could result in big debts.
+              FamilyRoomRents allows you to find an accomodate place to stay that best fit your budget,
+              will not make the situation harder, and will not bring more stress and debt. 
             </p>
           </div>
         </v-col>
@@ -82,7 +83,6 @@ export default {
   .element1 {
     width: 365px;
     height: 500px;
-    /* background: red; */
     position: relative;
     margin: 20px 0px;
     padding: 15px;
@@ -98,7 +98,6 @@ export default {
   .element2 {
     width: 365px;
     height: 500px;
-    /* background: red; */
     position: relative;
     margin: 20px 0px;
     border-left: 10px solid #3CB371;

@@ -5,7 +5,7 @@
         >
             <v-card>
                 <v-card-title>
-                <span class="headline">Edit Profile</span>
+                    <span class="headline">Edit Profile</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container class="text-center" style="margin-bottom: -110px;">
@@ -223,10 +223,6 @@ export default {
             changes: [],
             errors: {}
         }
-    },
-    created(){
-        // const myRoom = this.contentRoom;
-        // this.room = this.contentState.room;
     },
     methods: {
         ...mapActions([

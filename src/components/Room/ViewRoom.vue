@@ -1,13 +1,6 @@
 <template>
     <v-container>
         <ContentLoading  v-if="isContentLoading"/>
-        <!-- <v-progress-circular
-            v-if="isContentLoading"
-            color="green"
-            :size="100"
-            :width="50"
-            indeterminate
-        ></v-progress-circular> -->
         <v-row class="text-center" v-if="!isContentLoading">
             <v-col
                 class="mb-5"

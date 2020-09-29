@@ -1,12 +1,7 @@
 <template>
   <v-container>
     <v-row class="text-center" justify="center">
-      <!-- <v-col lg="4"> -->
-      <!-- <div id="logo" > -->
-          <img id="careerBanner" :src="require('../assets/careers.jpg')" alt="career">
-      <!-- </div> -->
-      <!-- <h2 class="headline font-weight-bold mb-3">About Us</h2> -->
-      <!-- </v-col> -->
+      <img id="careerBanner" :src="require('../assets/careers.jpg')" alt="career">
     </v-row>
     <v-row class="text-center" justify="center">
         <v-col>
@@ -22,7 +17,7 @@
 
 <style scoped>
     #careerBanner{
-        margin: -25px 0px 10px 0px;
+        margin-top: -85px;
         width: 70%;
         height: 400px;
         border-radius: 15px;
