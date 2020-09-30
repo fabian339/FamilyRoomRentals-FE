@@ -66,7 +66,7 @@
     margin: 20px 20%;
     padding: 10px;
     background-color: lightblue;
-    width: 60%;
+    width: 70%;
     text-align: left;
     font: 400 .9em 'Open Sans', sans-serif;
     border: 1px solid #211755;

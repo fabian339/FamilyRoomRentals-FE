@@ -4,7 +4,7 @@
       <div class="logo" >
           <img :src="require('../assets/logo.png')" alt="logo" width="400">
       </div>
-      <v-col cols="8">
+      <div>
         <h2 class="headline font-weight-bold mb-3">Contact Us</h2>
         <div style="padding-left: 100px; padding-right: 100px;">
           <p class="font">
@@ -17,7 +17,7 @@
             and share you experience with us.
           </p>
         </div>
-      </v-col>
+      </div>
     </v-row>
   </v-container>
 

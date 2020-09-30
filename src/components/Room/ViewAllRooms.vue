@@ -12,11 +12,13 @@
       >
         <div id="filterContainer">
           <h3>Filter by: </h3>
-            <v-radio-group v-model="filterBy" row style="margin: 10px 0px -36px 90px;">
-            <div v-for="(item, index) in filters" :key="index - 20">
-                <v-radio color="pink" style="margin: auto 10px;" :label="item" @click.stop="radioClick(index)" :value="item"></v-radio> 
-            </div>
+          <div style="background-color: black">
+            <v-radio-group v-model="filterBy" row>
+              <div v-for="(item, index) in filters" :key="index - 20">
+                  <v-radio color="pink" style="margin: auto 10px;" :label="item" @click.stop="radioClick(index)" :value="item"></v-radio> 
+              </div>
             </v-radio-group>
+          </div>
         <v-row>
         <v-col cols="4">
           <v-text-field
