@@ -12,11 +12,18 @@
       >
         <div id="filterContainer">
           <h3>Filter by: </h3>
-          <div style="background-color: black">
+          <div>
             <v-radio-group v-model="filterBy" row>
-              <div v-for="(item, index) in filters" :key="index - 20">
-                  <v-radio color="pink" style="margin: auto 10px;" :label="item" @click.stop="radioClick(index)" :value="item"></v-radio> 
-              </div>
+                <div id="group">
+                  <v-radio 
+                    v-for="(item, index) in filters" :key="index - 20"
+                    color="pink" 
+                    style="margin: auto 10px;" 
+                    :label="item" 
+                    @click.stop="radioClick(index)" 
+                    :value="item">
+                  </v-radio> 
+                </div>
             </v-radio-group>
           </div>
         <v-row>
@@ -131,4 +138,12 @@ export default {
     border-radius: 15px;
     padding: 10px;
   }
+
+  #group{
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0px 0px -25px 0px;
+  }
+
 </style>
