@@ -17,7 +17,7 @@
 
 <style scoped>
     #careerBanner{
-        margin-top: -85px;
+        margin-top: -15px;
         width: 70%;
         height: 400px;
         border-radius: 15px;
