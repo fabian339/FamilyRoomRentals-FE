@@ -37,6 +37,9 @@
                     Delete Room
                     <v-icon dark right>mdi-delete</v-icon>
                 </v-btn>
+                <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">
+                    This room is marked as Rented. To publish it back please unmark it in the edit section.
+                </p>
 
                 <v-dialog
                     v-model="deleteDialog"

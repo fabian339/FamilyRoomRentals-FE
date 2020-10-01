@@ -8,11 +8,14 @@
       height="200px"
       v-bind:src="this.roomData.images[0]"
     >
+    <div id="rented" v-if="this.roomData.rented">
+      <v-card-title style="justify-content: center;">Rented</v-card-title>
+    </div>
+    <v-spacer></v-spacer>
     <div id="price">
       <v-card-title>${{this.roomData.price}}/month</v-card-title>
     </div>
     </v-img>
-
     <v-card-subtitle class="pb-0 font">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
 
     <v-card-text class="text--primary font" style="margin-bottom: -30px;">
@@ -58,5 +61,14 @@
     height: 55px;
     background-color: seagreen;
     border-top-right-radius: 15px;
+    /* margin: 110px auto; */
+  }
+  #rented{
+    margin: 0px 0px 90px 195px;
+    background-color: goldenrod;
+    width: 45%;
+    height: 55px;
+    border-bottom-left-radius: 15px;
+    justify-content: center;
   }
 </style>

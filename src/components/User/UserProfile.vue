@@ -10,7 +10,17 @@
         md="8"
       >
         <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
-        <h2>{{currentUserRooms.length > 0 ? 'Your Rooms:' : 'No Rooms Yet!'}}</h2>
+        <!-- <h2>No Rooms Yet!</h2> -->
+        <div class="selector" >
+          <v-select
+            :items="['All Rooms', 'Active Rooms', 'Rented Rooms']"
+            @change="onTabChange"
+            solo
+            item-color="green"
+            color="green"
+            value="All Rooms"
+           ><span class="white--text">Lorem ipsum</span></v-select>
+        </div>
         <v-progress-circular
           v-if="isContentLoading"
           color="green"
@@ -18,12 +28,12 @@
           :width="15"
           indeterminate
         ></v-progress-circular>
-        <v-container style="background-color: white !important;" v-if="!isContentLoading" class="grey lighten-5">
+        <v-container style="background-color: white !important; margin: 35px 0px;" v-if="!isContentLoading" class="grey lighten-5">
           <v-row no-gutters>
             <v-col
               style="margin: 10px auto"  
               md="6"
-              v-for="item in currentUserRooms" :key="item.street1"
+              v-for="item in !filter ? currentUserRooms : filteredUserRooms" :key="item.street1"
             >
               <Room :roomData="item" />
           </v-col>
@@ -61,13 +71,34 @@ export default {
   },
   data(){
     return {
+      active: false,
+      filter: false,
+      filteredUserRooms: []
     }
   },
   created(){
   },
   methods:{
-
+    onTabChange(e){
+      if(e === "All Rooms") this.filter = false; 
+      else{
+        if(e == "Active Rooms") this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === false)
+        if(e == "Rented Rooms") this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === true)
+        this.filter = true
+      }
+      // console.log(e)
+    }
 
   }
 }
 </script>
+
+<style scoped>
+  .selector{
+    width: 30%;
+    margin: 10px 35% -30px 35%;  
+    border: 5px solid seagreen;
+    height: 58px;  
+    border-radius: 10px;
+  }
+</style>

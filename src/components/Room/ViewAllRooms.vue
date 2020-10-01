@@ -5,51 +5,54 @@
       <div class="logo" >
         <img :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
+      <div id="filterContainer">
+        <h3>Filter by: </h3>
+        <div>
+          <v-radio-group v-model="filterBy" row>
+              <div id="group">
+                <v-radio 
+                  v-for="(item, index) in filters" :key="index - 20"
+                  color="pink" 
+                  style="margin: auto 10px;" 
+                  :label="item" 
+                  @click.stop="radioClick(index)" 
+                  :value="item">
+                </v-radio> 
+              </div>
+          </v-radio-group>
+        </div>
+      <v-row>
+      <v-col cols="4">
+        <v-text-field
+          label="City"
+          @input="onCityChange"
+          clearable
+          color="#006400"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="4">
+        <v-text-field
+          label="State"
+          @input="onStateChange"
+          clearable
+          color="#006400"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="4">
+        <v-text-field
+          label="Zipcode"
+          @input="onZipcodeChange"
+          clearable
+          color="#006400"
+        ></v-text-field>
+      </v-col>
+      </v-row>
+      </div>
       <v-col
         class="mb-5"
         cols="12"
         style="marginTop: -30px"
       >
-        <div id="filterContainer">
-          <h3>Filter by: </h3>
-          <div>
-            <v-radio-group v-model="filterBy" row>
-                <div id="group">
-                  <v-radio 
-                    v-for="(item, index) in filters" :key="index - 20"
-                    color="pink" 
-                    style="margin: auto 10px;" 
-                    :label="item" 
-                    @click.stop="radioClick(index)" 
-                    :value="item">
-                  </v-radio> 
-                </div>
-            </v-radio-group>
-          </div>
-        <v-row>
-        <v-col cols="4">
-          <v-text-field
-            label="City"
-            @input="onCityChange"
-            clearable
-          ></v-text-field>
-        </v-col>
-        <v-col cols="4">
-          <v-text-field
-            label="State"
-            @input="onStateChange"
-            clearable
-          ></v-text-field>
-        </v-col>
-        <v-col cols="4">
-          <v-text-field
-            label="Zipcode"
-            @input="onZipcodeChange"
-            clearable
-          ></v-text-field>
-        </v-col>
-        </v-row>
-        </div>
         <h2 class="headline font-weight-bold mb-3">
           All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
         </h2>
@@ -132,8 +135,8 @@ export default {
 
 <style scoped>
   #filterContainer{
-    margin: 30px 20%;
-    width: 60%;
+    margin: 30px 10%;
+    width: 80%;
     background-color: #c0e4c0;
     border-radius: 15px;
     padding: 10px;

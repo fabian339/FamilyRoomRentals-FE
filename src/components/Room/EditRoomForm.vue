@@ -5,11 +5,25 @@
         >
             <v-card>
                 <v-card-title>
-                    <span class="headline">Edit Profile</span>
+                    <span class="headline">Edit Room</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container class="text-center" style="margin-bottom: -110px;">
                         <form>
+                            <v-radio-group
+                                v-model="radioChecked"
+                                @change="roomRented"
+                                row
+                                >
+                                <span>Mark Room as Rented: </span>
+                                <v-spacer></v-spacer>
+                                <v-radio
+                                    label="No"
+                                ></v-radio>
+                                <v-radio
+                                    label="Yes"
+                                ></v-radio>
+                            </v-radio-group>
                             <v-text-field
                                 name="title"
                                 v-model="title"
@@ -221,7 +235,9 @@ export default {
             images: this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images],
             tempRule: '',
             changes: [],
-            errors: {}
+            errors: {},
+            radioChecked: this.$store.getters.contentRoom.rented === false ? 0 : 1,
+            rented: this.$store.getters.contentRoom.rented
         }
     },
     methods: {
@@ -250,6 +266,11 @@ export default {
                 this.tempRule = '';
             }
         },
+        roomRented(e){
+            this.changes.push('rented');
+            this.rented = e === 0 ? false : true
+            // console.log("chanigin",e)
+        },
         saveUpdatedRoomData(e) {
             e.preventDefault();
             if(this.changes.length !== 0){
@@ -259,7 +280,6 @@ export default {
                 let locationBeingUpdated = false;
                 let properties = [...new Set(this.changes)]
                 properties.forEach(item => {
-                    // console.log(item)
                     if(item === 'zipCode' || item === 'street2' || item === 'street1' || 
                     item === 'state' || item === 'country' || item === 'city') {
                         data.location = this.location;
@@ -276,7 +296,7 @@ export default {
                     data.objectId = this.$store.getters.contentRoom.objectId;
                     this.updateRoom(data);
                     this.show = false;
-                    // console.log(this.errors, data);
+                    console.log(data);
                 }
             } else {
                 let errors = {
