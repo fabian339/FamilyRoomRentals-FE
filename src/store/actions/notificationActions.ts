@@ -6,11 +6,11 @@ let appRouter: any = router;
 
 export default {
 
-  sendNotification: (context: any, notification: object) => {
-    axios.post(`/classes/Notifications`, notification)
+  sendOffer: (context: any, notification: object) => {
+    axios.post(`/classes/Offers`, notification)
     .then((res) => {
-      context.commit('SET_NOTIFICATION_SENT', true);
-      console.log('Notification Sent', res)
+      context.commit('SET_OFFER_SENT', true);
+      console.log('offer Sent', res)
   })
   .catch((err) => {
       // const err = {
@@ -22,7 +22,7 @@ export default {
   },
 
   fetchUserNotifications: (context: any, id: string) => {
-    axios.get('/classes/Notifications')
+    axios.get('/classes/Offers')
     .then((res) => {
       let myNotifications = res.data.results.filter((item: any) => item.receiverId === id);
       res.data.results
@@ -34,7 +34,7 @@ export default {
   },
 
   markNotificationRead: (context: any, notificationId: {}) => {
-    axios.put(`/classes/Notifications/${notificationId}`, {readByReceiver: true})
+    axios.put(`/classes/Offers/${notificationId}`, {readByReceiver: true})
     .then((res) => {
       // console.log("Updating Notifiction",res)
       context.commit('MARK_NOTIFICATION_READ', notificationId);
@@ -44,9 +44,9 @@ export default {
     });
   },
 
-  deleteNotification: (context: any, id: string) => {
+  deleteOffer: (context: any, id: string) => {
     // context.commit('SET_LOADING_CONTENT', true);
-    axios.delete(`/classes/Notifications/${id}`)
+    axios.delete(`/classes/Offers/${id}`)
     .then((res) => {
       context.commit('DELETE_NOTIFICATION', id);
       // context.commit('SET_LOADING_CONTENT', false);

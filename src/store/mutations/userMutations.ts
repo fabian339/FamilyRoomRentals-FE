@@ -42,22 +42,24 @@ export default {
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
     },
-    SET_NOTIFICATION_SENT: (state: any, notificationSent: boolean) => {
-        state.userState.notificationSent = notificationSent
+
+    //NOTIFICATIONS
+    SET_OFFER_SENT: (state: any, offerSent: boolean) => {
+        state.notificationState.offerSent = offerSent
     },
     SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
-        state.userState.userNotifications = notifications
+        state.notificationState.userNotifications = notifications
     },
     MARK_NOTIFICATION_READ: (state: any, notificationId: any) => {
-        const index = state.userState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-        state.userState.userNotifications[index].readByReceiver = true;
+        const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.notificationState.userNotifications[index].readByReceiver = true;
     },
     DELETE_NOTIFICATION: (state: any, notificationId: any) => {
-        const index = state.userState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-        state.userState.userNotifications.splice(index, 1);
-        state.userState.notidicationDeleted = true;
+        const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.notificationState.userNotifications.splice(index, 1);
+        state.notificationState.offerDeleted = true;
         setTimeout(() => {
-          state.userState.notidicationDeleted = false;
+          state.notificationState.offerDeleted = false;
         }, 5000);
     },
     CLEAR_USER_ERROR: (state: any) => {

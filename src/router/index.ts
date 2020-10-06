@@ -12,6 +12,7 @@ import LoginForm from '@/components/User/LoginForm.vue'
 import RegistrationForm from '@/components/User/RegistrationForm.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
+import Schedule from '@/components/notification/Schedule.vue'
 
 
 Vue.use(VueRouter)
@@ -52,6 +53,12 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     // meta: {
     //   requiresAuth: true,
     // }
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: '/offer/:id/schedule',
+    name: 'Schedule',
+    component: Schedule,
     beforeEnter: ifAuthenticated,
   },
   {

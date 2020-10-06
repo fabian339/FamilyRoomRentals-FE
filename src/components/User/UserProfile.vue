@@ -11,7 +11,17 @@
       >
         <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
         <!-- <h2>No Rooms Yet!</h2> -->
-        <div class="selector" >
+        <v-progress-circular
+          v-if="isContentLoading"
+          color="green"
+          :size="100"
+          :width="15"
+          indeterminate
+        ></v-progress-circular>
+
+        <h2 v-if="currentUserRooms.length === 0">No Rooms Yet!</h2>
+      
+        <div v-else class="selector" >
           <v-select
             :items="['All Rooms', 'Active Rooms', 'Rented Rooms']"
             @change="onTabChange"
@@ -21,13 +31,6 @@
             value="All Rooms"
            ><span class="white--text">Lorem ipsum</span></v-select>
         </div>
-        <v-progress-circular
-          v-if="isContentLoading"
-          color="green"
-          :size="100"
-          :width="15"
-          indeterminate
-        ></v-progress-circular>
         <v-container style="background-color: white !important; margin: 35px 0px;" v-if="!isContentLoading" class="grey lighten-5">
           <v-row no-gutters>
             <v-col

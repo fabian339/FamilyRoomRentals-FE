@@ -24,7 +24,7 @@
                 cols="12"
                 style="marginTop: -30px"
             >
-            <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}}</small>
+            <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}} by {{contentRoom.ownerFname}}, {{contentRoom.ownerLname}}</small>
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
                 <v-btn class="ma-2" color="#008080" dark @click.stop="updateDialog = true" >
                     Edit Room
@@ -38,7 +38,8 @@
                     <v-icon dark right>mdi-delete</v-icon>
                 </v-btn>
                 <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">
-                    This room is marked as Rented. To publish it back please unmark it in the edit section.
+                    This room cannot receive offers as it is marked as <strong>rented.</strong> 
+                    To publish it back please unmark it in the edit section.
                 </p>
 
                 <v-dialog
@@ -109,14 +110,14 @@
             </div>
             </v-col>
                     
-            <NotificationForm />
+            <OfferForm v-if="!contentRoom.rented" />
         </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import NotificationForm from '@/components/notification/NotificationForm.vue';
+import OfferForm from '@/components/notification/OfferForm.vue';
 import ContentLoading from '@/components/layout/ContentLoading.vue';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
@@ -124,7 +125,7 @@ import EditRoomForm from './EditRoomForm.vue'
   export default {
     name: 'viewRoom',
     components: {
-        NotificationForm,
+        OfferForm,
         EditRoomForm,
         SuccessAlert,
         ContentLoading

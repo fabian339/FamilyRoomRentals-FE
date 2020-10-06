@@ -25,14 +25,16 @@ export default new Vuex.Store({
       userState:{
         user: {},
         loadingUser: false,
-        userNotifications: [],
         userUpdated: false,
         userDeleted: false,
-        notificationSent: false,
-        notidicationDeleted: false,
         passwordResetEmailSent: false,
         token: localStorage.getItem('user-token') || '',
         errors: {}
+      }, 
+      notificationState: {
+        userNotifications: [],
+        offerSent: false,
+        offerDeleted: false,
       }
     }),
     getters: {
@@ -50,9 +52,10 @@ export default new Vuex.Store({
       isUserUpdated: state => state.userState.userUpdated,
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
-      isNotificationSent: state => state.userState.notificationSent,
-      isNotificationDeleted: state => state.userState.notidicationDeleted,
-      currentUserNotifications: state => state.userState.userNotifications.reverse(),
+      //Notifications
+      isOfferSent: state => state.notificationState.offerSent,
+      isOfferDeleted: state => state.notificationState.offerDeleted,
+      currentUserNotifications: state => state.notificationState.userNotifications.reverse(),
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
     },

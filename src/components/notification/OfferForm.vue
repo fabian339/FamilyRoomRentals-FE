@@ -1,11 +1,11 @@
 <template>
     <v-row class="text-center" justify="center" >
-        <v-col lg="4" v-if="!isNotificationSent" style="border: 2px solid #8fbc8f; border-radius: 10px">
+        <v-col lg="4" v-if="!isOfferSent" style="border: 2px solid #8fbc8f; border-radius: 10px">
         <h2 class="headline font-weight-bold mb-3">
             Interested?
         </h2>
         <h5 class="headline font-weight-bold mb-3">
-            Don't wait, Send us a message
+            Don't wait, Send us an offer
         </h5>
             <form
             >
@@ -19,51 +19,55 @@
 
                 <v-text-field
                     v-model="email"
-                    label="email: example@email.com"
+                    label="Email: example@email.com"
                     outlined
                     :error-messages="errors.email"   
                 ></v-text-field>
 
                 <v-text-field
                     v-model="phone"
-                    label="phone number: (212-222-2222)"
+                    label="Phone #: (212-222-2222)"
                     outlined
                     :error-messages="errors.phone"   
                 ></v-text-field>
-
-                <v-textarea
-                    v-model="message"
-                    filled
-                    label="Enter your message"
-                    :error-messages="errors.message"   
-                ></v-textarea> 
+                <label>This room is listed for ${{contentRoom.price}}/month, enter your offer </label>
+                <v-text-field
+                    v-model="offer"
+                    :label="contentRoom.price"
+                    solo-inverted
+                    type="number"
+                    prefix="$"
+                    height="80"
+                    style="width: 50%; margin: 10px 25% -10px 25%; font-size: 40px;"
+                    :error-messages="errors.offer"   
+                ></v-text-field>
                 <div>
                     <small style="color: darkcyan">(Tipically Respond within 24 hours)</small>
                 </div>
                 <v-btn type="submit" @click="sendMessage" color="#2e8b57" dark>
-                    Send
+                    Send Offer
                 </v-btn>
             </form>
         </v-col>
-        <SuccessAlert v-if="isNotificationSent" msg="Your Message was sent and received. Please kindly wait for a reesponse to the email or phone you provided." />
+        <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
     </v-row>
     
 </template>
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import {validateNotification} from '../../store/validators'
+import {validateOffer} from '../../store/validators'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 
   export default {
-    name: 'NotificationForm',
+    name: 'OfferForm',
     components: {
         SuccessAlert
     },
     computed: {
         ...mapGetters([
             'contentRoom',
-            'isNotificationSent',
+            'isOfferSent',
         ]),
     },
    data () {
@@ -71,7 +75,7 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue';
         full_name: '',
         email: '',
         phone: '',
-        message: '',
+        offer: '',
         sent: false,
         errors: {}
       }
@@ -80,7 +84,7 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue';
     },
     methods:{
         ...mapActions([                  // Add this
-            'sendNotification'
+            'sendOffer'
         ]),
         sendMessage(e) {
             e.preventDefault();
@@ -88,15 +92,15 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue';
                     full_name: this.full_name,
                     email: this.email,
                     phone: this.phone,
-                    message: this.message,
+                    offer: this.offer,
                     receiverId: this.contentRoom.ownerId,
                     roomId: this.contentRoom.objectId,
                     readByDev: false,
                     readByReceiver: false
                 }
-            const {valid, errors} = validateNotification(notification);
+            const {valid, errors} = validateOffer(notification);
             if(!valid) this.errors = errors;
-            else this.sendNotification(notification);
+            else this.sendOffer(notification);
         }
     }
   }

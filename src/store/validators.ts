@@ -203,7 +203,7 @@ export const validateUserRegistration = (data: User) => {
 
 
 
-export const validateNotification = (data: any) => {
+export const validateOffer = (data: any) => {
   let errors:any = {};
 
   //validation for fullname
@@ -220,8 +220,8 @@ export const validateNotification = (data: any) => {
   } else if(!isPhoneNumber(data.phone)){
     errors.phone = 'Must be a valid phone number'
   } 
-  //validation for message
-  if(isEmpty(data.message)) errors.message = 'Must not be empty';
+  //validation for offer
+  if(data.offer < 0 || !data.offer) errors.offer = 'Must enter a positive amount';
   //check if errors are registered
   return {
       errors,

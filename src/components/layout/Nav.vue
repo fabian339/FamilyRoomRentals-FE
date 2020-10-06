@@ -67,9 +67,9 @@
                                 </v-list-item-avatar>
                                 <v-list-item-content>
                                     <v-list-item-title :style="`${item.readByReceiver === false ? 'color: green' : 'color: #778899'}`" >
-                                        {{`(${new Date(item.createdAt).toLocaleString('en-US')})- ${item.readByReceiver === false ? 'Unread Message' : 'Check Message'}`}}
+                                        {{`(${new Date(item.createdAt).toLocaleString('en-US')}) - ${item.readByReceiver === false ? 'New Offer' : 'Check Offer'}`}}
                                     </v-list-item-title>
-                                    <v-list-item-subtitle v-html="`${item.message.substring(0, 35)}...`"></v-list-item-subtitle>
+                                    <v-list-item-subtitle >*********************</v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
                             
@@ -79,7 +79,7 @@
                         </div>
                     </v-card>
                 </v-menu>
-                <ViewNotification v-model="openNoticicationDialog" :notificationData="notification" />
+                <ViewOffer v-model="openOfferDialog" :offerData="notification" />
             </div>
 
             <v-btn color="#e9ffd4" v-if="isAuthenticated" @click="logoutUser" text>
@@ -101,12 +101,12 @@
     </div>
 </template>
 <script>
-import ViewNotification from '@/components/notification/ViewNotification.vue'
+import ViewOffer from '@/components/notification/ViewOffer.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'Nav',
     components: {
-        ViewNotification
+        ViewOffer
     },
     computed: {
         ...mapGetters([
@@ -115,7 +115,7 @@ export default {
         ])
     },
     data: () => ({
-        openNoticicationDialog: false,
+        openOfferDialog: false,
         notification: {},
     }),
     methods:{
@@ -129,7 +129,7 @@ export default {
         },
         openNotificationDialog(item){
             this.notification = item;
-            this.openNoticicationDialog = true;
+            this.openOfferDialog = true;
             if(item.readByReceiver === false) this.markNotificationRead(item.objectId)   
         }
     },

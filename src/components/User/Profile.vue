@@ -54,7 +54,7 @@
       <v-alert type="error" v-if="Object.keys(userErrors).length !== 0">
         Error while updating user information. To view and resolve error click <a style="text-decoration: underline;" @click.stop="editUser = true">here</a>.
       </v-alert>
-      <SuccessAlert v-if="isNotificationDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
+      <SuccessAlert v-if="isOfferDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
       <SuccessAlert v-if="isUserUpdated && !isUserLoading" msg="User data successfully updated!" />
       <SuccessAlert v-if="isPasswordResetEmailSent && !isUserLoading" msg="Reset password email sent successfully!" />
       <v-img
@@ -171,7 +171,7 @@
 
           <v-list-item-content>
             <v-list-item-title class="font">({{this.$store.getters.currentUserRooms.length}})</v-list-item-title>
-            <v-list-item-subtitle>Active Rooms</v-list-item-subtitle>
+            <v-list-item-subtitle># Rooms</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider inset></v-divider>
@@ -210,7 +210,7 @@ export default {
         'currentUser',
         'isUserLoading',
         'userErrors',
-        'isNotificationDeleted',
+        'isOfferDeleted',
         'isUserUpdated',
         'isPasswordResetEmailSent',
       ])
