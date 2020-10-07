@@ -32,6 +32,7 @@ export default new Vuex.Store({
         errors: {}
       }, 
       notificationState: {
+        offer: {},
         userNotifications: [],
         offerSent: false,
         offerDeleted: false,
@@ -53,9 +54,10 @@ export default new Vuex.Store({
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
       //Notifications
+      currentOffer: state => state.notificationState.offer,
       isOfferSent: state => state.notificationState.offerSent,
       isOfferDeleted: state => state.notificationState.offerDeleted,
-      currentUserNotifications: state => state.notificationState.userNotifications.reverse(),
+      currentOffers: state => state.notificationState.userNotifications.reverse(),
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
     },

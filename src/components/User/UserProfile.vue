@@ -66,7 +66,6 @@ export default {
       ...mapGetters([
         'isContentLoading',
         'currentUserRooms',
-        'isNotificationDeleted',
         'isUserUpdated',
         'isPasswordResetEmailSent',
         'isRoomDeleted'

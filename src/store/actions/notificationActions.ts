@@ -44,6 +44,17 @@ export default {
     });
   },
 
+  acceptOffer: (context: any, offerData: any) => {
+    axios.put(`/classes/Offers/${offerData.objectId}`, offerData)
+    .then((res) => {
+      console.log("Updating offer",res)
+      // context.commit('UPDATE_OFFER', offerData);
+    })
+    .catch((err) => {
+      context.commit('SET_CONTENT_ERROR', err);
+    });
+  },
+
   deleteOffer: (context: any, id: string) => {
     // context.commit('SET_LOADING_CONTENT', true);
     axios.delete(`/classes/Offers/${id}`)

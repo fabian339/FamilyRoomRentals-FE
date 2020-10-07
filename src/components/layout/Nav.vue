@@ -33,8 +33,8 @@
                         v-on="on"
                         >
                             <v-badge
-                                :content="currentUserNotifications.filter((item) => item.readByReceiver === false).length"
-                                :value="currentUserNotifications.filter((item) => item.readByReceiver === false).length"
+                                :content="currentOffers.filter((item) => item.readByReceiver === false).length"
+                                :value="currentOffers.filter((item) => item.readByReceiver === false).length"
                                 color="green"  
                                 overlap 
                             >
@@ -51,10 +51,10 @@
                     
                         <v-list                         
                             rounded
-                            v-if="currentUserNotifications.length !== 0"
+                            v-if="currentOffers.length !== 0"
                         >
                             <v-list-item
-                                v-for="(item, index) in currentUserNotifications"
+                                v-for="(item, index) in currentOffers"
                                 :key="index"
                                 @click.stop="openNotificationDialog(item)"
                             >
@@ -111,7 +111,7 @@ export default {
     computed: {
         ...mapGetters([
             'isAuthenticated',
-            'currentUserNotifications',
+            'currentOffers',
         ])
     },
     data: () => ({

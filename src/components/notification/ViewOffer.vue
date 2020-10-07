@@ -26,13 +26,42 @@
                                 to show him/her the room. Otherwise, deny such offer.
                             </p>
                         </div>
+                        <p style="color: teal">
+                            <strong>
+                                Status: {{offerData.offerAccepted ? 'You accepted the offer, waiting for results.': 'Offer not yet accepted!'}}
+                            </strong>
+                        </p>
                 </v-card-text>
                 <v-card-actions style="margin-top: -25px;">
                 <!-- <v-spacer></v-spacer> -->
                 <div class="my-2">
-                    <v-btn style="margin: 0px 5px;" small outlined color="#556B2F" @click.stop="redirectToSchedule">Accept offer</v-btn> 
-                    <v-btn style="margin: 0px 5px;" small outlined color="#FF69B4" @click.stop="show = false">Deny Offer</v-btn>
-                    <v-btn style="margin: 0px 5px;" small color="error" @click.stop="showDeleteWarning = true">Delete Offer</v-btn>
+                    <v-btn 
+                        style="margin: 0px 5px;" 
+                        small 
+                        outlined 
+                        color="#556B2F"
+                        :disabled="offerData.offerAcceptedByOwner"  
+                        @click.stop="redirectToSchedule">
+                        Accept offer
+                    </v-btn> 
+                    <v-btn 
+                        style="margin: 0px 5px;" 
+                        small 
+                        outlined 
+                        color="#FF69B4" 
+                        @click.stop="show = false"
+                        :disabled="offerData.offerAcceptedByOwner"
+                        >
+                        Deny Offer
+                    </v-btn>
+                    <v-btn 
+                        style="margin: 0px 5px;" 
+                        small color="error" 
+                        @click.stop="showDeleteWarning = true"
+                        :disabled="offerData.offerAcceptedByOwner"
+                        >
+                        Delete Offer
+                    </v-btn>
                 </div>                
                 </v-card-actions>
             </v-card>
@@ -73,7 +102,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapMutations} from 'vuex'
 export default {
     name: "ViewNotification",
     props: {
@@ -101,6 +130,9 @@ export default {
         ...mapActions([
             'deleteOffer'
         ]),
+        ...mapMutations([
+            'SET_OFFER'
+        ]),
         deleteMessage(){
             this.deleteOffer(this.offerData.objectId)
             this.showDeleteWarning = false;
@@ -111,6 +143,7 @@ export default {
             if(this.$router.history.current.path !== `/offer/${this.offerData.objectId}/schedule`){
                 // console.log('current path', this.$router.history.current.path)
                 // appRouter.push(`/profile`)
+                this.SET_OFFER(this.offerData)
                 this.$router.push(`/offer/${this.offerData.objectId}/schedule`)
                 this.show = false
             } else this.show = false

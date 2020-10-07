@@ -54,6 +54,9 @@ export default {
         const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
         state.notificationState.userNotifications[index].readByReceiver = true;
     },
+    SET_OFFER: (state: any, offerData: any) => {
+        state.notificationState.offer = offerData;
+    },
     DELETE_NOTIFICATION: (state: any, notificationId: any) => {
         const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
         state.notificationState.userNotifications.splice(index, 1);
