@@ -109,8 +109,12 @@
                 </v-btn>
             </div>
             </v-col>
-                    
-            <OfferForm v-if="!contentRoom.rented" />
+        </v-row>
+        <v-row class="text-center" justify="center">
+            <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
+                <OfferForm v-if="!contentRoom.rented" />    
+            </v-col>
+            <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
         </v-row>
     </v-container>
 </template>
@@ -136,7 +140,8 @@ import EditRoomForm from './EditRoomForm.vue'
             'isContentLoading',
             'currentUser',
             'contentRoom',
-            'isRoomUpdated'
+            'isRoomUpdated',
+            'isOfferSent'
         ]),
     },
     data(){

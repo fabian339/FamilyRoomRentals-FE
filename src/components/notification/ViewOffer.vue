@@ -9,12 +9,12 @@
                     <span class="headline">Message</span>
                 </v-card-title>
                 <v-card-text>
-                        <p>From: {{offerData.full_name}}</p>
-                        <p>Interested Room: <a :href="`/#/room/${offerData.roomId}`" target="_blank">Click Here</a></p>
+                        <p>From: {{currentOffer.full_name}}</p>
+                        <p>Interested Room: <a :href="`/#/room/${currentOffer.roomId}`" target="_blank">Click Here</a></p>
                         <p>Message: </p>
                         <div id="message">
                             <p> 
-                                I will like to offer the ammount of <strong>${{offerData.offer}}</strong> for this room. 
+                                I will like to offer the ammount of <strong>${{currentOffer.offer}}</strong> for this room. 
                                 Please consider my offer as I will really appreciate it.
                             </p>
                         </div>
@@ -22,13 +22,13 @@
                             <h3>What would you like to do?</h3>
                             <p>
                                 If you feel like this is a good match and price for the property,
-                                please accept <strong>{{offerData.full_name}}'s offer</strong> and schedule a meeting 
+                                please accept <strong>{{currentOffer.full_name}}'s offer</strong> and schedule a meeting 
                                 to show him/her the room. Otherwise, deny such offer.
                             </p>
                         </div>
                         <p style="color: teal">
                             <strong>
-                                Status: {{offerData.offerAccepted ? 'You accepted the offer, waiting for results.': 'Offer not yet accepted!'}}
+                                Status: {{currentOffer.offerAcceptedByOwner ? 'You accepted the offer, waiting for results.': 'Offer not yet accepted!'}}
                             </strong>
                         </p>
                 </v-card-text>
@@ -40,7 +40,7 @@
                         small 
                         outlined 
                         color="#556B2F"
-                        :disabled="offerData.offerAcceptedByOwner"  
+                        :disabled="currentOffer.offerAcceptedByOwner"  
                         @click.stop="redirectToSchedule">
                         Accept offer
                     </v-btn> 
@@ -50,7 +50,7 @@
                         outlined 
                         color="#FF69B4" 
                         @click.stop="show = false"
-                        :disabled="offerData.offerAcceptedByOwner"
+                        :disabled="currentOffer.offerAcceptedByOwner"
                         >
                         Deny Offer
                     </v-btn>
@@ -58,7 +58,7 @@
                         style="margin: 0px 5px;" 
                         small color="error" 
                         @click.stop="showDeleteWarning = true"
-                        :disabled="offerData.offerAcceptedByOwner"
+                        :disabled="currentOffer.offerAcceptedByOwner"
                         >
                         Delete Offer
                     </v-btn>
@@ -97,17 +97,15 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-
     </div>
 </template>
 
 <script>
-import {mapActions, mapMutations} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
     name: "ViewNotification",
     props: {
         value: Boolean,
-        offerData: {}
     },
     computed: {
         show: {
@@ -119,7 +117,10 @@ export default {
                     this.$emit('input', value)
                 }
             }
-        }
+        },
+        ...mapGetters([
+            'currentOffer',
+        ]),
     },
     data(){
         return{
@@ -130,21 +131,21 @@ export default {
         ...mapActions([
             'deleteOffer'
         ]),
-        ...mapMutations([
-            'SET_OFFER'
-        ]),
+        // ...mapMutations([
+        //     'SET_OFFER'
+        // ]),
         deleteMessage(){
-            this.deleteOffer(this.offerData.objectId)
+            this.deleteOffer(this.currentOffer.objectId)
             this.showDeleteWarning = false;
             this.$emit('input', false)
             // console.log("Deleting Notification", id)
         },
         redirectToSchedule(){
-            if(this.$router.history.current.path !== `/offer/${this.offerData.objectId}/schedule`){
+            if(this.$router.history.current.path !== `/offer/${this.currentOffer.objectId}/schedule`){
                 // console.log('current path', this.$router.history.current.path)
                 // appRouter.push(`/profile`)
-                this.SET_OFFER(this.offerData)
-                this.$router.push(`/offer/${this.offerData.objectId}/schedule`)
+                // this.SET_OFFER(this.currentOffer)
+                this.$router.push(`/offer/${this.currentOffer.objectId}/schedule`)
                 this.show = false
             } else this.show = false
         }

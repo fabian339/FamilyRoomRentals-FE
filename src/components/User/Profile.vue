@@ -57,6 +57,7 @@
       <SuccessAlert v-if="isOfferDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
       <SuccessAlert v-if="isUserUpdated && !isUserLoading" msg="User data successfully updated!" />
       <SuccessAlert v-if="isPasswordResetEmailSent && !isUserLoading" msg="Reset password email sent successfully!" />
+      <SuccessAlert v-if="isOfferAcceptedByOwner && !isUserLoading" msg="Offer Accepted, we will notify you when a meeting date is selected." />
       <v-img
         :src="currentUser.userPhoto"
         height="300px"
@@ -213,6 +214,7 @@ export default {
         'isOfferDeleted',
         'isUserUpdated',
         'isPasswordResetEmailSent',
+        'isOfferAcceptedByOwner',
       ])
   },
   data(){

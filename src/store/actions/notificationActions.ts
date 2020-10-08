@@ -6,11 +6,11 @@ let appRouter: any = router;
 
 export default {
 
-  sendOffer: (context: any, notification: object) => {
+  sendOffer: (context: any, notification: any) => {
+    console.log(notification);
     axios.post(`/classes/Offers`, notification)
     .then((res) => {
-      context.commit('SET_OFFER_SENT', true);
-      console.log('offer Sent', res)
+      context.commit('SET_OFFER_SENT_BY_CLIENT', true);
   })
   .catch((err) => {
       // const err = {
@@ -33,21 +33,16 @@ export default {
     });
   },
 
-  markNotificationRead: (context: any, notificationId: {}) => {
-    axios.put(`/classes/Offers/${notificationId}`, {readByReceiver: true})
-    .then((res) => {
-      // console.log("Updating Notifiction",res)
-      context.commit('MARK_NOTIFICATION_READ', notificationId);
-    })
-    .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
-    });
-  },
-
-  acceptOffer: (context: any, offerData: any) => {
+  updateOffer: (context: any, offerData: any) => {
     axios.put(`/classes/Offers/${offerData.objectId}`, offerData)
     .then((res) => {
-      console.log("Updating offer",res)
+      context.commit('UPDATE_OFFER', offerData);
+      if(offerData.offerAcceptedByOwner) {
+        context.commit('SET_OFFER_ACCEPTED_BY_OWNER', true);
+        if(appRouter.history.current.path !== '/profile'){
+          appRouter.push(`/profile`)
+        }
+      }
       // context.commit('UPDATE_OFFER', offerData);
     })
     .catch((err) => {
@@ -69,5 +64,40 @@ export default {
     .catch((err) => {
       context.commit('SET_CONTENT_ERROR', err);
     });
+  },
+
+  SendClientEmail: (context: any, email: string) => {
+    const mailjet = require ('node-mailjet')
+    .connect('da0fae2865dd1cc58ba371d9f6f2b9d2', '6890ee35b2dd961b4c57a9e9cddfa91f')
+    const request = mailjet
+    .post("send", {'version': 'v3.1'})
+    .request({
+      "Messages":[
+        {
+          "From": {
+            "Email": "mrfabian.cs@gmail.com",
+            "Name": "Marcos"
+          },
+          "To": [
+            {
+              "Email": `${email}`,
+              "Name": "Marcos"
+            }
+          ],
+          "Subject": "Greetings from Mailjet.",
+          "TextPart": "My first Mailjet email",
+          "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+          "CustomID": "AppGettingStartedTest"
+        }
+      ]
+    })
+    request
+      .then((result: any) => {
+        console.log(result.body)
+      })
+      .catch((err: any) => {
+        console.log(err.statusCode)
+      })
   }
+
 }

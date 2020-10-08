@@ -33,8 +33,8 @@
                         v-on="on"
                         >
                             <v-badge
-                                :content="currentOffers.filter((item) => item.readByReceiver === false).length"
-                                :value="currentOffers.filter((item) => item.readByReceiver === false).length"
+                                :content="currentUserOffers.filter((item) => item.readByReceiver === false).length"
+                                :value="currentUserOffers.filter((item) => item.readByReceiver === false).length"
                                 color="green"  
                                 overlap 
                             >
@@ -51,10 +51,10 @@
                     
                         <v-list                         
                             rounded
-                            v-if="currentOffers.length !== 0"
+                            v-if="currentUserOffers.length !== 0"
                         >
                             <v-list-item
-                                v-for="(item, index) in currentOffers"
+                                v-for="(item, index) in currentUserOffers"
                                 :key="index"
                                 @click.stop="openNotificationDialog(item)"
                             >
@@ -79,7 +79,7 @@
                         </div>
                     </v-card>
                 </v-menu>
-                <ViewOffer v-model="openOfferDialog" :offerData="notification" />
+                <ViewOffer v-model="openOfferDialog" />
             </div>
 
             <v-btn color="#e9ffd4" v-if="isAuthenticated" @click="logoutUser" text>
@@ -102,7 +102,7 @@
 </template>
 <script>
 import ViewOffer from '@/components/notification/ViewOffer.vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'Nav',
     components: {
@@ -111,26 +111,32 @@ export default {
     computed: {
         ...mapGetters([
             'isAuthenticated',
-            'currentOffers',
+            'currentUserOffers',
         ])
     },
     data: () => ({
         openOfferDialog: false,
-        notification: {},
     }),
     methods:{
         ...mapActions([
             'logout',
-            'markNotificationRead'
+            'updateOffer'
+        ]),
+        ...mapMutations([
+            'SET_OFFER'
         ]),
         logoutUser(e){
             e.preventDefault();
             this.logout()
         },
         openNotificationDialog(item){
-            this.notification = item;
+            this.SET_OFFER(item)
             this.openOfferDialog = true;
-            if(item.readByReceiver === false) this.markNotificationRead(item.objectId)   
+            let data = {
+                objectId: item.objectId,
+                readByReceiver: true
+            }
+            if(item.readByReceiver === false) this.updateOffer(data)   
         }
     },
 }

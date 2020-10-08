@@ -17,7 +17,8 @@
         </v-card-text>
         <v-card-text>
           Your access to and use of the Service is conditioned on your acceptance of and compliance with these 
-          terms. These terms apply to all visitors, users, and others who access or use the service.  
+          terms. These terms applies to all users using this service to promote a property or find candidates 
+          for occupancy.  
         </v-card-text>
         <v-card-text>
           By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part
@@ -25,45 +26,34 @@
         </v-card-text>
         <v-card-text>
           <p><strong>Conditions:</strong></p>    
-          By accepting to the terms and conditions, you agree to provide a one time payment per offer which will 
-          which will be procceced once the offer has been accepted and a meeting has been schedule. Such meeting 
-          will take action when the person renting the property and the client agree to the same terms.
-        </v-card-text>
-        <v-card-text>
-          <p><strong>Price:</strong></p>  
-          <ol>  
-            <li> As a consideration for the provision of the service by the Service provider, the price for the provision
-              of the Services is <strong> $20 ("price"). </strong>
-            </li>
-            <li> The Buyer shall/shall not (delete as appropriate) pay for the Service Provider's using an online transaction
-                where the payment shall be made.  
-            </li>
-          </ol>
+          By accepting to the terms and conditions, you agree that you will be available on one of these days:
+          <div v-for="(item, index) in offerData.meetingDates" :key="index + 20">
+              <li> {{item.date}} at {{item.time}} </li>
+          </div>  
+          which will be determined once the client accept the date of preference. By accepting to the terms and 
+          conditions, you also agree to maintain all interactions with the client to appropiate and in business manner.
         </v-card-text>
         <v-card-text>
           <p><strong>Payment:</strong></p>   
           <ol> 
-            <li> They Buyer agrees to pay the Price to the Service Provider once the offer is accepted and a meeting has been
-              made between the two parties.
+            <li> 
+                They Buyer agrees to pay the Price to the Service Provider once the offer is accepted and a meeting has been
+                made between the two parties.
+            </li>
+            <li>
+                As FamilyRoomRentals is promoting and offering a property that you provided, you will be granted the ammount
+                of <strong> $10 ("price") </strong> if the deal is closed in good manners. Meaning the two parties have decided
+                to move forward with the agreement. Such ammount will be deposited in an account provided by you onces the deal 
+                is closed.
+            </li>
+            <li>
+                FamilyRoomRentals does not grant any money if the deal is not closed. That is if after the meeting, both parties 
+                decided not to move forward, there will be no money granted.
             </li>
             <li> Any charges payable under this Agreement are exclusive of any applicable taxes, tariff surcharges or ther like 
               amounts assessed by any govermental entity arising as a result of the provision of the Service by the Service 
               Provider to the Buyer under this Agreement and such shall be payable by the Buyer to the Service Provider in 
               addition to all other charges payable herenuder.
-            </li>
-          </ol>
-        </v-card-text>
-        <v-card-text>
-          <p><strong>Refund:</strong></p> 
-          <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-              as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-              of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-              the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-              payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-              offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
             </li>
           </ol>
         </v-card-text>
@@ -85,7 +75,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click.stop="addOfferToThisRoom"
+            @click.stop="addScheduleDates"
           >
             Continue
           </v-btn>
@@ -98,10 +88,10 @@
 <script>
 import {mapActions} from 'vuex'
 export default {
-    name: "ClientOffertAgreement",
+    name: "UserAgreementWithClient",
     props: {
         value: Boolean,
-        clientOffer: {}
+        offerData: {}
     },
     computed: {
         show: {
@@ -122,20 +112,31 @@ export default {
         }
     },
     methods: {
-      ...mapActions([
-          'sendOffer',
-          'SendClientEmail'
-      ]),
-      addOfferToThisRoom(){
-          if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
-          else {
-              this.clientOffer.isOfferAgreementByClientAccepted = this.checkbox;
-              this.sendOffer(this.clientOffer)
-              this.sendOffer(this.clientOffer.email)
-              this.agreementError = ''
-              this.show = false;
-          }
-      }
+        ...mapActions([
+            'updateOffer'
+        ]),
+        addScheduleDates(){
+            if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
+            else {
+                let scheduleDates = [];
+                this.offerData.meetingDates.forEach(element => {
+                    scheduleDates.push({
+                        date: element.date,
+                        time: element.time
+                    })
+                });
+                let data = {
+                    meetingDates: scheduleDates,
+                    objectId: this.offerData.objectId,
+                    isOfferAgreementByOwnerAccepted: this.checkbox,
+                    offerAcceptedByOwner: this.offerData.offerAcceptedByOwner
+                };
+                this.updateOffer(data)
+                // console.log(data)
+                this.agreementError = ''
+                this.show = false;
+            }
+        }
     }
 }
 </script>

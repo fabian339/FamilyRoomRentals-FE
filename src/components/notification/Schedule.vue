@@ -17,60 +17,24 @@
             </v-col>
         </v-row>
         <v-row justify="space-around">
-            <div>
+            <div v-for="(item, index) in dates" :key="index + 4">
                 <div>
-                    <v-date-picker
-                        v-model="dates[0].date"
-                        color="blue"
+                     <v-date-picker
+                        v-model="item.date"
+                        :color="item.color"
                     ></v-date-picker>
                 </div>
                 <div>
                     <v-time-picker
-                        @input="fixDate1"
+                        v-model="item.tempTime"
+                        @input="fixTime(index)"
+                        :color="item.color"
                     ></v-time-picker>
                 </div>
                 <v-text-field
-                    :value="`Schedule: ${dates[0].date} at ${dates[0].time}`"
+                    :value="`Schedule: ${item.date} at ${item.time}`"
                     disabled
-                    :error-messages="dates[0].errorDateMsg"   
-                ></v-text-field>
-            </div>
-            <div>
-                <div>
-                    <v-date-picker
-                        v-model="dates[1].date"
-                        color="orange"
-                    ></v-date-picker>
-                </div>
-                <div>
-                    <v-time-picker
-                        @input="fixDate2"
-                        color="orange"
-                    ></v-time-picker>
-                </div>
-                <v-text-field
-                    :value="`Schedule: ${dates[1].date} at ${dates[1].time}`"
-                    disabled
-                    :error-messages="dates[1].errorDateMsg"   
-                ></v-text-field>
-            </div>
-            <div>
-                <div>
-                    <v-date-picker
-                        v-model="dates[2].date"
-                        color="pink"
-                    ></v-date-picker>
-                </div>
-                <div>
-                    <v-time-picker
-                        @input="fixDate3"
-                        color="pink" 
-                    ></v-time-picker>
-                </div>
-                <v-text-field
-                    :value="`Schedule: ${dates[2].date} at ${dates[2].time}`"
-                    disabled
-                    :error-messages="dates[2].errorDateMsg"  
+                    :error-messages="item.errorDateMsg"  
                 ></v-text-field>
             </div>
         </v-row>
@@ -83,15 +47,16 @@
             <p style="color:red">{{duplicatedDateError}}</p>
         </v-row>
     </div>
+    <UserAgreementWithClient v-model="showUserAgreement" :offerData="data"/>
   </v-container>
 </template>
 <script>
-// import ViewOffer from '@/components/notification/ViewOffer.vue'
+import UserAgreementWithClient from '@/components/agreements/UserAgreementWithClient.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'Schedule',
     components: {
-        // ViewOffer
+        UserAgreementWithClient
     },
     computed: {
         ...mapGetters([
@@ -102,44 +67,41 @@ export default {
         dates: [
             {
                 date: new Date().toISOString().substr(0, 10),
+                tempTime: '',
                 time: '',
+                color: 'blue',
                 errorDateMsg: ''
             },
             {
                 date: new Date().toISOString().substr(0, 10),
+                tempTime: '',
                 time: '',
+                color: 'orange',
                 errorDateMsg: ''
             },
             {
                 date: new Date().toISOString().substr(0, 10),
+                tempTime: '',
                 time: '',
+                color: 'pink',
                 errorDateMsg: ''
             }
         ],
-        duplicatedDateError: ''
+        duplicatedDateError: '',
+        showUserAgreement: false,
+        data: {}
     }),
+    created(){
+
+    },
     methods:{
         ...mapActions([
             'acceptOffer',
         ]),
-        fixDate1(time){
-            this.dates[0].time = (parseInt(time.substr(0, 2)) < 12) ? 
-                (parseInt(time.substr(0, 2)) === 0 ) ? 
-                (`12${(time.substr(2, 4))} AM`) :
-                (time + ' AM') : (parseInt(time.substr(0, 2)) > 12) ? 
-                (`${(parseInt(time.substr(0, 2)) - 12)}${(time.substr(2, 4))} PM`) : 
-                (`${time} PM`);
-        },
-        fixDate2(time){
-            this.dates[1].time = (parseInt(time.substr(0, 2)) < 12) ? 
-                (parseInt(time.substr(0, 2)) === 0 ) ? 
-                (`12${(time.substr(2, 4))} AM`) :
-                (time + ' AM') : (parseInt(time.substr(0, 2)) > 12) ? 
-                (`${(parseInt(time.substr(0, 2)) - 12)}${(time.substr(2, 4))} PM`) : 
-                (`${time} PM`);
-        },
-        fixDate3(time){
-            this.dates[2].time = (parseInt(time.substr(0, 2)) < 12) ? 
+        fixTime(index){
+            // console.log("HEREEEEE", e)
+            let time = this.dates[index].tempTime;
+            this.dates[index].time = (parseInt(time.substr(0, 2)) < 12) ? 
                 (parseInt(time.substr(0, 2)) === 0 ) ? 
                 (`12${(time.substr(2, 4))} AM`) :
                 (time + ' AM') : (parseInt(time.substr(0, 2)) > 12) ? 
@@ -147,6 +109,7 @@ export default {
                 (`${time} PM`);
         },
         SendSchedule(){
+            console.log("validating schedule")
             let validSchedule = true;
             if(this.isThereDuplicatedDates()){
                 this.duplicatedDateError = 'Cannot select duplicated dates!'
@@ -168,19 +131,25 @@ export default {
                 } else if(!(new Date("01/01/2000 "+item.time) > new Date("01/01/2000 7:00 AM") &&
                     new Date("01/01/2000 "+item.time) < new Date("01/01/2000 8:00 PM"))) {
                     item.errorDateMsg = 'Please select an appropiate time.'
+                    console.log(item.time, "error time")
                     validSchedule = false;
-                } else item.errorDateMsg = '';
+                } else {
+                    item.errorDateMsg = '';
+                    console.log("cleaning errors")
+                }
             })
             // show dialog to accept terms and conditions
             if(validSchedule) {
-                this.dates.forEach(item => delete item.errorDateMsg)
+                // this.dates.forEach(item => delete item.errorDateMsg)
                 const offerData = {
                     objectId: this.$route.params.id,
                     offerAcceptedByOwner: true,
                     meetingDates: this.dates
                 }
+                this.data = offerData;
+                this.showUserAgreement = true;
                 // this.acceptOffer(offerData);
-                console.log('schedule is valid', offerData)
+                // console.log('schedule is valid', offerData)
             }
         },
         isThereDuplicatedDates(){
