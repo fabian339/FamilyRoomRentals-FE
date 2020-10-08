@@ -66,38 +66,8 @@ export default {
     });
   },
 
-  SendClientEmail: (context: any, email: string) => {
-    const mailjet = require ('node-mailjet')
-    .connect('da0fae2865dd1cc58ba371d9f6f2b9d2', '6890ee35b2dd961b4c57a9e9cddfa91f')
-    const request = mailjet
-    .post("send", {'version': 'v3.1'})
-    .request({
-      "Messages":[
-        {
-          "From": {
-            "Email": "mrfabian.cs@gmail.com",
-            "Name": "Marcos"
-          },
-          "To": [
-            {
-              "Email": `${email}`,
-              "Name": "Marcos"
-            }
-          ],
-          "Subject": "Greetings from Mailjet.",
-          "TextPart": "My first Mailjet email",
-          "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
-          "CustomID": "AppGettingStartedTest"
-        }
-      ]
-    })
-    request
-      .then((result: any) => {
-        console.log(result.body)
-      })
-      .catch((err: any) => {
-        console.log(err.statusCode)
-      })
-  }
+  // SendClientEmail: async (context: any, email: string) => {
+  //   const nodemailer = require("nodemailer");
+  // }
 
 }
