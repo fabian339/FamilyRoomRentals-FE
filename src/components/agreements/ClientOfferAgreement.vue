@@ -97,12 +97,11 @@
 
 <script>
 import {mapActions} from 'vuex'
-import {SendClientEmail} from '../../globals/emails'
+import {SendEmailToClientOnOffer, SendEmailToUserOnOffer} from '../../globals/emails'
 export default {
     name: "ClientOffertAgreement",
     props: {
         value: Boolean,
-        clientOffer: {}
     },
     computed: {
         show: {
@@ -136,18 +135,25 @@ export default {
       addOfferToThisRoom(){
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
           else {
-              this.clientOffer.isOfferAgreementByClientAccepted = this.checkbox;
-              const emailData = SendClientEmail({
-                email: this.clientOffer.email,
-                name: this.clientOffer.full_name,
-                offer: this.clientOffer.offer,
-                phone: this.clientOffer.phone,
-                roomId: this.clientOffer.roomId,
-                logo: this.logo
+              this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
+              const clientEmailData = SendEmailToClientOnOffer({
+                email: this.$store.getters.currentOffer.email,
+                name: this.$store.getters.currentOffer.full_name,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
               })
-                // console.log("emailSend", emailData);
-              this.SendEmail(emailData);
-              this.sendOffer(this.clientOffer)
+
+              const clientUserData = SendEmailToUserOnOffer({
+                email:this.$store.getters.currentOffer.ownerEmail,
+                name: this.$store.getters.currentOffer.ownerName,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+              })
+
+                console.log("emailSend", clientEmailData, clientUserData);
+              // this.SendEmail(clientEmailData);
+              // this.SendEmail(clientUserData);
+              this.sendOffer(this.$store.getters.currentOffer)
               this.agreementError = ''
               this.show = false;
           }

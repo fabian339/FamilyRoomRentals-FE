@@ -24,9 +24,14 @@ export default {
   fetchUserNotifications: (context: any, id: string) => {
     axios.get('/classes/Offers')
     .then((res) => {
-      let myNotifications = res.data.results.filter((item: any) => item.receiverId === id);
-      res.data.results
+      let myNotifications:any = [];  
+
+      res.data.results.forEach((offer: any)=> {
+          if(appRouter.history.current.path === `/offer/${offer.objectId}/schedule`) context.commit('SET_OFFER', offer);
+          if(offer.receiverId === id) myNotifications.push(offer)
+      })
       context.commit('SET_USER_NOTIFICATIONS', myNotifications);
+      // console.log(appRouter.history)
     })
     .catch((err) => {
       context.commit('SET_CONTENT_ERROR', err);

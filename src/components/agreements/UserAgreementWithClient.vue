@@ -87,6 +87,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import { SendEmailToClientOnOfferAccepted} from '../../globals/emails'
 export default {
     name: "UserAgreementWithClient",
     props: {
@@ -113,7 +114,8 @@ export default {
     },
     methods: {
         ...mapActions([
-            'updateOffer'
+            'updateOffer',
+            'SendEmail'
         ]),
         addScheduleDates(){
             if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
@@ -129,10 +131,21 @@ export default {
                     meetingDates: scheduleDates,
                     objectId: this.offerData.objectId,
                     isOfferAgreementByOwnerAccepted: this.checkbox,
-                    offerAcceptedByOwner: this.offerData.offerAcceptedByOwner
+                    offerAcceptedByOwner: this.offerData.offerAcceptedByOwner,
+                    status: 'Offer accepted, submitted available dates!'
                 };
-                this.updateOffer(data)
+              const clientEmailData = SendEmailToClientOnOfferAccepted({
+                email: 'ovn75668@cuoly.com',
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+                // expirationDate needed 
+              })
+
+              this.updateOffer(data)
                 // console.log(data)
+                this.SendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;
             }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="offerContainer">
-            <ClientOfferAgreement v-model="openOfferAgreementDialog" :clientOffer="offerData" />
+            <ClientOfferAgreement v-model="openOfferAgreementDialog" />
             <h2 class="headline font-weight-bold mb-3">
                 Interested?
             </h2>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import {validateOffer} from '../../store/validators'
 import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.vue'
 
@@ -75,13 +75,15 @@ import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.v
         phone: '',
         offer: '',
         openOfferAgreementDialog: false,
-        offerData: {},
         errors: {}
       }
     },
     created() {
     },
     methods:{
+        ...mapMutations([
+            'SET_OFFER'
+        ]),
         openAgreementDialog() {
             const clientOffer = {
                     full_name: this.full_name,
@@ -90,12 +92,14 @@ import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.v
                     offer: this.offer,
                     receiverId: this.contentRoom.ownerId,
                     roomId: this.contentRoom.objectId,
+                    ownerName: `${this.contentRoom.ownerFname} ${this.contentRoom.ownerLname}`,
+                    ownerEmail: this.contentRoom.ownerEmail,
                     isOfferAgreementByClientAccepted: false,
                 }
             const {valid, errors} = validateOffer(clientOffer);
             if(!valid) this.errors = errors;
             else {
-                this.offerData = clientOffer;
+                this.SET_OFFER(clientOffer);
                 this.openOfferAgreementDialog = true;
             }
         }

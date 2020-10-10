@@ -224,6 +224,7 @@ import {validateCreateRoom} from '../../store/validators'
                 ownerId: this.currentUser.objectId,
                 ownerFname: this.currentUser.fName,
                 ownerLname: this.currentUser.lName,
+                ownerEmail: this.currentUser.email,
                 rented: false,
                 images: this.images.length === 0 ? noImageForRoom : this.images
             }

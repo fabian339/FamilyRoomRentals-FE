@@ -13,7 +13,7 @@
           </p>
           <p class="font">
             Send us an email to 
-            <a href="mailto:familyroomrentals.contact@protonmail.com" target="_blank">familyroomrentals.contact@protonmail.com</a> 
+            <a href="mailto:familyroomrentas@dr.com" target="_blank">familyroomrentas@dr.com</a> 
             and share you experience with us.
           </p>
         </div>

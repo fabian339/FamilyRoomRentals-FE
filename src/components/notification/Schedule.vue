@@ -1,10 +1,16 @@
 <template>
   <v-container>
-    <v-row class="text-center" justify="center" v-if="this.$store.getters.currentOffer.offerAccepted">
+    <v-row class="text-center" justify="center" v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner">
         <div class="logo" >
             <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>
-        <h1 style="color: brown; font-style: italic;">This Offer is already accepted!</h1>
+        <h1 style="color: brown; font-style: italic;">
+            {{currentOffer.offerAcceptedByOwner ? (
+                `This offer is already accepted and has the schedule: ${currentOffer.offerAcceptedByOwner}`) : (
+                    'This offer was rejected.'
+                )
+            }}
+        </h1>
     </v-row>
     <div v-else>
         <v-row class="text-center" justify="center">
@@ -12,42 +18,50 @@
                 <img :src="require('../../assets/logo.png')" alt="logo" width="400">
             </div>
             <v-col lg="8">
-                <h2 class="headline font-weight-bold mb-3">Schedule your meeting with the client</h2>
-                <h3>Please select three available dates, you will be notified prior the meeting day.</h3>
+                <h2 class="headline font-weight-bold mb-3">Schedule your meeting with {{currentOffer.full_name}}</h2>
+                <h3>Please select three available dates at your best convenience.</h3>
+                <h4>{{currentOffer.full_name}} will select one of these dates to meet with you, see the property, and discuss details.</h4>
             </v-col>
         </v-row>
         <v-row justify="space-around">
-            <div v-for="(item, index) in dates" :key="index + 4">
+            <div v-for="(item, index) in dates" :key="index + 4" style="border: 2px solid lightgray; border-radius: 15px; width: 294px;">
                 <div>
+                    <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT DATE# {{index + 1}} </strong></p>
                      <v-date-picker
                         v-model="item.date"
                         :color="item.color"
                     ></v-date-picker>
-                </div>
-                <div>
+            
+                    <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT TIME# {{index + 1}} </strong></p>
                     <v-time-picker
                         v-model="item.tempTime"
                         @input="fixTime(index)"
                         :color="item.color"
                     ></v-time-picker>
+                <div style="text-align: center;line-height: 10px;margin: 20px 0px;">
+                    <p :style="`color: ${item.color}`">{{`Schedule: ${item.date} at ${item.time}`}}</p>
+                    <p style="color: red; line-height: 15px;">{{item.errorDateMsg}}</p>
                 </div>
-                <v-text-field
-                    :value="`Schedule: ${item.date} at ${item.time}`"
-                    disabled
-                    :error-messages="item.errorDateMsg"  
-                ></v-text-field>
+                </div>
             </div>
         </v-row>
-        <v-row class="text-center" justify="center" style="margin: 15px">
+        <v-row class="text-center" justify="center" style="margin: 35px 0px -5px 0px;">
             <v-btn @click.stop="SendSchedule" color="#483D8B" dark>
                 Save Avaliable Dates
             </v-btn>
         </v-row>
-        <v-row class="text-center" justify="center" style="margin: 0px 15px">
+        <v-row class="text-center" justify="center" style="margin: 25px 0px -15px 0px">
             <p style="color:red">{{duplicatedDateError}}</p>
         </v-row>
     </div>
-    <UserAgreementWithClient v-model="showUserAgreement" :offerData="data"/>
+    <UserAgreementWithClient 
+        v-model="showUserAgreement" 
+        :offerData="{
+                    objectId: this.currentOffer.objectId,
+                    offerAcceptedByOwner: true,
+                    meetingDates: this.dates,
+                }"
+    />
   </v-container>
 </template>
 <script>
@@ -61,6 +75,7 @@ export default {
     computed: {
         ...mapGetters([
             'isAuthenticated',
+            'currentOffer'
         ])
     },
     data: () => ({
@@ -69,21 +84,21 @@ export default {
                 date: new Date().toISOString().substr(0, 10),
                 tempTime: '',
                 time: '',
-                color: 'blue',
+                color: '#191970',
                 errorDateMsg: ''
             },
             {
                 date: new Date().toISOString().substr(0, 10),
                 tempTime: '',
                 time: '',
-                color: 'orange',
+                color: '#FF7F50',
                 errorDateMsg: ''
             },
             {
                 date: new Date().toISOString().substr(0, 10),
                 tempTime: '',
                 time: '',
-                color: 'pink',
+                color: '#C71585',
                 errorDateMsg: ''
             }
         ],
@@ -120,7 +135,7 @@ export default {
                 let restrictionDate = new Date();
                 restrictionDate.setMonth(restrictionDate.getMonth() + 1);
                 if(new Date(item.date).toISOString() < new Date().toISOString()){
-                    item.errorDateMsg = 'This date has passed, please select another date.';
+                    item.errorDateMsg = 'This date has passed or its too soon.';
                     validSchedule = false;
                 } else if(!(selectedDate.toISOString() < restrictionDate.toISOString())) {
                     item.errorDateMsg = 'Please select a date within one month from today.'
@@ -141,12 +156,12 @@ export default {
             // show dialog to accept terms and conditions
             if(validSchedule) {
                 // this.dates.forEach(item => delete item.errorDateMsg)
-                const offerData = {
-                    objectId: this.$route.params.id,
-                    offerAcceptedByOwner: true,
-                    meetingDates: this.dates
-                }
-                this.data = offerData;
+                // const offerData = {
+                //     objectId: this.currentOffer.objectId,
+                //     offerAcceptedByOwner: true,
+                //     meetingDates: this.dates
+                // }
+                // this.data = offerData;
                 this.showUserAgreement = true;
                 // this.acceptOffer(offerData);
                 // console.log('schedule is valid', offerData)

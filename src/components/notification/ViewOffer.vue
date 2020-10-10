@@ -26,9 +26,12 @@
                                 to show him/her the room. Otherwise, deny such offer.
                             </p>
                         </div>
-                        <p style="color: teal">
+                        <p>  
                             <strong>
-                                Status: {{currentOffer.offerAcceptedByOwner ? 'You accepted the offer, waiting for results.': 'Offer not yet accepted!'}}
+                                Status:
+                            </strong>
+                            <strong style="color: teal">
+                                {{currentOffer.status}}
                             </strong>
                         </p>
                 </v-card-text>
@@ -40,7 +43,7 @@
                         small 
                         outlined 
                         color="#556B2F"
-                        :disabled="currentOffer.offerAcceptedByOwner"  
+                        :disabled="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner"  
                         @click.stop="redirectToSchedule">
                         Accept offer
                     </v-btn> 
@@ -49,9 +52,9 @@
                         small 
                         outlined 
                         color="#FF69B4" 
-                        @click.stop="show = false"
-                        :disabled="currentOffer.offerAcceptedByOwner"
-                        >
+                        @click.stop="showRejectionDialog = true"
+                        :disabled="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner"
+                    >
                         Deny Offer
                     </v-btn>
                     <v-btn 
@@ -59,7 +62,7 @@
                         small color="error" 
                         @click.stop="showDeleteWarning = true"
                         :disabled="currentOffer.offerAcceptedByOwner"
-                        >
+                    >
                         Delete Offer
                     </v-btn>
                 </div>                
@@ -97,6 +100,38 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog
+            v-model="showRejectionDialog"
+            max-width="320"
+            >
+            <v-card>
+                <v-card-title class="headline">Are you sure you want to reject this offer?</v-card-title>
+                <v-card-text>
+                    Once this is done, we cannot undo this action. Do you want to continue?
+                </v-card-text>
+
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="showRejectionDialog = false"
+                >
+                    Cancel
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click.stop="markOfferRejected"
+                >
+                    Continue
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -125,11 +160,13 @@ export default {
     data(){
         return{
             showDeleteWarning: false,
+            showRejectionDialog: false,
         }
     },
     methods: {
         ...mapActions([
-            'deleteOffer'
+            'deleteOffer',
+            'updateOffer'
         ]),
         // ...mapMutations([
         //     'SET_OFFER'
@@ -148,6 +185,14 @@ export default {
                 this.$router.push(`/offer/${this.currentOffer.objectId}/schedule`)
                 this.show = false
             } else this.show = false
+        },
+        markOfferRejected(){
+            this.updateOffer({
+                objectId: this.currentOffer.objectId,
+                offerRejectedByOwner: true,
+                status: "Offer was rejected!",
+            })
+            this.showRejectionDialog = false
         }
     }
 }
