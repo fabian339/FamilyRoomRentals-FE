@@ -13,6 +13,7 @@ import RegistrationForm from '@/components/User/RegistrationForm.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
+import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
 
 
 Vue.use(VueRouter)
@@ -100,6 +101,11 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/stories',
     name: 'Stories',
     component: Stories
+  },
+  {
+    path: '/offer-for-room/:secretId/select-date-to-meet/:token',
+    name: 'SelectDateAndPay',
+    component: SelectDateAndPay
   },
 ]
 

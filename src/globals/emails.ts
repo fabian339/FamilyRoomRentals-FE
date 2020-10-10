@@ -81,15 +81,16 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <p>${data.ownerName} has accepted your offer and decided to move forward.</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='familyroomrentals/#/room/'${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Status: Offer accepted, ${data.ownerName} submitted three available dates </p>
         </div>
-        <h3>What now?</h3>
 
-        <p>Take a look at the available dates here.</p>
-        <p>Expiration date: data.expirationDate</p>
-        <p> 
+        <h4>What now?</h4>
+        <p>Verification Id: <strong>${data.verificationId}</strong> - (you will need this ID to select the meeting date) </p>
+        <p>Take a look at the available dates 
+        <strong><a href='http://localhost:8080/#/offer-for-room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+        <p>
             You have 7 days to select a date, keep in mind that if you do not select a date, the offer will
             be dismiss.
         </p>

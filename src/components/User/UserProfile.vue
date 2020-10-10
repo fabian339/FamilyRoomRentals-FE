@@ -57,7 +57,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'UserProfile',
-    components: {
+  components: {
     Room,
     SuccessAlert,
     Profile

@@ -38,6 +38,19 @@ export default {
     });
   },
 
+  getOffer: (context: any, id: String) => {
+    console.log('this is a Data22', id)
+    context.commit('SET_LOADING_CONTENT', true);
+    axios.get(`/classes/Offers/${id}`)
+    .then((res) => {
+      context.commit('SET_OFFER', res.data)
+      context.commit('SET_LOADING_CONTENT', false);
+    })
+    .catch((err) => {
+      context.commit('SET_CONTENT_ERROR', err);
+    });
+  },
+
   updateOffer: (context: any, offerData: any) => {
     axios.put(`/classes/Offers/${offerData.objectId}`, offerData)
     .then((res) => {

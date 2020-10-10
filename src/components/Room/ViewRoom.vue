@@ -154,7 +154,6 @@ import EditRoomForm from './EditRoomForm.vue'
     },
     methods:{
         ...mapActions([
-            'setRoom',
             'deleteRoom',
         ]),
         deleteRoomData(){
@@ -166,9 +165,6 @@ import EditRoomForm from './EditRoomForm.vue'
             window.open(this.roomAddress, '_blank');
         },
     },
-    created() {
-        if(Object.keys(this.contentRoom).length === 0) this.setRoom(this.$route.params.id);
-    }
   }
 </script>
 

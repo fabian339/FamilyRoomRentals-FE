@@ -9,6 +9,10 @@ export default {
       context.commit('SET_LOADING_CONTENT', true);
       axios.get('/classes/Room')
       .then((res) => {
+        res.data.results.forEach((room: any)=> {
+            if(appRouter.history.current.path === `/room/${room.objectId}`) context.commit('SET_ROOM', room);
+        })
+
         context.commit('SET_ROOMS', res.data.results);
         context.commit('SET_LOADING_CONTENT', false);
       })
@@ -40,18 +44,6 @@ export default {
     .then((res) => {
       // console.log("update Room Response: ", res);
       context.commit('UPDATE_ROOM', roomData);
-      context.commit('SET_LOADING_CONTENT', false);
-    })
-    .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
-    });
-  },
-
-  setRoom: (context: any, id: string) => {
-    context.commit('SET_LOADING_CONTENT', true);
-    axios.get(`/classes/Room/${id}`)
-    .then((res) => {
-      context.commit('SET_ROOM', res.data)
       context.commit('SET_LOADING_CONTENT', false);
     })
     .catch((err) => {

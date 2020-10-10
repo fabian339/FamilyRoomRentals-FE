@@ -88,6 +88,8 @@
 <script>
 import {mapActions} from 'vuex'
 import { SendEmailToClientOnOfferAccepted} from '../../globals/emails'
+let jwt = require('jsonwebtoken');
+
 export default {
     name: "UserAgreementWithClient",
     props: {
@@ -134,17 +136,25 @@ export default {
                     offerAcceptedByOwner: this.offerData.offerAcceptedByOwner,
                     status: 'Offer accepted, submitted available dates!'
                 };
+                let token = jwt.sign({
+                  iat: Math.floor(new Date()),
+                  exp: new Date().setDate(new Date().getDate() + 7),
+                  data: { 
+                      name: this.$store.getters.currentOffer.full_name 
+                    }
+                  }, this.$store.getters.currentOffer.roomId);
+              
               const clientEmailData = SendEmailToClientOnOfferAccepted({
-                email: 'ovn75668@cuoly.com',
+                email: 'bog27432@eoopy.com',
                 name: this.$store.getters.currentOffer.full_name,
                 ownerName: this.$store.getters.currentOffer.ownerName,
                 offer: this.$store.getters.currentOffer.offer,
                 roomId: this.$store.getters.currentOffer.roomId,
-                // expirationDate needed 
+                verificationId: this.$store.getters.currentOffer.objectId,
+                token: token
               })
-
-              this.updateOffer(data)
-                // console.log(data)
+              // this.updateOffer(data)
+                console.log(data, clientEmailData, token)
                 this.SendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;
