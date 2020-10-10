@@ -74,7 +74,6 @@ import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.v
         email: '',
         phone: '',
         offer: '',
-        sent: false,
         openOfferAgreementDialog: false,
         offerData: {},
         errors: {}

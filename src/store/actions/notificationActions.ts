@@ -66,8 +66,19 @@ export default {
     });
   },
 
-  // SendClientEmail: async (context: any, email: string) => {
-  //   const nodemailer = require("nodemailer");
-  // }
+  SendEmail: (context: any, emailData: any) => {
+    axios.post(`/functions/sendEmailOne`, emailData)
+    .then((res) => {
+      // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
+      console.log("Sending Email",res)
+  })
+  .catch((err) => {
+      // const err = {
+      //   responseError: "Invalid email/password.."
+      // }
+      context.commit('SET_USER_ERROR', err);
+      // localStorage.removeItem('user-token')
+    });
+  }
 
 }

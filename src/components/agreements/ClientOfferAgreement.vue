@@ -97,6 +97,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {SendClientEmail} from '../../globals/emails'
 export default {
     name: "ClientOffertAgreement",
     props: {
@@ -118,23 +119,53 @@ export default {
     data(){
         return {
             checkbox: false,
-            agreementError: ''
+            agreementError: '',
+            logo: ''
         }
+    },
+    created(){
+      this.getDataUri(require('../../assets/logo.png'), (dataUri) => {
+         this.logo = dataUri
+      });
     },
     methods: {
       ...mapActions([
           'sendOffer',
-          'SendClientEmail'
+          'SendEmail'
       ]),
       addOfferToThisRoom(){
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
           else {
               this.clientOffer.isOfferAgreementByClientAccepted = this.checkbox;
+              const emailData = SendClientEmail({
+                email: this.clientOffer.email,
+                name: this.clientOffer.full_name,
+                offer: this.clientOffer.offer,
+                phone: this.clientOffer.phone,
+                roomId: this.clientOffer.roomId,
+                logo: this.logo
+              })
+                // console.log("emailSend", emailData);
+              this.SendEmail(emailData);
               this.sendOffer(this.clientOffer)
-              this.sendOffer(this.clientOffer.email)
               this.agreementError = ''
               this.show = false;
           }
+      },
+     getDataUri(url, callback) {
+      var image = new Image();
+      image.onload = function () {
+      var canvas = document.createElement('canvas');
+      canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+      canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+      canvas.getContext('2d').drawImage(this, 0, 0);
+      // Get raw image data
+      // callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
+      // ... or get as Data URI
+      callback(canvas.toDataURL('image/png'));
+      };
+
+      image.src = url;
       }
     }
 }
