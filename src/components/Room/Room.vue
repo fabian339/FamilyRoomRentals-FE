@@ -33,7 +33,7 @@
 
 <script>
   // import store from '../store.js'
-  import { mapActions } from 'vuex'
+  import { mapMutations } from 'vuex'
 
   // import axios from 'axios'
   export default {
@@ -44,11 +44,11 @@
     created() {
   },
   methods: {
-    ...mapActions([
-      'setRoom',
+    ...mapMutations([
+      'SET_ROOM',
     ]),
     viewRoom() {
-      this.setRoom(this.roomData.objectId)
+      this.SET_ROOM(this.roomData)
       this.$router.push(`room/${this.roomData.objectId}`)
     }
   }   

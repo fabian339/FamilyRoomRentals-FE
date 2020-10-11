@@ -38,12 +38,20 @@ export default {
     });
   },
 
-  getOffer: (context: any, id: String) => {
-    console.log('this is a Data22', id)
+  getOffer: (context: any, data: any) => {
+    // console.log('this is a Data22', id)
     context.commit('SET_LOADING_CONTENT', true);
-    axios.get(`/classes/Offers/${id}`)
+    axios.get(`/classes/Offers/${data.id}`)
     .then((res) => {
-      context.commit('SET_OFFER', res.data)
+      if(res.data.offerToken === data.token){
+        context.commit('SET_OFFER', res.data)
+        context.commit('SET_OFFER_TOKEN_VERIFIED', true)
+        context.commit('CLEAR_NOTIFICATIONS_ERROR')
+      } else {
+        context.commit('SET_OFFER_ERROR', {
+          error: 'Invalid Verification ID!'
+        })
+      }
       context.commit('SET_LOADING_CONTENT', false);
     })
     .catch((err) => {
@@ -85,17 +93,18 @@ export default {
   },
 
   SendEmail: (context: any, emailData: any) => {
-    axios.post(`/functions/sendEmailOne`, emailData)
+    const path = ['/functions/sendEmailOne', '/functions/sendEmailThree'];
+    let index = Math.random();
+    if(index < 0.5) index = Math.floor(index)
+    else index = Math.ceil(index)
+    
+    axios.post(path[index], emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
       console.log("Sending Email",res)
-  })
-  .catch((err) => {
-      // const err = {
-      //   responseError: "Invalid email/password.."
-      // }
+    })
+    .catch((err) => {
       context.commit('SET_USER_ERROR', err);
-      // localStorage.removeItem('user-token')
     });
   }
 

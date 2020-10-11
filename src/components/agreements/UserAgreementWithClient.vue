@@ -129,13 +129,7 @@ export default {
                         time: element.time
                     })
                 });
-                let data = {
-                    meetingDates: scheduleDates,
-                    objectId: this.offerData.objectId,
-                    isOfferAgreementByOwnerAccepted: this.checkbox,
-                    offerAcceptedByOwner: this.offerData.offerAcceptedByOwner,
-                    status: 'Offer accepted, submitted available dates!'
-                };
+
                 let token = jwt.sign({
                   iat: Math.floor(new Date()),
                   exp: new Date().setDate(new Date().getDate() + 7),
@@ -144,8 +138,16 @@ export default {
                     }
                   }, this.$store.getters.currentOffer.roomId);
               
+                let offerData = {
+                  meetingDates: scheduleDates,
+                  objectId: this.offerData.objectId,
+                  isOfferAgreementByOwnerAccepted: this.checkbox,
+                  offerAcceptedByOwner: this.offerData.offerAcceptedByOwner,
+                  offerToken: token,
+                  status: 'Offer accepted, submitted available dates!'
+                };
               const clientEmailData = SendEmailToClientOnOfferAccepted({
-                email: 'bog27432@eoopy.com',
+                email: this.$store.getters.currentOffer.email,
                 name: this.$store.getters.currentOffer.full_name,
                 ownerName: this.$store.getters.currentOffer.ownerName,
                 offer: this.$store.getters.currentOffer.offer,
@@ -153,8 +155,8 @@ export default {
                 verificationId: this.$store.getters.currentOffer.objectId,
                 token: token
               })
-              // this.updateOffer(data)
-                console.log(data, clientEmailData, token)
+                this.updateOffer(offerData)
+                console.log(offerData, clientEmailData, token)
                 this.SendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;

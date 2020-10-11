@@ -150,9 +150,9 @@ export default {
                 roomId: this.$store.getters.currentOffer.roomId,
               })
 
-                console.log("emailSend", clientEmailData, clientUserData);
-              // this.SendEmail(clientEmailData);
-              // this.SendEmail(clientUserData);
+              // console.log(clientEmailData, clientUserData);
+              this.SendEmail(clientUserData);
+              this.SendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
               this.agreementError = ''
               this.show = false;

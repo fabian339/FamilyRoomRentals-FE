@@ -5,6 +5,8 @@ import UserActions from './actions/userActions';
 import NotificationActions from './actions/notificationActions';
 import ContentMutations from './mutations/contentMutations';
 import UserMutations from './mutations/userMutations';
+import NotificationMutations from './mutations/notificationMutations';
+
 // import {Room} from './validators'
 
 
@@ -36,7 +38,9 @@ export default new Vuex.Store({
         userNotifications: [],
         offerSentByClient: false,
         offerDeleted: false,
-        offerAcceptedByOwner: false
+        offerTokenVerified: false,
+        offerAcceptedByOwner: false,
+        errors: {}
       }
     }),
     getters: {
@@ -54,15 +58,17 @@ export default new Vuex.Store({
       isUserUpdated: state => state.userState.userUpdated,
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
-      //Notifications
+      userErrors: state => state.userState.errors,
+      //Notifications/Offers
       currentOffer: state => state.notificationState.offer,
       isOfferSent: state => state.notificationState.offerSentByClient,
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
+      isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
       currentUserOffers: state => state.notificationState.userNotifications.reverse(),
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
-      userErrors: state => state.userState.errors,
+      offerErrors: state => state.notificationState.errors,
     },
-    mutations: {...ContentMutations, ...UserMutations},
+    mutations: {...ContentMutations, ...UserMutations, ...NotificationMutations},
     actions: {...ContentActions, ...UserActions, ...NotificationActions }
   });

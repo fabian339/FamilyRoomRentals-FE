@@ -110,7 +110,7 @@
             </div>
             </v-col>
         </v-row>
-        <v-row class="text-center" justify="center">
+        <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
                 <OfferForm v-if="!contentRoom.rented" />    
             </v-col>

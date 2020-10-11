@@ -187,6 +187,7 @@ export default {
             } else this.show = false
         },
         markOfferRejected(){
+            //send email to client on offer rejected!!
             this.updateOffer({
                 objectId: this.currentOffer.objectId,
                 offerRejectedByOwner: true,

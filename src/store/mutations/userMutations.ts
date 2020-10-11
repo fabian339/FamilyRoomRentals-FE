@@ -43,49 +43,13 @@ export default {
         state.userState.errors = errors
     },
 
-    //NOTIFICATIONS
-    SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
-        state.notificationState.offerSentByClient = offerSentByClient;
-        setTimeout(() => {
-          state.notificationState.offerSentByClient = false;
-        }, 8000);
-    },
-
-    SET_OFFER_ACCEPTED_BY_OWNER: (state: any, offerAcceptedByOwner: boolean) => {
-        state.notificationState.offerAcceptedByOwner = offerAcceptedByOwner;
-        setTimeout(() => {
-          state.notificationState.offerAcceptedByOwner = false;
-        }, 8000);
-    },
     SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
         state.notificationState.userNotifications = notifications
     },
-    // MARK_NOTIFICATION_READ: (state: any, notificationId: any) => {
-    //     const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-    //     state.notificationState.userNotifications[index].readByReceiver = true;
-    // },
-    UPDATE_OFFER: (state: any, updateOfferData: any) => {
-        const index = state.notificationState.userNotifications.findIndex((offer:any = {} ) => offer.objectId === updateOfferData.objectId);
-        let tempOffer = state.notificationState.userNotifications[index];
-        for (const property in updateOfferData) {
-          tempOffer[property] = updateOfferData[property]
-        }
-        state.notificationState.userNotifications[index] = tempOffer;
-        state.notificationState.offer = tempOffer;
-    },
-    SET_OFFER: (state: any, offerData: any) => {
-        state.notificationState.offer = offerData;
-    },
-    DELETE_NOTIFICATION: (state: any, notificationId: any) => {
-        const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-        state.notificationState.userNotifications.splice(index, 1);
-        state.notificationState.offerDeleted = true;
-        setTimeout(() => {
-          state.notificationState.offerDeleted = false;
-        }, 5000);
-    },
+
     CLEAR_USER_ERROR: (state: any) => {
         state.userState.errors = {}
     }
+
 
 }

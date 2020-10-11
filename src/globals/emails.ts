@@ -123,7 +123,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
     };
 }
 
-export const SendEmailToClientOnOfferDeclined = (data: any) => {
+export const SendEmailToClientOnOfferRejected = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear ${data.name}, </h3>
