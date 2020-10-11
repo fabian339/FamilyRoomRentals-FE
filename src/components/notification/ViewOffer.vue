@@ -137,6 +137,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import { SendEmailToClientOnOfferRejected } from '../../globals/emails'
 export default {
     name: "ViewNotification",
     props: {
@@ -166,7 +167,8 @@ export default {
     methods: {
         ...mapActions([
             'deleteOffer',
-            'updateOffer'
+            'updateOffer',
+            'sendEmail'
         ]),
         // ...mapMutations([
         //     'SET_OFFER'
@@ -179,9 +181,6 @@ export default {
         },
         redirectToSchedule(){
             if(this.$router.history.current.path !== `/offer/${this.currentOffer.objectId}/schedule`){
-                // console.log('current path', this.$router.history.current.path)
-                // appRouter.push(`/profile`)
-                // this.SET_OFFER(this.currentOffer)
                 this.$router.push(`/offer/${this.currentOffer.objectId}/schedule`)
                 this.show = false
             } else this.show = false
@@ -192,7 +191,14 @@ export default {
                 objectId: this.currentOffer.objectId,
                 offerRejectedByOwner: true,
                 status: "Offer was rejected!",
-            })
+            });
+            let clientEmailData = SendEmailToClientOnOfferRejected({
+                email: this.$store.getters.currentOffer.email,
+                name: this.$store.getters.currentOffer.full_name,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+            });
+            this.sendEmail(clientEmailData);
             this.showRejectionDialog = false
         }
     }

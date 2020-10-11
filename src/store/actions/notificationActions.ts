@@ -92,7 +92,7 @@ export default {
     });
   },
 
-  SendEmail: (context: any, emailData: any) => {
+  sendEmail: (context: any, emailData: any) => {
     const path = ['/functions/sendEmailOne', '/functions/sendEmailThree'];
     let index = Math.random();
     if(index < 0.5) index = Math.floor(index)

@@ -117,7 +117,7 @@ export default {
     methods: {
         ...mapActions([
             'updateOffer',
-            'SendEmail'
+            'sendEmail'
         ]),
         addScheduleDates(){
             if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
@@ -157,7 +157,7 @@ export default {
               })
                 this.updateOffer(offerData)
                 console.log(offerData, clientEmailData, token)
-                this.SendEmail(clientEmailData);
+                this.sendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;
             }

@@ -130,7 +130,7 @@ export default {
     methods: {
       ...mapActions([
           'sendOffer',
-          'SendEmail'
+          'sendEmail'
       ]),
       addOfferToThisRoom(){
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
@@ -143,16 +143,16 @@ export default {
                 roomId: this.$store.getters.currentOffer.roomId,
               })
 
-              const clientUserData = SendEmailToUserOnOffer({
+              const userEmailData = SendEmailToUserOnOffer({
                 email:this.$store.getters.currentOffer.ownerEmail,
                 name: this.$store.getters.currentOffer.ownerName,
                 offer: this.$store.getters.currentOffer.offer,
                 roomId: this.$store.getters.currentOffer.roomId,
               })
 
-              // console.log(clientEmailData, clientUserData);
-              this.SendEmail(clientUserData);
-              this.SendEmail(clientEmailData);
+              // console.log(clientEmailData, userEmailData);
+              this.sendEmail(userEmailData);
+              this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
               this.agreementError = ''
               this.show = false;
