@@ -51,8 +51,10 @@
                 <p style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
                 <v-btn v-if="!showPayment" color="#66CDAA" @click.stop="showPayment = true">Next</v-btn>
             </div>
-            <div v-if="showPayment">
-                <h1>Showing Payment</h1>
+            <div>
+                <div>
+                    <Checkout />
+                </div>
             </div>
         </v-col>
     </v-row>
@@ -62,9 +64,15 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
+import Checkout from './Checkout'
+// import { stripeKey, stripeOptions } from './stripeConfig.json'
+// import StripeElement from './StripeElement'
+// import { loadStripe } from "@stripe/stripe-js";
+// const promise = loadStripe("pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn");
 
   export default {
     name: 'SelectDateAndPay',
+    components: { Checkout },
     computed: {
       ...mapGetters([
         'isContentLoading',
@@ -83,18 +91,17 @@ import { mapGetters, mapActions } from 'vuex'
             showDates: false,
             dateSelected: '',
             showPayment: false,
+            complete: false,
+            stripeOptions: {
+                required: true
+                // see https://stripe.com/docs/stripe.js#element-options for details
+            },
             errors: {}
         }
     },
     
     beforeMount(){
-        // if(this.$router.history.current.path !== `/offer/${this.currentOffer.objectId}/schedule`){
-        // console.log(this.$router.history)
         const {secretId, token} = this.$router.history.current.params;
-        //  if(decodedtoken.exp * 1000 < Date.now()){
-        // let selectedDate = new Date();
-        // let restrictionDate = new Date();
-        // restrictionDate.setDay(restrictionDate.getDay() + 7);
 
         try {
             var decoded = jwt.verify(token, secretId);
@@ -132,3 +139,13 @@ import { mapGetters, mapActions } from 'vuex'
     }
   }
 </script>
+
+<style>
+    .stripe-card {
+        width: 300px;
+        border: 1px solid grey;
+    }
+    .stripe-card.complete {
+        border-color: green;
+    }
+</style>
