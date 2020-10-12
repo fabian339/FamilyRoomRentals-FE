@@ -52,9 +52,9 @@
                 <v-btn v-if="!showPayment" color="#66CDAA" @click.stop="showPayment = true">Next</v-btn>
             </div>
             <div>
-                <div>
+                <!-- <v-col lg="4"> -->
                     <Checkout />
-                </div>
+                <!-- </v-col> -->
             </div>
         </v-col>
     </v-row>
