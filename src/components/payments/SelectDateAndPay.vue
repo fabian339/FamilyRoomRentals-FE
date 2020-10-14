@@ -4,9 +4,10 @@
       <div class="logo" >
           <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>
-        <v-col lg="12"> 
-            <h2 class="headline font-weight-bold mb-3">
-                {{data.name}}, you are {{showPayment ? 'one step away!' : 'a few steps away!'}}
+        <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
+        <v-col lg="12" v-else> 
+            <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
+                {{data.name}}, you are a few steps away!'
             </h2> 
             <v-progress-circular
                 v-if="isContentLoading"
@@ -14,9 +15,9 @@
                 :size="100"
                 :width="15"
                 indeterminate
-                >
+            >
             </v-progress-circular>
-                <v-row class="text-center" justify="center">
+            <v-row class="text-center" justify="center">
             <v-col lg="4" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
                 <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
                 <form>
@@ -35,7 +36,7 @@
                     <p style="color: red; margin: 15px 0px -30px 0px">{{offerErrors.error}}</p>
                 </form>
             </v-col>
-                </v-row>
+            </v-row>
             <div v-if="!isContentLoading && isOfferTokenVerified && showDates">
                 <h3 style="margin: 10px 0px;">Please select an available date: </h3>
                 <v-radio-group v-model="dateSelectedIndex" style="display: inline-block;">
@@ -54,9 +55,9 @@
             <v-btn v-if="isOfferTokenVerified" color="#66CDAA" @click.stop="onDateSelect">
                     {{!showDates ? 'BACK' : 'NEXT'}}
             </v-btn>
-            <div v-if="showPayment" transition="scroll-x-reverse-transition">
+            <div v-if="showPayment">
                 <div id="confirmation">
-                    <h2>Comfirmation:</h2>
+                    <h2>The Service:</h2>
                     <v-row class="text-center" justify="center" style="align-items: center;">
                         <div style="width: 275px;">
                             <img 
@@ -95,7 +96,14 @@
                         </div>
                     </v-row>
                 </div>
-                <div>
+                <div style="margin: 0px 20%">
+                    <h4>
+                        FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
+                        please read our <a href="#"> Terms & Conditions. </a>
+                    </h4>
+                    <h2 style="margin-top: 25px; color: darkgreen;">Nicol, You are one step away!</h2>
+                </div>
+                <div transition="scroll-x-reverse-transition">
                     <Checkout />
                 </div>
             </div>
@@ -108,10 +116,6 @@
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
 import Checkout from './Checkout'
-// import { stripeKey, stripeOptions } from './stripeConfig.json'
-// import StripeElement from './StripeElement'
-// import { loadStripe } from "@stripe/stripe-js";
-// const promise = loadStripe("pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn");
 
   export default {
     name: 'SelectDateAndPay',
@@ -128,7 +132,7 @@ import Checkout from './Checkout'
         return {
             data: {},
             tokenExpired: false,
-            tokenError: '',
+            tokenError: false,
             id: '',
             showForm: true,
             showDates: false,
@@ -152,7 +156,7 @@ import Checkout from './Checkout'
         try {
             var decoded = jwt.verify(token, secretId);
         } catch(err) {
-            this.tokenError = err;
+            this.tokenError = true;
         }
         if(decoded){
             // console.log(new Date(decoded.iat) , new Date(decoded.exp))

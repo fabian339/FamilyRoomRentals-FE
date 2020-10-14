@@ -2,7 +2,7 @@
     <v-row class="text-center" justify="center">
         <v-card class="mx-auto" hover id="mycard">
             <v-card-title class="justify-center">
-                <h2>Payment Information</h2>
+                <h2 style="color:rgb(10 60 28)">Payment Information</h2>
             </v-card-title>
             <form @submit="this.handleSubmit" class="formClass">
                 <v-text-field
@@ -19,7 +19,7 @@
                     <div id="card-postalCode" class="elementContainer adjustWidth"></div>
                 </div>
                 <v-card-actions class="justify-center">
-                    <v-btn color="rgb(61, 66, 78)" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
+                    <v-btn color="#1f4e41" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
                         <v-progress-circular
                             v-if="loadingPayment"
                             color="blue"
@@ -102,7 +102,7 @@ name: 'Checkout',
         cardExpiry.on('change', this.handleChange);
 
         var cardCvc = elements.create('cardCvc', {
-            style: {...elementStyles, width: '20%'},
+            style: elementStyles,
             classes: elementClasses,
         });
         cardCvc.mount('#card-cvc');
