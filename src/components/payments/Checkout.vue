@@ -44,13 +44,15 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
     elements = stripe.elements();
 // let stripe;
 import axios from 'axios';
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
-name: 'Checkout',
+    props: ['offerData'],
+    name: 'Checkout',
     data(){
         return {
             loadingPayment: false,
-            paymentSucceeded: false,
+            // paymentSucceeded: false,
             cardName: '',
             clientSecret: '',
             cardNameError: ''
@@ -119,6 +121,12 @@ name: 'Checkout',
     },
        
     methods: {
+        ...mapActions([
+            'updateOffer',
+        ]),
+        ...mapMutations([
+            'PAYMENT_SUCCEEDED_ON_OFFER',
+        ]),
         handleChange(event) {
             var displayError = document.getElementById('card-errors');
             displayError.textContent = (event.error ? event.error.message : '')
@@ -143,9 +151,18 @@ name: 'Checkout',
                 displayError.textContent = `Payment failed, ${payload.error.message}`;
                 this.loadingPayment = false
             } else {
-                this.loadingPayment = false
-                this.paymentSucceeded = true
+                // this.loadingPayment = false
+                // this.paymentSucceeded = true
                 console.log(payload)
+                if(this.offerData){
+                    // this.updateOffer(this.offerData)
+                    this.loadingPayment = false
+                    // this.paymentSucceeded = true
+                    this.PAYMENT_SUCCEEDED_ON_OFFER(true)
+                    // console.log("dataa", this.offerData)
+                } else{
+                    console.log("Donation Payment")
+                } 
             }
         },
         async PaymentIntent(){

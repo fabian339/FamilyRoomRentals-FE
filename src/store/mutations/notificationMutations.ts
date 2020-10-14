@@ -25,6 +25,9 @@ export default {
     SET_OFFER: (state: any, offerData: any) => {
         state.notificationState.offer = offerData;
     },
+    PAYMENT_SUCCEEDED_ON_OFFER: (state: any, value: boolean) => {
+        state.notificationState.paymentSucceededOnOffer = true;
+    },
     SET_OFFER_TOKEN_VERIFIED: (state: any, offerVerified: boolean) => {
         state.notificationState.offerTokenVerified = offerVerified;
     },

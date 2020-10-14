@@ -18,24 +18,24 @@
             >
             </v-progress-circular>
             <v-row class="text-center" justify="center">
-            <v-col lg="4" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
-                <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
-                <form>
-                    <v-text-field
-                        label="Verification ID"
-                        v-model="id"
-                        append-icon="mdi-account"
-                        type="text"
-                        outlined
-                        :error-messages="errors.id"
-                    ></v-text-field>
+                <v-col lg="4" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
+                    <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
+                    <form>
+                        <v-text-field
+                            label="Verification ID"
+                            v-model="id"
+                            append-icon="mdi-account"
+                            type="text"
+                            outlined
+                            :error-messages="errors.id"
+                        ></v-text-field>
 
-                    <v-spacer></v-spacer>
-                    
-                    <v-btn color="#66CDAA" @click.stop="idVerification">Verify</v-btn>
-                    <p style="color: red; margin: 15px 0px -30px 0px">{{offerErrors.error}}</p>
-                </form>
-            </v-col>
+                        <v-spacer></v-spacer>
+                        
+                        <v-btn color="#66CDAA" @click.stop="idVerification">Verify</v-btn>
+                        <p style="color: red; margin: 15px 0px -30px 0px">{{offerErrors.error}}</p>
+                    </form>
+                </v-col>
             </v-row>
             <div v-if="!isContentLoading && isOfferTokenVerified && showDates">
                 <h3 style="margin: 10px 0px;">Please select an available date: </h3>
@@ -52,12 +52,12 @@
                 <p style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
                 <p style="color: red">{{selectDateError}}</p>
             </div>
-            <v-btn v-if="isOfferTokenVerified" color="#66CDAA" @click.stop="onDateSelect">
+            <v-btn v-if="isOfferTokenVerified && !isPaymentSucceededOnOffer" color="#66CDAA" @click.stop="onDateSelect">
                     {{!showDates ? 'BACK' : 'NEXT'}}
             </v-btn>
             <div v-if="showPayment">
                 <div id="confirmation">
-                    <h2>The Service:</h2>
+                    <h2>{{isPaymentSucceededOnOffer ? 'Its Done, Meeting Confirmed!!' : 'The Service:'}}</h2>
                     <v-row class="text-center" justify="center" style="align-items: center;">
                         <div style="width: 275px;">
                             <img 
@@ -96,16 +96,34 @@
                         </div>
                     </v-row>
                 </div>
-                <div style="margin: 0px 20%">
-                    <h4>
-                        FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
-                        please read our <a href="#"> Terms & Conditions. </a>
-                    </h4>
-                    <h2 style="margin-top: 25px; color: darkgreen;">Nicol, You are one step away!</h2>
+                <div v-if="isPaymentSucceededOnOffer" style="margin: 0px 15%">
+                    <SuccessAlert 
+                        :msg="`Congratulations, your payment is processing and you are now ready to meet 
+                        with ${currentOffer.ownerName}. Please pay attention to you email for confirmation and updates!`" 
+                    />
+                    <p>Redirecting on: {{ timerCount }}</p>
                 </div>
-                <div transition="scroll-x-reverse-transition">
-                    <Checkout />
-                </div>
+                <div v-else>
+                    <div style="margin: 0px 20%">
+                        <h4>
+                            FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
+                            please read our <a href="#"> Terms & Conditions. </a>
+                        </h4>
+                        <h2 style="margin-top: 25px; color: darkgreen;">Nicol, You are one step away!</h2>
+                    </div>
+                    <div>
+                        <Checkout :offerData="{
+                                roomAddress: `${roomLocation.street1}, 
+                                    ${roomLocation.street2},
+                                    ${roomLocation.city},
+                                    ${roomLocation.state},
+                                    ${roomLocation.zipCode},
+                                    ${roomLocation.country}`,
+                                officialMeetingDate: `${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
+                                        at ${currentOffer.meetingDates[dateSelectedIndex].time}`,
+                            }"/>
+                    </div>
+                </div>  
             </div>
         </v-col>
     </v-row>
@@ -115,17 +133,19 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import Checkout from './Checkout'
 
   export default {
     name: 'SelectDateAndPay',
-    components: { Checkout },
+    components: { Checkout, SuccessAlert },
     computed: {
       ...mapGetters([
         'isContentLoading',
         'currentOffer',
         'offerErrors',
-        'isOfferTokenVerified'
+        'isOfferTokenVerified',
+        'isPaymentSucceededOnOffer'
       ])
     },
     data () {
@@ -142,6 +162,7 @@ import Checkout from './Checkout'
             dateSelectedIndex: '',
             showPayment: false,
             complete: false,
+            timerCount : 10,
             stripeOptions: {
                 required: true
                 // see https://stripe.com/docs/stripe.js#element-options for details
@@ -149,6 +170,22 @@ import Checkout from './Checkout'
             errors: {}
         }
     },
+    // watch: {
+
+    //         timerCount: {
+    //             handler(value) {
+
+    //                 if (value > 0) {
+    //                     setTimeout(() => {
+    //                         this.timerCount--;
+    //                     }, 1000);
+    //                 }
+
+    //             },
+    //             immediate: true // This ensures the watcher is triggered upon creation
+    //         }
+
+    //     },
     
     beforeMount(){
         const {secretId, token} = this.$router.history.current.params;
@@ -164,6 +201,9 @@ import Checkout from './Checkout'
             else this.data = decoded.data
         }
     },
+    // created() {
+    //        this.countDownTimer()
+    //     },
     methods:{
         ...mapActions([
             'getOffer',
@@ -200,6 +240,14 @@ import Checkout from './Checkout'
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
         },
+        // countDownTimer() {
+        //     if(this.countDown > 0) {
+        //         setTimeout(() => {
+        //             this.countDown -= 1
+        //             this.countDownTimer()
+        //         }, 1000)
+        //     }
+        // },
     }
   }
 </script>
