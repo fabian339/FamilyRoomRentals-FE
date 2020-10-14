@@ -52,11 +52,15 @@
                 <p style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
                 <p style="color: red">{{selectDateError}}</p>
             </div>
-            <v-btn v-if="isOfferTokenVerified && !isPaymentSucceededOnOffer" color="#66CDAA" @click.stop="onDateSelect">
-                    {{!showDates ? 'BACK' : 'NEXT'}}
+            <v-btn 
+                v-if="isOfferTokenVerified && !isPaymentSucceededOnOffer" 
+                color="#66CDAA"
+                :disabled="confirmedDate"
+                @click.stop="onDateSelect">
+                    {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
             </v-btn>
             <div v-if="showPayment">
-                <div id="confirmation">
+                <div v-if="!this.showDates" id="confirmation">
                     <h2>{{isPaymentSucceededOnOffer ? 'Its Done, Meeting Confirmed!!' : 'The Service:'}}</h2>
                     <v-row class="text-center" justify="center" style="align-items: center;">
                         <div style="width: 275px;">
@@ -96,34 +100,33 @@
                         </div>
                     </v-row>
                 </div>
-                <div v-if="isPaymentSucceededOnOffer" style="margin: 0px 15%">
-                    <SuccessAlert 
-                        :msg="`Congratulations, your payment is processing and you are now ready to meet 
-                        with ${currentOffer.ownerName}. Please pay attention to you email for confirmation and updates!`" 
-                    />
-                    <p>Redirecting on: {{ timerCount }}</p>
-                </div>
-                <div v-else>
-                    <div style="margin: 0px 20%">
+                
+                <v-btn 
+                    v-if="!this.showDates && !confirmedDate" 
+                    @click.stop="confirmedDate = true"
+                > 
+                    Confirm Information 
+                </v-btn>
+                    
+                <div v-if="confirmedDate">
+                    <div v-if="!this.$store.getters.isPaymentSucceededOnOffer" style="margin: 15px 20%">
                         <h4>
-                            FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
-                            please read our <a href="#"> Terms & Conditions. </a>
+                                FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
+                                please read our <a href="#"> Terms & Conditions. </a>
                         </h4>
                         <h2 style="margin-top: 25px; color: darkgreen;">Nicol, You are one step away!</h2>
                     </div>
-                    <div>
-                        <Checkout :offerData="{
-                                roomAddress: `${roomLocation.street1}, 
-                                    ${roomLocation.street2},
-                                    ${roomLocation.city},
-                                    ${roomLocation.state},
-                                    ${roomLocation.zipCode},
-                                    ${roomLocation.country}`,
-                                officialMeetingDate: `${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
-                                        at ${currentOffer.meetingDates[dateSelectedIndex].time}`,
-                            }"/>
-                    </div>
-                </div>  
+                    <Checkout :offerData="{
+                            roomAddress: `${roomLocation.street1}, 
+                                ${roomLocation.street2},
+                                ${roomLocation.city},
+                                ${roomLocation.state},
+                                ${roomLocation.zipCode},
+                                ${roomLocation.country}`,
+                            officialMeetingDate: `${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
+                                    at ${currentOffer.meetingDates[dateSelectedIndex].time}`,
+                        }"/>
+                </div>
             </div>
         </v-col>
     </v-row>
@@ -133,12 +136,12 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import Checkout from './Checkout'
 
   export default {
     name: 'SelectDateAndPay',
-    components: { Checkout, SuccessAlert },
+    components: { Checkout },
     computed: {
       ...mapGetters([
         'isContentLoading',
@@ -162,6 +165,7 @@ import Checkout from './Checkout'
             dateSelectedIndex: '',
             showPayment: false,
             complete: false,
+            confirmedDate: false,
             timerCount : 10,
             stripeOptions: {
                 required: true
@@ -170,22 +174,6 @@ import Checkout from './Checkout'
             errors: {}
         }
     },
-    // watch: {
-
-    //         timerCount: {
-    //             handler(value) {
-
-    //                 if (value > 0) {
-    //                     setTimeout(() => {
-    //                         this.timerCount--;
-    //                     }, 1000);
-    //                 }
-
-    //             },
-    //             immediate: true // This ensures the watcher is triggered upon creation
-    //         }
-
-    //     },
     
     beforeMount(){
         const {secretId, token} = this.$router.history.current.params;

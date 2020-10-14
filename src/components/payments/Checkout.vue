@@ -1,6 +1,15 @@
 <template>
     <v-row class="text-center" justify="center">
-        <v-card class="mx-auto" hover id="mycard">
+        <div v-if="isPaymentSucceededOnOffer" style="margin: 0px 15%">
+            <SuccessAlert 
+                :msg="`Congratulations, your payment is processing and you are now ready to meet 
+                with ${this.$store.getters.currentOffer.ownerName}. Please pay attention to you email for confirmation and updates!`" 
+            />
+            <p style="color: seagreen; font-size: 20px;">
+                Redirecting to homepage in: <strong>{{ countDown }}</strong>
+            </p>
+        </div>
+        <v-card v-else class="mx-auto" hover id="mycard">
             <v-card-title class="justify-center">
                 <h2 style="color:rgb(10 60 28)">Payment Information</h2>
             </v-card-title>
@@ -22,7 +31,7 @@
                     <v-btn color="#1f4e41" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
                         <v-progress-circular
                             v-if="loadingPayment"
-                            color="blue"
+                            color="silver"
                             :size="35"
                             :width="5"
                             indeterminate
@@ -44,24 +53,29 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
     elements = stripe.elements();
 // let stripe;
 import axios from 'axios';
-import { mapActions, mapMutations } from 'vuex'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import { mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
     props: ['offerData'],
+    components: {SuccessAlert},
     name: 'Checkout',
+    computed: {
+        ...mapGetters([
+            'isPaymentSucceededOnOffer',
+        ]),
+    },
     data(){
         return {
             loadingPayment: false,
             // paymentSucceeded: false,
             cardName: '',
             clientSecret: '',
-            cardNameError: ''
+            cardNameError: '',
+            countDown: 15,
         }
     },
     async mounted() {
-    //   init()
-        // stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
-
         var elementStyles = {
             base: {
                 color: '#32325D',
@@ -135,7 +149,7 @@ export default {
             ev.preventDefault();
             this.loadingPayment = true
 
-                         //  4242 4242 4242 4242  08 / 24  123  94107
+            //  4242 4242 4242 4242  08 / 24  123  94107
             // if(this.cardName === '') 
             const payload = await stripe.confirmCardPayment(this.clientSecret, {
             payment_method: {
@@ -158,11 +172,23 @@ export default {
                     // this.updateOffer(this.offerData)
                     this.loadingPayment = false
                     // this.paymentSucceeded = true
-                    this.PAYMENT_SUCCEEDED_ON_OFFER(true)
+                    this.PAYMENT_SUCCEEDED_ON_OFFER(true);
+                    this.countDownTimer();
                     // console.log("dataa", this.offerData)
                 } else{
                     console.log("Donation Payment")
                 } 
+            }
+        },
+        countDownTimer() {
+            if(this.countDown === 0){
+                this.$router.push('/')
+            }
+            if(this.countDown > 0) {
+                setTimeout(() => {
+                    this.countDown -= 1
+                    this.countDownTimer()
+                }, 1000)
             }
         },
         async PaymentIntent(){
