@@ -94,6 +94,7 @@ import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.v
                     roomId: this.contentRoom.objectId,
                     ownerName: `${this.contentRoom.ownerFname} ${this.contentRoom.ownerLname}`,
                     ownerEmail: this.contentRoom.ownerEmail,
+                    ownerPhone: this.contentRoom.ownerPhone,
                     isOfferAgreementByClientAccepted: false,
                 }
             const {valid, errors} = validateOffer(clientOffer);

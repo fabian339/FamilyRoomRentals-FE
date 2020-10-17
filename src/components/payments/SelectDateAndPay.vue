@@ -5,9 +5,11 @@
           <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>
         <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
+        <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
+        <h2 v-else-if="this.$store.getters.currentOffer.meetingScheduled">A meeting was already scheduled!</h2>
         <v-col lg="12" v-else> 
             <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
-                {{data.name}}, you are a few steps away!'
+                {{data.name}}, you are a few steps away!
             </h2> 
             <v-progress-circular
                 v-if="isContentLoading"
@@ -49,7 +51,7 @@
                 </v-radio-group>
 
                 <h4>You will be meeting with {{currentOffer.ownerName}} on this date.</h4>
-                <p style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
+                <p class="font" style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
                 <p style="color: red">{{selectDateError}}</p>
             </div>
             <v-btn 
@@ -72,11 +74,11 @@
                                 style="b
                                 order: 2px solid; margin: 30px;"
                             />
-                            <p>You will meet {{currentOffer.ownerName}} too see this propery</p>
+                            <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
                         </div>
                         <div style="width: 275px;">
                             <h3>When: </h3>
-                            <p>
+                            <p class="font">
                                 {{new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)}},
                                 at {{currentOffer.meetingDates[dateSelectedIndex].time}}
                             </p>
@@ -102,6 +104,7 @@
                 </div>
                 
                 <v-btn 
+                    color="#9acd32"
                     v-if="!this.showDates && !confirmedDate" 
                     @click.stop="confirmedDate = true"
                 > 
@@ -114,17 +117,28 @@
                                 FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
                                 please read our <a href="#"> Terms & Conditions. </a>
                         </h4>
-                        <h2 style="margin-top: 25px; color: darkgreen;">Nicol, You are one step away!</h2>
+                        <h2 style="margin-top: 25px; color: darkgreen;">{{data.name}}, You are one step away!</h2>
                     </div>
+                    <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
                     <Checkout :offerData="{
-                            roomAddress: `${roomLocation.street1}, 
-                                ${roomLocation.street2},
-                                ${roomLocation.city},
-                                ${roomLocation.state},
-                                ${roomLocation.zipCode},
-                                ${roomLocation.country}`,
-                            officialMeetingDate: `${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
-                                    at ${currentOffer.meetingDates[dateSelectedIndex].time}`,
+                            roomAddress: {
+                                street1: roomLocation.street1, 
+                                street2: roomLocation.street2,
+                                city: roomLocation.city,
+                                state: roomLocation.state,
+                                zipCode: roomLocation.zipCode,
+                                country: roomLocation.country
+                            },
+                            officialMeetingDate: {
+                                date: currentOffer.meetingDates[dateSelectedIndex].date,
+                                time: currentOffer.meetingDates[dateSelectedIndex].time
+                            },
+                            whenWasMeetingScheduled: new Date(),
+                            meetingScheduled: true,
+                            readByReceiver: false,
+                            status: `Meeting Scheduled for ${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
+                                at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
+                            objectId: this.$store.getters.currentOffer.objectId
                         }"/>
                 </div>
             </div>
@@ -184,8 +198,8 @@ import Checkout from './Checkout'
             this.tokenError = true;
         }
         if(decoded){
-            // console.log(new Date(decoded.iat) , new Date(decoded.exp))
-            if(new Date(decoded.iat) > new Date(decoded.exp)) this.tokenExpired = true;
+            // console.log(new Date() , new Date(decoded.exp))
+            if(new Date() > new Date(decoded.exp)) this.tokenExpired = true;
             else this.data = decoded.data
         }
     },
@@ -199,7 +213,7 @@ import Checkout from './Checkout'
         idVerification(){
             if(this.id === '') {
                 const errors = {
-                    id: 'Must nor be empty, Verification id was send to your email.'
+                    id: 'Must not be empty, verification id was send to your email.'
                 }
                 this.errors = errors;
             }
@@ -228,14 +242,6 @@ import Checkout from './Checkout'
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
         },
-        // countDownTimer() {
-        //     if(this.countDown > 0) {
-        //         setTimeout(() => {
-        //             this.countDown -= 1
-        //             this.countDownTimer()
-        //         }, 1000)
-        //     }
-        // },
     }
   }
 </script>

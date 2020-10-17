@@ -16,7 +16,7 @@ export default {
       // const err = {
       //   responseError: "Invalid email/password.."
       // }
-      context.commit('SET_USER_ERROR', err);
+      context.commit('SET_OFFER_ERROR', err);
       // localStorage.removeItem('user-token')
     });
   },
@@ -34,7 +34,7 @@ export default {
       // console.log(appRouter.history)
     })
     .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
+      context.commit('SET_OFFER_ERROR', err);
     });
   },
 
@@ -49,14 +49,18 @@ export default {
         context.commit('CLEAR_NOTIFICATIONS_ERROR')
       } else {
         context.commit('SET_OFFER_ERROR', {
-          error: 'Invalid Verification ID!'
+          error: 'Invalid Verification, check parameters!'
         })
       }
       context.commit('SET_LOADING_CONTENT', false);
     })
     .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
-    });
+      context.commit('SET_OFFER_ERROR', {
+        error: 'Invalid Verification ID!'
+      })
+      context.commit('SET_LOADING_CONTENT', false);
+
+    })
   },
 
   updateOffer: (context: any, offerData: any) => {
@@ -72,7 +76,7 @@ export default {
       // context.commit('UPDATE_OFFER', offerData);
     })
     .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
+      context.commit('SET_OFFER_ERROR', err);
     });
   },
 
@@ -88,7 +92,7 @@ export default {
       }
     })
     .catch((err) => {
-      context.commit('SET_CONTENT_ERROR', err);
+      context.commit('SET_OFFER_ERROR', err);
     });
   },
 
@@ -104,7 +108,7 @@ export default {
       console.log("Sending Email",res)
     })
     .catch((err) => {
-      context.commit('SET_USER_ERROR', err);
+      context.commit('SET_OFFER_ERROR', err);
     });
   }
 

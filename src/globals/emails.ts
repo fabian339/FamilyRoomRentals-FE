@@ -165,3 +165,120 @@ export const SendEmailToClientOnOfferRejected = (data: any) => {
         html,
     };
 }
+
+export const SendEmailToClientOnMeetingScheduled = (data: any) => {
+    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p>YAYY You have offcially scheduled a meeting with ${data.ownerName}!</p>
+        <h4>Information:</h4>
+        <div style="line-height: 5px;">
+            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Offer: <strong>$${data.offer}</strong> </p>
+            <p>Meeting with:  ${data.ownerName}</p>
+            <p>Meeting date:  ${data.meetingDate}</p>
+            <p>Meeting Location:  
+                <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
+                    ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
+                </a>
+            </p>
+            <p>${data.ownerName}'s email:  ${data.ownerEmail}</p>
+            <p>${data.ownerName}'s phone:  ${data.ownerPhone}</p>
+
+        </div>
+
+        <h4>How to handle the meeting?</h4>
+        <p>
+            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
+            necessary while visiting ${data.ownerName}'s property. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please stay alert while visiting the property. </ul>
+        <ul> Please try to contact ${data.clientName} prior to the meeting to descuss details. </ul>
+
+        <p>
+            Once the meeting is done, we will send a follow up email to see how it went. 
+        </p>
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.email,
+        subject: "Your Meeting has been Confirmed!",
+        name: data.name,
+        html,
+    };
+}
+
+
+export const SendEmailToUserOnMeetingScheduled = (data: any) => {
+    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p>YAYY A Meeting was scheduled for ${data.clientName}'s offer!</p>
+        <h4>Information:</h4>
+        <div style="line-height: 5px;">
+            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Offer: <strong>$${data.offer}</strong> </p>
+            <p>Meeting with:  ${data.clientName}</p>
+            <p>Meeting date:  ${data.meetingDate}</p>
+            <p>${data.clientName}'s email:  ${data.clientEmail}</p>
+            <p>${data.clientName}'s phone:  ${data.clientPhone}</p>
+            <div>
+                <p>Meeting Location:  
+                    <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
+                        ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
+                    </a> 
+                </p>
+            </div>
+        </div>
+
+        <h4>How to handle the meeting?</h4>
+        <p>
+            While dealing with a pandemic, receiving visits could be challenging. Please take all the precautions
+            necessary while receiving a visit from ${data.clientName}. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please be fair, friendly, and welcoming. </ul>
+        <ul> Please stay alert while the visitor is in the property. </ul>
+        <ul> Please try to contact ${data.clientName} prior to the meeting to descuss details. </ul>
+
+        <p>
+            Once the meeting is done, we will send a follow up email to see how it went. 
+        </p>
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.email,
+        subject: "A Meeting has been Confirmed!",
+        name: data.name,
+        html,
+    };
+}

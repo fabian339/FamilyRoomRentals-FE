@@ -55,6 +55,7 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
 import axios from 'axios';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import { mapActions, mapMutations, mapGetters } from 'vuex'
+import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../globals/emails'
 
 export default {
     props: ['offerData'],
@@ -137,6 +138,7 @@ export default {
     methods: {
         ...mapActions([
             'updateOffer',
+            'sendEmail'
         ]),
         ...mapMutations([
             'PAYMENT_SUCCEEDED_ON_OFFER',
@@ -169,9 +171,38 @@ export default {
                 // this.paymentSucceeded = true
                 console.log(payload)
                 if(this.offerData){
-                    // this.updateOffer(this.offerData)
+                    const clientEmailData = SendEmailToClientOnMeetingScheduled({
+                        // email: this.$store.getters.currentOffer.email,
+                        email: 'rzw17825@bcaoo.com',
+                        name: this.$store.getters.currentOffer.full_name,
+                        ownerName: this.$store.getters.currentOffer.ownerName,
+                        ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+                        ownerPhone: this.$store.getters.currentOffer.ownerPhone,
+                        offer: this.$store.getters.currentOffer.offer,
+                        meetingDate: `${new Date(this.offerData.officialMeetingDate.date).toString().substr(0, 15)}, 
+                            at ${this.offerData.officialMeetingDate.time}`,
+                        roomId: this.$store.getters.currentOffer.roomId,
+                        meetingLocation: this.offerData.roomAddress,
+                    })
+
+                    const userEmailData = SendEmailToUserOnMeetingScheduled({
+                        email: this.$store.getters.currentOffer.ownerEmail,
+                        name: this.$store.getters.currentOffer.ownerName,
+                        clientName: this.$store.getters.currentOffer.full_name,
+                        offer: this.$store.getters.currentOffer.offer,
+                        roomId: this.$store.getters.currentOffer.roomId,
+                        meetingDate: `${new Date(this.offerData.officialMeetingDate.date).toString().substr(0, 15)}, 
+                            at ${this.offerData.officialMeetingDate.time}`,
+                        meetingLocation: this.offerData.roomAddress,
+                        clientEmail: this.$store.getters.currentOffer.email,
+                        clientPhone: this.$store.getters.currentOffer.phone,
+                    })
+
+                    // console.log(clientEmailData);
+                    this.sendEmail(userEmailData);
+                    this.sendEmail(clientEmailData);
+                    this.updateOffer(this.offerData);
                     this.loadingPayment = false
-                    // this.paymentSucceeded = true
                     this.PAYMENT_SUCCEEDED_ON_OFFER(true);
                     this.countDownTimer();
                     // console.log("dataa", this.offerData)
