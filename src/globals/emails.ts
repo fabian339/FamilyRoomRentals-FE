@@ -29,7 +29,7 @@ export const SendEmailToClientOnOffer = (data: any) => {
         
     return {
         email: data.email,
-        subject: "Offer Comfirmation!",
+        subject: "Offer Confirmation!",
         name: data.name,
         html,
     };

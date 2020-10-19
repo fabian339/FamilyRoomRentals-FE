@@ -131,14 +131,18 @@ export default {
                 validSchedule = false;
             }
             this.dates.forEach(item => {
-                let selectedDate = new Date(item.date);
+                let withinThreeDatesFromNow = new Date();
+                withinThreeDatesFromNow.setDate(withinThreeDatesFromNow.getDate() + 3);
                 let restrictionDate = new Date();
                 restrictionDate.setMonth(restrictionDate.getMonth() + 1);
                 if(new Date(item.date).toISOString() < new Date().toISOString()){
                     item.errorDateMsg = 'This date has passed or its too soon.';
                     validSchedule = false;
-                } else if(!(selectedDate.toISOString() < restrictionDate.toISOString())) {
+                } else if(!(new Date(item.date).toISOString() < restrictionDate.toISOString())) {
                     item.errorDateMsg = 'Please select a date within one month from today.'
+                    validSchedule = false;
+                } else if(new Date(item.date).toISOString() <= withinThreeDatesFromNow.toISOString()) {
+                    item.errorDateMsg = `Available dates are after ${withinThreeDatesFromNow.toISOString().substring(0, 10)}.`
                     validSchedule = false;
                 } else if(item.time === '') {
                     item.errorDateMsg = 'Please select a time for the meeting.'

@@ -150,8 +150,8 @@ export default {
                 roomId: this.$store.getters.currentOffer.roomId,
               })
 
-              // console.log(clientEmailData, userEmailData);
-              this.sendEmail(userEmailData);
+              console.log(clientEmailData, userEmailData);
+              // this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
               this.agreementError = ''

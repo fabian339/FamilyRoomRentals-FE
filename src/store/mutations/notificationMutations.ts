@@ -31,6 +31,9 @@ export default {
     SET_OFFER_TOKEN_VERIFIED: (state: any, offerVerified: boolean) => {
         state.notificationState.offerTokenVerified = offerVerified;
     },
+    SET_COUNTDOWN: (state: any, value: boolean) => {
+        state.notificationState.showCountDown = value;
+    },
     DELETE_NOTIFICATION: (state: any, notificationId: any) => {
         const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
         state.notificationState.userNotifications.splice(index, 1);

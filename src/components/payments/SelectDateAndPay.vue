@@ -6,7 +6,7 @@
         </div>
         <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
         <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
-        <h2 v-else-if="this.$store.getters.currentOffer.meetingScheduled">A meeting was already scheduled!</h2>
+        <h2 v-else-if="this.$store.getters.currentOffer.meetingScheduled && !this.$store.getters.isCountDownShowing">A meeting was already scheduled!</h2>
         <v-col lg="12" v-else> 
             <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
                 {{data.name}}, you are a few steps away!
@@ -44,8 +44,12 @@
                 <v-radio-group v-model="dateSelectedIndex" style="display: inline-block;">
                         <div v-for="(date, index) in currentOffer.meetingDates" :key="index + 60">
                             <v-radio
-                            style="margin-bottom: 10px"
-                                :label="`${ new Date(date.date).toString().substr(0, 15)} at ${date.time}`"
+                                style="margin-bottom: 10px"
+                                :label="`
+                                    ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}
+                                    ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)) <= new Date() ? '(Date has passed, unavailable.)': ''}
+                                    `"
+                                :disabled="new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)) <= new Date()"
                             ></v-radio>
                         </div>
                 </v-radio-group>
@@ -79,7 +83,7 @@
                         <div style="width: 275px;">
                             <h3>When: </h3>
                             <p class="font">
-                                {{new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)}},
+                                {{new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}},
                                 at {{currentOffer.meetingDates[dateSelectedIndex].time}}
                             </p>
                         </div>
@@ -130,14 +134,13 @@
                                 country: roomLocation.country
                             },
                             officialMeetingDate: {
-                                date: currentOffer.meetingDates[dateSelectedIndex].date,
+                                date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
                                 time: currentOffer.meetingDates[dateSelectedIndex].time
                             },
                             whenWasMeetingScheduled: new Date(),
                             meetingScheduled: true,
                             readByReceiver: false,
-                            status: `Meeting Scheduled for ${new Date(currentOffer.meetingDates[dateSelectedIndex].date).toString().substr(0, 15)},
-                                at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
+                            status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
                             objectId: this.$store.getters.currentOffer.objectId
                         }"/>
                 </div>
@@ -152,6 +155,7 @@ let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import Checkout from './Checkout'
+// :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
@@ -181,10 +185,7 @@ import Checkout from './Checkout'
             complete: false,
             confirmedDate: false,
             timerCount : 10,
-            stripeOptions: {
-                required: true
-                // see https://stripe.com/docs/stripe.js#element-options for details
-            },
+            // showCountDown: this.$refs.checkoutRef.$data,
             errors: {}
         }
     },

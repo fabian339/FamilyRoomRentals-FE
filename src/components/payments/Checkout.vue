@@ -142,6 +142,7 @@ export default {
         ]),
         ...mapMutations([
             'PAYMENT_SUCCEEDED_ON_OFFER',
+            'SET_COUNTDOWN'
         ]),
         handleChange(event) {
             var displayError = document.getElementById('card-errors');
@@ -179,8 +180,7 @@ export default {
                         ownerEmail: this.$store.getters.currentOffer.ownerEmail,
                         ownerPhone: this.$store.getters.currentOffer.ownerPhone,
                         offer: this.$store.getters.currentOffer.offer,
-                        meetingDate: `${new Date(this.offerData.officialMeetingDate.date).toString().substr(0, 15)}, 
-                            at ${this.offerData.officialMeetingDate.time}`,
+                        meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
                         roomId: this.$store.getters.currentOffer.roomId,
                         meetingLocation: this.offerData.roomAddress,
                     })
@@ -191,19 +191,19 @@ export default {
                         clientName: this.$store.getters.currentOffer.full_name,
                         offer: this.$store.getters.currentOffer.offer,
                         roomId: this.$store.getters.currentOffer.roomId,
-                        meetingDate: `${new Date(this.offerData.officialMeetingDate.date).toString().substr(0, 15)}, 
-                            at ${this.offerData.officialMeetingDate.time}`,
+                        meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
                         meetingLocation: this.offerData.roomAddress,
                         clientEmail: this.$store.getters.currentOffer.email,
                         clientPhone: this.$store.getters.currentOffer.phone,
                     })
 
-                    // console.log(clientEmailData);
+                    // console.log(this.offerData);
                     this.sendEmail(userEmailData);
                     this.sendEmail(clientEmailData);
                     this.updateOffer(this.offerData);
                     this.loadingPayment = false
                     this.PAYMENT_SUCCEEDED_ON_OFFER(true);
+                    this.SET_COUNTDOWN(true);
                     this.countDownTimer();
                     // console.log("dataa", this.offerData)
                 } else{
@@ -213,6 +213,7 @@ export default {
         },
         countDownTimer() {
             if(this.countDown === 0){
+                this.SET_COUNTDOWN(false);
                 this.$router.push('/')
             }
             if(this.countDown > 0) {
