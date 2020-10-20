@@ -9,7 +9,7 @@
       v-bind:src="this.roomData.images[0]"
     >
     <div id="rented" v-if="this.roomData.rented">
-      <v-card-title style="justify-content: center;">Rented</v-card-title>
+      <v-card-title style="justify-content: center;">Just Rented</v-card-title>
     </div>
     <v-spacer></v-spacer>
     <div id="price">

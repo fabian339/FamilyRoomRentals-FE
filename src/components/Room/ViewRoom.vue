@@ -112,7 +112,8 @@
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
-                <OfferForm v-if="!contentRoom.rented" />    
+                <OfferForm v-if="!contentRoom.rented" />   
+                <p v-if="contentRoom.rented" style="color: #de1254">No offer can be made as this Room is already rented!</p> 
             </v-col>
             <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
         </v-row>

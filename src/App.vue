@@ -26,11 +26,13 @@ export default {
     Nav,
     Footer
   },  
+
   created(){
     axios.defaults.baseURL = "https://parseapi.back4app.com";
     axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
     axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
     axios.defaults.headers.common['Content-Type'] = 'application/json'
+
     this.fetchData();
     
     const token = localStorage.getItem('user-token');
@@ -81,7 +83,7 @@ export default {
             // console.log(offer)
             if(!offer.reminderSent){
               // if(new Date(new Date().setDate(26)).toDateString() === new Date(offer.officialMeetingDate.date).toDateString()){
-              if(new Date(new Date().setHours(0,0,0,0)).toDateString() === new Date(offer.officialMeetingDate.date).toDateString()){
+              if(new Date().toDateString() === new Date(new Date(offer.officialMeetingDate.date).setDate(new Date(offer.officialMeetingDate.date).getDate() - 2)).toDateString()){
                 this.sendReminders(offer)
               }
             }

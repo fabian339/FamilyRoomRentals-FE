@@ -293,6 +293,7 @@ export default {
                 const {valid, errors} = validateUpdateRoom(data);
                 if(!valid) this.errors = errors;
                 else {
+                    if(data.rented && data.rented === true) data.rentedDate = new Date()
                     data.objectId = this.$store.getters.contentRoom.objectId;
                     this.updateRoom(data);
                     this.show = false;

@@ -5,11 +5,15 @@
       <div class="logo" >
         <img :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
-      <div id="filterContainer">
+      <div style="width: 100%; margin-bottom: 25px;" v-if="!showFilter">
+        <v-btn class="ma-2" color="#355f57" @click.stop="showFilter = true" dark >Filter</v-btn>
+      </div>
+      <div id="filterContainer" v-else>
+        <v-btn id="closeBtn" small color="red" @click.stop="showFilter = false" dark >x</v-btn>
         <h3>Filter by: </h3>
-        <div>
+        <v-row class="text-center" justify="center">
           <v-radio-group v-model="filterBy" row>
-              <div id="group">
+              <div style="display: flex;">
                 <v-radio 
                   v-for="(item, index) in filters" :key="index - 20"
                   color="pink" 
@@ -20,33 +24,33 @@
                 </v-radio> 
               </div>
           </v-radio-group>
-        </div>
-      <v-row>
-      <v-col cols="4">
-        <v-text-field
-          label="City"
-          @input="onCityChange"
-          clearable
-          color="#006400"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="4">
-        <v-text-field
-          label="State"
-          @input="onStateChange"
-          clearable
-          color="#006400"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="4">
-        <v-text-field
-          label="Zipcode"
-          @input="onZipcodeChange"
-          clearable
-          color="#006400"
-        ></v-text-field>
-      </v-col>
-      </v-row>
+        </v-row>
+        <v-row style="margin-top: -15px;">
+          <v-col cols="4">
+            <v-text-field
+              label="City"
+              @input="onCityChange"
+              clearable
+              color="#006400"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              label="State"
+              @input="onStateChange"
+              clearable
+              color="#006400"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              label="Zipcode"
+              @input="onZipcodeChange"
+              clearable
+              color="#006400"
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </div>
       <v-col
         class="mb-5"
@@ -56,14 +60,14 @@
         <h2 class="headline font-weight-bold mb-3">
           All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
         </h2>
-        <v-container>
+        <v-container id="roomContainer">
           <v-row no-gutters v-if="filterBy === 'Most Recent'">
             <v-col
               class="mb-8"
               cols="16"
               v-for="(item) in contentRooms" :key="item.street1"
               >
-                <Room :roomData=item />
+                <Room :roomData=item v-if="!item.rented || new Date() < new Date(new Date(item.rentedDate).setDate(new Date(item.rentedDate).getDate() + 2))"/>
             </v-col>
           </v-row>
           <v-row no-gutters v-else>
@@ -106,6 +110,7 @@ export default {
       filteredRooms: [],
       filters: ["Most Recent", "Price Low to High", "Price High to Low"],
       filterBy: "Most Recent",
+      showFilter: false,
     }
   },
   methods:{
@@ -137,16 +142,21 @@ export default {
   #filterContainer{
     margin: 30px 10%;
     width: 80%;
-    background-color: #c0e4c0;
+    background-color: #d6d6d6;
     border-radius: 15px;
     padding: 10px;
+    position: relative;
   }
 
-  #group{
-    display: inline-flex;
-    justify-content: center;
-    width: 100%;
-    margin: 0px 0px -25px 0px;
+  #roomContainer{
+    overflow: auto;
+    height: 600px;
+  }
+
+  #closeBtn{
+    position: absolute;
+    top: 0px;
+    right: 0;
   }
 
 </style>
