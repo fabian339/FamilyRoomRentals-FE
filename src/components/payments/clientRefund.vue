@@ -86,6 +86,7 @@ let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import {validateClientRefundData} from '../../store/validators'
+import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
 
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
@@ -136,7 +137,8 @@ import {validateClientRefundData} from '../../store/validators'
     methods:{
         ...mapActions([
             'getOfferOnClientRefund',
-            'updateOffer'
+            'updateOffer',
+            'sendEmail'
         ]),
         ...mapMutations([
             'SET_COUNTDOWN',
@@ -170,11 +172,17 @@ import {validateClientRefundData} from '../../store/validators'
             const {valid, errors} = validateClientRefundData(data);
             if(!valid) this.errors = errors;
             else{
+                const emailToAdmin = SendEmailToAdminOnRefundRequested({
+                    email: 'mrfabian.cs@gmail.com'
+                })
+                this.sendEmail(emailToAdmin);
                 this.updateOffer({
                     objectId: this.id,
                     clientRequestedRefund: true,
-                    clientRefundData: data
+                    clientRefundData: data,
+                    refundRequestCaseOpen: true,
                 })
+                //send email to admin
                 this.SET_COUNTDOWN(true);
                 this.countDownTimer();
                 this.showRefundForm = false;

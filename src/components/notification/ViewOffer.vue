@@ -11,21 +11,25 @@
                 <v-card-text>
                         <p>From: {{currentOffer.full_name}}</p>
                         <p>Interested Room: <a :href="`/#/room/${currentOffer.roomId}`" target="_blank">Click Here</a></p>
-                        <p>Message: </p>
-                        <div id="message">
-                            <p> 
-                                I will like to offer the ammount of <strong>${{currentOffer.offer}}</strong> for this room. 
-                                Please consider my offer as I will really appreciate it.
-                            </p>
+                        <p>Offer: ${{currentOffer.offer}}</p>
+                        <div v-if="!currentOffer.followupSent">
+                            <p>Message: </p>
+                            <div id="message">
+                                <p> 
+                                    I will like to offer the ammount of <strong>${{currentOffer.offer}}</strong> for this room. 
+                                    Please consider my offer as I will really appreciate it.
+                                </p>
+                            </div>
+                            <div style="margin: 15px 0px;">
+                                <h3>What would you like to do?</h3>
+                                <p>
+                                    If you feel like this is a good match and price for the property,
+                                    please accept <strong>{{currentOffer.full_name}}'s offer</strong> and schedule a meeting 
+                                    to show him/her the room. Otherwise, deny such offer.
+                                </p>
+                            </div>
                         </div>
-                        <div style="margin: 15px 0px;">
-                            <h3>What would you like to do?</h3>
-                            <p>
-                                If you feel like this is a good match and price for the property,
-                                please accept <strong>{{currentOffer.full_name}}'s offer</strong> and schedule a meeting 
-                                to show him/her the room. Otherwise, deny such offer.
-                            </p>
-                        </div>
+                        
                         <p>  
                             <strong>
                                 Status:
@@ -34,6 +38,19 @@
                                 {{currentOffer.status}}
                             </strong>
                         </p>
+
+                        <div v-if="currentOffer.followupSent">
+                            <p>Tell us how it went, request payment, and submit feedback.</p>
+                            <v-btn 
+                                style="margin: 0px -10px;" 
+                                small 
+                                 
+                                color="green"
+                                @click.stop="openSurvey = true"
+                            >
+                                Answer Survey
+                            </v-btn> 
+                        </div>
                 </v-card-text>
                 <v-card-actions style="margin-top: -25px;">
                 <!-- <v-spacer></v-spacer> -->
@@ -59,7 +76,8 @@
                     </v-btn>
                     <v-btn 
                         style="margin: 0px 5px;" 
-                        small color="error" 
+                        small 
+                        color="error" 
                         @click.stop="showDeleteWarning = true"
                         :disabled="currentOffer.offerAcceptedByOwner"
                     >
@@ -162,6 +180,7 @@ export default {
         return{
             showDeleteWarning: false,
             showRejectionDialog: false,
+            openSurvey: false,
         }
     },
     methods: {
