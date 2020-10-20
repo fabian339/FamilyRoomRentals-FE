@@ -497,18 +497,28 @@ export const SendEmailToAdminOnRefundRequested = (data: any) => {
             Login to check your account 
             <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
         </p>
+        `;
+        
+    return {
+        email: data.email,
+        subject: "New Refund Requested!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}
 
-        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
-        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
-
-        <div style="line-height: 3px; margin: 40px 0px;">
-            <p>FamilyRoomRentals.Inc</p>
-            <p>New York, NY</p>
-            <p>(347) 389-0868</p>
-            <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
-        </div>
-        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+export const SendEmailToAdminOnPaymentRequested = (data: any) => {
+    // console.log("from email: ", data.logo)
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear admin, </h3>
+        <p>A new payment has been requested.</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            Login to check your account 
+            <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+        </p>
         `;
         
     return {

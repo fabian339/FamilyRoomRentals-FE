@@ -86,8 +86,8 @@ export default {
               }
             }
             if(!offer.followupSent){
-              // if(new Date().toDateString() === new Date(new Date(offer.officialMeetingDate.date).setDate(new Date(offer.officialMeetingDate.date).getDate() + 2)).toDateString()){
-              if(new Date(new Date().setDate(28)).toDateString() === new Date(new Date(offer.officialMeetingDate.date).setDate(new Date(offer.officialMeetingDate.date).getDate() + 2)).toDateString()){
+              if(new Date().toDateString() === new Date(new Date(offer.officialMeetingDate.date).setDate(new Date(offer.officialMeetingDate.date).getDate() + 2)).toDateString()){
+              // if(new Date(new Date().setDate(28)).toDateString() === new Date(new Date(offer.officialMeetingDate.date).setDate(new Date(offer.officialMeetingDate.date).getDate() + 2)).toDateString()){
                 this.sendFollowUps(offer)
               }
             }
@@ -140,8 +140,8 @@ export default {
         }, offer.roomId);
 
       const clientEmailData = SendFollowupToClient({
-        // email: offer.email,
-        email: 'cnv66774@eoopy.com',
+        email: offer.email,
+        // email: 'ngj58878@cuoly.com',
         name: offer.full_name,
         ownerName: offer.ownerName,
         roomId: offer.roomId,
@@ -150,8 +150,8 @@ export default {
       })
 
       const userEmailData = SendFollowupToUser({
-        // ownerEmail: offer.ownerEmail,
-        ownerEmail: 'cnv66774@eoopy.com',
+        ownerEmail: offer.ownerEmail,
+        // ownerEmail: 'ngj58878@cuoly.com',
         name: offer.full_name,
         ownerName: offer.ownerName,
       })

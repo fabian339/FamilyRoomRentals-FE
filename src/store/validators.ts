@@ -235,6 +235,8 @@ export const validateClientRefundData = (data: any) => {
 
   //validation for fullname
   if(isEmpty(data.name)) errors.name = 'Must not be empty';
+  //validation for refundReason
+  if(isEmpty(data.refundReason)) errors.refundReason = 'Must not be empty';
   //validation for email
   if(isEmpty(data.email)) {
     errors.email = 'Must not be empty'

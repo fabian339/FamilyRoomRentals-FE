@@ -64,6 +64,13 @@
                             outlined
                             :error-messages="errors.phone"   
                         ></v-text-field>
+                        <v-select
+                            :items="refundReasons"
+                            label="Reason for refund?"
+                            v-model="refundReason"
+                            outlined
+                            :error-messages="errors.refundReason"   
+                        ></v-select>
                         <v-btn color="#66CDAA" @click.stop="submitRefundData">Request $10 Refund</v-btn>
                     </form>
                 </v-col>
@@ -113,6 +120,8 @@ import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
             phone: '',
             showRefundForm: false,
             countDown: 15,
+            refundReason: '',
+            refundReasons: ['No agreement was made.', 'Meeting did not happend.', 'I was unavailable.', 'I did not like the property.'],
             errors: {}
         }
     },
@@ -156,10 +165,6 @@ import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
                     id :this.id,
                     token: this.$router.history.current.params.refundToken
                 });
-                // this.updateOffer({
-                //     objectId: this.id,
-                //     clientRequestedRefund: true,
-                // })
                this.showRefundForm = true;
             }
         },
@@ -167,13 +172,15 @@ import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
             const data = {
                 name: this.name,
                 email: this.email,
-                phone: this.phone
+                phone: this.phone,
+                refundReason: this.refundReason
             }
             const {valid, errors} = validateClientRefundData(data);
             if(!valid) this.errors = errors;
             else{
+                //send email to admin
                 const emailToAdmin = SendEmailToAdminOnRefundRequested({
-                    email: 'mrfabian.cs@gmail.com'
+                    email: 'familyroomrentals@dr.com'
                 })
                 this.sendEmail(emailToAdmin);
                 this.updateOffer({
@@ -182,7 +189,6 @@ import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
                     clientRefundData: data,
                     refundRequestCaseOpen: true,
                 })
-                //send email to admin
                 this.SET_COUNTDOWN(true);
                 this.countDownTimer();
                 this.showRefundForm = false;
@@ -191,7 +197,7 @@ import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
          countDownTimer() {
             if(this.countDown === 0){
                 this.SET_COUNTDOWN(false);
-                // this.$router.push('/')
+                this.$router.push('/')
             }
             if(this.countDown > 0) {
                 setTimeout(() => {

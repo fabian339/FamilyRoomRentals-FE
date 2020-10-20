@@ -67,7 +67,7 @@
                                 </v-list-item-avatar>
                                 <v-list-item-content>
                                     <v-list-item-title :style="`${!item.readByReceiver ? 'color: green' : 'color: #778899'}`" >
-                                        {{`(${new Date(item.createdAt).toLocaleString('en-US')}) - ${!item.readByReceiver ? item.meetingScheduled ? 'Offer Status Updated' : 'New Offer' : 'Check Offer'}`}}
+                                        {{`(${new Date(item.createdAt).toLocaleString('en-US')}) - ${!item.readByReceiver ? item.meetingScheduled ? 'Offer Status Updated' : 'New Offer' : item.followupSent ? item.submittedFollowUpData ? 'Offer Not Active' : 'Submit Survey' : 'Check Offer'}`}}
                                     </v-list-item-title>
                                     <v-list-item-subtitle >*********************</v-list-item-subtitle>
                                 </v-list-item-content>

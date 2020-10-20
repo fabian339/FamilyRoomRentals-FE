@@ -173,8 +173,8 @@ export default {
                 console.log(payload)
                 if(this.offerData){
                     const clientEmailData = SendEmailToClientOnMeetingScheduled({
-                        // email: this.$store.getters.currentOffer.email,
-                        email: 'rzw17825@bcaoo.com',
+                        email: this.$store.getters.currentOffer.email,
+                        // email: 'rzw17825@bcaoo.com',
                         name: this.$store.getters.currentOffer.full_name,
                         ownerName: this.$store.getters.currentOffer.ownerName,
                         ownerEmail: this.$store.getters.currentOffer.ownerEmail,

@@ -39,13 +39,12 @@
                             </strong>
                         </p>
 
-                        <div v-if="currentOffer.followupSent">
+                        <div v-if="currentOffer.followupSent && !currentOffer.submittedFollowUpData">
                             <p>Tell us how it went, request payment, and submit feedback.</p>
                             <v-btn 
                                 style="margin: 0px -10px;" 
                                 small 
-                                 
-                                color="green"
+                                color="#ADD8E6"
                                 @click.stop="openSurvey = true"
                             >
                                 Answer Survey
@@ -79,7 +78,7 @@
                         small 
                         color="error" 
                         @click.stop="showDeleteWarning = true"
-                        :disabled="currentOffer.offerAcceptedByOwner"
+                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable"
                     >
                         Delete Offer
                     </v-btn>
@@ -87,6 +86,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
         <v-dialog
             v-model="showDeleteWarning"
             max-width="350"
@@ -150,17 +150,155 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog
+            v-model="openSurvey"
+            max-width="650"
+            :persistent="!surveySubmitted"
+        >
+            <SuccessAlert v-if="surveySubmitted" :msg="`Your followup has been submitterd, ${surveyData.answer5 === 'Yes' ? 'we are reviewing the information in order to process the payment.' : 'we thank you for using FamilyRoomRentals.'}`" />
+            <v-card v-else>
+                <v-card-title class="headline">Followup Survey</v-card-title>
+                <v-card-text>
+                    This is just a survey to know how things went between you and {{currentOffer.full_name}}.
+                </v-card-text>
+                <v-col cols="12">        
+                    <form>
+                        <v-select
+                            :items="['Excellent', 'Good', 'Ok', 'Bad', 'Terrible']"
+                            label="How was the meeting overall?"
+                            v-model="surveyData.answer1"
+                            outlined
+                            :error-messages="errors.answer1"   
+                        ></v-select>
+                        <v-select
+                            :items="['Yes', 'No']"
+                            :label="`Did you and ${currentOffer.full_name} came to an agreement?`"
+                            v-model="surveyData.answer2"
+                            :error-messages="errors.answer2"   
+                            outlined
+                        ></v-select>
+                        <v-select
+                            v-if="surveyData.answer2 === 'Yes'"
+                            :items="['Yes', 'No', 'Not Sure']"
+                            :label="`Will ${currentOffer.full_name} be moving into the property soon?`"
+                            v-model="surveyData.answer3"
+                            outlined
+                        ></v-select>
+                        <v-select
+                            v-if="surveyData.answer2 === 'No'"
+                            :items="['I did not like the visitor', 'Visitor was unable to follow property rules', 'Meeting never happened', 'The visitor never showed up', 'I was unavailable', 'Other']"
+                            :label="`What went wrong?`"
+                            v-model="surveyData.answer4"
+                            outlined
+                        ></v-select>
+                        <div
+                            v-if="surveyData.answer3 === 'Yes'"
+                        >
+                            <p style="color: teal;">That is good too know!</p>
+                            <v-select
+                                :items="['Yes', 'No']"
+                                :label="`Would you like to request your payment?`"
+                                v-model="surveyData.answer5"
+                                outlined
+                            ></v-select>
+                        </div>
+                        <p 
+                            v-if="surveyData.answer3 === 'No'"
+                            style="color: saddlebrown;"
+                        >
+                            A payment can only be requested if {{currentOffer.full_name}} agrees to move in.
+                        </p>
+                        <p 
+                            v-if="surveyData.answer3 === 'Not Sure'"
+                            style="color: darkblue;"
+                        >
+                            Not a problem, please feel free contact us if {{currentOffer.full_name}} agrees 
+                            to move in. Please do not delete this offer yet. If this offer gets deleted and 
+                            then {{currentOffer.full_name}} decides to move in, there will not be enough evidence 
+                            to process your payment. 
+                        </p>
+                        <div
+                            v-if="surveyData.answer5 === 'Yes'" 
+                        >
+                            <p><strong>To receive your $10 payment, please enter card information:</strong> </p>
+                            <p>Please make sure that the information is correct!</p>
+                            <v-row justify="center" style="border: 2px solid darkgray;border-radius: 45px;margin-bottom: 15px;">
+                                <v-col cols="5">
+                                    <v-text-field
+                                    label="1234 1234 1234 123"
+                                    v-model="surveyData.cardData.cardN"
+                                    :append-icon="cardType(surveyData.cardData.cardN)"
+                                    :error-messages="errors.cardN"   
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="2.3">
+                                    <v-text-field
+                                    label="MM/YY"
+                                    v-model="surveyData.cardData.cardExp"
+                                    :error-messages="errors.cardExp"   
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-text-field
+                                    label="CVC"
+                                    v-model="surveyData.cardData.cardCvc"
+                                    :error-messages="errors.cardCvc"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="2.3">
+                                    <v-text-field
+                                    label="Zipcode"
+                                    v-model="surveyData.cardData.cardZip"
+                                    :error-messages="errors.cardZip"
+                                    ></v-text-field>
+                                </v-col>
+                                <p>Allow us two business days to review the information and process the payment.</p>
+                            </v-row>
+                        </div>
+                        <v-textarea
+                            name="input-7-1"
+                            filled
+                            label="Comment: (optional)"
+                            v-model="surveyData.comments"
+                        ></v-textarea> 
+                    </form>
+                </v-col>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="openSurvey = false"
+                >
+                    Cancel
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click.stop="submitSurvey"
+                >
+                    Submit
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import { SendEmailToClientOnOfferRejected } from '../../globals/emails'
+import { SendEmailToClientOnOfferRejected, SendEmailToAdminOnPaymentRequested } from '../../globals/emails'
+import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+
 export default {
     name: "ViewNotification",
     props: {
         value: Boolean,
     },
+    components: {SuccessAlert},
     computed: {
         show: {
             get () {
@@ -181,6 +319,22 @@ export default {
             showDeleteWarning: false,
             showRejectionDialog: false,
             openSurvey: false,
+            surveySubmitted: false,
+            surveyData: {
+                answer1: '',
+                answer2: '',
+                answer3: '',
+                answer4: '',
+                answer5: '',
+                comments: '',
+                cardData: {
+                    cardN: '',
+                    cardCvc: '',
+                    cardExp: '',
+                    cardZip: ''
+                }
+            },
+            errors: {}
         }
     },
     methods: {
@@ -219,6 +373,83 @@ export default {
             });
             this.sendEmail(clientEmailData);
             this.showRejectionDialog = false
+        },
+        submitSurvey(){
+            let errors = {};
+            if(this.surveyData.answer1 === '') errors.answer1 = 'Must not be empty'
+            else if(this.surveyData.answer2 === '') errors.answer2 = 'Must not be empty'
+            else if(this.surveyData.answer5 === 'Yes') {
+                if(!this.validateCreditCardNumber(this.surveyData.cardData.cardN)) errors.cardN = 'Invalid card'
+                if(this.surveyData.cardData.cardCvc === '') errors.cardCvc = 'Must not be empty'
+                if(this.surveyData.cardData.cardExp === '') errors.cardExp = 'Must not be empty'
+                if(this.surveyData.cardData.cardZip === '') errors.cardZip = 'Must not be empty'
+            }
+            if(Object.keys(errors).length !== 0) this.errors = errors;
+            else {
+                this.updateOffer({
+                    objectId: this.currentOffer.objectId,
+                    followUpData: this.surveyData,
+                    submittedFollowUpData: true,
+                    userRequestedPayment: this.surveyData.answer5 === 'Yes' ? true : false,
+                    paymentRequestedCaseOpen: this.surveyData.answer5 === 'Yes' ? true : false,
+                    offerRemoveable: this.surveyData.answer5 === 'Yes' ? false : true,
+                    status: this.surveyData.answer5 === 'Yes' ? 'Requested Payment.' : 'Nothing else to do!'
+                })
+                if(this.surveyData.answer5 === 'Yes'){
+                    const emailToAdmin = SendEmailToAdminOnPaymentRequested({
+                        email: 'familyroomrentals@dr.com'
+                    })
+                    this.sendEmail(emailToAdmin);
+                }
+                this.surveySubmitted = true;
+                // console.log('submitting')
+            }
+        },
+        // returns true or false
+        validateCreditCardNumber(cardNumber) {
+            cardNumber = cardNumber.split(' ').join("");
+            if (parseInt(cardNumber) <= 0 || (!/\d{15,16}(~\W[a-zA-Z])*$/.test(cardNumber)) || cardNumber.length > 16) {
+                return false;
+            }
+            var carray = new Array();
+            for (let i = 0; i < cardNumber.length; i++) {
+                carray[carray.length] = cardNumber.charCodeAt(i) - 48;
+            }
+            carray.reverse();
+            var sum = 0;
+            for (let i = 0; i < carray.length; i++) {
+                var tmp = carray[i];
+                if ((i % 2) != 0) {
+                    tmp *= 2;
+                    if (tmp > 9) {
+                        tmp -= 9;
+                    }
+                }
+                sum += tmp;
+            }
+            return ((sum % 10) == 0);
+        },
+        cardType(cardNumber) { // returns card type; should not rely on this for checking if a card is valid
+            cardNumber = cardNumber.split(' ').join("");
+            var o = {
+                electron: /^(4026|417500|4405|4508|4844|4913|4917)\d+$/,
+                maestro: /^(5018|5020|5038|5612|5893|6304|6759|6761|6762|6763|0604|6390)\d+$/,
+                dank: /^(5019)\d+$/,
+                interpayment: /^(636)\d+$/,
+                unionpay: /^(62|88)\d+$/,
+                visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
+                mcard: /^5[1-5][0-9]{14}$/,
+                amex: /^3[47][0-9]{13}$/,
+                diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
+                disc: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
+                jcb: /^(?:2131|1800|35\d{3})\d{11}$/
+            }
+            for(var k in o) {
+                if(o[k].test(cardNumber)) {
+                    return k;
+                }
+            }
+            return null;
         }
     }
 }
