@@ -195,6 +195,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
         </p>
         <ul> Please wear a face covering </ul>
         <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please be on time </ul>
         <ul> Please ask as many questions as possible  </ul>
         <ul> Please stay alert while visiting the property. </ul>
         <ul> Please try to contact ${data.clientName} prior to the meeting to descuss details. </ul>
@@ -279,6 +280,206 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
         email: data.email,
         subject: "A Meeting has been Confirmed!",
         name: data.name,
+        html,
+    };
+}
+
+export const SendReminderToClient = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p>Your meeting with ${data.ownerName} is two days away!</p>
+        <h4>Information:</h4>
+        <div style="line-height: 5px;">
+            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Offer: <strong>$${data.offer}</strong> </p>
+            <p>Meeting with:  ${data.ownerName}</p>
+            <p>Meeting date:  ${data.meetingDate}</p>
+            <p>Meeting Location:  
+                <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
+                    ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
+                </a>
+            </p>
+            <p>${data.ownerName}'s email:  ${data.ownerEmail}</p>
+            <p>${data.ownerName}'s phone:  ${data.ownerPhone}</p>
+
+        </div>
+
+        <h4>Recomendations:</h4>
+        <p>
+            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
+            necessary while visiting ${data.ownerName}'s property. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please be on time </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please stay alert while visiting the property. </ul>
+        <ul> Please try to contact ${data.ownerName} prior to the meeting to descuss details. </ul>
+
+        <p>
+            Once the meeting is done, we will send a follow up email to see how it went. 
+        </p>
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.email,
+        subject: "Meeting Reminder!",
+        name: data.name,
+        html,
+    };
+}
+
+export const SendReminderToUser = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.ownerName}, </h3>
+        <p>Your meeting with ${data.name} is two days away!</p>
+        <h4>Information:</h4>
+        <div style="line-height: 5px;">
+            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Offer: <strong>$${data.offer}</strong> </p>
+            <p>Meeting with:  ${data.name}</p>
+            <p>Meeting date:  ${data.meetingDate}</p>
+            <p>Meeting Location:  
+                <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
+                    ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
+                </a>
+            </p>
+            <p>${data.name}'s email:  ${data.email}</p>
+            <p>${data.name}'s phone:  ${data.phone}</p>
+
+        </div>
+
+        <h4>Recomendations:</h4>
+        <p>
+            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
+            necessary receiving a visit from ${data.name}. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please be on time </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please stay alert while visiting the property. </ul>
+        <ul> Please try to contact ${data.name} prior to the meeting to descuss details. </ul>
+
+        <p>
+            Once the meeting is done, we will send a follow up email to see how it went. 
+        </p>
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.ownerEmail,
+        subject: "Meeting Reminder!",
+        name: data.name,
+        html,
+    };
+}
+
+export const SendFollowupToClient = (data: any) => {
+    // console.log("from email: ", data.logo)
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p>We hope that your meeting with ${data.ownerName} was pleasant!</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            If the meeting went well and an agreetment was made, there is nothing to do and we wish you all the best. 
+            However, if an agreetment was not made, we encourage you to get a 50% refund of what you paid to make 
+            the meeting possible.
+        </p>
+        <p>
+            Please click 
+            <strong><a href='http://localhost:8081/#/request/${data.roomId}/refund/${data.token}' target="_blank">HERE</a></strong>
+            to issue a 50% refund.
+        </p>
+        <p>
+            Verification ID: <strong>${data.verificationId}</strong> - (you will need this ID to issue the refund).
+        </p>
+
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.email,
+        subject: "Meeting Followup!",
+        name: data.name,
+        html,
+    };
+}
+
+
+export const SendFollowupToUser = (data: any) => {
+    // console.log("from email: ", data.logo)
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.ownerName}, </h3>
+        <p>We hope that your meeting with ${data.name} was pleasant!</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            If the meeting went well and an agreetment was made, we are happy to suggest you to please request your $10 payment.
+            However, if an agreetment was not made, we encourage you to keep it up accepting offers until the right one come through.
+        </p>
+        <p>
+            Login to check your account 
+            <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+        </p>
+
+        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p>familyroomrentals.com</p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.ownerEmail,
+        subject: "Meeting Followup!",
+        name: data.ownerName,
         html,
     };
 }

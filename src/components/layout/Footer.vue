@@ -53,6 +53,7 @@
         {name: 'Careers', path: '/careers'},
         {name: 'Stories', path: '/stories'},
         {name: 'Contact Us', path: '/contact'},
+        {name: 'Donate', path: '/donate'},
       ],
     icons: [
         'mdi-facebook',

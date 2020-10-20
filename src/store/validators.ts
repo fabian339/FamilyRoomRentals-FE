@@ -230,7 +230,29 @@ export const validateOffer = (data: any) => {
 }
 
 
+export const validateClientRefundData = (data: any) => {
+  let errors:any = {};
 
+  //validation for fullname
+  if(isEmpty(data.name)) errors.name = 'Must not be empty';
+  //validation for email
+  if(isEmpty(data.email)) {
+    errors.email = 'Must not be empty'
+  } else if(!isEmail(data.email)){
+      errors.email = 'Must be a valid email address'
+  }  
+  //validation for phone
+  if(isEmpty(data.phone)) {
+    errors.phone = 'Must not be empty'
+  } else if(!isPhoneNumber(data.phone)){
+    errors.phone = 'Must be a valid phone number'
+  } 
+  //check if errors are registered
+  return {
+      errors,
+      valid: (Object.keys(errors).length === 0) ? true : false
+  }
+}
 export const validateLoginData = (data: Login) => {
   let errors:any = {};
 

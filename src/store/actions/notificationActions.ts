@@ -63,6 +63,31 @@ export default {
     })
   },
 
+  getOfferOnClientRefund: (context: any, data: any) => {
+    // console.log('this is a Data22', id)
+    context.commit('SET_LOADING_CONTENT', true);
+    axios.get(`/classes/Offers/${data.id}`)
+    .then((res) => {
+      if(res.data.clientRefundToken === data.token){
+        context.commit('SET_OFFER', res.data)
+        context.commit('SET_OFFER_TOKEN_VERIFIED', true)
+        context.commit('CLEAR_NOTIFICATIONS_ERROR')
+      } else {
+        context.commit('SET_OFFER_ERROR', {
+          error: 'Invalid Verification, check parameters!'
+        })
+      }
+      context.commit('SET_LOADING_CONTENT', false);
+    })
+    .catch((err) => {
+      context.commit('SET_OFFER_ERROR', {
+        error: 'Invalid Verification ID!'
+      })
+      context.commit('SET_LOADING_CONTENT', false);
+
+    })
+  },
+
   updateOffer: (context: any, offerData: any) => {
     axios.put(`/classes/Offers/${offerData.objectId}`, offerData)
     .then((res) => {

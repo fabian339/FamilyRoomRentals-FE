@@ -14,6 +14,7 @@ import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
 import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
+import clientRefund from '@/components/payments/clientRefund.vue'
 
 
 Vue.use(VueRouter)
@@ -107,6 +108,11 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     name: 'SelectDateAndPay',
     component: SelectDateAndPay
   },
+  {
+    path: '/request/:secretId/refund/:refundToken',
+    name: 'clientRefund',
+    component: clientRefund
+  }
 ]
 
 
