@@ -1,9 +1,11 @@
 <template>
+  <v-container>
     <v-row class="text-center" style="margin-top: -20px;">
       <v-col
         md="4"
-      >
-        <Profile style="margin: 60px auto;"/>
+      > 
+        <h2 id="userName">{{this.$store.getters.currentUser.fName}} {{this.$store.getters.currentUser.lName}}</h2>
+        <Profile style="margin-top: 15px;"/>
       </v-col>
       <v-col
         cols="12"
@@ -19,32 +21,36 @@
           indeterminate
         ></v-progress-circular>
 
-        <h2 style="margin: 10px;" v-if="currentUserRooms.length === 0">Welcome, Your Rooms will be here!</h2>
-      
-        <div v-else class="selector" >
-          <v-select
-            :items="['All Rooms', 'Active Rooms', 'Rented Rooms']"
-            @change="onTabChange"
-            solo
-            item-color="green"
-            color="green"
-            value="All Rooms"
-           ><span class="white--text">Lorem ipsum</span></v-select>
-        </div>
-        <v-container style="background-color: white !important; margin: 35px 0px;" v-if="!isContentLoading" class="grey lighten-5">
+        <h2 v-if="currentUserRooms.length === 0" style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>
+      <!-- v-if="currentUserRooms.length === 0" -->
+        <v-row v-else class="text-center" justify="center" style="margin-bottom: -5px;">
+          <v-radio-group v-model="filterBy" row>
+              <div style="display: flex;">
+                <v-radio 
+                  v-for="(item, index) in ['All Rooms', 'Active Rooms', 'Rented Rooms']" :key="index - 20"
+                  color="pink" 
+                  style="margin: auto 10px;" 
+                  :label="item" 
+                  @click.stop="radioClick(index)" 
+                  :value="item">
+                </v-radio> 
+              </div>
+          </v-radio-group>
+        </v-row>
+        <v-container id="roomsContainer" v-if="!isContentLoading">
           <v-row no-gutters>
             <v-col
-              style="margin: 10px auto"  
-              md="6"
+              class="mb-8"
+              cols="16"
               v-for="item in !filter ? currentUserRooms : filteredUserRooms" :key="item.street1"
             >
               <Room :roomData="item" />
           </v-col>
         </v-row>
-      </v-container>
+        </v-container>
       </v-col>
     </v-row>
-
+  </v-container>
 </template>
 
 <script>
@@ -73,34 +79,48 @@ export default {
   },
   data(){
     return {
-      active: false,
       filter: false,
+      filterBy: 'All Rooms',
       filteredUserRooms: []
     }
   },
   created(){
   },
   methods:{
-    onTabChange(e){
-      if(e === "All Rooms") this.filter = false; 
-      else{
-        if(e == "Active Rooms") this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === false)
-        if(e == "Rented Rooms") this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === true)
+    radioClick(index){
+      if(index === 0) this.filter = false
+      else {
+        if(index === 1) this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === false)
+        if(index === 2) this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === true)
         this.filter = true
       }
-      // console.log(e)
-    }
+    },
 
   }
 }
 </script>
 
 <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
   .selector{
     width: 30%;
     margin: 10px 35% -30px 35%;  
     border: 5px solid seagreen;
     height: 58px;  
     border-radius: 10px;
+  }
+  #userName{
+    font-family: 'DM Serif Display', cursive;
+    font-size: 30px;
+    /* margin: 7.5px 0px; */
+    color: slategrey;
+  }
+
+  #roomsContainer{
+    background-color: white !important;
+    overflow: auto;
+    height: 750px;
+    margin-top: 10px;
+    padding: 0;
   }
 </style>

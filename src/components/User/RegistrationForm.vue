@@ -40,7 +40,7 @@
             <v-text-field
               ref="phone"
               v-model="phone"
-              label="phone: (222-222-2222)"
+              label="Phone: (222-222-2222)"
               :error-messages="formErrors.phone"
             ></v-text-field>
 

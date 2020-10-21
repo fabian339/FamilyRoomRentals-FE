@@ -60,7 +60,7 @@
         <h2 class="headline font-weight-bold mb-3">
           All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
         </h2>
-        <v-container id="roomContainer">
+        <v-container id="roomsContainer">
           <v-row no-gutters v-if="filterBy === 'Most Recent'">
             <v-col
               class="mb-8"
@@ -148,7 +148,7 @@ export default {
     position: relative;
   }
 
-  #roomContainer{
+  #roomsContainer{
     overflow: auto;
     height: 600px;
   }

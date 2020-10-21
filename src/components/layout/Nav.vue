@@ -22,7 +22,7 @@
             </v-btn>
 
             <v-btn color="#e9ffd4" v-if="isAuthenticated" to="/profile" text>
-                <span>My Profile</span>
+                <span>{{this.$store.getters.currentUser.fName}}'s Profile</span>
             </v-btn>
 
             <div v-if="isAuthenticated" class="text-center" style="margin: auto 15px;">

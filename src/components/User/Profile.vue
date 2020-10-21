@@ -100,9 +100,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-card-title style="margin: 110px auto; justify-content: center">
+        <!-- <v-card-title style="margin: 110px auto; justify-content: center">
           <div class="display-1 pl-12 pt-12">{{currentUser.fName}} {{currentUser.lName}}</div>
-        </v-card-title>
+        </v-card-title> -->
       </v-img>
 
       <v-list two-line>
@@ -153,9 +153,9 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="font">
-              To be removed!!
+              {{new Date(currentUser.createdAt).toDateString()}}
             </v-list-item-title>
-            <v-list-item-subtitle>Receive notifications about rooms by </v-list-item-subtitle>
+            <v-list-item-subtitle>User since: </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 
