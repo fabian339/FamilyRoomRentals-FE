@@ -12,11 +12,11 @@ export default {
     context.commit('SET_LOADING_USER', true);
     axios.post(`/users`, user)
     .then((res) => {
-      const token = res.data.sessionToken;
-      localStorage.setItem('user-token', token);
-      context.commit('AUTH_SUCCESS', token);
+      // const token = res.data.sessionToken;
+      // localStorage.setItem('user-token', token);
+      // context.commit('AUTH_SUCCESS', token);
       // context.dispatch('fetchUserNotifications', res.data.objectId);
-      // console.log('Getting Current User',user)
+      // console.log('Registering User', res);
       let currentUser = user;
       delete currentUser.password;
       delete currentUser.confirmPassword;
@@ -25,10 +25,11 @@ export default {
       currentUser.objectId = res.data.objectId;
       currentUser.sessionToken = res.data.sessionToken;
       currentUser.userPhoto = res.data.userPhoto;
+      currentUser.emailVerified = false;
       currentUser.className = '_User';
       context.commit('SET_USER', currentUser)
-      if(appRouter.history.current.path !== '/profile'){
-        appRouter.push(`/profile`)
+      if(appRouter.history.current.path !== '/email-verification'){
+        appRouter.push(`/email-verification`)
       }
       context.commit('SET_LOADING_USER', false);
       context.commit('CLEAR_USER_ERROR')
@@ -67,23 +68,29 @@ export default {
     context.commit('SET_LOADING_USER', true);
     axios.post(`/login`, user)
     .then((res) => {
-      // console.log('loging user', res)
+      console.log('loging user', res)
       const user = res.data
       const token = user.sessionToken;
-      localStorage.setItem('user-token', token);
       user.className = "_User";
       delete user.confirmPassword;
       delete user.ACL;
-      context.commit('AUTH_SUCCESS', token);
-      context.dispatch('fetchUserNotifications', user.objectId);
       context.commit('SET_USER', user)
-      if(appRouter.history.current.path !== '/profile'){
-        appRouter.push(`/profile`)
+
+      if(!user.emailVerified){
+        appRouter.push(`/email-verification`)
+      } else {
+        if(appRouter.history.current.path !== '/profile'){
+          localStorage.setItem('user-token', token);
+          context.commit('AUTH_SUCCESS', token);
+          context.dispatch('fetchUserNotifications', user.objectId);
+          appRouter.push(`/profile`)
+        }
       }
       context.commit('SET_LOADING_USER', false);
       context.commit('CLEAR_USER_ERROR')
   })
   .catch(() => {
+    // console.log(error)
       const err = {
         responseError: "Invalid email/password."
       }
@@ -129,6 +136,19 @@ export default {
     .then((res) => {
       // console.log("update password: ", res);
       context.commit('PASSWORD_RESET_EMAIL_SENT', true);
+      context.commit('SET_LOADING_USER', false);
+    })
+    .catch((err) => {
+      context.commit('SET_USER_ERROR', err);
+    });
+  },
+
+  sendEmailVerification: (context: any, data: any) => {
+    context.commit('SET_LOADING_USER', true);
+    axios.post(`/verificationEmailRequest`, data)
+    .then((res) => {
+      console.log("email Sent Again: ", res);
+      context.commit('EMAIL_VERIFICATION_SENT', true);
       context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {

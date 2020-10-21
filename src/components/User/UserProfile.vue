@@ -19,7 +19,7 @@
           indeterminate
         ></v-progress-circular>
 
-        <h2 v-if="currentUserRooms.length === 0">No Rooms Yet!</h2>
+        <h2 style="margin: 10px;" v-if="currentUserRooms.length === 0">Welcome, Your Rooms will be here!</h2>
       
         <div v-else class="selector" >
           <v-select

@@ -10,6 +10,7 @@ import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
 import LoginForm from '@/components/User/LoginForm.vue'
 import RegistrationForm from '@/components/User/RegistrationForm.vue'
+import EmailVerification from '@/components/User/EmailVerification.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
@@ -112,6 +113,11 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/request/:secretId/refund/:refundToken',
     name: 'clientRefund',
     component: clientRefund
+  },
+  {
+    path: '/email-verification',
+    name: 'emailVerification',
+    component: EmailVerification
   }
 ]
 

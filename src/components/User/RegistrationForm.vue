@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center" justify="center">
       <div class="logo" >
-          <img :src="require('../../assets/logo.png')" alt="logo" width="400">
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
       <v-col lg="4">
         <h2 class="headline font-weight-bold mb-3">Register</h2>
@@ -44,26 +44,6 @@
               :error-messages="formErrors.phone"
             ></v-text-field>
 
-              <p>How would you like to receive notifications? </p>
-              <v-radio-group 
-                v-model="notifyBy" 
-                style="margin: auto 30%"
-                :error-messages="formErrors.notifyBy"
-                >
-                <v-radio
-                  label="By email"
-                ></v-radio>
-                <v-radio
-                  label="By phone/text"
-                ></v-radio>
-                <v-radio
-                  label="Both"
-                ></v-radio>
-                <v-radio
-                  label="None"
-                ></v-radio>
-              </v-radio-group>
-
             <v-text-field
               id="password"
               label="Password"
@@ -86,7 +66,8 @@
               :type="value2 ? 'password' : 'text'"
               :error-messages="formErrors.confirmPassword"
               @click:append="() => (value2 = !value2)"
-            ></v-text-field>        
+            ></v-text-field>    
+               
               <v-spacer></v-spacer>
               <v-btn type="submit" color="#66CDAA">Register</v-btn>
               <p style="color: red">{{userErrors.responseError}}</p>
@@ -121,7 +102,6 @@ import {validateUserRegistration} from '../../store/validators'
         phone: '',
         password: '',
         confirmPassword: '',
-        notifyBy: '',
         formErrors: {},
         value1: String,
         value2: String
@@ -139,7 +119,6 @@ import {validateUserRegistration} from '../../store/validators'
                 username: this.username,
                 email: this.email,
                 phone: this.phone,
-                notifyBy: this.notifyBy === '' ? this.notifyBy : ['email', 'phone/text', 'both', 'none'][this.notifyBy],
                 password: this.password,
                 confirmPassword: this.confirmPassword
             }

@@ -1,11 +1,11 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <v-row class="text-center" justify="center">
       <div class="logo" >
-        <img :src="require('./../assets/logo.png')" alt="logo" width="400">
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
+      <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
       <v-row no-gutters class="text-center">
-        <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
         <v-col class="element1">
           <div style="width: 365px;margin: 25px auto;">
             <h1 style="font-size: 60px">Focus on what you can afford</h1>

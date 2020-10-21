@@ -3,7 +3,7 @@
     <ContentLoading v-if="isContentLoading"/>
     <v-row class="text-center" v-if="!isContentLoading">
       <div class="logo" >
-        <img :src="require('../../assets/logo.png')" alt="logo" width="400">
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
       <div style="width: 100%; margin-bottom: 25px;" v-if="!showFilter">
         <v-btn class="ma-2" color="#355f57" @click.stop="showFilter = true" dark >Filter</v-btn>

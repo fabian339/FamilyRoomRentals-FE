@@ -8,11 +8,19 @@
                 style="marginTop: -30px"
             >
                 <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
-                <v-carousel class="RoomImages">
+                <v-carousel class="RoomImages" v-if="contentRoom.images && contentRoom.images.length > 0">
                     <v-carousel-item
                         v-for="(image,i) in contentRoom.images"
                         :key="i"
                         :src="image"
+                        reverse-transition="fade-transition"
+                        transition="fade-transition"
+                        height="50px"
+                    ></v-carousel-item>
+                </v-carousel>
+                <v-carousel class="RoomImages" v-else>
+                    <v-carousel-item
+                        src="https://i.ibb.co/t85JhCP/no-Room-Img.png" alt="no-Room-Img"
                         reverse-transition="fade-transition"
                         transition="fade-transition"
                         height="50px"
@@ -111,6 +119,9 @@
             </v-col>
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
+            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount + 3}}</strong></p>
+        </v-row>
+        <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
                 <OfferForm v-if="!contentRoom.rented" />   
                 <p v-if="contentRoom.rented" style="color: #de1254">No offer can be made as this Room is already rented!</p> 
@@ -140,7 +151,6 @@ import EditRoomForm from './EditRoomForm.vue'
             'contentRoom',
             'isContentLoading',
             'currentUser',
-            'contentRoom',
             'isRoomUpdated',
             'isOfferSent'
         ]),

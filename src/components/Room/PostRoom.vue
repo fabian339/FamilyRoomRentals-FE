@@ -2,7 +2,7 @@
   <v-row class="text-center" justify="center">
     <v-col cols="12" sm="10" md="8" lg="6">
     <div class="logo" >
-        <img :src="require('../../assets/logo.png')" alt="logo" width="400">
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
     </div>
     <h2 class="headline font-weight-bold mb-3">
         Publish Your Room
@@ -168,7 +168,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import noImageForRoom from './noImageForRoom'
+// import noImageForRoom from './noImageForRoom'
 import {validateCreateRoom} from '../../store/validators'
 
   export default {
@@ -227,7 +227,7 @@ import {validateCreateRoom} from '../../store/validators'
                 ownerEmail: this.currentUser.email,
                 ownerPhone: this.currentUser.phone,
                 rented: false,
-                images: this.images.length === 0 ? noImageForRoom : this.images
+                images: this.images.length === 0 ? [] : this.images
             }
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;

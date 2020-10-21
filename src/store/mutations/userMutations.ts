@@ -39,6 +39,12 @@ export default {
           state.userState.passwordResetEmailSent = false;
         }, 5000);
     },
+    EMAIL_VERIFICATION_SENT: (state: any, emailSent: boolean) => {
+        state.userState.emailVerificationSent = true;
+        setTimeout(() => {
+          state.userState.emailVerificationSent = false;
+        }, 5000);
+    },
     SET_USER_ERROR: (state: any, errors: object) => {
         state.userState.errors = errors
     },

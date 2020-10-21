@@ -64,29 +64,9 @@
                             :error-messages="formErrors.phone"
                         ></v-text-field>
 
-                        <p>How would you like to receive notifications? </p>
-                        <v-radio-group 
-                            v-model="notifyBy" 
-                            style="margin: auto 30%"
-                            @change="radioChange"
-                        >
-                            <v-radio
-                                label="By email"
-                            ></v-radio>
-                            <v-radio
-                                label="By phone/text"
-                            ></v-radio>
-                            <v-radio
-                                label="Both"
-                            ></v-radio>
-                            <v-radio
-                                label="None"
-                            ></v-radio>
-                        </v-radio-group>
-
-                        <label for="userPhoto">Change profile picture</label>
                         <div id="profilePhotoContainer">
-                            <img :src="userPhoto" alt="img" width="150" height="100">
+                            <p>Change profile picture</p>
+                            <img :src="`${userPhoto ? userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`" alt="img" width="150" height="100">
                             <div style="width: 60%; margin: auto;">
                                 <v-file-input
                                     accept="image/*"
@@ -176,7 +156,6 @@ import {validateUpdateUser} from '../../store/validators'
         email: this.$store.getters.currentUser.email,
         phone: this.$store.getters.currentUser.phone,
         userPhoto: this.$store.getters.currentUser.userPhoto,
-        notifyBy: ['email', 'phone/text', 'both', 'none'].findIndex((item) => item === this.$store.getters.currentUser.notifyBy),
         formErrors: {},
         changes: [],
         showPasswordDialog: false
@@ -194,8 +173,7 @@ import {validateUpdateUser} from '../../store/validators'
                 const updatedUserData = {}
                 let properties = [...new Set(this.changes)]
                 properties.forEach(item => {
-                    if(item === "notifyBy") updatedUserData[item] = ['email', 'phone/text', 'both', 'none'][this[item]];
-                    else updatedUserData[item] = this[item];
+                    updatedUserData[item] = this[item];
                 });
                 updatedUserData.objectId = this.$store.getters.currentUser.objectId;
                 //when updating the user, if fname or lname are updated then update the rooms that belongs to that user
@@ -239,10 +217,7 @@ import {validateUpdateUser} from '../../store/validators'
             this.changes.push(e.target.name);
             // console.log('focus' ,e.target.name)
         },
-        radioChange(){
-            this.changes.push('notifyBy');
-            // console.log("radio changing", e);
-        },
+
         changePassword(){
             console.log("changing password");
             const data = {

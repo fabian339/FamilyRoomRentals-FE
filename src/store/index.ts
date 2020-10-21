@@ -30,6 +30,7 @@ export default new Vuex.Store({
         userUpdated: false,
         userDeleted: false,
         passwordResetEmailSent: false,
+        emailVerificationSent: false,
         token: localStorage.getItem('user-token') || '',
         errors: {}
       }, 
@@ -60,6 +61,7 @@ export default new Vuex.Store({
       isUserUpdated: state => state.userState.userUpdated,
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
+      isEmailVerificationSent: state => state.userState.emailVerificationSent,
       userErrors: state => state.userState.errors,
       //Notifications/Offers
       currentOffer: state => state.notificationState.offer,

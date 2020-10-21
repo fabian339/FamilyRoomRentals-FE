@@ -130,7 +130,8 @@ export default {
     methods: {
       ...mapActions([
           'sendOffer',
-          'sendEmail'
+          'sendEmail',
+          'updateRoom'
       ]),
       addOfferToThisRoom(){
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
@@ -154,6 +155,10 @@ export default {
               // this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
+              this.updateRoom({
+                offersAmount: this.$store.getters.contentRoom.offersAmount + 1,
+                objectId: this.$store.getters.contentRoom.objectId
+              });
               this.agreementError = ''
               this.show = false;
           }

@@ -3,10 +3,10 @@
         <div id="offerContainer">
             <ClientOfferAgreement v-model="openOfferAgreementDialog" />
             <h2 class="headline font-weight-bold mb-3">
-                Interested?
+                Interested? Don't wait!
             </h2>
             <h5 class="headline font-weight-bold mb-3">
-                Don't wait, Send us an offer
+                Send your offer to {{contentRoom.ownerFname}} {{contentRoom.ownerLname}}
             </h5>
             <form
             >

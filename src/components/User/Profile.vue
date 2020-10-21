@@ -59,7 +59,7 @@
       <SuccessAlert v-if="isPasswordResetEmailSent && !isUserLoading" msg="Reset password email sent successfully!" />
       <SuccessAlert v-if="isOfferAcceptedByOwner && !isUserLoading" msg="Offer Accepted Successfully, we will notify you when a meeting date is selected." />
       <v-img
-        :src="currentUser.userPhoto"
+        :src="`${currentUser.userPhoto ? currentUser.userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`"
         height="300px"
         dark
       >
@@ -153,12 +153,8 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="font">
-              {{
-                currentUser.notifyBy === 'both' ? 
-                'both email & phone' : 
-                currentUser.notifyBy === 'none' ?
-                'not email nor phone' : currentUser.notifyBy
-              }}</v-list-item-title>
+              To be removed!!
+            </v-list-item-title>
             <v-list-item-subtitle>Receive notifications about rooms by </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -236,18 +232,17 @@ export default {
         e.preventDefault();
         const roomIds = [];
         const notificationIds = [];
-        if(this.$store.getters.currentUserRooms.length !== 0){
+        if(this.$store.getters.currentUserRooms && this.$store.getters.currentUserRooms.length !== 0){
           this.$store.getters.currentUserRooms.forEach(room => roomIds.push(room.objectId));
         }
-        if(this.$store.getters.currentUserNotifications.length !== 0){
+        if(this.$store.getters.currentUserNotifications && this.$store.getters.currentUserNotifications.length !== 0){
           this.$store.getters.currentUserNotifications.forEach(noti => notificationIds.push(noti.objectId));
         }
 
-        // console.log({
-        //   userId: this.$store.getters.currentUser.objectId,
-        //   roomIds,
-        //   notificationIds,
-        // })
+        console.log({
+          roomIds,
+          notificationIds,
+        })
         this.deleteUserAccount({
           userId: this.$store.getters.currentUser.objectId,
           roomIds,
