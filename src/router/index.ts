@@ -16,6 +16,7 @@ import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
 import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
 import clientRefund from '@/components/payments/clientRefund.vue'
+import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
 
 
 Vue.use(VueRouter)
@@ -118,6 +119,11 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/email-verification',
     name: 'emailVerification',
     component: EmailVerification
+  },
+  {
+    path: '/terms-and-conditions',
+    name: 'termsAndConditions',
+    component: TermsAndConditions
   }
 ]
 

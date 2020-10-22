@@ -56,7 +56,7 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import {validateOffer} from '../../store/validators'
-import ClientOfferAgreement from '@/components/agreements/ClientOfferAgreement.vue'
+import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
 
   export default {
     name: 'OfferForm',
