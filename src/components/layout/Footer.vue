@@ -54,6 +54,7 @@
         {name: 'Stories', path: '/stories'},
         {name: 'Contact Us', path: '/contact'},
         {name: 'Donate', path: '/donate'},
+        {name: 'Terms', path: '/terms-and-conditions'},
       ],
     icons: [
         'mdi-facebook',
