@@ -31,10 +31,10 @@
           </div>
         </v-col>
         <v-col class="element4">
-          <div style="margin: 60px;">
-            <video width="400" controls>
+          <div style="margin: 60px; width:400px; height: 200px; border: 2px solid">
+            <!-- <video width="400" controls>
                 <source type="video/mp4" :src="require('./../assets/test.mp4')" />
-            </video>
+            </video> -->
           </div>
        </v-col>
       </v-row>
