@@ -5,7 +5,7 @@
         md="4"
       > 
         <h2 id="userName">{{this.$store.getters.currentUser.fName}} {{this.$store.getters.currentUser.lName}}</h2>
-        <Profile style="margin-top: 15px;"/>
+        <Profile style="margin-top: 10px;"/>
       </v-col>
       <v-col
         cols="12"
@@ -112,7 +112,7 @@ export default {
   #userName{
     font-family: 'DM Serif Display', cursive;
     font-size: 30px;
-    /* margin: 7.5px 0px; */
+    margin-top: 5px;
     color: slategrey;
   }
 

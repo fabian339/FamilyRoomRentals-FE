@@ -151,28 +151,27 @@
           <v-list-item-icon>
             <v-icon color="#6B8E23">?</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title class="font">
-              {{new Date(currentUser.createdAt).toDateString()}}
-            </v-list-item-title>
-            <v-list-item-subtitle>User since: </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-divider inset></v-divider>
-
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon color="#6B8E23">?</v-icon>
-          </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title class="font">({{this.$store.getters.currentUserRooms.length}})</v-list-item-title>
             <v-list-item-subtitle># Rooms</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-divider inset></v-divider>
 
+        <v-divider inset></v-divider>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="#6B8E23">?</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="font">
+              {{new Date(currentUser.createdAt).toDateString()}}
+            </v-list-item-title>
+            <v-list-item-subtitle>User since </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider inset></v-divider>
         <v-list-item>
           <v-list-item-icon>
             <v-icon color="#6B8E23">mdi-lock</v-icon>

@@ -7,7 +7,7 @@
       <v-col lg="4">
         <h2 class="headline font-weight-bold mb-3">Register</h2>
           <form
-            @submit="submit"
+            @submit.stop="submit"
           >
             <v-text-field
               ref="fName"
@@ -66,14 +66,26 @@
               :type="value2 ? 'password' : 'text'"
               :error-messages="formErrors.confirmPassword"
               @click:append="() => (value2 = !value2)"
-            ></v-text-field>    
-               
-              <v-spacer></v-spacer>
-              <v-btn type="submit" color="#66CDAA">Register</v-btn>
-              <p style="color: red">{{userErrors.responseError}}</p>
-              <small>
-                    Already have an account? Log In <router-link to="/login">HERE </router-link>
-              </small>
+            ></v-text-field> 
+
+            <v-row>
+              <v-checkbox
+                style="margin: 0px 0px 0px 15px;"
+                v-model="checkbox"
+                :error-messages="formErrors.agreement"
+              >
+                <template slot="label">
+                  <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
+                </template>
+              </v-checkbox>
+            </v-row>
+
+            <v-spacer></v-spacer>
+            <v-btn type="submit" color="#66CDAA">Register</v-btn>
+            <p style="color: red">{{userErrors.responseError}}</p>
+            <small>
+                  Already have an account? Log In <router-link to="/login">HERE </router-link>
+            </small>
           </form>
       </v-col>
     </v-row>
@@ -102,6 +114,7 @@ import {validateUserRegistration} from '../../store/validators'
         phone: '',
         password: '',
         confirmPassword: '',
+        checkbox: false,
         formErrors: {},
         value1: String,
         value2: String
@@ -120,7 +133,8 @@ import {validateUserRegistration} from '../../store/validators'
                 email: this.email,
                 phone: this.phone,
                 password: this.password,
-                confirmPassword: this.confirmPassword
+                confirmPassword: this.confirmPassword,
+                agreement: this.checkbox
             }
             const {valid, errors} = validateUserRegistration(user);
             if(!valid) this.formErrors = errors;

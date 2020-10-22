@@ -70,7 +70,7 @@
             <v-textarea
                 name="input-7-1"
                 filled
-                label="Details of Property: (include rules)"
+                label="Details of Property: (What you expect and what you are looking for)"
                 v-model="description"
                 :error-messages="errors.description"   
             ></v-textarea>   
@@ -159,6 +159,15 @@
                 cols="12"
                 style="marginTop: 10px"
             >
+                <v-checkbox
+                    style="margin: 5px 0px 5px -15px;"
+                    v-model="checkbox"
+                    :error-messages="errors.agreement"
+                >
+                    <template slot="label">
+                    <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
+                    </template>
+                </v-checkbox>
                 <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
             </v-col>
         </form>
@@ -190,7 +199,7 @@ import {validateCreateRoom} from '../../store/validators'
             country: ''
         },
         price: '',
-        // propertyOwner: false,
+        checkbox: false,
         description: '',
         propertyRules: [],
         tempRule: '',
@@ -227,7 +236,8 @@ import {validateCreateRoom} from '../../store/validators'
                 ownerEmail: this.currentUser.email,
                 ownerPhone: this.currentUser.phone,
                 rented: false,
-                images: this.images.length === 0 ? [] : this.images
+                images: this.images.length === 0 ? [] : this.images,
+                agreement: this.checkbox
             }
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;

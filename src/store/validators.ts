@@ -5,7 +5,7 @@ interface Room {
   createdAt: string,
   objectId: string,
   updatedAt: string,
-  // propertyOwnerName: string, 
+  agreement: boolean, //terms and conditions
   description: string,
   ownerId: string,
   images: string[]
@@ -28,6 +28,7 @@ interface User {
   phone: string,
   notifyBy: string,
   password: string,
+  agreement: boolean, //terms and conditions
   confirmPassword: string,
 }
 
@@ -78,6 +79,9 @@ export const validateCreateRoom = (data: Room) => {
     errors.zipCode = 'Must be a valid zipcode';
   }
   if(isEmpty(data.location.country)) errors.country = 'Must not be empty';
+
+  //validation for agreement
+  if(!(data.agreement)) errors.agreement = 'Must accept Terms and Conditions!';
 
   //validation for price
   if(data.price < 0 || !data.price) errors.price = 'Must enter a positive amount';
@@ -186,6 +190,9 @@ export const validateUserRegistration = (data: User) => {
   
   //validation for notifyBy
   if(isEmpty(data.notifyBy)) errors.notifyBy = 'Please make a selection.';
+
+  //validation for agreement
+  if(!(data.agreement)) errors.agreement = 'Must accept Terms and Conditions!';
 
   //validation for password
   if(isEmpty(data.password)) errors.password = 'Must not be empty'
