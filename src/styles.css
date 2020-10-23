@@ -7,3 +7,10 @@
     font-size: 25px;
     line-height: 25px;
 }
+
+.termsContainer{
+    overflow: auto;
+    /* border: 2px solid; */
+    height: 670px;
+    padding: 50px;
+}

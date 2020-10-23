@@ -1,80 +1,75 @@
 <template>
-  <div id="termsContainer">
-    <v-row class="text-center rowContainer">
+    <v-row class="text-center" id="pageContainer">
       <v-col
         md="3"
-        id="linksCol"
+        style="background-color: #c2d29c"
       > 
-      <TermsNav />      
+        <TermsNav @clicked="onClickChild"/>      
       </v-col>
       <v-col
         cols="12"
         md="9"
         id="txtCol"
       >
-      <NewUserTerms />
+        <Agreements v-if="path === '/terms-and-conditions/agreements' || this.$router.history.current.path === '/terms-and-conditions/agreements'" />
+        <Commitments v-if="path === '/terms-and-conditions/commitments' || this.$router.history.current.path === '/terms-and-conditions/commitments'" />
+        <Communications v-if="path === '/terms-and-conditions/communications' || this.$router.history.current.path === '/terms-and-conditions/communications'" />
+        <OurUser v-if="path === '/terms-and-conditions/our-users' || this.$router.history.current.path === '/terms-and-conditions/our-users'" />
+        <Privacy v-if="path === '/terms-and-conditions/privacy' || this.$router.history.current.path === '/terms-and-conditions/privacy'" />
+        <Security v-if="path === '/terms-and-conditions/security' || this.$router.history.current.path === '/terms-and-conditions/security'" />
+        <Services v-if="path === '/terms-and-conditions/services' || this.$router.history.current.path === '/terms-and-conditions/services'" />
       </v-col>
     </v-row>
-  </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import TermsNav from './TermsNav.vue'
-import NewUserTerms from './NewUserTerms.vue'
+import Agreements from './tabs/Agreements.vue'
+import Commitments from './tabs/Commitments.vue'
+import Communications from './tabs/Communications.vue'
+import OurUser from './tabs/OurUser.vue'
+import Privacy from './tabs/Privacy.vue'
+import Security from './tabs/Security.vue'
+import Services from './tabs/Services.vue'
 
-// import ContentLoading from '@/components/layout/ContentLoading.vue'
-
-// import store from '@/actions/store'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'TermsAndConditions',
   components: {
     TermsNav,
-    NewUserTerms
+    Agreements,
+    Commitments,
+    Communications,
+    OurUser,
+    Privacy,
+    Security,
+    Services,
   },
+  data: () => ({
+    path: ''
+  }),
   computed: {
       ...mapGetters([
       ])
   },
-  data() {
-    return{ 
-    }
+  created(){
+        console.log(this.path)
   },
-  methods:{}
+  methods:{
+    onClickChild (value) {
+      this.path = value;
+      console.log(value) // someValue
+    }
+  }
 }
 </script>
 
 <style scoped>
-  .rowContainer{
-    height: 100%;
-    /* margin: -24px -24px; */
-    /* border: 2px solid; */
-    /* margin-top: -12px; */
+
+  #pageContainer{
+    margin-top: -12px;
+    margin-bottom: -12px;
   }
-  #termsContainer{
-    position: absolute;
-    right: 0;
-    top: 0;
-    /* border: 2px solid; */
-    height: 100%;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-  }
-  #linksCol{
-    background: #c2d29c;
-    /* bottom: 0;
-    top: 0;
-    position: absolute;
-    left: 0; */
-  }
-  #txtCol{
-        /* background: blue; */
-    /* bottom: 0;
-    top: 0;
-    position: absolute;
-    left: 0; */
-  }
+
 </style>

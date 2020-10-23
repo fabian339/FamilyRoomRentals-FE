@@ -4,6 +4,7 @@
       <div class="logo" >
         <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
+    </v-row>
       <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
       <v-row no-gutters class="text-center">
         <v-col class="element1">
@@ -42,43 +43,44 @@
         class="mb-5"
         cols="12"
       >
-      <h2 class="headline font-weight-bold mb-3">
-        Recent Rooms
-      </h2>
-      <v-progress-circular
-        v-if="isContentLoading"
-        color="green"
-        :size="100"
-        :width="15"
-        indeterminate
-      ></v-progress-circular>
-      <v-container v-if="!isContentLoading">
-        <v-row no-gutters>
-          <v-col
-            class="mb-8"
-            cols="16"
-            v-for="item in contentRooms.slice(0,3)" :key="item.street1"
-            >
-              <Room :roomData=item v-if="!item.rented || new Date() < new Date(new Date(item.rentedDate).setDate(new Date(item.rentedDate).getDate() + 2))"/>
-          </v-col>
-        </v-row>
-      </v-container>
+        <h1 class="text-center font-weight-bold mb-3">
+          Recent Rooms
+        </h1>
+        <!-- <v-progress-circular
+          v-if="isContentLoading"
+          color="green"
+          :size="100"
+          :width="15"
+          indeterminate
+        ></v-progress-circular> -->
+        <v-container id="roomsContainer" v-if="!isContentLoading">
+          <v-row no-gutters>
+            <v-col
+              class="mb-8"
+              cols="16"
+              v-for="item in contentRooms.slice(0,3)" :key="item.street1"
+              >
+                <Room :roomData=item v-if="!item.rented || new Date() < new Date(new Date(item.rentedDate).setDate(new Date(item.rentedDate).getDate() + 2))"/>
+            </v-col>
+          </v-row>
+        </v-container>
 
-        <v-row justify="center">
-          <a class="subheading mx-3" href="/#/rooms">
-            View More...
-          </a>
-        </v-row>
-      </v-col>
-      <v-card class="mx-auto" width="450" height="200px" color="#d5efe6">
-        <v-row class="text-center" justify="center">
-          <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
-          <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>
-          <v-card-text>Looking for a room? Start sending offers now!!</v-card-text>
-          <v-btn color="#ffbc00" @click.stop="selectRandomRoom">view ramdom room</v-btn>
-        </v-row>
-      </v-card>
-    </v-row>
+          <v-row justify="center">
+            <a class="subheading mx-3" href="/#/rooms">
+              View More...
+            </a>
+          </v-row>
+        </v-col>
+      <v-row class="text-center">
+        <v-card class="mx-auto" width="450" height="200px" color="#d5efe6">
+          <v-row class="text-center" justify="center">
+            <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
+            <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>
+            <v-card-text>Looking for a room? Start sending offers now!!</v-card-text>
+            <v-btn color="#ffbc00" @click.stop="selectRandomRoom">view ramdom room</v-btn>
+          </v-row>
+        </v-card>
+      </v-row>
   </v-container>
 </template>
 
@@ -157,6 +159,11 @@ export default {
     margin: 20px 0px;
     border-left: 10px solid #3CB371;
     animation: mymove2 3s normal forwards ease-in-out;
+  }
+
+   #roomsContainer{
+    /* overflow: auto; */
+    /* height: 600px; */
   }
 
   @keyframes mymove2 {

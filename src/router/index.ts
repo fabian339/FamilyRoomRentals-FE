@@ -121,10 +121,40 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: EmailVerification
   },
   {
-    path: '/terms-and-conditions',
+    path: '/terms-and-conditions/services',
     name: 'termsAndConditions',
     component: TermsAndConditions
-  }
+  },
+  {
+    path: '/terms-and-conditions/commitments',
+    name: 'commitments',
+    component: TermsAndConditions,
+  },
+  {
+    path: '/terms-and-conditions/our-users',
+    name: 'users',
+    component: TermsAndConditions,
+  },  
+  {
+    path: '/terms-and-conditions/agreements',
+    name: 'agreements',
+    component: TermsAndConditions,
+  },  
+  {
+    path: '/terms-and-conditions/communications',
+    name: 'communications',
+    component: TermsAndConditions,
+  },  
+  {
+    path: '/terms-and-conditions/privacy',
+    name: 'privacy',
+    component: TermsAndConditions,
+  },  
+  {
+    path: '/terms-and-conditions/security',
+    name: 'security',
+    component: TermsAndConditions,
+  },
 ]
 
 

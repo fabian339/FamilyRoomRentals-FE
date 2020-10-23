@@ -1,32 +1,49 @@
 <template>
     <div id="navContainer">
+        <div >
+            <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="200">
+        </div>
         <div id="items">
-            <v-btn class="termsBtn" text>
-                <span>Our Service</span>
-            </v-btn>
-
-            <v-btn class="termsBtn" to="/signup" text>
-                <span>The Commitments</span>
-            </v-btn>
-
-            <v-btn class="termsBtn" to="/login" text>
-                <span>Type of User</span>
-            </v-btn>
-            
-            <v-btn class="termsBtn" to="/about" text>
-                <span>Agreements</span>
-            </v-btn>
-
-            <v-btn class="termsBtn" to="/about" text>
-                <span>Communications</span>
-            </v-btn>
-
-            <v-btn class="termsBtn" to="/about" text>
-                <span>Privacy Basics</span>
+            <v-btn
+                v-for="(tab, index) in tabs"
+                text
+                :key="index + 99"
+                :to="tab.path"
+                class="my-2 tabBtn"
+                @click="onClickButton(tab.path)"
+            >
+                {{tab.name}}
             </v-btn>
         </div>
     </div>
 </template>
+
+<script>
+  // import store from '../store.js'
+//   import { mapMutations } from 'vuex'
+
+  // import axios from 'axios'
+  export default {
+    name: 'TermsNav',
+    data: () => ({
+      tabs: [
+        {name: 'Our Service', path: '/terms-and-conditions/services'},
+        {name: 'The Commitments', path: '/terms-and-conditions/commitments'},
+        {name: 'Our Users', path: '/terms-and-conditions/our-users'},
+        {name: 'Agreements', path: '/terms-and-conditions/agreements'},
+        {name: 'Communications', path: '/terms-and-conditions/communications'},
+        {name: 'Privacy Basics', path: '/terms-and-conditions/privacy'},
+        {name: 'Security', path: '/terms-and-conditions/security'},
+      ],
+    }),
+    methods: {
+        onClickButton (path) {
+        this.$emit('clicked', path)
+        }
+  }
+}
+</script>
+
 
 <style scoped>
     #navContainer{
@@ -43,7 +60,7 @@
     #items{
         display: grid;
     }
-    .termsBtn{
+    .tabBtn{
         color: #447273;
         margin: 5px 0px;
     }
