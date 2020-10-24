@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Career from '../views/Career.vue'
 import Contact from '../views/Contact.vue'
-import Stories from '../views/Stories.vue'
+import Qas from '../views/Qas.vue'
 import PostRoom from '@/components/Room/PostRoom.vue'
 import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
 import ViewRoom from '@/components/Room/ViewRoom.vue'
@@ -109,9 +109,9 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: Contact
   },
   {
-    path: '/stories',
-    name: 'Stories',
-    component: Stories
+    path: '/qas',
+    name: 'Qas',
+    component: Qas
   },
   {
     path: '/offer-for-room/:secretId/select-date-to-meet/:token',
@@ -165,8 +165,8 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: TermsAndConditions,
   },  
   {
-    path: '/terms-and-conditions/security',
-    name: 'security',
+    path: '/terms-and-conditions/safety',
+    name: 'Safety',
     component: TermsAndConditions,
   },
 ]

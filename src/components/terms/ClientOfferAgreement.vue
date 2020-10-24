@@ -152,7 +152,7 @@ export default {
               })
 
               console.log(clientEmailData, userEmailData);
-              // this.sendEmail(userEmailData);
+              this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
               this.updateRoom({

@@ -32,7 +32,7 @@
         {name: 'Agreements', path: '/terms-and-conditions/agreements'},
         {name: 'Communications', path: '/terms-and-conditions/communications'},
         {name: 'Privacy Basics', path: '/terms-and-conditions/privacy'},
-        {name: 'Security', path: '/terms-and-conditions/security'},
+        {name: 'Safety', path: '/terms-and-conditions/safety'},
       ],
     }),
     methods: {

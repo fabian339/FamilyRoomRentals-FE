@@ -10,7 +10,7 @@
             </p>
         </div>
         <v-card v-else class="mx-auto" hover id="mycard">
-            <v-card-title class="justify-center">
+            <v-card-title class="justify-center" style="background-color: darkseagreen">
                 <h2 style="color:rgb(10 60 28)">Payment Information</h2>
             </v-card-title>
             <form @submit="this.handleSubmit" class="formClass">

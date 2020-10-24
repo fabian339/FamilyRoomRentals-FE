@@ -67,7 +67,7 @@
         </v-btn>
         <v-btn
             icon
-            to="/terms-and-conditions/security"
+            to="/terms-and-conditions/safety"
             class="termsNextLink"
         >
             <v-icon>mdi-arrow-right</v-icon>

@@ -17,7 +17,7 @@
         <Communications v-else-if="path === '/terms-and-conditions/communications' || this.$router.history.current.path === '/terms-and-conditions/communications'" />
         <OurUser v-else-if="path === '/terms-and-conditions/our-users' || this.$router.history.current.path === '/terms-and-conditions/our-users'" />
         <Privacy v-else-if="path === '/terms-and-conditions/privacy' || this.$router.history.current.path === '/terms-and-conditions/privacy'" />
-        <Security v-else-if="path === '/terms-and-conditions/security' || this.$router.history.current.path === '/terms-and-conditions/security'" />
+        <Safety v-else-if="path === '/terms-and-conditions/safety' || this.$router.history.current.path === '/terms-and-conditions/safety'" />
         <Services v-else-if="path === '/terms-and-conditions/services' || this.$router.history.current.path === '/terms-and-conditions/services'" />
         <div class="termsContainer" v-else-if="path === '/terms-and-conditions' || this.$router.history.current.path === '/terms-and-conditions'">
           <div class="termsTextContainer">
@@ -71,7 +71,7 @@ import Commitments from './tabs/Commitments.vue'
 import Communications from './tabs/Communications.vue'
 import OurUser from './tabs/OurUser.vue'
 import Privacy from './tabs/Privacy.vue'
-import Security from './tabs/Security.vue'
+import Safety from './tabs/Safety.vue'
 import Services from './tabs/Services.vue'
 
 
@@ -84,7 +84,7 @@ export default {
     Communications,
     OurUser,
     Privacy,
-    Security,
+    Safety,
     Services,
   },
   data: () => ({

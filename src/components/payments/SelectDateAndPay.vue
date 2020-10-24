@@ -71,12 +71,11 @@
                     <v-row class="text-center" justify="center" style="align-items: center;">
                         <div style="width: 275px;">
                             <img 
-                                :src="roomImages[0]" 
+                                :src="roomImages.length > 0 ? roomImages[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
                                 alt="roomPhoto" 
                                 width="150" 
                                 height="100"
-                                style="b
-                                order: 2px solid; margin: 30px;"
+                                style="border: 2px solid; margin: 30px;"
                             />
                             <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
                         </div>

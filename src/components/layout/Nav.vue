@@ -5,7 +5,7 @@
             class="nav"
         >
             <div>
-                <v-toolbar-title id="title">FamilyRoomRentals</v-toolbar-title>
+                <v-toolbar-title @click.stop="homePage" id="title">FamilyRoomRentals</v-toolbar-title>
             </div>
             <v-spacer></v-spacer>
 
@@ -129,6 +129,10 @@ export default {
             e.preventDefault();
             this.logout()
         },
+        homePage(e){
+            e.preventDefault();
+            if(this.$router.history.current.path !== '/') this.$router.push('/')
+        },
         openNotificationDialog(item){
             this.SET_OFFER(item)
             this.openOfferDialog = true;
@@ -147,6 +151,10 @@ export default {
         font-size: 35px;
         margin: 10px;
         color: #e9ffd4;
+    }
+    #title:hover{
+        background-color:#ffffff1c;
+        cursor: pointer;
     }
 
     .nav{
