@@ -10,7 +10,8 @@
         <v-col class="element1">
           <div style="width: 365px;margin: 25px auto;">
             <h1 style="font-size: 60px">Focus on what you can afford</h1>
-            <p class="font"> We service those who are in the need of moving but cannot afford big bills. 
+            <p class="font"> 
+              We service those who are in the need of moving but cannot afford big bills. 
               Renting an appartment or house is not cheap and could result in big debts.
               FamilyRoomRents allows you to find an accomodate place by placing an offer that 
               best fit your budget, will not make the situation harder, and will not bring more stress. 
@@ -71,15 +72,27 @@
             </a>
           </v-row>
         </v-col>
-      <v-row class="text-center">
-        <v-card class="mx-auto" width="450" height="200px" color="#d5efe6">
-          <v-row class="text-center" justify="center">
-            <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
-            <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>
-            <v-card-text>Looking for a room? Start sending offers now!!</v-card-text>
-            <v-btn color="#ffbc00" @click.stop="selectRandomRoom">view ramdom room</v-btn>
-          </v-row>
-        </v-card>
+      <v-row no-gutters class="text-center">
+        <v-col class="element5">
+          <div style="width: 365px;margin: 25px auto;">
+            <h1 style="font-size: 60px">Our Mission</h1>
+              <p class="font"> 
+                FamilyRoomRents main's focus is to connect individuls with common needs at an affordable price.
+                We know and understand that sometimes things do not tend to go our ways, but yet we have to make
+                important decisions.
+              </p>
+          </div>
+        </v-col>
+        <v-col class="element6">
+              <v-card class="mx-auto" width="450" height="200px" color="#d5efe6" style="margin-top: 40px;">
+                <v-row class="text-center" justify="center">
+                  <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
+                  <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>
+                  <v-card-text>Looking for a room? Start sending offers now!!</v-card-text>
+                  <v-btn color="#ffbc00" @click.stop="selectRandomRoom">view ramdom room</v-btn>
+                </v-row>
+              </v-card>
+          </v-col>
       </v-row>
   </v-container>
 </template>
@@ -137,12 +150,29 @@ export default {
     /* border-right: 10px solid darkslateblue; */
     /* animation: mymove1 3s normal forwards ease-in-out; */
   }
+    .element5 {
+    /* width: 365px; */
+    height: 300px;
+    /* position: relative;
+    margin: 10px -3px; */
+    /* padding: 15px; */
+    /* border-right: 10px solid darkslateblue; */
+    /* animation: mymove1 3s normal forwards ease-in-out; */
+  }
 
   @keyframes mymove1 {
     from {left: -50%;}
     to {left: -1.5%;}
   }
 
+ .element6 {
+    /* width: 365px; */
+    height: 300px;
+    /* position: relative;
+    margin: 10px 3px; */
+    /* border-left: 10px solid darkslateblue; */
+    /* animation: mymove2 3s normal forwards ease-in-out; */
+  }
  .element4 {
     width: 365px;
     height: 370px;

@@ -1,125 +1,100 @@
 <template>
     <div class="termsContainer">
-        <h1 style="font-size: 30px;"><strong> Commitment Terms & Conditions ("Terms") </strong></h1>
-         <hr style="margin: 15px 25px;">
-        <div>    
-            <p><strong>Last updated (10/7/2020)</strong></p>    
-            Please read these Terms and Conditions ("Terms") carefully before proceding to make an 
-            offer using the of FamilyRoomRentals.com website (the "service") operated by FamilyRoomRentals, Inc.
-        </div>
-        <div>
-            Your access to and use of the Service is conditioned on your acceptance of and compliance with these 
-            terms. These terms apply to all visitors, users, and others who access or use the service.  
-        </div>
-        <div>
-            By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part
-            of the terms, then you may not access the Service.
-        </div>
-        <div>
-            <p><strong>Conditions:</strong></p>    
-            By accepting to the terms and conditions, you agree to provide a one time payment per offer which will 
-            which will be procceced once the offer has been accepted and a meeting has been schedule. Such meeting 
-            will take action when the person renting the property and the client agree to the same terms.
-        </div>
-        <div>
-            <p><strong>Price:</strong></p>  
-            <ol>  
-            <li> As a consideration for the provision of the service by the Service provider, the price for the provision
-                of the Services is <strong> $20 ("price"). </strong>
-            </li>
-            <li> The Buyer shall/shall not (delete as appropriate) pay for the Service Provider's using an online transaction
-                where the payment shall be made.  
-            </li>
-            </ol>
-        </div>
-        <div>
-            <p><strong>Payment:</strong></p>   
-            <ol> 
-            <li> They Buyer agrees to pay the Price to the Service Provider once the offer is accepted and a meeting has been
-                made between the two parties.
-            </li>
-            <li> Any charges payable under this Agreement are exclusive of any applicable taxes, tariff surcharges or ther like 
-                amounts assessed by any govermental entity arising as a result of the provision of the Service by the Service 
-                Provider to the Buyer under this Agreement and such shall be payable by the Buyer to the Service Provider in 
-                addition to all other charges payable herenuder.
-            </li>
-            </ol>
-        </div>
-        <div>
-            <p><strong>Refund:</strong></p> 
-            <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-                as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-                of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-                the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-                payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-                offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
-            </li>
-            </ol> 
-        </div>
-                <div>
-            <p><strong>Refund:</strong></p> 
-            <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-                as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-                of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-                the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-                payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-                offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
-            </li>
-            </ol> 
-        </div>
-                <div>
-            <p><strong>Refund:</strong></p> 
-            <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-                as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-                of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-                the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-                payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-                offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
-            </li>
-            </ol> 
-        </div>
-                <div>
-            <p><strong>Refund:</strong></p> 
-            <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-                as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-                of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-                the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-                payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-                offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
-            </li>
-            </ol> 
-        </div>
-                <div>
-            <p><strong>Refund:</strong></p> 
-            <ol>
-            <li> FamilyRoomRentals guarantee a refund only if the property offer was accepted and a meeting was scheduled, but 
-                as a result both parties decided not to move forward. A refund will be schedule with only <strong> half </strong> 
-                of what was originally paid. For example, the Provision of the Services is <strong> $20 ("price") </strong>, then 
-                the refund will be half of it which is <strong> $10 ("price"). </strong> The refund will be made to the originally
-                payment method used.
-            </li>
-            <li> There will be  <strong> no refund </strong> if the deal is closed in a successfull standard. Meaning, if the 
-                offer was accepted and the deal was successfully closed by both parties, then a refund is not needed.
-            </li>
-            </ol> 
-        </div>
-    <!-- <v-card-actions> -->
+        <div class="termsTextContainer">
+            <p style="font-size: 55px"> Your Commitment to FamilyRoomRentals </p>
+            <hr style="margin: 15px 25px;">
 
-    <!-- </v-card-actions> -->
+            <h3 style="font-family: 'Scheherazade', serif; font-size: 25px">Welcome to FamilyRoomRentals!</h3>
+            <br>
+            <p>Last updated (10/23/2020)</p>             
+            <p>
+                FamilyRoomRentals provide services to help advance our mission.
+            </p>
+            <h3 style="font-size: 25px;">Creating a FamilyRoomRentals's Account</h3>
+            <p>
+                If you are creating a FamilyRoomRentals's account, we need you to make the following commitments:
+            </p>
+            <ul style="margin-bottom: 15px">
+                <li>Agree with our Terms of Use ("Terms")</li>
+                <li>Use your real / legal identity.</li>
+                <li>Provide accurate information about yourself.</li>
+                <li>Create only one account</li>
+                <li>Not share your account information</li>
+                <li>You are at least 18 years old</li>
+                <li>You are not a convicted sex offender.</li>
+                <li>We've not previously disabled your account for violations of our Terms and Conditions ("Terms").</li>
+                <li>You will not violate FamilyRoomRentals's Terms of Use ("Terms")</li>
+                <li>You will not share anything that is unlawful, misleading, discriminatory, of fradulent</li>
+                <li>You will not share antrhing that violates someone else's right</li>
+                <li>
+                    You may not upload viruses or malicious code or do anything that could disable, overburden, or 
+                    impair the proper working or appearance of FamilyRoomRentals.
+                </li>
+                <li>You may not collect data from FamilyRoomRentals</li>
+                <li>You may report to FamilyRoomRentals any misleading or dangerous content</li>
+            </ul>
+            <p style="color: #6f2b2b;">
+                If we notice that content that you have shared is in violation of our Terms of Use ("Terms"), we'll could
+                either suspend or terminate your account, time frame will notified.
+            </p>
+            <h3 style="font-size: 25px;">Making Offers</h3>
+            <p>
+                If you are using FamilyRoomRentals's services to adquire a property, you will need to make offers to such
+                property. By doing so we need you to make the following commitments:
+            </p>
+                <ul style="margin-bottom: 15px">
+                <li>Agree with our Terms of Use ("Terms")</li>
+                <li>Use your real / legal identity</li>
+                <li>Provide accurate information about yourself</li>
+                <li>You are at least 18 years old</li>
+                <li>You are not a convicted sex offender</li>
+                <li>You may pay a fee only if the offer is accepted</li>
+                <li>
+                    You may communicate via email, text, or phone call with person renting the property 
+                    only if the offer is accepted
+                </li>
+                <li>You may meet with person renting the property only if the offer is accepted</li>
+                <li>You may request a 50% refund only if the offer has been rejected</li>
+                <li>You will not violate FamilyRoomRentals's Terms of Use ("Terms")</li>
+                <li>You will not share anything that is unlawful, misleading, discriminatory, of fradulent</li>
+                <li>You will not share antrhing that violates someone else's right</li>
+                <li>
+                    You may not upload viruses or malicious code or do anything that could disable, overburden, or 
+                    impair the proper working or appearance of FamilyRoomRentals
+                </li>
+                <li>You may not collect data from FamilyRoomRentals</li>
+                <li>You may report to FamilyRoomRentals any misleading or dangerous content</li>
+            </ul>
+            <p>
+                You declare and guarantee that you have, or have obtained, all rights, licenses, consents, permissions, 
+                power and/or authority necessary to grant the rights for any Content that you submit, 
+                post or display on or through the FamilyRoomRentals Services. You agree that such Content will not 
+                contain material subject to copyright or other proprietary rights, unless you have necessary permission 
+                or are otherwise legally entitled to post the material and to grant FamilyRoomRentals the license described 
+                above.
+            </p>
+        </div>
+        <v-btn
+            icon
+            to="/terms-and-conditions/our-users"
+            class="termsBackLink"
+        >
+            <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+        <v-btn
+            icon
+            to="/terms-and-conditions/agreements"
+            class="termsNextLink"
+        >
+            <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
     </div>
 </template>
 <style scoped>
-
+.listContainer{
+    list-style: circle; 
+    list-style-position: inside; 
+    text-align: left;
+    margin: 0px 20%;
+}
 </style>

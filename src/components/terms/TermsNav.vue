@@ -10,7 +10,6 @@
                 :key="index + 99"
                 :to="tab.path"
                 class="my-2 tabBtn"
-                @click="onClickButton(tab.path)"
             >
                 {{tab.name}}
             </v-btn>
@@ -28,8 +27,8 @@
     data: () => ({
       tabs: [
         {name: 'Our Service', path: '/terms-and-conditions/services'},
-        {name: 'The Commitments', path: '/terms-and-conditions/commitments'},
         {name: 'Our Users', path: '/terms-and-conditions/our-users'},
+        {name: 'The Commitments', path: '/terms-and-conditions/commitments'},
         {name: 'Agreements', path: '/terms-and-conditions/agreements'},
         {name: 'Communications', path: '/terms-and-conditions/communications'},
         {name: 'Privacy Basics', path: '/terms-and-conditions/privacy'},
@@ -37,9 +36,9 @@
       ],
     }),
     methods: {
-        onClickButton (path) {
-        this.$emit('clicked', path)
-        }
+        // onClickButton (path) {
+        // this.$emit('clicked', path)
+        // }
   }
 }
 </script>

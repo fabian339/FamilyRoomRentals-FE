@@ -30,6 +30,14 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
   next('/login')
 }
 
+// const reRender = (to: any, from: any, next: any) => {
+//   if (to.matched.some((record: any) => record.meta.reuse === false)) {
+//     next()
+//     return
+//   }
+//   next('/login')
+// }
+
   const routes = [
   {
     path: '/',
@@ -121,8 +129,14 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: EmailVerification
   },
   {
-    path: '/terms-and-conditions/services',
+    path: '/terms-and-conditions',
     name: 'termsAndConditions',
+    component: TermsAndConditions,
+    meta: { reuse: false }
+  },
+  {
+    path: '/terms-and-conditions/services',
+    name: 'OurServices',
     component: TermsAndConditions
   },
   {
