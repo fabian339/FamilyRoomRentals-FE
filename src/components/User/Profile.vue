@@ -163,6 +163,21 @@
           <v-list-item-icon>
             <v-icon color="#6B8E23">?</v-icon>
           </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title class="font">
+              <a @click.stop="openSavedRoomsCatalog = true">
+                ({{this.$store.getters.currentUser.savedRoomsIds ?  this.$store.getters.currentUser.savedRoomsIds.length : 0}})
+              </a>
+            </v-list-item-title>
+            <v-list-item-subtitle>Saved Rooms</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider inset></v-divider>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="#6B8E23">?</v-icon>
+          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="font">
               {{new Date(currentUser.createdAt).toDateString()}}
@@ -184,6 +199,26 @@
         </v-list-item>
       </v-list>
     </v-card>
+          <v-dialog
+        v-model="openSavedRoomsCatalog"
+        max-width="330"
+        >
+        <v-card>
+            <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
+            <v-card-text>
+                Once this is done, we cannot recover any data.
+                The following will be deleted:
+                <ol>
+                  <li>All account information</li>
+                  <li>All rooms and information related to rooms</li>
+                  <li>All notifications</li>
+                  <li>All messages/conversations</li>
+                  <li>You will no longer receive notifications to email/phone</li>
+                </ol>
+                Do you want to continue?
+            </v-card-text>
+        </v-card>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -215,7 +250,8 @@ export default {
   data(){
     return {
       editUser: false,
-      deleteUser: false
+      deleteUser: false,
+      openSavedRoomsCatalog: false
       // myRooms: []
     }
   },
@@ -247,6 +283,10 @@ export default {
           roomIds,
           notificationIds,
         })
+      },
+      openSavedRooms(){
+        this.openSavedRoomsCatalog = true;
+        console.log("openSavedRooms")
       }
 
   }
