@@ -67,7 +67,7 @@
               cols="16"
               v-for="(item) in contentRooms" :key="item.street1"
               >
-                <Room :roomData=item v-if="!item.rented || new Date() < new Date(new Date(item.rentedDate).setDate(new Date(item.rentedDate).getDate() + 2))"/>
+                <Room :roomData="item"/>
             </v-col>
           </v-row>
           <v-row no-gutters v-else>
@@ -76,7 +76,7 @@
               cols="16"
               v-for="(item) in filteredRooms" :key="item.street1"
             >
-                <Room :roomData=item />
+                <Room :roomData="item" />
             </v-col>
           </v-row>
         </v-container>

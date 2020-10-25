@@ -11,18 +11,19 @@
         <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
         <v-row no-gutters class="text-center">
           <v-col class="element1">
-            <div style="width: 365px;margin: 25px auto;">
+            <div style="width: 380px;margin: auto;">
               <h1 style="font-size: 60px">Focus on what you can afford</h1>
               <p class="font"> 
-                We service those who are in the need of moving but cannot afford big bills. 
-                Renting an appartment or house is not cheap and could result in big debts.
-                FamilyRoomRents allows you to find an accomodate place by placing an offer that 
+                Why are you working so hard to get something that you cannot afford? Why 
+                haven't you look at other options? Maybe all you need is a temporary place
+                to stay until you get back on your feets.
+                FamilyRoomRents allows you to find an affordable place by placing property offers that 
                 best fit your budget, will not make the situation harder, and will not bring more stress. 
               </p>
             </div>
           </v-col>
           <v-col class="element2">
-              <img style="margin: 10px" :src="require('./../assets/conversation.png')" alt="conversation" width="325" height="490">
+              <img style="margin: 10px" src="https://i.ibb.co/QFj0vhM/homepage-conv.jpg" alt="homepage-conv" width="360" height="490">
           </v-col>
         </v-row>
         <v-row class="text-center">
@@ -48,15 +49,8 @@
           cols="12"
         >
           <h1 class="text-center font-weight-bold mb-3">
-            Recent Rooms
+            Recently Post
           </h1>
-          <!-- <v-progress-circular
-            v-if="isContentLoading"
-            color="green"
-            :size="100"
-            :width="15"
-            indeterminate
-          ></v-progress-circular> -->
           <v-container id="roomsContainer" >
             <v-row no-gutters>
               <v-col
@@ -64,7 +58,7 @@
                 cols="16"
                 v-for="item in contentRooms.slice(0,3)" :key="item.street1"
                 >
-                  <Room :roomData=item v-if="!item.rented || new Date() < new Date(new Date(item.rentedDate).setDate(new Date(item.rentedDate).getDate() + 2))"/>
+                  <Room :roomData="item"/>
               </v-col>
             </v-row>
           </v-container>
@@ -81,13 +75,13 @@
               <h1 style="font-size: 60px">Our Mission</h1>
                 <p class="font"> 
                   FamilyRoomRents main's focus is to connect individuls with common needs at an affordable price.
-                  We know and understand that sometimes things do not tend to go our ways, but yet we have to make
-                  important decisions.
+                  We service people who are in the need of moving but cannot afford big bills as renting an appartment 
+                  or house is not cheap and could result in big debts.. 
                 </p>
             </div>
           </v-col>
           <v-col class="element6">
-                <v-card class="mx-auto" width="450" height="200px" color="#d5efe6" style="margin-top: 40px;">
+                <v-card class="mx-auto" width="450" height="200px" color="#d5efe6" style="margin-top: 50px;">
                   <v-row class="text-center" justify="center">
                     <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
                     <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>

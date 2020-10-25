@@ -1,36 +1,45 @@
 <template>
     <v-container>
         <ContentLoading  v-if="isContentLoading"/>
-        <v-row class="text-center" v-if="!isContentLoading">
-            <v-col
-                class="mb-5"
-                cols="12"
-                style="marginTop: -30px"
+        <v-row class="text-center" v-if="!isContentLoading" justify="center">
+            <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
+            <div 
+                class="imageContainer"
+                :style="fullScreen ? 'height: 90vh; width: 100%' : 'height: 500px; width: 70%'"
+                 v-if="contentRoom.images && contentRoom.images.length > 0"
+                 @click.stop="fullScreen = !fullScreen"
             >
-                <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
-                <v-carousel class="RoomImages" v-if="contentRoom.images && contentRoom.images.length > 0">
-                    <v-carousel-item
-                        v-for="(image,i) in contentRoom.images"
-                        :key="i"
-                        :src="image"
-                        reverse-transition="fade-transition"
-                        transition="fade-transition"
-                        height="50px"
-                    ></v-carousel-item>
-                </v-carousel>
-                <v-carousel class="RoomImages" v-else>
-                    <v-carousel-item
-                        src="https://i.ibb.co/t85JhCP/no-Room-Img.png" alt="no-Room-Img"
-                        reverse-transition="fade-transition"
-                        transition="fade-transition"
-                        height="50px"
-                    ></v-carousel-item>
-                </v-carousel>
-            </v-col>
+                <v-btn
+                    icon
+                    dark
+                    class="previousPic"
+                    @click.stop="changePhoto('previous')"
+                >
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+                <v-btn
+                    icon
+                    dark
+                    class="nextPic"
+                    @click.stop="changePhoto('next')"
+                >
+                    <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
+                <img :src="contentRoom.images[imgToDisplayIndex]" alt="img" width="100%" height="100%">
+            </div>
+            <v-row justify="center" style="width: 100%">                   
+                <div style="display: flex">
+                    <v-col v-for="(image, index) in contentRoom.images" :key="image.street1">
+                        <div @click.stop="imgToDisplayIndex = index">
+                            <img :src="image" alt="img" width="100" height="50">
+                        </div>
+                    </v-col>
+                </div>
+            </v-row>
+            <!-- </v-col> -->
             <v-col
                 class="mb-5"
                 cols="12"
-                style="marginTop: -30px"
             >
             <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}} by {{contentRoom.ownerFname}}, {{contentRoom.ownerLname}}</small>
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
@@ -119,7 +128,7 @@
             </v-col>
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
-            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount + 3}}</strong></p>
+            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount}}</strong></p>
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
@@ -160,6 +169,8 @@ import EditRoomForm from './EditRoomForm.vue'
             deleteDialog: false,
             updateDialog: false,
             roomAddress: '',
+            fullScreen: false,
+            imgToDisplayIndex: 0,
             updated: false
         }
     },
@@ -175,14 +186,33 @@ import EditRoomForm from './EditRoomForm.vue'
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
         },
-    },
+        changePhoto(direction){
+            if(direction === 'next') {
+                if(this.contentRoom.images.length - 1 > this.imgToDisplayIndex){
+                    this.imgToDisplayIndex = this.imgToDisplayIndex + 1;
+                } else {
+                    this.imgToDisplayIndex = 0;
+                    console.log(this.imgToDisplayIndex, direction)  
+                }
+            }
+            if(direction === 'previous') {
+                if(this.imgToDisplayIndex != 0){
+                    this.imgToDisplayIndex = this.imgToDisplayIndex - 1;
+                } else {
+                    this.imgToDisplayIndex = this.contentRoom.images.length - 1
+                }
+
+                // console.log(this.imgToDisplayIndex, direction)
+            }
+        },
+    }
   }
 </script>
 
 <style scoped>
-    .RoomImages{
-        width: 80%;
-        margin: auto 10%;
+    .imageItem{
+        border: 2px solid;
+        width: 70%;
     }
     #description{
         align-items: center;
@@ -192,4 +222,35 @@ import EditRoomForm from './EditRoomForm.vue'
         line-height: 2rem;
         margin: 10px;
     }
+    .imageContainer{
+        border: 2px solid;
+        /* width: 70%; */
+        position:relative;
+        /* height: auto; */
+    }
+    #inspire {
+        height: 100vh;
+        background-color: black;
+        border-style: solid;
+        border-color: grey;
+    }
+    .nextPic{
+        position: absolute;
+        margin: 28% 0px;
+        background-color: #00000063 !important;
+        right: 0;
+    }
+    .previousPic{
+        position: absolute;
+        left: 0;
+        margin: 28% 0px;
+        background-color: #00000063 !important;
+    }
+    .smaillImg{
+        /* width: 100%; */
+        border: 2px solid;
+        /* display: flex;
+        justify-content: center; */
+    }
+
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="termsContainer">
         <div class="termsTextContainer">
-            <p style="font-size: 55px"> FamilyRoomRentals Agreements</p>
+            <p style="font-size: 45px"> FamilyRoomRentals Agreements</p>
             <hr style="margin: 15px 25px;">
 
             <h3 style="font-family: 'Scheherazade', serif; font-size: 25px">Welcome to FamilyRoomRentals!</h3>

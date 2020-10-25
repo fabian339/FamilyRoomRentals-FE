@@ -49,7 +49,7 @@ export default new Vuex.Store({
     getters: {
       // Content
       isContentLoading: state => state.contentState.loadingContent,
-      contentRooms: state => state.contentState.rooms.reverse(),
+      contentRooms: state => state.contentState.rooms.filter((room: any) => !room.rented || new Date() < new Date(new Date(room.rentedDate).setDate(new Date(room.rentedDate).getDate() + 2))).reverse(),
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
       isRoomUpdated: state => state.contentState.roomUpdated,
@@ -62,6 +62,7 @@ export default new Vuex.Store({
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
       isEmailVerificationSent: state => state.userState.emailVerificationSent,
+      currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
       //Notifications/Offers
       currentOffer: state => state.notificationState.offer,
@@ -72,7 +73,6 @@ export default new Vuex.Store({
       isCountDownShowing: state => state.notificationState.showCountDown,
       isPaymentSucceededOnOffer: state => state.notificationState.paymentSucceededOnOffer,
       currentUserOffers: state => state.notificationState.userNotifications.reverse(),
-      currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       offerErrors: state => state.notificationState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations, ...NotificationMutations},

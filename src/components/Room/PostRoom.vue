@@ -236,6 +236,7 @@ import {validateCreateRoom} from '../../store/validators'
                 ownerEmail: this.currentUser.email,
                 ownerPhone: this.currentUser.phone,
                 rented: false,
+                offersAmount: 0,
                 images: this.images.length === 0 ? [] : this.images,
                 agreement: this.checkbox
             }

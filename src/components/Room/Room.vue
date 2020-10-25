@@ -20,7 +20,7 @@
 
     <v-card-text class="text--primary font" style="margin-bottom: -30px;">
       <p> Publisher: {{this.roomData.ownerFname}} {{this.roomData.ownerLname}}</p>
-      <p class="font" style="font-size: 20px;"><strong>{{this.roomData.title.substring(0, 30).toUpperCase()}}...</strong></p>
+      <p class="font text-center" style="font-size: 20px;"><strong>{{this.roomData.title.substring(0, 24).toUpperCase()}}...</strong></p>
     </v-card-text>
 
     <v-card-actions class="justify-center">
