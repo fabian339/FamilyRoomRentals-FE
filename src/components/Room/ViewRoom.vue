@@ -143,15 +143,61 @@
             </div>
             </v-col>
         </v-row>
-        <v-row class="text-center" justify="center" v-if="!isContentLoading">
-            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount}}</strong></p>
-        </v-row>
+
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
                 <OfferForm v-if="!contentRoom.rented" />   
                 <p v-if="contentRoom.rented" style="color: #de1254">No offer can be made as this Room is already rented!</p> 
             </v-col>
             <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
+        </v-row>
+        <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
+            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount}}</strong></p>
+        </v-row>
+        <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
+            <v-btn 
+                small 
+                color="#8dbade" 
+                @click.stop="saveRoom" 
+                style="margin-right: 5px"
+                :disabled="saveBtnDiasabled"
+            >
+                {{saveBtnDiasabled ? 'Saved' : 'Save Property'}}
+            </v-btn>
+            <v-btn 
+                small 
+                color="#b58985" 
+                @click.stop="reportRoom" 
+                style="margin-left: 5px"
+                :disabled="reportBtnDiasabled"
+            >
+                <!-- Report Property -->
+                {{reportBtnDiasabled ? 'Reported' : 'Report Property'}}
+            </v-btn>
+        </v-row>
+        <v-row class="text-center" justify="center" style="margin-top: 20px;" v-if="!isContentLoading && !contentRoom.rented">
+            <v-expand-transition>
+                <v-card
+                    v-show="showSaveBtnWarning"
+                    height="100"
+                    width="230"
+                    color="#d7d8d8"
+                >
+                    <v-card-text style="color: blue">Please log in to save property!</v-card-text>
+                    <v-btn small color="#fff9b0" to="/login">Log In</v-btn>
+                </v-card>
+            </v-expand-transition>
+            <v-expand-transition>
+                <v-card
+                    v-show="showReportBtnWarning"
+                    height="100"
+                    width="240"
+                    color="#d7d8d8"
+                >
+                    <v-card-text style="color: blue">Please log in to report property!</v-card-text>
+                    <v-btn small color="#fff9b0" to="/login">Log In</v-btn>
+                </v-card>
+            </v-expand-transition>
         </v-row>
     </v-container>
 </template>
@@ -177,7 +223,8 @@ import EditRoomForm from './EditRoomForm.vue'
             'isContentLoading',
             'currentUser',
             'isRoomUpdated',
-            'isOfferSent'
+            'isOfferSent',
+            'isAuthenticated'
         ]),
     },
     data(){
@@ -187,12 +234,17 @@ import EditRoomForm from './EditRoomForm.vue'
             roomAddress: '',
             fullScreen: false,
             imgToDisplayIndex: 0,
-            updated: false
+            updated: false,
+            showSaveBtnWarning: false,
+            showReportBtnWarning: false,
+            reportBtnDiasabled: false,
+            saveBtnDiasabled: false
         }
     },
     methods:{
         ...mapActions([
             'deleteRoom',
+            'updateUser'
         ]),
         deleteRoomData(){
             this.deleteRoom(this.$route.params.id);
@@ -221,6 +273,32 @@ import EditRoomForm from './EditRoomForm.vue'
                 // console.log(this.imgToDisplayIndex, direction)
             }
         },
+        saveRoom(){
+            console.log("saving room")
+            if(this.isAuthenticated){
+                let roomIds = this.currentUser.savedRoomIds ? this.currentUser.savedRoomIds : [];
+                roomIds.push(this.contentRoom.objectId);
+                this.updateUser({
+                    objectId: this.currentUser.objectId,
+                    savedRoomIds: roomIds
+                })
+                //push room id to user
+                this.saveBtnDiasabled = true;
+            }
+            else {
+                this.showSaveBtnWarning = !this.showSaveBtnWarning;
+            }
+        },
+        reportRoom(){
+            console.log("reporting room")
+            if(this.isAuthenticated){
+                //send email to admin user
+                this.reportBtnDiasabled = true;
+            }
+            else {
+                this.showReportBtnWarning = !this.showReportBtnWarning;
+            }
+        }
     }
   }
 </script>
