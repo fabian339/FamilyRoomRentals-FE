@@ -27,13 +27,29 @@
                 </v-btn>
                 <img :src="contentRoom.images[imgToDisplayIndex]" alt="img" width="100%" height="100%">
             </div>
-            <v-row justify="center" style="width: 100%">                   
-                <div style="display: flex">
-                    <v-col v-for="(image, index) in contentRoom.images" :key="image.street1">
-                        <div @click.stop="imgToDisplayIndex = index">
-                            <img :src="image" alt="img" width="100" height="50">
-                        </div>
-                    </v-col>
+            <div                 
+                class="imageContainer"
+                style="border: 1px solid; width: 70%"
+                v-else
+            >   
+                <img src="https://i.ibb.co/t85JhCP/no-Room-Img.png" alt="img" width="70%" height="500">
+                
+            </div>
+            <v-row 
+                justify="center" 
+                style="margin: 0px 15%;" 
+                v-if="contentRoom.images && contentRoom.images.length > 0"
+            >                   
+                <div v-for="(image, index) in contentRoom.images" :key="image.street1">
+                    <div @click.stop="imgToDisplayIndex = index" >
+                        <img 
+                            :src="image" 
+                            alt="img" 
+                            width="100" 
+                            height="50"
+                            :style="imgToDisplayIndex === index ? ('border: 2px solid #ffe668; margin: 5px;') : ('margin: 5px;')"
+                        >
+                    </div>
                 </div>
             </v-row>
             <!-- </v-col> -->
@@ -223,34 +239,28 @@ import EditRoomForm from './EditRoomForm.vue'
         margin: 10px;
     }
     .imageContainer{
-        border: 2px solid;
+        /* border: 2px solid; */
         /* width: 70%; */
         position:relative;
         /* height: auto; */
     }
-    #inspire {
-        height: 100vh;
-        background-color: black;
-        border-style: solid;
-        border-color: grey;
-    }
     .nextPic{
         position: absolute;
-        margin: 28% 0px;
+        /* margin: 28vh 0px; */
+        bottom: 45%;
         background-color: #00000063 !important;
         right: 0;
     }
     .previousPic{
         position: absolute;
         left: 0;
-        margin: 28% 0px;
+        /* margin: 28vh 0px; */
+        bottom: 45%;
         background-color: #00000063 !important;
     }
     .smaillImg{
-        /* width: 100%; */
-        border: 2px solid;
-        /* display: flex;
-        justify-content: center; */
+        width: 70%;
+        border: solid;
     }
 
 </style>

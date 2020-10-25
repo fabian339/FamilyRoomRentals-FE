@@ -22,7 +22,6 @@
                 <li>Keep your personal information to yourself.</li>
                 <li>All transations must be done with the concern of FamilyRoomRentals</li>
                 <li>When a meeting is schedule, contact the person you meeting with, make sure is a real person.</li>
-                <li>Request a scam checker beforme meeting with anyone</li>
                 <li>Refuse background/credit checks</li>
                 <li>Always ask for identifications</li>
             </ul>
