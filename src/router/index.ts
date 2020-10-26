@@ -104,7 +104,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: Career
   },
   {
-    path: '/contact',
+    path: '/contact-us',
     name: 'Contact',
     component: Contact
   },

@@ -162,7 +162,7 @@
                 style="margin-right: 5px"
                 :disabled="saveBtnDiasabled"
             >
-                {{saveBtnDiasabled ? 'Saved' : 'Save Property'}}
+                {{saveBtnDiasabled ? alreadySaved ? 'Already Saved' : 'Saved' : 'Save Property'}}
             </v-btn>
             <v-btn 
                 small 
@@ -181,10 +181,9 @@
                     v-show="showSaveBtnWarning"
                     height="100"
                     width="230"
-                    color="#d7d8d8"
                 >
                     <v-card-text style="color: blue">Please log in to save property!</v-card-text>
-                    <v-btn small color="#fff9b0" to="/login">Log In</v-btn>
+                    <v-btn small color="#ffa826" to="/login">Log In</v-btn>
                 </v-card>
             </v-expand-transition>
             <v-expand-transition>
@@ -192,10 +191,9 @@
                     v-show="showReportBtnWarning"
                     height="100"
                     width="240"
-                    color="#d7d8d8"
                 >
                     <v-card-text style="color: blue">Please log in to report property!</v-card-text>
-                    <v-btn small color="#fff9b0" to="/login">Log In</v-btn>
+                    <v-btn small color="#ffa826" to="/login">Log In</v-btn>
                 </v-card>
             </v-expand-transition>
         </v-row>
@@ -208,6 +206,7 @@ import OfferForm from '@/components/notification/OfferForm.vue';
 import ContentLoading from '@/components/layout/ContentLoading.vue';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
+import {SendEmailToAdminOnRoomReported} from '../../globals/emails'
 
   export default {
     name: 'viewRoom',
@@ -238,13 +237,15 @@ import EditRoomForm from './EditRoomForm.vue'
             showSaveBtnWarning: false,
             showReportBtnWarning: false,
             reportBtnDiasabled: false,
+            alreadySaved: false,
             saveBtnDiasabled: false
         }
     },
     methods:{
         ...mapActions([
             'deleteRoom',
-            'updateUser'
+            'updateUser',
+            'sendEmail'
         ]),
         deleteRoomData(){
             this.deleteRoom(this.$route.params.id);
@@ -276,13 +277,17 @@ import EditRoomForm from './EditRoomForm.vue'
         saveRoom(){
             console.log("saving room")
             if(this.isAuthenticated){
-                let roomIds = this.currentUser.savedRoomIds ? this.currentUser.savedRoomIds : [];
-                roomIds.push(this.contentRoom.objectId);
-                this.updateUser({
-                    objectId: this.currentUser.objectId,
-                    savedRoomIds: roomIds
-                })
-                //push room id to user
+                // console.log(this.isContentLoading ,this.contentRoom.objectId, this.currentUser.objectId)
+                let roomIds = this.currentUser.savedRoomsIds ? this.currentUser.savedRoomsIds : [];
+                if(!roomIds.includes(this.contentRoom.objectId)){
+                    roomIds.push(this.contentRoom.objectId);
+                    this.updateUser({
+                        objectId: this.currentUser.objectId,
+                        savedRoomsIds: roomIds
+                    })
+                } else {
+                    this.alreadySaved = true;
+                }
                 this.saveBtnDiasabled = true;
             }
             else {
@@ -292,6 +297,13 @@ import EditRoomForm from './EditRoomForm.vue'
         reportRoom(){
             console.log("reporting room")
             if(this.isAuthenticated){
+                const adminEmailData = SendEmailToAdminOnRoomReported({
+                    email: 'familyroomrentals@dr.com',
+                    userId: this.$store.getters.currentUser.objectId,
+                    propertyId: this.$store.getters.contentRoom.objectId,
+                })
+                this.sendEmail(adminEmailData);
+
                 //send email to admin user
                 this.reportBtnDiasabled = true;
             }

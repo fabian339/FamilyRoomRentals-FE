@@ -100,9 +100,6 @@
 
         <v-spacer></v-spacer>
 
-        <!-- <v-card-title style="margin: 110px auto; justify-content: center">
-          <div class="display-1 pl-12 pt-12">{{currentUser.fName}} {{currentUser.lName}}</div>
-        </v-card-title> -->
       </v-img>
 
       <v-list two-line>
@@ -116,9 +113,6 @@
             <v-list-item-subtitle>Cell/Mobile</v-list-item-subtitle>
           </v-list-item-content>
 
-          <!-- <v-list-item-icon>
-            <v-icon color="#6B8E23">mdi-message-text</v-icon>
-          </v-list-item-icon> -->
         </v-list-item>
 
         <v-divider inset></v-divider>
@@ -166,7 +160,7 @@
 
           <v-list-item-content>
             <v-list-item-title class="font">
-              <a @click.stop="openSavedRoomsCatalog = true">
+              <a @click.stop="openSavedRooms">
                 ({{this.$store.getters.currentUser.savedRoomsIds ?  this.$store.getters.currentUser.savedRoomsIds.length : 0}})
               </a>
             </v-list-item-title>
@@ -201,22 +195,36 @@
     </v-card>
           <v-dialog
         v-model="openSavedRoomsCatalog"
-        max-width="330"
+        max-width="800"
         >
         <v-card>
-            <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
-            <v-card-text>
-                Once this is done, we cannot recover any data.
-                The following will be deleted:
-                <ol>
-                  <li>All account information</li>
-                  <li>All rooms and information related to rooms</li>
-                  <li>All notifications</li>
-                  <li>All messages/conversations</li>
-                  <li>You will no longer receive notifications to email/phone</li>
-                </ol>
-                Do you want to continue?
-            </v-card-text>
+          <div v-if="savedRooms.length > 0">
+            <v-card-title style="justify-content: center;">
+                <h2 style="font-weight: 200;" class="text-center">Saved Properties</h2>
+            </v-card-title>
+              <!-- <v-card-text>
+
+              </v-card-text> -->
+              <v-row>
+                  <v-col
+                    class="mb-8"
+                    cols="16"
+                    v-for="(item) in savedRooms" :key="item.street1"
+                  >
+                    <Room :roomData="item"/>
+                  </v-col>
+              </v-row>
+          </div>
+          <div v-else>
+            <v-card-title style="justify-content: center;">
+                <h2 style="font-weight: 200;" class="text-center">No Properties saved!</h2>
+            </v-card-title>
+              <!-- <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text> -->
+              <v-card-text>
+                Sometimes, when properties are saved, they might get eliminated by the person who shared them. If that 
+                is the case, the property also gets eliminated from you saved list.
+              </v-card-text>
+          </div>
         </v-card>
       </v-dialog>
   </v-container>
@@ -225,7 +233,7 @@
 <script>
 // @ is an alias to /src
 // import store from '@/actions/store'
-// import Room from '@/components/Room/Room.vue'
+import Room from '@/components/Room/Room.vue'
 import EditUserForm from '@/components/User/EditUserForm.vue'
 import { mapGetters, mapActions } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
@@ -234,7 +242,8 @@ export default {
   name: 'Profile',
   components: {
     EditUserForm,
-    SuccessAlert
+    SuccessAlert,
+    Room
   },
   computed: {
       ...mapGetters([
@@ -251,17 +260,21 @@ export default {
     return {
       editUser: false,
       deleteUser: false,
-      openSavedRoomsCatalog: false
+      openSavedRoomsCatalog: false,
+      savedRooms: [],
+      roomsSaved: 0,
       // myRooms: []
     }
   },
-  created(){
+  beforeMount(){
+    // console.log(this.currentUser.savedRoomsIds)
     // const { objectId } = this.currentUser;
     // this.myRooms = this.contentRooms.filter(room => room.ownerId === objectId);
   },
   methods:{
       ...mapActions([
-          'deleteUserAccount'
+          'deleteUserAccount',
+          'updateUser'
       ]),
       userRemoval(e){
         e.preventDefault();
@@ -285,8 +298,23 @@ export default {
         })
       },
       openSavedRooms(){
+        if(this.$store.getters.currentUser.savedRoomsIds && this.$store.getters.currentUser.savedRoomsIds.length > 0 
+          && this.savedRooms.length == 0) {
+          this.$store.getters.currentUser.savedRoomsIds.forEach(id => {
+            this.savedRooms.push(...this.$store.getters.contentRooms.filter(room => room.objectId === id));
+            // console.log(this.savedRooms,'roomsss')
+          })
+          if(this.savedRooms.length !== this.$store.getters.currentUser.savedRoomsIds.length){
+            let roomIds = [];
+            this.savedRooms.forEach(room => roomIds.push(room.objectId));
+            this.updateUser({
+                objectId: this.$store.getters.currentUser.objectId,
+                savedRoomsIds: roomIds
+              })
+          }
+        }
+
         this.openSavedRoomsCatalog = true;
-        console.log("openSavedRooms")
       }
 
   }

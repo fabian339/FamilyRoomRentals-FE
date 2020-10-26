@@ -529,3 +529,25 @@ export const SendEmailToAdminOnPaymentRequested = (data: any) => {
     };
 }
 
+
+export const SendEmailToAdminOnRoomReported = (data: any) => {
+    const html = `
+    <h3> Dear admin, </h3>
+    <p>
+        The user ${data.userId} reported the property <a href='http://localhost:8081/#/room/${data.propertyId}' target="_blank">HERE.</a>
+    </p>
+    
+    <h4>Actions: </h4>
+    <p>
+        Login to check your account 
+        <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+    </p>
+    `;
+    
+    return {
+        email: data.email,
+        subject: "Property Reported||",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}

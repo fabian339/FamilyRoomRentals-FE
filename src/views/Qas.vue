@@ -5,49 +5,49 @@
         <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
     <v-col lg="4">
-      <h2 class="headline font-weight-bold mb-3">USER EXPERIENCE</h2>
+      <h2 class="headline font-weight-bold mb-3">Questions / Answers</h2>
+      <p>Have a Questions? Please <router-link to="/contact-us">contact us.</router-link></p>
       </v-col>
     </v-row>
-        <v-row class="text-center" justify="center">
+    <v-row class="text-center" justify="center">
+      <div id="container">
+        <div class="message">
+          <p>Q. Is FamilyRoomRentals free?</p>
+            <p class="message-content font">
+              A. The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
+              We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
+              We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
+            </p>
+            <div class="message-timestamp-right">SMS 6:37</div>
+        </div>
 
-    <div id="container">
-      <div class="message">
-        <p>Q. Is FamilyRoomRentals free?</p>
-          <p class="message-content font">
-            A. The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-            We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-            We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-          </p>
-          <div class="message-timestamp-right">SMS 6:37</div>
-      </div>
+        <div class="message">
+            <p class="message-content font">
+              The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
+              We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
+              We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
+            </p>
+            <div class="message-timestamp-right">SMS 13:37</div>
+        </div>
 
-      <div class="message">
+        <div class="message">
           <p class="message-content font">
             The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
             We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
             We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
           </p>
-          <div class="message-timestamp-right">SMS 13:37</div>
+          <div class="message-timestamp-right">SMS 19:37</div>
+        </div>
+              <div class="message">
+          <p class="message-content font">
+            The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
+            We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
+            We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
+          </p>
+          <div class="message-timestamp-right">SMS 2:37</div>
+        </div>
       </div>
-
-      <div class="message">
-        <p class="message-content font">
-          The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-          We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-          We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-        </p>
-        <div class="message-timestamp-right">SMS 19:37</div>
-      </div>
-            <div class="message">
-        <p class="message-content font">
-          The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-          We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-          We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-        </p>
-        <div class="message-timestamp-right">SMS 2:37</div>
-      </div>
-    </div>
-        </v-row>
+    </v-row>
   </v-container>
 
     
@@ -64,9 +64,9 @@
 
 .message {
     position: relative;
-    margin: 20px 20%;
+    margin: 20px 15%;
     padding: 10px;
-    background-color: lightblue;
+    /* background-color: lightblue; */
     width: 70%;
     text-align: left;
     font: 400 .9em 'Open Sans', sans-serif;
@@ -92,7 +92,7 @@
     position: absolute;
     width: 0;
     height: 0;
-    border-bottom: 15px solid lightblue;
+    border-bottom: 15px solid #ffff;
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
     bottom: 0;

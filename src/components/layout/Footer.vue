@@ -51,7 +51,7 @@
         {name: 'Home', path: '/'},
         {name: 'About Us', path: '/about'},
         {name: 'Careers', path: '/careers'},
-        {name: 'Contact Us', path: '/contact'},
+        {name: 'Contact Us', path: '/contact-us'},
         {name: 'Terms', path: '/terms-and-conditions'},
         {name: 'Q/A', path: '/qas'},
       ],
