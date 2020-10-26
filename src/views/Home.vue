@@ -11,11 +11,10 @@
         <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
         <v-row no-gutters class="text-center">
           <v-col class="element1">
-            <div style="width: 380px;margin: auto;">
+            <div style="width: 340px;margin: auto;">
               <h1 style="font-size: 60px">Focus on what you can afford</h1>
               <p class="font"> 
-                Why are you working so hard to get something that you cannot afford? Why 
-                haven't you look at other options? Maybe all you need is a temporary place
+                Why haven't you look at other options? Maybe all you need is a temporary place
                 to stay until you get back on your feets.
                 FamilyRoomRents allows you to find an affordable place by placing property offers that 
                 best fit your budget, will not make the situation harder, and will not bring more stress. 
@@ -23,12 +22,12 @@
             </div>
           </v-col>
           <v-col class="element2">
-              <img style="margin: 10px" src="https://i.ibb.co/QFj0vhM/homepage-conv.jpg" alt="homepage-conv" width="360" height="490">
+              <img style="margin: 10px" src="https://i.ibb.co/QFj0vhM/homepage-conv.jpg" alt="homepage-conv" width="360" height="480">
           </v-col>
         </v-row>
-        <v-row class="text-center">
+        <v-row no-gutters class="text-center">
           <v-col class="element3">
-            <div style="width: 365px;margin: 25px auto;">
+            <div style="width: 380px;margin: auto;">
               <h1 style="font-size: 60px">How it Works?</h1>
               <p class="font"> Simply look for a property of your interest, make an affordable offer, 
                 then wait for a meeting date to see the property. And just like that you could be finding
@@ -37,9 +36,9 @@
             </div>
           </v-col>
           <v-col class="element4">
-            <!-- <h3>Look How Simple</h3> -->
-            <div style="padding:30px" >
-              <iframe src="https://drive.google.com/file/d/11QrnX1zVLvrUWsTtbVR7DWiHrYB6h5M6/preview" width="400" height="280" frameborder="0" allowfullscreen></iframe> 
+            <div style="margin-top: 5%;">
+              <h2> Sending Offers</h2>
+              <iframe style="border: 2px solid;" src="https://streamable.com/e/geigaz" width="350" height="200" frameborder="0" allowfullscreen></iframe>            
             </div>
         </v-col>
         </v-row>
@@ -48,7 +47,7 @@
           cols="12"
         >
           <h1 class="text-center font-weight-bold mb-3">
-            Recently Post
+            Recently Shared
           </h1>
           <v-container id="roomsContainer" >
             <v-row no-gutters>
@@ -80,7 +79,7 @@
             </div>
           </v-col>
           <v-col class="element6">
-                <v-card class="mx-auto" width="450" height="200px" color="#d5efe6" style="margin-top: 50px;">
+                <v-card class="mx-auto" width="450" height="215px" color="#d5efe6" style="margin-top: 50px;">
                   <v-row class="text-center" justify="center">
                     <v-card-text>Looking for a tenant? Register and share your room now!!</v-card-text>
                     <v-btn color="#fd9bf5ba" to="/signup">register</v-btn>
@@ -134,7 +133,7 @@ export default {
 
 <style scoped>
   .element1 {
-    width: 365px;
+    /* width: 365px; */
     height: 500px;
     position: relative;
     margin: 20px 0px;
@@ -176,13 +175,14 @@ export default {
     /* animation: mymove2 3s normal forwards ease-in-out; */
   }
  .element4 {
-    /* width: 365px;
-    height: 370px;
-    position: relative; */
-    margin: 0px 3px;
+    margin: 0px -3px;
     /* border: 2px solid; */
     /* border-left: 10px solid darkslateblue; */
     /* animation: mymove2 3s normal forwards ease-in-out; */
+    /* border: 2px solid; */
+    width: 365px;
+    height: 370px;
+    position: relative;
   }
 
   .element2 {
