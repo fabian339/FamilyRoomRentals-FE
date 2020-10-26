@@ -14,11 +14,11 @@
             </v-btn>
 
             <v-btn color="#e9ffd4" to="/rooms" text>
-                <span>View Rooms</span>
+                <span>View Properties</span>
             </v-btn>
 
             <v-btn color="#e9ffd4" v-if="isAuthenticated" to="/create-room" text>
-                <span>Post Your Room</span>
+                <span>Share Property</span>
             </v-btn>
 
             <v-btn color="#e9ffd4" v-if="isAuthenticated" to="/profile" text>

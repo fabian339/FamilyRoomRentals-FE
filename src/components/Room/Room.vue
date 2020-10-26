@@ -8,8 +8,11 @@
       height="200px"
       v-bind:src="this.roomData.images.length === 0 ? 'https://i.ibb.co/t85JhCP/no-Room-Img.png' : this.roomData.images[0]"
     >
-    <div id="rented" v-if="this.roomData.rented">
-      <v-card-title style="justify-content: center;">Just Rented</v-card-title>
+    <div id="rented" v-if="this.roomData.rented && new Date() < new Date(new Date(this.roomData.rentedDate).setDate(new Date(this.roomData.rentedDate).getDate() + 2))">
+      <v-card-title style="justify-content: center;"> Just Rented </v-card-title>
+    </div>
+    <div id="rented" v-if="this.roomData.rented && new Date() > new Date(new Date(this.roomData.rentedDate).setDate(new Date(this.roomData.rentedDate).getDate() + 2))">
+      <v-card-title style="justify-content: center;"> Rented </v-card-title>
     </div>
     <v-spacer></v-spacer>
     <div id="price">

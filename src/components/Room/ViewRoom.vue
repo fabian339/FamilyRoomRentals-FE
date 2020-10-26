@@ -1,8 +1,10 @@
 <template>
     <v-container>
         <ContentLoading  v-if="isContentLoading"/>
+        <div class="text-center">
+            <SuccessAlert v-if="isRoomUpdated && !isOfferSent" msg="Room Updated Successfully!" />
+        </div>
         <v-row class="text-center" v-if="!isContentLoading" justify="center">
-            <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
             <div 
                 class="imageContainer"
                 :style="fullScreen ? 'height: 90vh; width: 100%' : 'height: 500px; width: 70%'"

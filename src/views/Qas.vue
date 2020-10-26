@@ -11,40 +11,9 @@
     </v-row>
     <v-row class="text-center" justify="center">
       <div id="container">
-        <div class="message">
-          <p>Q. Is FamilyRoomRentals free?</p>
-            <p class="message-content font">
-              A. The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-              We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-              We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-            </p>
-            <div class="message-timestamp-right">SMS 6:37</div>
-        </div>
-
-        <div class="message">
-            <p class="message-content font">
-              The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-              We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-              We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-            </p>
-            <div class="message-timestamp-right">SMS 13:37</div>
-        </div>
-
-        <div class="message">
-          <p class="message-content font">
-            The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-            We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-            We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-          </p>
-          <div class="message-timestamp-right">SMS 19:37</div>
-        </div>
-              <div class="message">
-          <p class="message-content font">
-            The main goal of FamilyRoomRentals is to provide solutions to those struggling to find a roof over their heads.
-            We believe that many people cannot affort rent, specially if unemployed and living in busy areas such as NYC. 
-            We offer the convenient option of renting an affordable room as it could ease the stress and cut the bills.
-          </p>
-          <div class="message-timestamp-right">SMS 2:37</div>
+        <div class="message" v-for="(QA, index) in list" :key="index + 20">
+            <p>Q: {{QA.Q}}</p>
+            <p>A: {{QA.A}}</p>          
         </div>
       </div>
     </v-row>
@@ -52,6 +21,22 @@
 
     
 </template>
+
+<script>
+import qaList from '../globals/qaList'
+
+export default {
+  data() {
+    return {
+      list: []
+    }
+  },
+  beforeMount(){
+    this.list = qaList
+  }
+
+}
+</script>
 
 <style scoped>
 #container {

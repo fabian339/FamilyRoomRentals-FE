@@ -37,10 +37,9 @@
             </div>
           </v-col>
           <v-col class="element4">
-            <div style="margin: 60px; width:400px; height: 200px; border: 2px solid">
-              <!-- <video width="400" controls>
-                  <source type="video/mp4" :src="require('./../assets/test.mp4')" />
-              </video> -->
+            <!-- <h3>Look How Simple</h3> -->
+            <div style="padding:30px" >
+              <iframe src="https://drive.google.com/file/d/11QrnX1zVLvrUWsTtbVR7DWiHrYB6h5M6/preview" width="400" height="280" frameborder="0" allowfullscreen></iframe> 
             </div>
         </v-col>
         </v-row>
@@ -117,6 +116,9 @@ export default {
         'isUserDeleted'
       ])
   },
+  created(){
+
+  },
   methods:{
     ...mapMutations([
       'SET_ROOM',
@@ -145,7 +147,7 @@ export default {
     width: 365px;
     height: 370px;
     position: relative;
-    margin: 10px -3px;
+    margin: 0px -3px;
     /* padding: 15px; */
     /* border-right: 10px solid darkslateblue; */
     /* animation: mymove1 3s normal forwards ease-in-out; */
@@ -174,10 +176,11 @@ export default {
     /* animation: mymove2 3s normal forwards ease-in-out; */
   }
  .element4 {
-    width: 365px;
+    /* width: 365px;
     height: 370px;
-    position: relative;
-    margin: 10px 3px;
+    position: relative; */
+    margin: 0px 3px;
+    /* border: 2px solid; */
     /* border-left: 10px solid darkslateblue; */
     /* animation: mymove2 3s normal forwards ease-in-out; */
   }
