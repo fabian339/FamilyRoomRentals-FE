@@ -6,7 +6,7 @@ export const SendEmailToClientOnOffer = (data: any) => {
         <p> You offer was successfully sent!!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='familyroomrentals/#/room/'${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/'${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Status: Waiting for a response </p>
         </div>
@@ -81,7 +81,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <p>${data.ownerName} has accepted your offer and decided to move forward.</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Status: Offer accepted, ${data.ownerName} submitted three available dates </p>
         </div>
@@ -89,7 +89,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <h4>What now?</h4>
         <p>Verification Id: <strong>${data.verificationId}</strong> - (you will need this ID to select the meeting date) </p>
         <p>Take a look at the available dates 
-        <strong><a href='http://localhost:8080/#/offer-for-room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+        <strong><a href='https://familyroomrentals.com/#/offer-for-room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
         <p>
             You have 7 days to select a date, keep in mind that if you do not select a date, the offer will
             be dismiss.
@@ -174,7 +174,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
         <p>YAYY You have offcially scheduled a meeting with ${data.ownerName}!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.ownerName}</p>
             <p>Meeting date:  ${data.meetingDate}</p>
@@ -233,7 +233,7 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
         <p>YAYY A Meeting was scheduled for ${data.clientName}'s offer!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.clientName}</p>
             <p>Meeting date:  ${data.meetingDate}</p>
@@ -293,7 +293,7 @@ export const SendReminderToClient = (data: any) => {
         <p>Your meeting with ${data.ownerName} is two days away!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.ownerName}</p>
             <p>Meeting date:  ${data.meetingDate}</p>
@@ -352,7 +352,7 @@ export const SendReminderToUser = (data: any) => {
         <p>Your meeting with ${data.name} is two days away!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='http://localhost:8080/#/room/${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.name}</p>
             <p>Meeting date:  ${data.meetingDate}</p>
@@ -417,7 +417,7 @@ export const SendFollowupToClient = (data: any) => {
         </p>
         <p>
             Please click 
-            <strong><a href='http://localhost:8081/#/request/${data.roomId}/refund/${data.token}' target="_blank">HERE</a></strong>
+            <strong><a href='https://familyroomrentals.com/#/request/${data.roomId}/refund/${data.token}' target="_blank">HERE</a></strong>
             to issue a 50% refund.
         </p>
         <p>
@@ -460,7 +460,7 @@ export const SendFollowupToUser = (data: any) => {
         </p>
         <p>
             Login to check your account 
-            <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
         </p>
 
         <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
@@ -495,7 +495,7 @@ export const SendEmailToAdminOnRefundRequested = (data: any) => {
         <h4>Actions: </h4>
         <p>
             Login to check your account 
-            <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
         </p>
         `;
         
@@ -517,7 +517,7 @@ export const SendEmailToAdminOnPaymentRequested = (data: any) => {
         <h4>Actions: </h4>
         <p>
             Login to check your account 
-            <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
         </p>
         `;
         
@@ -534,13 +534,13 @@ export const SendEmailToAdminOnRoomReported = (data: any) => {
     const html = `
     <h3> Dear admin, </h3>
     <p>
-        The user ${data.userId} reported the property <a href='http://localhost:8081/#/room/${data.propertyId}' target="_blank">HERE.</a>
+        The user ${data.userId} reported the property <a href='https://familyroomrentals.com/#/room/${data.propertyId}' target="_blank">HERE.</a>
     </p>
     
     <h4>Actions: </h4>
     <p>
         Login to check your account 
-        <strong><a href='http://localhost:8081/#/login' target="_blank">HERE.</a></strong>
+        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
     </p>
     `;
     
