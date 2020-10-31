@@ -141,17 +141,21 @@ export default {
                 email: this.$store.getters.currentOffer.email,
                 name: this.$store.getters.currentOffer.full_name,
                 offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
+                roomId: this.$store.getters.contentRoom.objectId,
               })
 
               const userEmailData = SendEmailToUserOnOffer({
                 email:this.$store.getters.currentOffer.ownerEmail,
                 name: this.$store.getters.currentOffer.ownerName,
                 offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
+                roomId: this.$store.getters.contentRoom.objectId,
               })
 
-              console.log(clientEmailData, userEmailData);
+              // console.log(clientEmailData, userEmailData, { 
+              //   email: this.$store.getters.currentOffer.email,
+              //   name: this.$store.getters.currentOffer.full_name,
+              //   offer: this.$store.getters.currentOffer.offer,
+              //   roomId: this.$store.getters.contentRoom.objectId,});
               this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)

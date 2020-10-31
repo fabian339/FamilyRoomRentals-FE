@@ -1,12 +1,12 @@
 
 export const SendEmailToClientOnOffer = (data: any) => {
-    // console.log("from email: ", data.logo)
+    console.log("from email: ", data)
     const html = `
         <h3> Dear ${data.name}, </h3>
         <p> You offer was successfully sent!!</p>
         <h4>Information:</h4>
         <div style="line-height: 5px;">
-            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/'${data.roomId}'>Room</a></strong> </p>
+            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Status: Waiting for a response </p>
         </div>
@@ -22,7 +22,7 @@ export const SendEmailToClientOnOffer = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -44,12 +44,12 @@ export const SendEmailToUserOnOffer = (data: any) => {
         <h4>Information:</h4>
         <p> 
             The offer is regarding the following 
-            <strong><a href='familyroomrentals/#/room/'${data.roomId}'>room</a></strong>
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong>
             for the ammount of <strong>$${data.offer}</strong>.
         </p>
         <p> 
             To accept or reject this offer please log in into 
-            <a href='http://familyroomrentals.com/#/login'>familyroomrentals.com.</a>
+            <a href='https://familyroomrentals.com/#/login'>familyroomrentals.com.</a>
         </p>
 
         <p>Thank you for using FamilyRoomRentals</p>
@@ -60,7 +60,7 @@ export const SendEmailToUserOnOffer = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -110,7 +110,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -154,7 +154,7 @@ export const SendEmailToClientOnOfferRejected = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
@@ -211,7 +211,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -271,7 +271,7 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -330,7 +330,7 @@ export const SendReminderToClient = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -389,7 +389,7 @@ export const SendReminderToUser = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -432,7 +432,7 @@ export const SendFollowupToClient = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
@@ -471,7 +471,7 @@ export const SendFollowupToUser = (data: any) => {
             <p>New York, NY</p>
             <p>(347) 389-0868</p>
             <p>familyroomrentas@dr.com</p>
-            <p>familyroomrentals.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
         </div>
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
         `;
