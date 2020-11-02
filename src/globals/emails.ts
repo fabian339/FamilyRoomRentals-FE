@@ -80,10 +80,10 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <p>WOAA You're offer has been accepted!!</p>
         <p>${data.ownerName} has accepted your offer and decided to move forward.</p>
         <h4>Information:</h4>
-        <div style="line-height: 5px;">
+        <div>
             <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
-            <p>Status: Offer accepted, ${data.ownerName} submitted three available dates </p>
+            <p>Status: Offer accepted, ${data.ownerName} submitted three available dates to meet. </p>
         </div>
 
         <h4>What now?</h4>
@@ -173,7 +173,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
         <h3> Dear ${data.name}, </h3>
         <p>YAYY You have offcially scheduled a meeting with ${data.ownerName}!</p>
         <h4>Information:</h4>
-        <div style="line-height: 5px;">
+        <div>
             <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.ownerName}</p>
@@ -232,7 +232,7 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
         <h3> Dear ${data.name}, </h3>
         <p>YAYY A Meeting was scheduled for ${data.clientName}'s offer!</p>
         <h4>Information:</h4>
-        <div style="line-height: 5px;">
+        <div>
             <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
             <p>Offer: <strong>$${data.offer}</strong> </p>
             <p>Meeting with:  ${data.clientName}</p>
