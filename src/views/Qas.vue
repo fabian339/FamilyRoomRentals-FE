@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center" justify="center">
       <div class="logo" >
-        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
+        <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
       </div>
     <v-col lg="4">
       <h2 class="headline font-weight-bold mb-3">Questions / Answers</h2>

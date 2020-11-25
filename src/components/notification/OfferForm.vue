@@ -38,9 +38,9 @@
                     solo-inverted
                     type="number"
                     prefix="$"
-                    height="80"
-                    style="width: 50%; margin: 10px 25% -10px 25%; font-size: 40px;"
-                    :error-messages="errors.offer"   
+                    height="100"
+                    style="width: 50%; margin: 15px 25% -10px 25%; font-size: 40px;"
+                    :error-messages="errors.offer"
                 ></v-text-field>
                 <div>
                     <small style="color: darkcyan">(Tipically Respond within 24 hours)</small>

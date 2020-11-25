@@ -5,7 +5,7 @@
     <v-container v-else>
       <v-row class="text-center" justify="center">
         <div class="logo" >
-          <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
+          <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
         </div>
       </v-row>
         <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
@@ -100,7 +100,7 @@ import Room from '@/components/Room/Room.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import ContentLoading from '@/components/layout/ContentLoading.vue';
-
+// const config = require('./config.json')
 export default {
   name: 'Home',
   components: {

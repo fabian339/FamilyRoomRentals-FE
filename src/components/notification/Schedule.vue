@@ -1,67 +1,74 @@
 <template>
   <v-container>
-    <v-row class="text-center" justify="center" v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner">
+    <v-row class="text-center" justify="center" v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.currentUser.meetingsPending >= 2">
         <div class="logo" >
             <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>
-        <h1 style="color: brown; font-style: italic;">
-            {{currentOffer.offerAcceptedByOwner ? (
-                `This offer is already accepted and has the schedule: ${currentOffer.offerAcceptedByOwner}`) : (
-                    'This offer was rejected.'
-                )
-            }}
-        </h1>
     </v-row>
-    <div v-else>
-        <v-row class="text-center" justify="center">
-            <div class="logo" >
-                <img :src="require('../../assets/logo.png')" alt="logo" width="400">
-            </div>
-            <v-col lg="8">
-                <h2 class="headline font-weight-bold mb-3">Schedule your meeting with {{currentOffer.full_name}}</h2>
-                <h3>Please select three available dates at your best convenience.</h3>
-                <h4>{{currentOffer.full_name}} will select one of these dates to meet with you, see the property, and discuss details.</h4>
-            </v-col>
-        </v-row>
-        <v-row justify="space-around">
-            <div v-for="(item, index) in dates" :key="index + 4" style="border: 2px solid lightgray; border-radius: 15px; width: 294px;">
-                <div>
-                    <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT DATE# {{index + 1}} </strong></p>
-                     <v-date-picker
-                        v-model="item.date"
-                        :color="item.color"
-                    ></v-date-picker>
-            
-                    <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT TIME# {{index + 1}} </strong></p>
-                    <v-time-picker
-                        v-model="item.tempTime"
-                        @input="fixTime(index)"
-                        :color="item.color"
-                    ></v-time-picker>
-                <div style="text-align: center;line-height: 10px;margin: 20px 0px;">
-                    <p :style="`color: ${item.color}`">{{`Schedule: ${item.date} at ${item.time}`}}</p>
-                    <p style="color: red; line-height: 15px;">{{item.errorDateMsg}}</p>
+    <div>
+        <div v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.currentUser.meetingsPending >= 2">
+                <h1 style="color: brown; font-style: italic; text-align: center;">
+                        {{this.$store.getters.currentUser.meetingsPending >= 2 ? (
+                            "You already have two or more meetings pending. Please complete those meetings before scheduling new meetings!"
+                            ) :
+                            currentOffer.offerAcceptedByOwner ? (
+                            `This offer has been accepted and a schedule was already provided!`) : (
+                                'This offer was already rejected.'
+                            )
+                        }}
+                </h1>
+        </div>
+        <div v-else>
+            <v-row class="text-center" justify="center">
+                <div class="logo" >
+                    <img :src="require('../../assets/logo.png')" alt="logo" width="400">
                 </div>
+                <v-col lg="8">
+                    <h2 class="headline font-weight-bold mb-3">Schedule your meeting with {{currentOffer.full_name}}</h2>
+                    <h3>Please select three available dates at your best convenience.</h3>
+                    <h4>{{currentOffer.full_name}} will select one of these dates to meet with you, see the property, and discuss details.</h4>
+                </v-col>
+            </v-row>
+            <v-row justify="space-around">
+                <div v-for="(item, index) in dates" :key="index + 4" style="border: 2px solid lightgray; border-radius: 15px; width: 294px;">
+                    <div>
+                        <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT DATE# {{index + 1}} </strong></p>
+                        <v-date-picker
+                            v-model="item.date"
+                            :color="item.color"
+                        ></v-date-picker>
+                
+                        <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT TIME# {{index + 1}} </strong></p>
+                        <v-time-picker
+                            v-model="item.tempTime"
+                            @input="fixTime(index)"
+                            :color="item.color"
+                        ></v-time-picker>
+                    <div style="text-align: center;line-height: 10px;margin: 20px 0px;">
+                        <p :style="`color: ${item.color}`">{{`Schedule: ${item.date} at ${item.time}`}}</p>
+                        <p style="color: red; line-height: 15px;">{{item.errorDateMsg}}</p>
+                    </div>
+                    </div>
                 </div>
-            </div>
-        </v-row>
-        <v-row class="text-center" justify="center" style="margin: 35px 0px -5px 0px;">
-            <v-btn @click.stop="SendSchedule" color="#483D8B" dark>
-                Save Avaliable Dates
-            </v-btn>
-        </v-row>
-        <v-row class="text-center" justify="center" style="margin: 25px 0px -15px 0px">
-            <p style="color:red">{{duplicatedDateError}}</p>
-        </v-row>
+            </v-row>
+            <v-row class="text-center" justify="center" style="margin: 35px 0px -5px 0px;">
+                <v-btn @click.stop="SendSchedule" color="#483D8B" dark>
+                    Save Avaliable Dates
+                </v-btn>
+            </v-row>
+            <v-row class="text-center" justify="center" style="margin: 25px 0px -15px 0px">
+                <p style="color:red">{{duplicatedDateError}}</p>
+            </v-row>
+            <UserAgreementWithClient 
+                v-model="showUserAgreement" 
+                :offerData="{
+                            objectId: this.currentOffer.objectId,
+                            offerAcceptedByOwner: true,
+                            meetingDates: this.dates,
+                        }"
+            />
+        </div>
     </div>
-    <UserAgreementWithClient 
-        v-model="showUserAgreement" 
-        :offerData="{
-                    objectId: this.currentOffer.objectId,
-                    offerAcceptedByOwner: true,
-                    meetingDates: this.dates,
-                }"
-    />
   </v-container>
 </template>
 <script>

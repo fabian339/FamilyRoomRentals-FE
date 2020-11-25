@@ -31,7 +31,7 @@
             </div>
             <div                 
                 class="imageContainer"
-                style="border: 1px solid; width: 70%"
+                style="border: 1px solid; width: 70%; border-radius: 5px"
                 v-else
             >   
                 <img src="https://i.ibb.co/t85JhCP/no-Room-Img.png" alt="img" width="70%" height="500">

@@ -153,8 +153,9 @@ export default {
         color: #e9ffd4;
     }
     #title:hover{
-        background-color:#ffffff1c;
+        background-color:#ffffff10;
         cursor: pointer;
+        border-radius: 5px;
     }
 
     .nav{

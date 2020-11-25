@@ -117,6 +117,7 @@ export default {
     methods: {
         ...mapActions([
             'updateOffer',
+            'updateUser',
             'sendEmail'
         ]),
         addScheduleDates(){
@@ -156,7 +157,12 @@ export default {
                 token: token
               })
                 this.updateOffer(offerData)
-                console.log(offerData, clientEmailData, token)
+                this.updateUser({
+                  objectId: this.$store.getters.currentUser.objectId,
+                  meetingsPending: this.$store.getters.currentUser.meetingsPending + 1,
+                  acceptedOffers: this.$store.getters.currentUser.acceptedOffers + 1
+                })
+                // console.log(offerData, clientEmailData, token)
                 this.sendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;
