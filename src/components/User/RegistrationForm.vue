@@ -130,7 +130,7 @@ import {validateUserRegistration} from '../../store/validators'
                 fName: this.fName,
                 lName: this.lName,
                 username: this.username,
-                email: this.email,
+                email: this.email.toLowerCase(),
                 phone: this.phone,
                 password: this.password,
                 confirmPassword: this.confirmPassword,

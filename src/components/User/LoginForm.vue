@@ -91,7 +91,7 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue'
         submit(e) {
             e.preventDefault();
             const user = {
-                email: this.email,
+                email: this.email.toLowerCase(),
                 password: this.password,
             }
             const {valid, errors} = validateLoginData(user);
