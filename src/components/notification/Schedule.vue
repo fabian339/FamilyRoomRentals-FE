@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="text-center" justify="center" v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.currentUser.meetingsPending >= 2">
+    <v-row class="text-center" justify="center">
         <div class="logo" >
             <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>

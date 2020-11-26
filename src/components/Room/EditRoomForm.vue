@@ -11,11 +11,26 @@
                     <v-container class="text-center" style="margin-bottom: -110px;">
                         <form>
                             <v-radio-group
-                                v-model="radioChecked"
+                                v-model="rentedRadioChecked"
                                 @change="roomRented"
                                 row
+                                :disabled="disabled"
                                 >
-                                <span>Mark Room as Rented: </span>
+                                <span>Mark room as rented: </span>
+                                <v-spacer></v-spacer>
+                                <v-radio
+                                    label="No"
+                                ></v-radio>
+                                <v-radio
+                                    label="Yes"
+                                ></v-radio>
+                            </v-radio-group>
+                            <v-radio-group
+                                v-model="disabledRadioChecked"
+                                @change="roomDisabled"
+                                row
+                                >
+                                <span>Disable room (it will hide property from others): </span>
                                 <v-spacer></v-spacer>
                                 <v-radio
                                     label="No"
@@ -236,8 +251,10 @@ export default {
             tempRule: '',
             changes: [],
             errors: {},
-            radioChecked: this.$store.getters.contentRoom.rented === false ? 0 : 1,
-            rented: this.$store.getters.contentRoom.rented
+            rentedRadioChecked: this.$store.getters.contentRoom.rented === false ? 0 : 1,
+            rented: this.$store.getters.contentRoom.rented,
+            disabledRadioChecked: this.$store.getters.contentRoom.disabled === false ? 0 : 1,
+            disabled: this.$store.getters.contentRoom.disabled
         }
     },
     methods: {
@@ -269,6 +286,11 @@ export default {
         roomRented(e){
             this.changes.push('rented');
             this.rented = e === 0 ? false : true
+            // console.log("chanigin",e)
+        },
+        roomDisabled(e){
+            this.changes.push('disabled');
+            this.disabled = e === 0 ? false : true
             // console.log("chanigin",e)
         },
         saveUpdatedRoomData(e) {

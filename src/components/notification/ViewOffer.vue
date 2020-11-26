@@ -38,12 +38,30 @@
                                 {{currentOffer.status}}
                             </strong>
                         </p>
+                        <div v-if="currentOffer.offerAcceptedByOwner">
+                            <div v-if="!currentOffer.meetingScheduled">
+                                <p style="margin-bottom: 5px;">Dates submitted: </p>
+                                <div v-for="date in currentOffer.meetingDates" :key="date.date">
+                                    <span> - {{date.date}} at {{date.time}}</span>
+                                </div>
+                            </div>
+                            <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
+                            <v-btn 
+                                style="margin-top: 5px;" 
+                                small 
+                                color="error"
+                            >
+                                Cancel Meeting
+                            </v-btn> 
+                        </div>
+
 
                         <div v-if="currentOffer.followupSent && !currentOffer.submittedFollowUpData">
                             <p>Tell us how it went, request payment, and submit feedback.</p>
                             <v-btn 
                                 style="margin: 0px -10px;" 
                                 small 
+                                dark
                                 color="#ADD8E6"
                                 @click.stop="openSurvey = true"
                             >
@@ -51,11 +69,11 @@
                             </v-btn> 
                         </div>
                 </v-card-text>
-                <v-card-actions style="margin-top: -25px;">
+                <v-card-actions style="margin-top: -25px; margin-left: 10px;">
                 <!-- <v-spacer></v-spacer> -->
                 <div class="my-2">
                     <v-btn 
-                        style="margin: 0px 5px;" 
+                        style="margin: 5px 5px;" 
                         small 
                         outlined 
                         color="#556B2F"
@@ -64,7 +82,7 @@
                         Accept offer
                     </v-btn> 
                     <v-btn 
-                        style="margin: 0px 5px;" 
+                        style="margin: 5px 5px;" 
                         small 
                         outlined 
                         color="#FF69B4" 
@@ -74,7 +92,7 @@
                         Deny Offer
                     </v-btn>
                     <v-btn 
-                        style="margin: 0px 5px;" 
+                        style="margin: 5px 5px;" 
                         small 
                         color="error" 
                         @click.stop="showDeleteWarning = true"

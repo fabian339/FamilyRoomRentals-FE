@@ -27,7 +27,7 @@
           <v-radio-group v-model="filterBy" row>
               <div style="display: flex;">
                 <v-radio 
-                  v-for="(item, index) in ['All Rooms', 'Active Rooms', 'Rented Rooms']" :key="index - 20"
+                  v-for="(item, index) in ['All Rooms', 'Active Rooms', 'Rented Rooms', 'Disabled Rooms']" :key="index - 20"
                   color="pink" 
                   style="margin: auto 10px;" 
                   :label="item" 
@@ -90,8 +90,9 @@ export default {
     radioClick(index){
       if(index === 0) this.filter = false
       else {
-        if(index === 1) this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === false)
-        if(index === 2) this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented === true)
+        if(index === 1) this.filteredUserRooms = this.currentUserRooms.filter(room => !room.rented && !room.disabled && !room.lockedByAdmin)
+        if(index === 2) this.filteredUserRooms = this.currentUserRooms.filter(room => room.rented)
+        if(index === 3) this.filteredUserRooms = this.currentUserRooms.filter(room => room.disabled || room.lockedByAdmin)
         this.filter = true
       }
     },

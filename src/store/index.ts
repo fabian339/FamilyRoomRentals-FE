@@ -49,7 +49,7 @@ export default new Vuex.Store({
     getters: {
       // Content
       isContentLoading: state => state.contentState.loadingContent,
-      contentRooms: state => state.contentState.rooms.filter((room: any) => !room.rented || new Date() < new Date(new Date(room.rentedDate).setDate(new Date(room.rentedDate).getDate() + 2))).reverse(),
+      contentRooms: state => state.contentState.rooms.filter((room: any) => (!room.rented && !room.disabled && !room.lockedByAdmin) || (room.rented && new Date() < new Date(new Date(room.rentedDate).setDate(new Date(room.rentedDate).getDate() + 2)))).reverse(),
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
       isRoomUpdated: state => state.contentState.roomUpdated,

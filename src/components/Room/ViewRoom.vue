@@ -61,20 +61,42 @@
             >
             <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}} by {{contentRoom.ownerFname}}, {{contentRoom.ownerLname}}</small>
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
-                <v-btn class="ma-2" color="#008080" dark @click.stop="updateDialog = true" >
-                    Edit Room
-                    <v-icon dark>mdi-pencil</v-icon>
-                </v-btn> 
+                <div v-if="!this.contentRoom.lockedByAdmin">
+                    <v-btn 
+                        class="ma-2" 
+                        color="#008080"  
+                        dark
+                        @click.stop="updateDialog = true" 
+                    >
+                        Edit Room
+                        <v-icon dark>mdi-pencil</v-icon>
+                    </v-btn> 
 
-                <EditRoomForm v-model="updateDialog"/>
+                    <EditRoomForm v-model="updateDialog"/>
 
-                <v-btn class="ma-2" color="red" dark @click.stop="deleteDialog = true">
-                    Delete Room
-                    <v-icon dark right>mdi-delete</v-icon>
-                </v-btn>
+                    <v-btn 
+                        class="ma-2" 
+                        color="red" 
+                        dark 
+                        @click.stop="deleteDialog = true"
+                    >
+                        Delete Room
+                        <v-icon dark right>mdi-delete</v-icon>
+                    </v-btn>
+                </div>
                 <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">
                     This room cannot receive offers as it is marked as <strong>rented.</strong> 
                     To publish it back please unmark it in the edit section.
+                </p>
+ 
+                <p v-if="this.contentRoom.disabled && !this.contentRoom.lockedByAdmin" style="color: darkgoldenrod;">
+                    This room is not public and cannot receive offers as it is marked as <strong>disabled.</strong> 
+                    To publish it back please unmark it in the edit section.
+                </p>
+                <p v-if="this.contentRoom.lockedByAdmin" style="color: red;">
+                    This property has been temporary disabled/blocked by <strong>FamilyRoomRentalts.</strong> This is because you either 
+                    violated FamilyRoomRentalts's Terms and Conditions, cancelled a pending meeting for no reason,
+                    or pusblished something inappropriate. Please review our Terms & Conditions for more details. 
                 </p>
 
                 <v-dialog
@@ -148,8 +170,9 @@
 
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
             <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
-                <OfferForm v-if="!contentRoom.rented" />   
+                <OfferForm v-if="!contentRoom.rented && !contentRoom.lockedByAdmin && !contentRoom.disabled" />   
                 <p v-if="contentRoom.rented" style="color: #de1254">No offer can be made as this Room is already rented!</p> 
+                <p v-if="contentRoom.lockedByAdmin" style="color: #de1254">No offer can be made as this Room is temporary disabled!</p> 
             </v-col>
             <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
         </v-row>
@@ -162,7 +185,7 @@
                 color="#8dbade" 
                 @click.stop="saveRoom" 
                 style="margin-right: 5px"
-                :disabled="saveBtnDiasabled"
+                :disabled="saveBtnDiasabled || contentRoom.lockedByAdmin || contentRoom.disabled"
             >
                 {{saveBtnDiasabled ? alreadySaved ? 'Already Saved' : 'Saved' : 'Save Property'}}
             </v-btn>
@@ -171,7 +194,7 @@
                 color="#b58985" 
                 @click.stop="reportRoom" 
                 style="margin-left: 5px"
-                :disabled="reportBtnDiasabled"
+                :disabled="reportBtnDiasabled || contentRoom.lockedByAdmin || contentRoom.disabled"
             >
                 <!-- Report Property -->
                 {{reportBtnDiasabled ? 'Reported' : 'Report Property'}}
