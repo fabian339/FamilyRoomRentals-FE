@@ -20,9 +20,6 @@
         </div>
         <div v-else>
             <v-row class="text-center" justify="center">
-                <div class="logo" >
-                    <img :src="require('../../assets/logo.png')" alt="logo" width="400">
-                </div>
                 <v-col lg="8">
                     <h2 class="headline font-weight-bold mb-3">Schedule your meeting with {{currentOffer.full_name}}</h2>
                     <h3>Please select three available dates at your best convenience.</h3>

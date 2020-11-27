@@ -50,6 +50,7 @@
                                 style="margin-top: 5px;" 
                                 small 
                                 color="error"
+                                @click.stop="openCancelMeetingWarning = true"
                             >
                                 Cancel Meeting
                             </v-btn> 
@@ -106,9 +107,52 @@
         </v-dialog>
 
         <v-dialog
+            v-model="openCancelMeetingWarning"
+            max-width="400"
+        >
+            <v-card>
+                <v-card-title class="headline">Are you sure you want to cancel this meeting?</v-card-title>
+                    <v-card-text>
+                        CONCEQUENCES:
+                    </v-card-text>
+                    <v-card-text>
+                        At FamilyRoomRentals, we depend on clients making offers. Cancelling a pending meeting could
+                        result in losing revenue and potentially losing the client. 
+                        <strong v-if="currentOffer.meetingScheduled">
+                            As a concequence of cancelling a pending meeting, we could disable this property for a period
+                            of one week, or more. Please read our propery's Terms & Conditions for more details.
+                        </strong>
+                    </v-card-text>
+                <v-card-text>
+                    Once this is done, we cannot undo this action. Do you want to continue?
+                </v-card-text>
+
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click.stop="openCancelMeetingWarning = false"
+                >
+                    Cancel
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click.stop="cancelMeeting"
+                >
+                    Continue
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog
             v-model="showDeleteWarning"
             max-width="350"
-            >
+        >
             <v-card>
                 <v-card-title class="headline">Are you sure you want to delete this offer?</v-card-title>
                 <v-card-text>
@@ -335,6 +379,7 @@ export default {
     data(){
         return{
             showDeleteWarning: false,
+            openCancelMeetingWarning: false,
             showRejectionDialog: false,
             openSurvey: false,
             surveySubmitted: false,
@@ -468,7 +513,12 @@ export default {
                 }
             }
             return null;
+        },
+        cancelMeeting(){
+            //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
+            //else send email to both parties cancelling meeting
         }
+        
     }
 }
 </script>
