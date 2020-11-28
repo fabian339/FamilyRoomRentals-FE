@@ -159,7 +159,6 @@ export default {
                 this.updateOffer(offerData)
                 this.updateUser({
                   objectId: this.$store.getters.currentUser.objectId,
-                  meetingsPending: this.$store.getters.currentUser.meetingsPending + 1,
                   acceptedOffers: this.$store.getters.currentUser.acceptedOffers + 1
                 })
                 // console.log(offerData, clientEmailData, token)

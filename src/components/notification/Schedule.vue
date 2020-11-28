@@ -6,10 +6,10 @@
         </div>
     </v-row>
     <div>
-        <div v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.currentUser.meetingsPending >= 2">
+        <div v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.contentRoom.meetingsPending >= 2">
                 <h1 style="color: brown; font-style: italic; text-align: center;">
-                        {{this.$store.getters.currentUser.meetingsPending >= 2 ? (
-                            "You already have two or more meetings pending. Please complete those meetings before scheduling new meetings!"
+                        {{this.$store.getters.contentRoom.meetingsPending >= 2 ? (
+                            "You already have two or more meetings pending for this property. Please complete those meetings before scheduling new meetings!"
                             ) :
                             currentOffer.offerAcceptedByOwner ? (
                             `This offer has been accepted and a schedule was already provided!`) : (
@@ -27,7 +27,7 @@
                 </v-col>
             </v-row>
             <v-row justify="space-around">
-                <div v-for="(item, index) in dates" :key="index + 4" style="border: 2px solid lightgray; border-radius: 15px; width: 294px;">
+                <div v-for="(item, index) in dates" :key="index + 4" style="border: 2px solid lightgray; border-radius: 15px; width: 294px; margin-top: 5px">
                     <div>
                         <p :style="`text-align: center; color: ${item.color}`"><strong> SELECT DATE# {{index + 1}} </strong></p>
                         <v-date-picker
@@ -41,10 +41,10 @@
                             @input="fixTime(index)"
                             :color="item.color"
                         ></v-time-picker>
-                    <div style="text-align: center;line-height: 10px;margin: 20px 0px;">
-                        <p :style="`color: ${item.color}`">{{`Schedule: ${item.date} at ${item.time}`}}</p>
-                        <p style="color: red; line-height: 15px;">{{item.errorDateMsg}}</p>
-                    </div>
+                        <div style="text-align: center;line-height: 10px;margin: 20px 0px;">
+                            <p :style="`color: ${item.color}`">{{`Schedule: ${item.date} at ${item.time}`}}</p>
+                            <p style="color: red; line-height: 15px;">{{item.errorDateMsg}}</p>
+                        </div>
                     </div>
                 </div>
             </v-row>

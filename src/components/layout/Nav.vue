@@ -123,7 +123,8 @@ export default {
             'updateOffer'
         ]),
         ...mapMutations([
-            'SET_OFFER'
+            'SET_OFFER',
+            'SET_ROOM'
         ]),
         logoutUser(e){
             e.preventDefault();
@@ -134,7 +135,9 @@ export default {
             if(this.$router.history.current.path !== '/') this.$router.push('/')
         },
         openNotificationDialog(item){
+            const offerRoom = this.$store.getters.contentRooms.filter(room => room.objectId === item.roomId)[0];
             this.SET_OFFER(item)
+            this.SET_ROOM(offerRoom)
             this.openOfferDialog = true;
             let data = {
                 objectId: item.objectId,

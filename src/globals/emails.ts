@@ -89,7 +89,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <h4>What now?</h4>
         <p>Verification Id: <strong>${data.verificationId}</strong> - (you will need this ID to select the meeting date) </p>
         <p>Take a look at the available dates 
-        <strong><a href='https://familyroomrentals.com/#/offer-for-room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+        <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
         <p>
             You have 7 days to select a date, keep in mind that if you do not select a date, the offer will
             be dismiss.
@@ -548,6 +548,97 @@ export const SendEmailToAdminOnRoomReported = (data: any) => {
         email: data.email,
         subject: "Property Reported||",
         name: 'FamilyRoomRentals',
+        html,
+    };
+}
+
+export const SendEmailToClientOnMeetingCancelled = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p> The meeting process with ${data.ownerName} has been cancelled. </p>
+
+        <h4>Information:</h4>
+        <p> 
+            You made an offer regarding the following  
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>property</a></strong>
+            for the ammount of <strong>$${data.offer}</strong>.
+        </p>
+        <p> 
+            Unfortunately, the property owner has cancelled the meeting process
+            and will not be moving forward.
+        </p>
+
+        <p> 
+            ${data.meetingScheduled ? `${data.status} has been cancelled. You will not be charged!!` : 'This offer is terminated!'}
+        </p>
+        
+        <p>
+            <strong>But,</strong> there is a property for everyone. <strong>Do not give up,</strong> 
+            we encourage you to keep sending offers at 
+            <a href='https://familyroomrentals.com/#'>familyroomrentals.com.</a>
+        </p>
+            
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.email,
+        subject: "Important Information about your offer!",
+        name: data.name,
+        html,
+    };
+}
+
+
+export const SendEmailToOwnerOnMeetingCancelled = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.ownerName}, </h3>
+        <p> The meeting process with ${data.name} has been cancelled. </p>
+
+        <h4>Information:</h4>
+        <p> 
+            You accepted an offer regarding the following  
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>property</a></strong>
+            for the ammount of <strong>$${data.offer}</strong>.
+        </p>
+
+        <p>
+            At FamilyRoomRentals, we depend on clients making offers. Cancelling a pending meeting could
+            result in losing revenue and potentially losing the client.
+        </p>
+        <p> 
+            ${data.meetingScheduled ? `${data.status} has been cancelled. As a concequence of cancelling a pending meeting, we could disable this property for a period
+            of one week, or more.` : 'This offer is terminated effectibely now!'}
+        </p>
+        
+            
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.email,
+        subject: "Important Information about your offer!",
+        name: data.ownerName,
         html,
     };
 }

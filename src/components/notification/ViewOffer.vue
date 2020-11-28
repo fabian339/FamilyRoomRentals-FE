@@ -20,7 +20,7 @@
                                     Please consider my offer as I will really appreciate it.
                                 </p>
                             </div>
-                            <div style="margin: 15px 0px;">
+                            <div v-if="!currentOffer.offerAcceptedByOwner" style="margin: 15px 0px;">
                                 <h3>What would you like to do?</h3>
                                 <p>
                                     If you feel like this is a good match and price for the property,
@@ -30,15 +30,15 @@
                             </div>
                         </div>
                         
-                        <p>  
+                        <p style="margin-top: 5px">  
                             <strong>
                                 Status:
                             </strong>
-                            <strong style="color: teal">
+                            <strong style="color: teal;">
                                 {{currentOffer.status}}
                             </strong>
                         </p>
-                        <div v-if="currentOffer.offerAcceptedByOwner">
+                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCancelled">
                             <div v-if="!currentOffer.meetingScheduled">
                                 <p style="margin-bottom: 5px;">Dates submitted: </p>
                                 <div v-for="date in currentOffer.meetingDates" :key="date.date">
@@ -97,7 +97,7 @@
                         small 
                         color="error" 
                         @click.stop="showDeleteWarning = true"
-                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable"
+                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable && !currentOffer.processCancelled"
                     >
                         Delete Offer
                     </v-btn>
@@ -108,10 +108,10 @@
 
         <v-dialog
             v-model="openCancelMeetingWarning"
-            max-width="400"
+            max-width="450"
         >
             <v-card>
-                <v-card-title class="headline">Are you sure you want to cancel this meeting?</v-card-title>
+                <v-card-title class="headline">Are you sure you want to cancel the meeting process?</v-card-title>
                     <v-card-text>
                         CONCEQUENCES:
                     </v-card-text>
@@ -120,7 +120,8 @@
                         result in losing revenue and potentially losing the client. 
                         <strong v-if="currentOffer.meetingScheduled">
                             As a concequence of cancelling a pending meeting, we could disable this property for a period
-                            of one week, or more. Please read our propery's Terms & Conditions for more details.
+                            of one week, or more. If you have rented this property, please mark it as rented instead.
+                            Please read our propery's Terms & Conditions for more details.
                         </strong>
                     </v-card-text>
                 <v-card-text>
@@ -351,8 +352,13 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
-import { SendEmailToClientOnOfferRejected, SendEmailToAdminOnPaymentRequested } from '../../globals/emails'
+import {mapActions, mapGetters } from 'vuex'
+import { 
+    SendEmailToClientOnOfferRejected, 
+    SendEmailToAdminOnPaymentRequested, 
+    SendEmailToClientOnMeetingCancelled,
+    SendEmailToOwnerOnMeetingCancelled 
+} from '../../globals/emails'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
@@ -404,11 +410,10 @@ export default {
         ...mapActions([
             'deleteOffer',
             'updateOffer',
-            'sendEmail'
+            'sendEmail',
+            'updateRoom',
+            'updateUser'
         ]),
-        // ...mapMutations([
-        //     'SET_OFFER'
-        // ]),
         deleteMessage(){
             this.deleteOffer(this.currentOffer.objectId)
             this.showDeleteWarning = false;
@@ -416,8 +421,8 @@ export default {
             // console.log("Deleting Notification", id)
         },
         redirectToSchedule(){
-            if(this.$router.history.current.path !== `/offer/${this.currentOffer.objectId}/schedule`){
-                this.$router.push(`/offer/${this.currentOffer.objectId}/schedule`)
+            if(this.$router.history.current.path !== `/room/${this.currentOffer.roomId}/offer/${this.currentOffer.objectId}/schedule`){
+                this.$router.push(`/room/${this.currentOffer.roomId}/offer/${this.currentOffer.objectId}/schedule`)
                 this.show = false
             } else this.show = false
         },
@@ -517,6 +522,49 @@ export default {
         cancelMeeting(){
             //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
             //else send email to both parties cancelling meeting
+            let clientEmailData = SendEmailToClientOnMeetingCancelled({
+                email: this.$store.getters.currentOffer.email,
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
+                status: this.$store.getters.currentOffer.status,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+            });
+
+            let ownerEmailData = SendEmailToOwnerOnMeetingCancelled({
+                email: this.$store.getters.currentOffer.ownerEmail,
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
+                status: this.$store.getters.currentOffer.status,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+            });
+            // console.log(clientEmailData)
+            this.sendEmail(clientEmailData);
+            this.sendEmail(ownerEmailData);
+
+            this.updateOffer({
+                objectId: this.$store.getters.currentOffer.objectId,
+                cancellationDate: new Date(),
+                processCancelled: true,
+                status: 'Meeting proccess cancelled!'
+            })
+
+            if(this.$store.getters.currentOffer.meetingScheduled){
+                this.updateRoom({
+                    objectId: this.$store.getters.currentOffer.roomId,
+                    lockedByAdmin: true,
+                    lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
+                    meetingsPending: this.$store.getters.currentOffer.meetingsPending !== 0 ? this.$store.getters.currentOffer.meetingsPending - 1 : 0
+                })
+
+                // give full refund to client
+                // console.log(new Date(new Date().setDate(new Date().getDate() + 7)))
+            }
+
+            this.openCancelMeetingWarning = false
         }
         
     }

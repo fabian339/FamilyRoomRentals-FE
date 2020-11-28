@@ -68,7 +68,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     beforeEnter: ifAuthenticated,
   },
   {
-    path: '/offer/:id/schedule',
+    path: '/room/:roomId/offer/:offerId/schedule',
     name: 'Schedule',
     component: Schedule,
     beforeEnter: ifAuthenticated,
@@ -114,7 +114,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     component: Qas
   },
   {
-    path: '/offer-for-room/:secretId/select-date-to-meet/:token',
+    path: '/room/:secretId/select-date-to-meet/:token',
     name: 'SelectDateAndPay',
     component: SelectDateAndPay
   },

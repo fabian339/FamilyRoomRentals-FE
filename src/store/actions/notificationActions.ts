@@ -27,7 +27,7 @@ export default {
       let myNotifications:any = [];  
 
       res.data.results.forEach((offer: any)=> {
-          if(appRouter.history.current.path === `/offer/${offer.objectId}/schedule`) context.commit('SET_OFFER', offer);
+          if(appRouter.history.current.path.includes(`/offer/${offer.objectId}`)) context.commit('SET_OFFER', offer);
           if(offer.receiverId === id) myNotifications.push(offer)
       })
       context.commit('SET_USER_NOTIFICATIONS', myNotifications);
@@ -46,6 +46,15 @@ export default {
       if(res.data.offerToken === data.token){
         context.commit('SET_OFFER', res.data)
         context.commit('SET_OFFER_TOKEN_VERIFIED', true)
+        let date1 = new Date();
+        let date2 = new Date(new Date(`${res.data.officialMeetingDate.date} ${res.data.officialMeetingDate.time}`).setDate(
+          new Date(`${res.data.officialMeetingDate.date} ${res.data.officialMeetingDate.time}`).getDate() + 1));
+        if(!res.data.didMeetingPassed && (date1 > date2)){
+            context.dispatch('updateOffer', {
+              objectId: res.data.objectId,
+              didMeetingPassed: true
+            });
+        }
         context.commit('CLEAR_NOTIFICATIONS_ERROR')
       } else {
         context.commit('SET_OFFER_ERROR', {

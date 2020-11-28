@@ -1,6 +1,6 @@
 <template>
     <v-row class="text-center" justify="center">
-        <div v-if="isPaymentSucceededOnOffer" style="margin: 0px 15%">
+        <div v-if="paymentSucceeded" style="margin: 0px 15%">
             <SuccessAlert 
                 :msg="`Congratulations, your payment is processing and you are now ready to meet 
                 with ${this.$store.getters.currentOffer.ownerName}. Please pay attention to you email for confirmation and updates!`" 
@@ -9,40 +9,47 @@
                 Redirecting to homepage in: <strong>{{ countDown }}</strong>
             </p>
         </div>
-        <v-card v-else class="mx-auto" hover id="mycard">
-            <v-card-title class="justify-center" style="background-color: darkseagreen">
-                <h2 style="color:rgb(10 60 28)">Payment Information</h2>
-            </v-card-title>
-            <form @submit="this.handleSubmit" class="formClass">
-                <v-text-field
-                    placeholder="Name on card"
-                    style="margin: 10px;"
-                    v-model="cardName"
-                    :rules="[cardName.length > 0 || 'Please enter name on card!']"
-                    required
-                ></v-text-field>
-                <div id="card-number" class="elementContainer"></div>
-                <div id="expiry-cvc-postalCode-container">
-                    <div id="card-expiry" class="elementContainer adjustWidth"></div>
-                    <div id="card-cvc" class="elementContainer adjustWidth "></div>
-                    <div id="card-postalCode" class="elementContainer adjustWidth"></div>
-                </div>
-                <v-card-actions class="justify-center">
-                    <v-btn color="#1f4e41" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
-                        <v-progress-circular
-                            v-if="loadingPayment"
-                            color="silver"
-                            :size="35"
-                            :width="5"
-                            indeterminate
-                        >
-                        </v-progress-circular>
-                        <span v-else>Pay Service Fee</span>
-                    </v-btn>
-                </v-card-actions>
-                <p id="card-errors"></p>
-            </form>
-        </v-card>
+        <div v-else >
+            <h4>
+                    FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
+                    please read our <a href="#"> Terms & Conditions. </a>
+            </h4>
+            <h2 style="margin-top: 25px; color: darkgreen;">{{this.$store.getters.currentOffer.full_name}}, You are one step away!</h2>
+            <v-card class="mx-auto" hover id="mycard" width="100%">
+                <v-card-title class="justify-center" style="background-color: darkseagreen">
+                    <h2 style="color:rgb(10 60 28)">Payment Information</h2>
+                </v-card-title>
+                <form @submit="this.handleSubmit" class="formClass">
+                    <v-text-field
+                        placeholder="Name on card"
+                        style="margin: 10px;"
+                        v-model="cardName"
+                        :rules="[cardName.length > 0 || 'Please enter name on card!']"
+                        required
+                    ></v-text-field>
+                    <div id="card-number" class="elementContainer"></div>
+                    <div id="expiry-cvc-postalCode-container">
+                        <div id="card-expiry" class="elementContainer adjustWidth"></div>
+                        <div id="card-cvc" class="elementContainer adjustWidth "></div>
+                        <div id="card-postalCode" class="elementContainer adjustWidth"></div>
+                    </div>
+                    <v-card-actions v-if="!paymentSucceeded" class="justify-center">
+                        <v-btn color="#1f4e41" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
+                            <v-progress-circular
+                                v-if="loadingPayment"
+                                color="silver"
+                                :size="35"
+                                :width="5"
+                                indeterminate
+                            >
+                            </v-progress-circular>
+                            <span v-else>Pay Service Fee</span>
+                        </v-btn>
+                    </v-card-actions>
+                    <p id="card-errors"></p>
+                </form>
+            </v-card>
+        </div>
     </v-row>
 </template>
 
@@ -54,7 +61,7 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
 // let stripe;
 import axios from 'axios';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
-import { mapActions, mapMutations, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../globals/emails'
 
 export default {
@@ -69,7 +76,7 @@ export default {
     data(){
         return {
             loadingPayment: false,
-            // paymentSucceeded: false,
+            paymentSucceeded: false,
             cardName: '',
             clientSecret: '',
             cardNameError: '',
@@ -138,11 +145,8 @@ export default {
     methods: {
         ...mapActions([
             'updateOffer',
+            'updateRoom',
             'sendEmail'
-        ]),
-        ...mapMutations([
-            'PAYMENT_SUCCEEDED_ON_OFFER',
-            'SET_COUNTDOWN'
         ]),
         handleChange(event) {
             var displayError = document.getElementById('card-errors');
@@ -170,7 +174,7 @@ export default {
             } else {
                 // this.loadingPayment = false
                 // this.paymentSucceeded = true
-                console.log(payload)
+                // console.log(payload)
                 if(this.offerData){
                     const clientEmailData = SendEmailToClientOnMeetingScheduled({
                         email: this.$store.getters.currentOffer.email,
@@ -197,29 +201,30 @@ export default {
                         clientPhone: this.$store.getters.currentOffer.phone,
                     })
 
-                    // console.log(this.offerData);
-                    this.sendEmail(userEmailData);
-                    this.sendEmail(clientEmailData);
-                    this.updateOffer(this.offerData);
+                    console.log(userEmailData, clientEmailData);
                     this.loadingPayment = false
-                    this.PAYMENT_SUCCEEDED_ON_OFFER(true);
-                    this.SET_COUNTDOWN(true);
-                    this.countDownTimer();
-                    // console.log("dataa", this.offerData)
+                    this.paymentSucceeded = true
+                    this.startCountDownTimer();
                 } else{
                     console.log("Donation Payment")
                 } 
             }
         },
-        countDownTimer() {
+        startCountDownTimer() {
             if(this.countDown === 0){
-                this.SET_COUNTDOWN(false);
+                const {secretId} = this.$router.history.current.params;
+                this.updateRoom({
+                    objectId: secretId,
+                    meetingsPending: this.$store.getters.currentUser.meetingsPending + 1,
+                })
+                // this.SET_COUNTDOWN(false);
+                this.updateOffer(this.offerData);
                 this.$router.push('/')
             }
             if(this.countDown > 0) {
                 setTimeout(() => {
                     this.countDown -= 1
-                    this.countDownTimer()
+                    this.startCountDownTimer()
                 }, 1000)
             }
         },
@@ -238,7 +243,7 @@ export default {
         /* border-radius: 20px; */
     }
     .formClass{
-        width: 55%;
+        width: 60%;
         display: inline-block;
     }
     .elementContainer{

@@ -1,13 +1,79 @@
 <template>
   <v-container>
     <v-row class="text-center" justify="center">
-      <div class="logo" >
+        <div class="logo" >
           <img :src="require('../../assets/logo.png')" alt="logo" width="400">
         </div>
         <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
         <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
-        <h2 v-else-if="this.$store.getters.currentOffer.meetingScheduled && !this.$store.getters.isCountDownShowing">A meeting was already scheduled!</h2>
-        <v-col lg="12" v-else> 
+        <div v-else-if="this.$store.getters.currentOffer.meetingScheduled">
+            <!-- if the meeting is not cancelled add meething have not passed -->
+            <div v-if="!currentOffer.processCancelled && !currentOffer.didMeetingPassed">
+                <div class="meetingTicket">
+                    <h2>{{data.name}}, here is you meeting information:</h2>
+                    <v-row class="text-center" justify="center" style="align-items: center;">
+                        <div style="width: 275px;">
+                            <img 
+                                :src="this.$store.getters.contentRoom.images.length > 0 ? this.$store.getters.contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
+                                alt="roomPhoto" 
+                                width="150" 
+                                height="100"
+                                style="border: 1px solid; margin: 30px;"
+                            />
+                            <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
+                        </div>
+                        <div style="width: 275px;">
+                            <h3>When: </h3>
+                            <p class="font"> 
+                                Meeting Scheduled for {{currentOffer.officialMeetingDate.date}} 
+                                at {{currentOffer.officialMeetingDate.time}}!
+                            </p>
+                        </div>
+                        <div style="width: 275px;">
+                            <h3>Where: </h3>
+                            <div>
+                                <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
+                            </div>
+                            <p class="font" >
+                                {{this.$store.getters.contentRoom.location.street1}}, 
+                                {{this.$store.getters.contentRoom.location.street2}},
+                                {{this.$store.getters.contentRoom.location.city}},
+                                {{this.$store.getters.contentRoom.location.state}},
+                                {{this.$store.getters.contentRoom.location.zipCode}},
+                                {{this.$store.getters.contentRoom.location.country}}
+                            </p>
+                            <v-btn color="teal" small dark @click="openAddress">
+                                Open Address
+                            </v-btn>
+                        </div>
+                    </v-row>
+                </div>
+                <div>
+                    <v-btn small style="margin: 30px 15px 0px 0px" color="error">Cancel Meeting</v-btn>
+                    <v-btn small style="margin: 30px 0px 0px 15px" color="#66CDAA">Check In Meeting</v-btn>
+                </div>
+            </div>
+            <div v-else>
+                <div v-if="this.$store.getters.contentRoom.processCancelled">
+                    <h1 style="color: brown; font-style: italic; text-align: center; margin:5px">
+                        Unfortunatelly, the meeting on {{this.$store.getters.currentOffer.officialMeetingDate.date}} 
+                        at {{this.$store.getters.currentOffer.officialMeetingDate.time}} has been cancelled.
+                    </h1>
+                    <p>
+                        We are sorry for this inconvenience, <strong>but HEY</strong>, there is a property 
+                        for everyone. Keep sending offers.
+                    </p>
+                </div>
+                <h1 
+                    v-if="currentOffer.didMeetingPassed"
+                    style="color: brown; font-style: italic; text-align: center; margin:5px"
+                >
+                    The meeting on {{this.$store.getters.currentOffer.officialMeetingDate.date}} 
+                    at {{this.$store.getters.currentOffer.officialMeetingDate.time}} has passed.
+                </h1>
+            </div>
+        </div>
+        <v-col v-else lg="12" > 
             <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
                 {{data.name}}, you are a few steps away!
             </h2> 
@@ -66,16 +132,16 @@
                     {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
             </v-btn>
             <div v-if="showPayment">
-                <div v-if="!this.showDates" id="confirmation">
+                <div v-if="!this.showDates" class="confirmation">
                     <h2>{{isPaymentSucceededOnOffer ? 'Its Done, Meeting Confirmed!!' : 'The Service:'}}</h2>
                     <v-row class="text-center" justify="center" style="align-items: center;">
                         <div style="width: 275px;">
                             <img 
-                                :src="roomImages.length > 0 ? roomImages[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
+                                :src="this.$store.getters.contentRoom.images.length > 0 ? this.$store.getters.contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
                                 alt="roomPhoto" 
                                 width="150" 
                                 height="100"
-                                style="border: 2px solid; margin: 30px;"
+                                style="border: 1px solid; margin: 30px;"
                             />
                             <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
                         </div>
@@ -92,12 +158,12 @@
                                 <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
                             </div>
                             <p class="font" >
-                                {{roomLocation.street1}}, 
-                                {{roomLocation.street2}},
-                                {{roomLocation.city}},
-                                {{roomLocation.state}},
-                                {{roomLocation.zipCode}},
-                                {{roomLocation.country}}
+                                {{this.$store.getters.contentRoom.location.street1}}, 
+                                {{this.$store.getters.contentRoom.location.street2}},
+                                {{this.$store.getters.contentRoom.location.city}},
+                                {{this.$store.getters.contentRoom.location.state}},
+                                {{this.$store.getters.contentRoom.location.zipCode}},
+                                {{this.$store.getters.contentRoom.location.country}}
                             </p>
                             <v-btn color="teal" small dark @click="openAddress">
                                 Open Address
@@ -115,22 +181,15 @@
                 </v-btn>
                     
                 <div v-if="confirmedDate">
-                    <div v-if="!this.$store.getters.isPaymentSucceededOnOffer" style="margin: 15px 20%">
-                        <h4>
-                                FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
-                                please read our <a href="#"> Terms & Conditions. </a>
-                        </h4>
-                        <h2 style="margin-top: 25px; color: darkgreen;">{{data.name}}, You are one step away!</h2>
-                    </div>
                     <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
                     <Checkout :offerData="{
                             roomAddress: {
-                                street1: roomLocation.street1, 
-                                street2: roomLocation.street2,
-                                city: roomLocation.city,
-                                state: roomLocation.state,
-                                zipCode: roomLocation.zipCode,
-                                country: roomLocation.country
+                                street1: this.$store.getters.contentRoom.location.street1, 
+                                street2: this.$store.getters.contentRoom.location.street2,
+                                city: this.$store.getters.contentRoom.location.city,
+                                state: this.$store.getters.contentRoom.location.state,
+                                zipCode: this.$store.getters.contentRoom.location.zipCode,
+                                country: this.$store.getters.contentRoom.location.country
                             },
                             officialMeetingDate: {
                                 date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
@@ -176,8 +235,8 @@ import Checkout from './Checkout'
             id: '',
             showForm: true,
             showDates: false,
-            roomImages: [],
-            roomLocation: {},
+            // roomImages: [],
+            // roomLocation: {},
             selectDateError: '',
             dateSelectedIndex: '',
             showPayment: false,
@@ -222,10 +281,6 @@ import Checkout from './Checkout'
                     id :this.id,
                     token: this.$router.history.current.params.token
                 });
-                const {secretId} = this.$router.history.current.params;
-                let roomIndex = this.$store.getters.contentRooms.findIndex(room => room.objectId === secretId);
-                this.roomImages = this.$store.getters.contentRooms[roomIndex].images
-                this.roomLocation = this.$store.getters.contentRooms[roomIndex].location
                 this.showDates = true;
             }
         },
@@ -254,11 +309,16 @@ import Checkout from './Checkout'
     .stripe-card.complete {
         border-color: green;
     }
-    #confirmation{
+    .confirmation{
         border: 2px dashed powderblue;
         padding: 15px;
         width: 85%;
         border-radius: 5px;
         margin: 20px 7.5%;
+    }
+    .meetingTicket{
+        border: 2px dashed powderblue;
+        padding: 15px;
+        border-radius: 5px;
     }
 </style>

@@ -10,7 +10,7 @@ export default {
       axios.get('/classes/Room')
       .then((res) => {
         res.data.results.forEach((room: any)=> {
-            if(appRouter.history.current.path === `/room/${room.objectId}`) context.commit('SET_ROOM', room);
+            if(appRouter.history.current.path.includes(`/room/${room.objectId}`)) context.commit('SET_ROOM', room);
         })
 
         context.commit('SET_ROOMS', res.data.results);
