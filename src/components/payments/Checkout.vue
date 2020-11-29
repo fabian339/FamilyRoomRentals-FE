@@ -187,6 +187,8 @@ export default {
                         meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
                         roomId: this.$store.getters.currentOffer.roomId,
                         meetingLocation: this.offerData.roomAddress,
+                        token: this.offerData.token,
+                        verificationId: this.offerData.objectId
                     })
 
                     const userEmailData = SendEmailToUserOnMeetingScheduled({
@@ -204,6 +206,8 @@ export default {
                     console.log(userEmailData, clientEmailData);
                     this.loadingPayment = false
                     this.paymentSucceeded = true
+                    this.sendEmail(userEmailData);
+                    this.sendEmail(clientEmailData)
                     this.startCountDownTimer();
                 } else{
                     console.log("Donation Payment")

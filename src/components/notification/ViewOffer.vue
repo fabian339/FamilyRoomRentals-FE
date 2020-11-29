@@ -554,10 +554,10 @@ export default {
 
             if(this.$store.getters.currentOffer.meetingScheduled){
                 this.updateRoom({
-                    objectId: this.$store.getters.currentOffer.roomId,
+                    objectId: this.$store.getters.contentRoom.objectId,
                     lockedByAdmin: true,
                     lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
-                    meetingsPending: this.$store.getters.currentOffer.meetingsPending !== 0 ? this.$store.getters.currentOffer.meetingsPending - 1 : 0
+                    meetingsPending: this.$store.getters.contentRoom.meetingsPending !== 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
                 })
 
                 // give full refund to client

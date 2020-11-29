@@ -185,7 +185,11 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
             </p>
             <p>${data.ownerName}'s email:  ${data.ownerEmail}</p>
             <p>${data.ownerName}'s phone:  ${data.ownerPhone}</p>
-
+            <p>Verification ID: <strong>${data.verificationId}</strong> - (you will need this ID to check-in the meeting!) </p>
+            
+            <p>To cancel or check-in the meeting, use the verification ID and click
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+            <p>
         </div>
 
         <h4>How to handle the meeting?</h4>
@@ -641,4 +645,27 @@ export const SendEmailToOwnerOnMeetingCancelled = (data: any) => {
         name: data.ownerName,
         html,
     };
+}
+
+
+export const SendEmailToAdminOnMeetingCancelation = (data: any) => {
+    const html = `
+    <h3> Dear admin, </h3>
+    <p>The client ${data.name} has canceled a meeting.</p>
+    
+    <h4>Actions: </h4>
+    <p>
+        Login to check your account 
+        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+    </p>
+    <p> MeetingID/OfferID: ${data.offerId} </p>
+    <p> Please procee to charge the cancelation feed to client! </p?
+    `;
+    
+return {
+    email: data.email,
+    subject: "New Cancelation Feed To Charge!",
+    name: 'FamilyRoomRentals',
+    html,
+};
 }

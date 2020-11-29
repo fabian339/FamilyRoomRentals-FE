@@ -49,7 +49,7 @@
                     </v-row>
                 </div>
                 <div>
-                    <v-btn small style="margin: 30px 15px 0px 0px" color="error">Cancel Meeting</v-btn>
+                    <v-btn small style="margin: 30px 15px 0px 0px" color="error" @click.stop="showCancelationWarning = true">Cancel Meeting</v-btn>
                     <v-btn small style="margin: 30px 0px 0px 15px" color="#66CDAA">Check In Meeting</v-btn>
                 </div>
             </div>
@@ -72,6 +72,49 @@
                     at {{this.$store.getters.currentOffer.officialMeetingDate.time}} has passed.
                 </h1>
             </div>
+            <v-dialog
+                v-model="showCancelationWarning"
+                max-width="450px"
+            >
+                <v-card>
+                    <v-card-title class="headline">Are you sure you want to cancel the meeting process?</v-card-title>
+                        <v-card-text>
+                            CONCEQUENCES:
+                        </v-card-text>
+                        <v-card-text>
+                            At FamilyRoomRentals, we depend on users posting and sharing their properties. 
+                            Cancelling a pending meeting could result in the lost of revenue and potentially losing the user. 
+                            <strong>
+                                As a concequence of cancelling a pending meeting, we will charge a fee of $5 as the user 
+                                dedicated his/her time to look foward for this meeting. Please read FamilyRoomRentals properyy's 
+                                Terms & Conditions for more details.
+                            </strong>
+                        </v-card-text>
+                    <v-card-text>
+                        Once this is done, we cannot undo this action. Do you want to continue?
+                    </v-card-text>
+
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click.stop="showCancelationWarning = false"
+                    >
+                        Cancel
+                    </v-btn>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click.stop="cancelMeeting"
+                    >
+                        Continue
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
         <v-col v-else lg="12" > 
             <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
@@ -199,7 +242,8 @@
                             meetingScheduled: true,
                             readByReceiver: false,
                             status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
-                            objectId: this.$store.getters.currentOffer.objectId
+                            objectId: this.$store.getters.currentOffer.objectId,
+                            token: this.$store.getters.currentOffer.offerToken
                         }"/>
                 </div>
             </div>
@@ -211,7 +255,7 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
-// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import { SendEmailToClientOnMeetingCancelled, SendEmailToOwnerOnMeetingCancelled, SendEmailToAdminOnMeetingCancelation } from '../../globals/emails'
 import Checkout from './Checkout'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
@@ -230,6 +274,7 @@ import Checkout from './Checkout'
     data () {
         return {
             data: {},
+            showCancelationWarning: false,
             tokenExpired: false,
             tokenError: false,
             id: '',
@@ -268,6 +313,9 @@ import Checkout from './Checkout'
     methods:{
         ...mapActions([
             'getOffer',
+            'sendEmail',
+            'updateOffer',
+            'updateRoom'
         ]),
         idVerification(){
             if(this.id === '') {
@@ -297,6 +345,56 @@ import Checkout from './Checkout'
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
         },
+        cancelMeeting(){
+            //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
+            //else send email to both parties cancelling meeting
+            let clientEmailData = SendEmailToClientOnMeetingCancelled({
+                email: this.$store.getters.currentOffer.email,
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
+                status: this.$store.getters.currentOffer.status,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+            });
+
+            let ownerEmailData = SendEmailToOwnerOnMeetingCancelled({
+                email: this.$store.getters.currentOffer.ownerEmail,
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
+                status: this.$store.getters.currentOffer.status,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+            });
+
+            let adminEmailData = SendEmailToAdminOnMeetingCancelation({
+                email: 'familyroomrentals@dr.com',
+                name: this.$store.getters.currentOffer.full_name,
+                offerId: this.$store.getters.currentOffer.objectId
+            });
+            // console.log(clientEmailData)
+            this.sendEmail(clientEmailData);
+            this.sendEmail(ownerEmailData);
+            this.sendEmail(adminEmailData);
+
+            this.updateOffer({
+                objectId: this.$store.getters.currentOffer.objectId,
+                cancellationDate: new Date(),
+                processCancelled: true,
+                status: 'Meeting proccess cancelled!'
+            })
+
+            this.updateRoom({
+                objectId: this.$store.getters.contentRoom.objectId,
+                chargeCancelationFeed: true,
+                meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
+            })
+
+            //send email to admin to change cancelation feed
+
+            this.showCancelationWarning = false
+        }
     }
   }
 </script>
