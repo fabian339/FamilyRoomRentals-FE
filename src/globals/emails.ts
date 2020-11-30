@@ -597,7 +597,7 @@ export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     `;
     return {
         email: data.email,
-        subject: "Important Information about your offer!",
+        subject: "Your Pending Meeting Has Been Canceled",
         name: data.name,
         html,
     };
@@ -641,7 +641,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
     `;
     return {
         email: data.email,
-        subject: "Important Information about your offer!",
+        subject: "Meeting Cancelation Confirmed!",
         name: data.ownerName,
         html,
     };

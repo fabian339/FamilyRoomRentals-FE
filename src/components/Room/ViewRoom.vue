@@ -357,6 +357,7 @@ import {SendEmailToAdminOnRoomReported} from '../../globals/emails'
         /* border: 2px solid; */
         /* width: 70%; */
         position:relative;
+        margin-top: -12px;
         /* height: auto; */
     }
     .nextPic{

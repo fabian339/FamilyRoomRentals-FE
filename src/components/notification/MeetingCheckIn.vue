@@ -1,111 +1,64 @@
 <template>
-    <div>
+    <v-row justify="center">
         <v-dialog
             v-model="show"
-            max-width="450px"
-         >
-            <v-card>
-                <v-card-title>
-                    <span class="headline">Message</span>
-                </v-card-title>
-                <v-card-text>
-                        <p>From: {{currentOffer.full_name}}</p>
-                        <p>Interested Room: <a :href="`/#/room/${currentOffer.roomId}`" target="_blank">Click Here</a></p>
-                        <p>Offer: ${{currentOffer.offer}}</p>
-                        <div v-if="!currentOffer.followupSent">
-                            <p>Message: </p>
-                            <div id="message">
-                                <p> 
-                                    I will like to offer the ammount of <strong>${{currentOffer.offer}}</strong> for this room. 
-                                    Please consider my offer as I will really appreciate it.
-                                </p>
-                            </div>
-                            <div v-if="!currentOffer.offerAcceptedByOwner" style="margin: 15px 0px;">
-                                <h3>What would you like to do?</h3>
-                                <p>
-                                    If you feel like this is a good match and price for the property,
-                                    please accept <strong>{{currentOffer.full_name}}'s offer</strong> and schedule a meeting 
-                                    to show him/her the room. Otherwise, deny such offer.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <p style="margin-top: 5px">  
-                            <strong>
-                                Status:
-                            </strong>
-                            <strong style="color: teal;">
-                                {{currentOffer.status}}
-                            </strong>
-                        </p>
-                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCancelled">
-                            <div v-if="!currentOffer.meetingScheduled">
-                                <p style="margin-bottom: 5px;">Dates submitted: </p>
-                                <div v-for="date in currentOffer.meetingDates" :key="date.date">
-                                    <span> - {{date.date}} at {{date.time}}</span>
-                                </div>
-                            </div>
-                            <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
-                            <v-btn 
-                                style="margin-top: 5px;" 
-                                small 
-                                color="error"
-                                @click.stop="openCancelMeetingWarning = true"
-                            >
-                                Cancel Meeting
-                            </v-btn> 
-                        </div>
+            width="650px"
+        >
+            <v-progress-linear
+            v-if="showLoading && !loadingFinished"
+                height="30"
+                :value="countUp * 20"
+                striped
+                color="lime"
+            ></v-progress-linear>
+            <v-card v-else>
+                <h2 v-if="!loadingFinished" style="padding: 30px; headline">
+                    {{user === "owner" ? (
+                        `Hey ${currentOffer.ownerName}, are you ready to check-in your meeting with ${currentOffer.full_name}?`) : (
+                        `Hey ${currentOffer.full_name}, are you ready to check-in your meeting with ${currentOffer.ownerName}? ` )}}
+                </h2>
+                <div v-if="loadingFinished" style="padding: 30px;">
+                    <h2 v-if="user === 'owner'">
+                        {{currentOffer.clientCheckedInMeeting ? (
+                            `Thank you for checking-in, please start the meeting with ${currentOffer.full_name}!`
+                        ) : (
+                            `Thank you for checking-in, please wait for ${currentOffer.full_name} to check-in to start the meeting!`
+                        )}}
+                    </h2>
+                    <h2 v-if="user === 'client'">
+                        {{currentOffer.ownerCheckedInMeeting ? (
+                            `Thank you for checking-in, please start the meeting with ${currentOffer.ownerName}!`
+                        ) : (
+                            `Thank you for checking-in, please wait for ${currentOffer.ownerName} to check-in to start the meeting!`
+                        )}}
+                    </h2>
+                </div>
 
-
-                        <div v-if="currentOffer.followupSent && !currentOffer.submittedFollowUpData">
-                            <p>Tell us how it went, request payment, and submit feedback.</p>
-                            <v-btn 
-                                style="margin: 0px -10px;" 
-                                small 
-                                dark
-                                color="#ADD8E6"
-                                @click.stop="openSurvey = true"
-                            >
-                                Answer Survey
-                            </v-btn> 
-                        </div>
-                </v-card-text>
-                <v-card-actions style="margin-top: -25px; margin-left: 10px;">
+                <v-card-actions v-if="!loadingFinished" style="margin-top: -25px; margin-left: 10px;">
                 <!-- <v-spacer></v-spacer> -->
                 <div class="my-2">
-                    <v-btn 
-                        style="margin: 5px 5px;" 
-                        small 
+                    <v-btn
+                        class="yesBtn"  
+                        rounded
                         outlined 
                         color="#556B2F"
-                        :disabled="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner"  
-                        @click.stop="redirectToSchedule">
-                        Accept offer
+                        @click.stop="registerMeeting">
+                        Yes
                     </v-btn> 
-                    <v-btn 
-                        style="margin: 5px 5px;" 
-                        small 
+                    <v-btn
+                        class="noBtn"  
+                        rounded
                         outlined 
                         color="#FF69B4" 
-                        @click.stop="showRejectionDialog = true"
-                        :disabled="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner"
+                        @click.stop="show = false"
                     >
-                        Deny Offer
-                    </v-btn>
-                    <v-btn 
-                        style="margin: 5px 5px;" 
-                        small 
-                        color="error" 
-                        @click.stop="showDeleteWarning = true"
-                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable && !currentOffer.processCancelled"
-                    >
-                        Delete Offer
+                        No
                     </v-btn>
                 </div>                
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </div>
+    </v-row>
 </template>
 
 <script>
@@ -117,8 +70,9 @@ export default {
     name: "MeetingCheckIN",
     props: {
         value: Boolean,
+        user: String
     },
-    components: {SuccessAlert},
+    components: {},
     computed: {
         show: {
             get () {
@@ -135,16 +89,69 @@ export default {
         ]),
     },
     data(){
-        return{}
+        return{
+            showLoading: false,
+            countUp: 0,
+            loadingFinished: false
+        }
 
     },
     methods: {
         ...mapActions([
+            'updateOffer'
         ]),
+        registerMeeting(){
+            // console.log(this.user)
+            // check that time match before actually checking in
+            if(this.user === 'owner'){
+                //send email to client on check-in
+                this.updateOffer({
+                    objectId: this.currentOffer.objectId,
+                    ownerCheckedInMeeting: true,
+                    OwnerCheckedInDate: new Date(),
+                    readByReceiver: false,
+                })
+            }
+            if(this.user === 'client'){
+                //send email to owner on check-in
+                this.updateOffer({
+                    objectId: this.currentOffer.objectId,
+                    clientCheckedInMeeting: true,
+                    clientCheckedInDate: new Date(),
+                    readByReceiver: false,
+                })
+            }
+            this.countUp = 0
+            this.showLoading = true
+            this.startCountUpTimer()
+        },
+        startCountUpTimer() {
+            if(this.countUp === 5){
+                this.loadingFinished = true
+                // this.countUp = 0
+            }
+            if(this.countUp < 5) {
+                setTimeout(() => {
+                    this.countUp += 1
+                    this.startCountUpTimer()
+                }, 1000)
+            }
+        },
         
     }
 }
 </script>
 <style scoped>
-
+    .yesBtn{
+        margin: 5px 5px;
+    }
+    .yesBtn:hover{
+        background-color: #f5f5dc;
+    }
+    .noBtn{
+        margin: 5px 5px;
+    }
+    .noBtn:hover{
+        background-color: #800000;
+    }
 </style>

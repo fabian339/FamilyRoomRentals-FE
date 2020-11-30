@@ -38,6 +38,16 @@
                                 {{currentOffer.status}}
                             </strong>
                         </p>
+                        <p v-if="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
+                            Meeting In Progress!
+                        </p>
+                        <p v-if="currentOffer.ownerCheckedInMeeting && !currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
+                            Wait for {{currentOffer.full_name}} to check-in to start the meeting!
+                        </p>
+                        <p v-if="!currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
+                            Please Check-In, {{currentOffer.full_name}} already checked-in!
+                        </p>
+
                         <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceled">
                             <div v-if="!currentOffer.meetingScheduled">
                                 <p style="margin-bottom: 5px;">Dates submitted: </p>
@@ -47,12 +57,25 @@
                             </div>
                             <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                             <v-btn 
-                                style="margin-top: 5px;" 
+                                style="margin: 0px 5px 0 0" 
                                 small 
+                                rounded
                                 color="error"
+                                :disabled="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting"
                                 @click.stop="openCancelMeetingWarning = true"
                             >
                                 Cancel Meeting
+                            </v-btn> 
+                            <v-btn 
+                                v-if="currentOffer.meetingScheduled"
+                                style="margin: 0px 0px 0px 5px;" 
+                                small 
+                                rounded 
+                                color="success"
+                                :disabled="currentOffer.ownerCheckedInMeeting"
+                                @click.stop="openCheckIn = true"
+                            >
+                                Check-in Meeting
                             </v-btn> 
                         </div>
 
@@ -348,6 +371,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <MeetingCheckIn v-model="openCheckIn" user="owner"/>
     </div>
 </template>
 
@@ -360,13 +385,14 @@ import {
     SendEmailToOwnerOnMeetingCanceledByOwner 
 } from '../../globals/emails'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 
 export default {
     name: "ViewNotification",
     props: {
         value: Boolean,
     },
-    components: {SuccessAlert},
+    components: {SuccessAlert, MeetingCheckIn},
     computed: {
         show: {
             get () {
@@ -385,6 +411,7 @@ export default {
     data(){
         return{
             showDeleteWarning: false,
+            openCheckIn: false,
             openCancelMeetingWarning: false,
             showRejectionDialog: false,
             openSurvey: false,
@@ -559,7 +586,7 @@ export default {
                     objectId: this.$store.getters.contentRoom.objectId,
                     lockedByAdmin: true,
                     lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
-                    meetingsPending: this.$store.getters.contentRoom.meetingsPending !== 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
+                    meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
                 })
             }
 
@@ -575,5 +602,9 @@ export default {
         padding: 15px;
         border-radius: 15px;
         padding-bottom: 0px;
+    }
+    .meetingStatus{
+        margin-top: 5px;
+        color: darkblue;
     }
 </style>

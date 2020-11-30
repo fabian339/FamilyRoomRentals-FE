@@ -114,8 +114,33 @@
                         </v-row>
                     </div>
                     <div v-if="currentOffer.meetingScheduled && !showTicket">
-                        <v-btn style="margin: 15px" color="red" @click.stop="showCancelationWarning = true">Cancel Meeting</v-btn>
-                        <v-btn style="margin: 15px" color="#66CDAA">Check-In Meeting</v-btn>
+                        <p v-if="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="status"> 
+                            Meeting In Progress!
+                        </p>
+                        <p v-if="!currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="status"> 
+                            Wait for {{currentOffer.ownerName}} to check-in to start the meeting!
+                        </p>
+                        <p v-if="currentOffer.ownerCheckedInMeeting && !currentOffer.clientCheckedInMeeting" class="status"> 
+                            Please Check-In, {{currentOffer.ownerName}} already checked-in!
+                        </p>
+                        <v-btn 
+                            style="margin: 15px" 
+                            rounded 
+                            color="error" 
+                            @click.stop="showCancelationWarning = true"
+                            :disabled="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting"
+                        >
+                            Cancel Meeting
+                        </v-btn>
+
+                        <v-btn 
+                            style="margin: 15px" 
+                            rounded color="success" 
+                            @click.stop="openCheckIn = true"
+                            :disabled="currentOffer.clientCheckedInMeeting"
+                        >
+                            Check-In Meeting
+                        </v-btn>
                     </div>
                 </div>
                 <div v-else>
@@ -214,6 +239,7 @@
                     }"/>
             </div>
         </v-col>
+        <MeetingCheckIn v-model="openCheckIn" user="client"/>
     </v-row>
   </v-container>
 </template>
@@ -222,12 +248,13 @@
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
 import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../globals/emails'
+import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import Checkout from './Checkout'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
-    components: { Checkout },
+    components: { Checkout,  MeetingCheckIn},
     computed: {
       ...mapGetters([
         'isContentLoading',
@@ -242,6 +269,7 @@ import Checkout from './Checkout'
             data: {},
             showTicket: false,
             paymentCompleted: false,
+            openCheckIn: false,
             showCancelationWarning: false,
             tokenExpired: false,
             tokenError: false,
@@ -400,5 +428,9 @@ import Checkout from './Checkout'
     .roomPhoto:hover{
         border: 5px solid; 
         cursor: pointer;
+    }
+    .status{
+        margin-top: 5px;
+        color: darkblue;
     }
 </style>
