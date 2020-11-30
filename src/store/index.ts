@@ -40,7 +40,6 @@ export default new Vuex.Store({
         offerSentByClient: false,
         offerDeleted: false,
         offerTokenVerified: false,
-        paymentSucceededOnOffer: false,
         offerAcceptedByOwner: false,
         errors: {}
       }
@@ -69,7 +68,6 @@ export default new Vuex.Store({
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
-      isPaymentSucceededOnOffer: state => state.notificationState.paymentSucceededOnOffer,
       currentUserOffers: state => state.notificationState.userNotifications.reverse(),
       offerErrors: state => state.notificationState.errors,
     },

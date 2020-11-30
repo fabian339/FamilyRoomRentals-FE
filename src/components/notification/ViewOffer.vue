@@ -38,7 +38,7 @@
                                 {{currentOffer.status}}
                             </strong>
                         </p>
-                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCancelled">
+                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceled">
                             <div v-if="!currentOffer.meetingScheduled">
                                 <p style="margin-bottom: 5px;">Dates submitted: </p>
                                 <div v-for="date in currentOffer.meetingDates" :key="date.date">
@@ -97,7 +97,7 @@
                         small 
                         color="error" 
                         @click.stop="showDeleteWarning = true"
-                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable && !currentOffer.processCancelled"
+                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable && !currentOffer.processCanceled"
                     >
                         Delete Offer
                     </v-btn>
@@ -113,7 +113,7 @@
             <v-card>
                 <v-card-title class="headline">Are you sure you want to cancel the meeting process?</v-card-title>
                     <v-card-text>
-                        CONCEQUENCES:
+                        IMPORTANT:
                     </v-card-text>
                     <v-card-text>
                         At FamilyRoomRentals, we depend on clients making offers. Cancelling a pending meeting could
@@ -356,8 +356,8 @@ import {mapActions, mapGetters } from 'vuex'
 import { 
     SendEmailToClientOnOfferRejected, 
     SendEmailToAdminOnPaymentRequested, 
-    SendEmailToClientOnMeetingCancelled,
-    SendEmailToOwnerOnMeetingCancelled 
+    SendEmailToClientOnMeetingCanceledByOwner,
+    SendEmailToOwnerOnMeetingCanceledByOwner 
 } from '../../globals/emails'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
@@ -522,7 +522,7 @@ export default {
         cancelMeeting(){
             //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
             //else send email to both parties cancelling meeting
-            let clientEmailData = SendEmailToClientOnMeetingCancelled({
+            let clientEmailData = SendEmailToClientOnMeetingCanceledByOwner({
                 email: this.$store.getters.currentOffer.email,
                 name: this.$store.getters.currentOffer.full_name,
                 ownerName: this.$store.getters.currentOffer.ownerName,
@@ -532,7 +532,7 @@ export default {
                 roomId: this.$store.getters.currentOffer.roomId,
             });
 
-            let ownerEmailData = SendEmailToOwnerOnMeetingCancelled({
+            let ownerEmailData = SendEmailToOwnerOnMeetingCanceledByOwner({
                 email: this.$store.getters.currentOffer.ownerEmail,
                 name: this.$store.getters.currentOffer.full_name,
                 ownerName: this.$store.getters.currentOffer.ownerName,
@@ -548,8 +548,10 @@ export default {
             this.updateOffer({
                 objectId: this.$store.getters.currentOffer.objectId,
                 cancellationDate: new Date(),
-                processCancelled: true,
-                status: 'Meeting proccess cancelled!'
+                processCanceled: true,
+                issueFullRefundToClient: this.$store.getters.currentOffer.meetingScheduled ? true : false,
+                readByReceiver: false,
+                status: `You canceled the meeting proccess on ${new Date().toLocaleDateString()}!`
             })
 
             if(this.$store.getters.currentOffer.meetingScheduled){
@@ -559,9 +561,6 @@ export default {
                     lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
                     meetingsPending: this.$store.getters.contentRoom.meetingsPending !== 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
                 })
-
-                // give full refund to client
-                // console.log(new Date(new Date().setDate(new Date().getDate() + 7)))
             }
 
             this.openCancelMeetingWarning = false

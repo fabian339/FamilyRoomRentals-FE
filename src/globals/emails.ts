@@ -556,7 +556,7 @@ export const SendEmailToAdminOnRoomReported = (data: any) => {
     };
 }
 
-export const SendEmailToClientOnMeetingCancelled = (data: any) => {
+export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear ${data.name}, </h3>
@@ -604,7 +604,7 @@ export const SendEmailToClientOnMeetingCancelled = (data: any) => {
 }
 
 
-export const SendEmailToOwnerOnMeetingCancelled = (data: any) => {
+export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear ${data.ownerName}, </h3>
@@ -648,7 +648,96 @@ export const SendEmailToOwnerOnMeetingCancelled = (data: any) => {
 }
 
 
-export const SendEmailToAdminOnMeetingCancelation = (data: any) => {
+export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p> You have canceled the meeting process with ${data.ownerName}. </p>
+
+        <h4>Information:</h4>
+        <p> 
+            You made an offer regarding the following  
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>property</a></strong>
+            for the ammount of <strong>$${data.offer}</strong>.
+        </p>
+        <p> 
+            We are sorry to see that the meeting will not be completed. This offer is terminated!
+        </p>
+
+        <h4>IMPORTANT:</h4>
+        <p> 
+            At FamilyRoomRentals, we depend on users posting and sharing their properties. 
+            Canceling a pending meeting could result in the lost of revenue and potentially losing the user. 
+            As a concequence of canceling a pending meeting, we will charge a fee of <strong>$5</strong> as the user dedicated 
+            his/her time to look foward for this meeting. Please read FamilyRoomRentals property's 
+            <strong><a href='https://familyroomrentals.com/#/terms-and-conditions'>Terms & Conditions</a></strong>
+            for more details.
+        </p>
+        
+            
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.email,
+        subject: "Meeting cancelation confirmed!",
+        name: data.name,
+        html,
+    };
+}
+
+
+export const SendEmailToOwnerOnMeetingCanceledByClient = (data: any) => {
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear ${data.ownerName}, </h3>
+        <p> ${data.name} has been canceled the meeting process with you. </p>
+
+        <h4>Information:</h4>
+        <p> 
+            You accepted an offer regarding the following  
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>property</a></strong>
+            for the ammount of <strong>$${data.offer}</strong>.
+        </p>
+
+        <p> 
+            We are sorry to see that the meeting will not be completed. This offer is terminated!
+        </p>
+
+        <p> 
+            Please feel free to eliminate this offer from you inbox!
+        </p>
+
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.email,
+        subject: "Your Meeting Has Been Canceled!!",
+        name: data.ownerName,
+        html,
+    };
+}
+
+export const SendEmailToAdminOnClientMeetingCancelation = (data: any) => {
     const html = `
     <h3> Dear admin, </h3>
     <p>The client ${data.name} has canceled a meeting.</p>

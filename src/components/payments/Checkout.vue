@@ -10,7 +10,7 @@
             </p>
         </div>
         <div v-else >
-            <h4>
+            <h4 style="margin: 0 10%;">
                     FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
                     please read our <a href="#"> Terms & Conditions. </a>
             </h4>
@@ -70,7 +70,6 @@ export default {
     name: 'Checkout',
     computed: {
         ...mapGetters([
-            'isPaymentSucceededOnOffer',
         ]),
     },
     data(){
@@ -148,6 +147,9 @@ export default {
             'updateRoom',
             'sendEmail'
         ]),
+        // onClickButton (event) {
+        //     this.$emit('clicked', 'someValue')
+        // },
         handleChange(event) {
             var displayError = document.getElementById('card-errors');
             displayError.textContent = (event.error ? event.error.message : '')
@@ -208,6 +210,13 @@ export default {
                     this.paymentSucceeded = true
                     this.sendEmail(userEmailData);
                     this.sendEmail(clientEmailData)
+                    const {secretId} = this.$router.history.current.params;
+                    this.updateRoom({
+                        objectId: secretId,
+                        meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
+                    })
+                    this.updateOffer(this.offerData);
+                    this.$emit('paymentSucceeded', this.paymentSucceeded)
                     this.startCountDownTimer();
                 } else{
                     console.log("Donation Payment")
@@ -216,13 +225,6 @@ export default {
         },
         startCountDownTimer() {
             if(this.countDown === 0){
-                const {secretId} = this.$router.history.current.params;
-                this.updateRoom({
-                    objectId: secretId,
-                    meetingsPending: this.$store.getters.currentUser.meetingsPending + 1,
-                })
-                // this.SET_COUNTDOWN(false);
-                this.updateOffer(this.offerData);
                 this.$router.push('/')
             }
             if(this.countDown > 0) {

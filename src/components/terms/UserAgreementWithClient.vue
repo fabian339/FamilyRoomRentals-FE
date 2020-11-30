@@ -133,7 +133,7 @@ export default {
 
                 let token = jwt.sign({
                   iat: Math.floor(new Date()),
-                  exp: new Date().setDate(new Date().getDate() + 7),
+                  exp: new Date().setDate(new Date().getDate() + 60),
                   data: { 
                       name: this.$store.getters.currentOffer.full_name 
                     }

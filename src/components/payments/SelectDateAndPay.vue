@@ -6,119 +6,9 @@
         </div>
         <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
         <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
-        <div v-else-if="this.$store.getters.currentOffer.meetingScheduled">
-            <!-- if the meeting is not cancelled add meething have not passed -->
-            <div v-if="!currentOffer.processCancelled && !currentOffer.didMeetingPassed">
-                <div class="meetingTicket">
-                    <h2>{{data.name}}, here is you meeting information:</h2>
-                    <v-row class="text-center" justify="center" style="align-items: center;">
-                        <div style="width: 275px;">
-                            <img 
-                                :src="this.$store.getters.contentRoom.images.length > 0 ? this.$store.getters.contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
-                                alt="roomPhoto" 
-                                width="150" 
-                                height="100"
-                                style="border: 1px solid; margin: 30px;"
-                            />
-                            <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
-                        </div>
-                        <div style="width: 275px;">
-                            <h3>When: </h3>
-                            <p class="font"> 
-                                Meeting Scheduled for {{currentOffer.officialMeetingDate.date}} 
-                                at {{currentOffer.officialMeetingDate.time}}!
-                            </p>
-                        </div>
-                        <div style="width: 275px;">
-                            <h3>Where: </h3>
-                            <div>
-                                <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
-                            </div>
-                            <p class="font" >
-                                {{this.$store.getters.contentRoom.location.street1}}, 
-                                {{this.$store.getters.contentRoom.location.street2}},
-                                {{this.$store.getters.contentRoom.location.city}},
-                                {{this.$store.getters.contentRoom.location.state}},
-                                {{this.$store.getters.contentRoom.location.zipCode}},
-                                {{this.$store.getters.contentRoom.location.country}}
-                            </p>
-                            <v-btn color="teal" small dark @click="openAddress">
-                                Open Address
-                            </v-btn>
-                        </div>
-                    </v-row>
-                </div>
-                <div>
-                    <v-btn small style="margin: 30px 15px 0px 0px" color="error" @click.stop="showCancelationWarning = true">Cancel Meeting</v-btn>
-                    <v-btn small style="margin: 30px 0px 0px 15px" color="#66CDAA">Check In Meeting</v-btn>
-                </div>
-            </div>
-            <div v-else>
-                <div v-if="this.$store.getters.contentRoom.processCancelled">
-                    <h1 style="color: brown; font-style: italic; text-align: center; margin:5px">
-                        Unfortunatelly, the meeting on {{this.$store.getters.currentOffer.officialMeetingDate.date}} 
-                        at {{this.$store.getters.currentOffer.officialMeetingDate.time}} has been cancelled.
-                    </h1>
-                    <p>
-                        We are sorry for this inconvenience, <strong>but HEY</strong>, there is a property 
-                        for everyone. Keep sending offers.
-                    </p>
-                </div>
-                <h1 
-                    v-if="currentOffer.didMeetingPassed"
-                    style="color: brown; font-style: italic; text-align: center; margin:5px"
-                >
-                    The meeting on {{this.$store.getters.currentOffer.officialMeetingDate.date}} 
-                    at {{this.$store.getters.currentOffer.officialMeetingDate.time}} has passed.
-                </h1>
-            </div>
-            <v-dialog
-                v-model="showCancelationWarning"
-                max-width="450px"
-            >
-                <v-card>
-                    <v-card-title class="headline">Are you sure you want to cancel the meeting process?</v-card-title>
-                        <v-card-text>
-                            CONCEQUENCES:
-                        </v-card-text>
-                        <v-card-text>
-                            At FamilyRoomRentals, we depend on users posting and sharing their properties. 
-                            Cancelling a pending meeting could result in the lost of revenue and potentially losing the user. 
-                            <strong>
-                                As a concequence of cancelling a pending meeting, we will charge a fee of $5 as the user 
-                                dedicated his/her time to look foward for this meeting. Please read FamilyRoomRentals properyy's 
-                                Terms & Conditions for more details.
-                            </strong>
-                        </v-card-text>
-                    <v-card-text>
-                        Once this is done, we cannot undo this action. Do you want to continue?
-                    </v-card-text>
-
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn
-                        color="green darken-1"
-                        text
-                        @click.stop="showCancelationWarning = false"
-                    >
-                        Cancel
-                    </v-btn>
-
-                    <v-btn
-                        color="green darken-1"
-                        text
-                        @click.stop="cancelMeeting"
-                    >
-                        Continue
-                    </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </div>
         <v-col v-else lg="12" > 
-            <h2 v-if="!showPayment" class="headline font-weight-bold mb-3">
-                {{data.name}}, you are a few steps away!
+            <h2 class="headline font-weight-bold mb-3">
+                {{(showDates && !currentOffer.meetingScheduled) ? `${data.name}, you are a few steps away!` : `${(showTicket || processCanceledByClient) ? '' : `Welcome ${data.name}!`}`}}
             </h2> 
             <v-progress-circular
                 v-if="isContentLoading"
@@ -128,8 +18,8 @@
                 indeterminate
             >
             </v-progress-circular>
-            <v-row class="text-center" justify="center">
-                <v-col lg="4" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
+            <v-row class="text-center" justify="center" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
+                <v-col lg="4">
                     <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
                     <form>
                         <v-text-field
@@ -148,7 +38,7 @@
                     </form>
                 </v-col>
             </v-row>
-            <div v-if="!isContentLoading && isOfferTokenVerified && showDates">
+            <div v-if="!isContentLoading && isOfferTokenVerified && showDates && !currentOffer.meetingScheduled">
                 <h3 style="margin: 10px 0px;">Please select an available date: </h3>
                 <v-radio-group v-model="dateSelectedIndex" style="display: inline-block;">
                         <div v-for="(date, index) in currentOffer.meetingDates" :key="index + 60">
@@ -168,84 +58,160 @@
                 <p style="color: red">{{selectDateError}}</p>
             </div>
             <v-btn 
-                v-if="isOfferTokenVerified && !isPaymentSucceededOnOffer" 
+                v-if="isOfferTokenVerified && !paymentCompleted && !confirmedDate && !currentOffer.meetingScheduled" 
                 color="#66CDAA"
-                :disabled="confirmedDate"
                 @click.stop="onDateSelect">
                     {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
             </v-btn>
-            <div v-if="showPayment">
-                <div v-if="!this.showDates" class="confirmation">
-                    <h2>{{isPaymentSucceededOnOffer ? 'Its Done, Meeting Confirmed!!' : 'The Service:'}}</h2>
-                    <v-row class="text-center" justify="center" style="align-items: center;">
-                        <div style="width: 275px;">
-                            <img 
-                                :src="this.$store.getters.contentRoom.images.length > 0 ? this.$store.getters.contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
-                                alt="roomPhoto" 
-                                width="150" 
-                                height="100"
-                                style="border: 1px solid; margin: 30px;"
-                            />
-                            <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
-                        </div>
-                        <div style="width: 275px;">
-                            <h3>When: </h3>
-                            <p class="font">
-                                {{new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}},
-                                at {{currentOffer.meetingDates[dateSelectedIndex].time}}
-                            </p>
-                        </div>
-                        <div style="width: 275px;">
-                            <h3>Where: </h3>
-                            <div>
-                                <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
+            <div v-if="currentOffer.meetingScheduled || showTicket">
+                <div v-if="!currentOffer.processCanceled && !currentOffer.didMeetingPassed">
+                    <div class="confirmation">
+                        <h2>{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
+                                `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
+                            )}}
+                        </h2>
+
+                        <v-row class="text-center" justify="center" style="align-items: center;">
+                            <div style="width: 275px;">
+                                <img 
+                                    :src="contentRoom.images.length > 0 ? contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
+                                    alt="roomPhoto" 
+                                    width="150" 
+                                    height="100"
+                                    @click.stop="openRoom"
+                                    class="roomPhoto"
+                                />
+                                <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
                             </div>
-                            <p class="font" >
-                                {{this.$store.getters.contentRoom.location.street1}}, 
-                                {{this.$store.getters.contentRoom.location.street2}},
-                                {{this.$store.getters.contentRoom.location.city}},
-                                {{this.$store.getters.contentRoom.location.state}},
-                                {{this.$store.getters.contentRoom.location.zipCode}},
-                                {{this.$store.getters.contentRoom.location.country}}
-                            </p>
-                            <v-btn color="teal" small dark @click="openAddress">
-                                Open Address
-                            </v-btn>
-                        </div>
-                    </v-row>
+                            <div style="width: 275px;">
+                                <h3>When: </h3>
+                                <p class="font"> 
+                                    {{currentOffer.meetingScheduled ? (
+                                        `Meeting Scheduled for ${currentOffer.officialMeetingDate.date} 
+                                    at ${currentOffer.officialMeetingDate.time}`) : (
+                                        `${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()},
+                                    at ${currentOffer.meetingDates[dateSelectedIndex].time}`
+                                    )}}
+                                </p>
+                            </div>
+                            <div style="width: 275px;">
+                                <h3>Where: </h3>
+                                <div>
+                                    <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
+                                </div>
+                                <p class="font" >
+                                    {{contentRoom.location.street1}}, 
+                                    {{contentRoom.location.street2}},
+                                    {{contentRoom.location.city}},
+                                    {{contentRoom.location.state}},
+                                    {{contentRoom.location.zipCode}},
+                                    {{contentRoom.location.country}}
+                                </p>
+                                <v-btn color="teal" small dark @click.stop="openAddress">
+                                    Open Address
+                                </v-btn>
+                            </div>
+                        </v-row>
+                    </div>
+                    <div v-if="currentOffer.meetingScheduled && !showTicket">
+                        <v-btn style="margin: 15px" color="red" @click.stop="showCancelationWarning = true">Cancel Meeting</v-btn>
+                        <v-btn style="margin: 15px" color="#66CDAA">Check-In Meeting</v-btn>
+                    </div>
                 </div>
-                
+                <div v-else>
+                    <div v-if="currentOffer.processCanceled">
+                        <h1 style="color: brown; font-style: italic; text-align: center; margin:5px">
+                            {{processCanceledByClient ? ('Meeting canceled succesfully!') : (
+                                `Unfortunatelly, the meeting on ${currentOffer.officialMeetingDate.date} 
+                                at ${currentOffer.officialMeetingDate.time} was canceled.`
+                            )}}
+                        </h1>
+                        <p v-if="!processCanceledByClient">
+                            We are sorry for this inconvenience, <strong>but HEY</strong>, there is a property 
+                            for everyone. Keep sending offers at <router-link to="/" target="_blank">FamilyRoomRentals</router-link>.
+                        </p>
+                    </div>
+                    <h1 
+                        v-if="currentOffer.didMeetingPassed"
+                        style="color: brown; font-style: italic; text-align: center; margin:5px"
+                    >
+                        The meeting on {{currentOffer.officialMeetingDate.date}} 
+                        at {{currentOffer.officialMeetingDate.time}} has passed.
+                    </h1>
+                </div>
                 <v-btn 
                     color="#9acd32"
-                    v-if="!this.showDates && !confirmedDate" 
+                    v-if="showTicket && !confirmedDate" 
                     @click.stop="confirmedDate = true"
                 > 
                     Confirm Information 
                 </v-btn>
-                    
-                <div v-if="confirmedDate">
-                    <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
-                    <Checkout :offerData="{
-                            roomAddress: {
-                                street1: this.$store.getters.contentRoom.location.street1, 
-                                street2: this.$store.getters.contentRoom.location.street2,
-                                city: this.$store.getters.contentRoom.location.city,
-                                state: this.$store.getters.contentRoom.location.state,
-                                zipCode: this.$store.getters.contentRoom.location.zipCode,
-                                country: this.$store.getters.contentRoom.location.country
-                            },
-                            officialMeetingDate: {
-                                date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
-                                time: currentOffer.meetingDates[dateSelectedIndex].time
-                            },
-                            whenWasMeetingScheduled: new Date(),
-                            meetingScheduled: true,
-                            readByReceiver: false,
-                            status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
-                            objectId: this.$store.getters.currentOffer.objectId,
-                            token: this.$store.getters.currentOffer.offerToken
-                        }"/>
-                </div>
+                <v-dialog
+                    v-model="showCancelationWarning"
+                    max-width="450px"
+                >
+                    <v-card>
+                        <v-card-title class="headline">Are you sure you want to cancel the meeting process?</v-card-title>
+                            <v-card-text>
+                                IMPORTANT:
+                            </v-card-text>
+                            <v-card-text>
+                                At FamilyRoomRentals, we depend on users posting and sharing their properties. 
+                                Canceling a pending meeting could result in the lost of revenue and potentially losing the user. 
+                                <strong>
+                                    As a concequence of canceling a pending meeting, we will charge a fee of $5 as the user 
+                                    dedicated his/her time to look foward for this meeting. Please read FamilyRoomRentals properyy's 
+                                    Terms & Conditions for more details.
+                                </strong>
+                            </v-card-text>
+                        <v-card-text>
+                            Once this is done, we cannot undo this action. Do you want to continue?
+                        </v-card-text>
+
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click.stop="showCancelationWarning = false"
+                        >
+                            Cancel
+                        </v-btn>
+
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click.stop="cancelMeeting"
+                        >
+                            Continue
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </div>
+            <div v-if="confirmedDate">
+                <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
+                <Checkout @paymentSucceeded="checkPayment" :offerData="{
+                        roomAddress: {
+                            street1: this.$store.getters.contentRoom.location.street1, 
+                            street2: this.$store.getters.contentRoom.location.street2,
+                            city: this.$store.getters.contentRoom.location.city,
+                            state: this.$store.getters.contentRoom.location.state,
+                            zipCode: this.$store.getters.contentRoom.location.zipCode,
+                            country: this.$store.getters.contentRoom.location.country
+                        },
+                        officialMeetingDate: {
+                            date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
+                            time: currentOffer.meetingDates[dateSelectedIndex].time
+                        },
+                        whenWasMeetingScheduled: new Date(),
+                        meetingScheduled: true,
+                        readByReceiver: false,
+                        status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
+                        objectId: this.$store.getters.currentOffer.objectId,
+                        token: this.$store.getters.currentOffer.offerToken
+                    }"/>
             </div>
         </v-col>
     </v-row>
@@ -255,7 +221,7 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
-import { SendEmailToClientOnMeetingCancelled, SendEmailToOwnerOnMeetingCancelled, SendEmailToAdminOnMeetingCancelation } from '../../globals/emails'
+import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../globals/emails'
 import Checkout from './Checkout'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
@@ -266,21 +232,23 @@ import Checkout from './Checkout'
       ...mapGetters([
         'isContentLoading',
         'currentOffer',
+        'contentRoom',
         'offerErrors',
         'isOfferTokenVerified',
-        'isPaymentSucceededOnOffer'
       ])
     },
     data () {
         return {
             data: {},
+            showTicket: false,
+            paymentCompleted: false,
             showCancelationWarning: false,
             tokenExpired: false,
             tokenError: false,
             id: '',
             showForm: true,
             showDates: false,
-            // roomImages: [],
+            processCanceledByClient: false,
             // roomLocation: {},
             selectDateError: '',
             dateSelectedIndex: '',
@@ -307,9 +275,6 @@ import Checkout from './Checkout'
             else this.data = decoded.data
         }
     },
-    // created() {
-    //        this.countDownTimer()
-    //     },
     methods:{
         ...mapActions([
             'getOffer',
@@ -332,10 +297,15 @@ import Checkout from './Checkout'
                 this.showDates = true;
             }
         },
+        checkPayment(value){
+            if(value){
+                this.paymentCompleted = value
+            }
+        },
         onDateSelect(){
             if(this.dateSelectedIndex === '') this.selectDateError = 'You must select a date!'
             else {
-                this.showPayment = true; 
+                this.showTicket = !this.showTicket; 
                 this.showDates = !this.showDates
                 this.selectDateError = ''
             }
@@ -345,55 +315,59 @@ import Checkout from './Checkout'
             this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
             window.open(this.roomAddress, '_blank');
         },
-        cancelMeeting(){
+       async cancelMeeting(){
             //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
-            //else send email to both parties cancelling meeting
-            let clientEmailData = SendEmailToClientOnMeetingCancelled({
-                email: this.$store.getters.currentOffer.email,
-                name: this.$store.getters.currentOffer.full_name,
-                ownerName: this.$store.getters.currentOffer.ownerName,
-                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
-                status: this.$store.getters.currentOffer.status,
-                offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
+            //else send email to both parties canceling meeting
+            let clientEmailData = SendEmailToClientOnMeetingCanceledByClient({
+                email: this.currentOffer.email,
+                name: this.currentOffer.full_name,
+                ownerName: this.currentOffer.ownerName,
+                meetingScheduled: this.currentOffer.meetingScheduled,
+                status: this.currentOffer.status,
+                offer: this.currentOffer.offer,
+                roomId: this.currentOffer.roomId,
             });
 
-            let ownerEmailData = SendEmailToOwnerOnMeetingCancelled({
-                email: this.$store.getters.currentOffer.ownerEmail,
-                name: this.$store.getters.currentOffer.full_name,
-                ownerName: this.$store.getters.currentOffer.ownerName,
-                meetingScheduled: this.$store.getters.currentOffer.meetingScheduled,
-                status: this.$store.getters.currentOffer.status,
-                offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
+            let ownerEmailData = SendEmailToOwnerOnMeetingCanceledByClient({
+                email: this.currentOffer.ownerEmail,
+                name: this.currentOffer.full_name,
+                ownerName: this.currentOffer.ownerName,
+                meetingScheduled: this.currentOffer.meetingScheduled,
+                status: this.currentOffer.status,
+                offer: this.currentOffer.offer,
+                roomId: this.currentOffer.roomId,
             });
 
-            let adminEmailData = SendEmailToAdminOnMeetingCancelation({
+            let adminEmailData = SendEmailToAdminOnClientMeetingCancelation({
                 email: 'familyroomrentals@dr.com',
-                name: this.$store.getters.currentOffer.full_name,
-                offerId: this.$store.getters.currentOffer.objectId
+                name: this.currentOffer.full_name,
+                offerId: this.currentOffer.objectId
             });
-            // console.log(clientEmailData)
-            this.sendEmail(clientEmailData);
-            this.sendEmail(ownerEmailData);
-            this.sendEmail(adminEmailData);
+            console.log(clientEmailData,ownerEmailData)
+            await this.sendEmail(clientEmailData);
+            await this.sendEmail(ownerEmailData);
+            //send email to admin to proccess cancelation feed
+            await this.sendEmail(adminEmailData);
 
-            this.updateOffer({
-                objectId: this.$store.getters.currentOffer.objectId,
+            await this.updateOffer({
+                objectId: this.currentOffer.objectId,
                 cancellationDate: new Date(),
-                processCancelled: true,
-                status: 'Meeting proccess cancelled!'
+                processCanceled: true,
+                processCanceledByClient: true,
+                chargeCancelationFeeToClient: true,
+                readByReceiver: false,
+                status: `Meeting proccess canceled by ${this.currentOffer.full_name}!`
             })
 
-            this.updateRoom({
-                objectId: this.$store.getters.contentRoom.objectId,
-                chargeCancelationFeed: true,
-                meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
+            await this.updateRoom({
+                objectId: this.contentRoom.objectId,
+                meetingsPending: this.contentRoom.meetingsPending > 0 ? this.contentRoom.meetingsPending - 1 : 0
             })
-
-            //send email to admin to change cancelation feed
-
+            this.processCanceledByClient = true
             this.showCancelationWarning = false
+        },
+        openRoom(){
+            window.open(`https://familyroomrentals.com/#/room/${this.contentRoom.objectId}`, '_blank');
         }
     }
   }
@@ -418,5 +392,13 @@ import Checkout from './Checkout'
         border: 2px dashed powderblue;
         padding: 15px;
         border-radius: 5px;
+    }
+    .roomPhoto{
+        border: 1px solid; 
+        margin: 30px;
+    }
+    .roomPhoto:hover{
+        border: 5px solid; 
+        cursor: pointer;
     }
 </style>
