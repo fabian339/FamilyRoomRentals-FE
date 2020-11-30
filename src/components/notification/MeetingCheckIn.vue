@@ -3,6 +3,7 @@
         <v-dialog
             v-model="show"
             width="650px"
+            persistent
         >
             <v-progress-linear
             v-if="showLoading && !loadingFinished"
@@ -32,6 +33,13 @@
                             `Thank you for checking-in, please wait for ${currentOffer.ownerName} to check-in to start the meeting!`
                         )}}
                     </h2>
+
+                    <v-btn
+                        style="margin: 5px 5px;"
+                        color="#556B2F"
+                        @click.stop="show = false">
+                        close
+                    </v-btn> 
                 </div>
 
                 <v-card-actions v-if="!loadingFinished" style="margin-top: -25px; margin-left: 10px;">
@@ -98,7 +106,8 @@ export default {
     },
     methods: {
         ...mapActions([
-            'updateOffer'
+            'updateOffer',
+            'sendEmail'
         ]),
         registerMeeting(){
             // console.log(this.user)
