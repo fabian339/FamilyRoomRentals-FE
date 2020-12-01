@@ -9,7 +9,7 @@
         <div v-if="currentOffer.offerAcceptedByOwner || currentOffer.offerRejectedByOwner || this.$store.getters.contentRoom.meetingsPending >= 2">
                 <h1 style="color: brown; font-style: italic; text-align: center;">
                         {{this.$store.getters.contentRoom.meetingsPending >= 2 ? (
-                            "You already have two or more meetings pending for this property. Please complete those meetings before scheduling new meetings!"
+                            "You already have two or more meetings pending for this property. If you completed such meetings, make sure to submit the follow-up questions. Otherwise, please complete those meetings before scheduling new ones! "
                             ) :
                             currentOffer.offerAcceptedByOwner ? (
                             `This offer has been accepted and a schedule was already provided!`) : (

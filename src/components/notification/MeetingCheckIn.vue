@@ -35,8 +35,8 @@
                     </h2>
 
                     <v-btn
-                        style="margin: 5px 5px;"
-                        color="#556B2F"
+                        style="margin: 10px 0;"
+                        color="#a9a9a9"
                         @click.stop="show = false">
                         close
                     </v-btn> 
@@ -71,7 +71,7 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-// import { } from '../../globals/emails'
+import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../globals/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
@@ -114,6 +114,15 @@ export default {
             // check that time match before actually checking in
             if(this.user === 'owner'){
                 //send email to client on check-in
+                const clientEmailData = SendEmailToClientOnOwnerCheckIn({
+                    email: this.currentOffer.email,
+                    name: this.currentOffer.full_name,
+                    ownerName: this.currentOffer.ownerName,
+                    roomId: this.currentOffer.roomId,
+                    token: this.currentOffer.token,
+                    verificationId: this.currentOffer.objectId
+                })
+                this.sendEmail(clientEmailData)
                 this.updateOffer({
                     objectId: this.currentOffer.objectId,
                     ownerCheckedInMeeting: true,
@@ -123,6 +132,12 @@ export default {
             }
             if(this.user === 'client'){
                 //send email to owner on check-in
+                const ownerEmailData = SendEmailToOwnerOnClientrCheckIn({
+                    ownerEmail: this.currentOffer.ownerEmail,
+                    name: this.currentOffer.full_name,
+                    ownerName: this.currentOffer.ownerName,
+                })
+                this.sendEmail(ownerEmailData)
                 this.updateOffer({
                     objectId: this.currentOffer.objectId,
                     clientCheckedInMeeting: true,

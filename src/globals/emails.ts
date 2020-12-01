@@ -228,7 +228,6 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
     };
 }
 
-
 export const SendEmailToUserOnMeetingScheduled = (data: any) => {
     const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
     // console.log("from email: ", data.logo)
@@ -757,4 +756,103 @@ return {
     name: 'FamilyRoomRentals',
     html,
 };
+}
+
+export const SendEmailToClientOnOwnerCheckIn = (data: any) => {
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+        <p> ${data.ownerName} has checked-in for the meeting! </p>
+
+        <p> If you haven't, please use your verification ID to check-in 
+            <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+        </p>
+
+        <p>Verification ID: <strong>${data.verificationId}</strong> - (you will need this ID to check-in the meeting!) </p>
+        
+        <h4>How to handle the meeting?</h4>
+        <p>
+            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
+            necessary while visiting ${data.ownerName}'s property. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please be on time </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please stay alert while visiting the property. </ul>
+        <ul> Verify that ${data.ownerName} has checked-in on the app before starting the meeting! </ul>
+        <ul> Stay Alert and be safe!! </ul>
+
+        <p>
+            Once the meeting is done, we will send you a follow up email to see how it went. 
+        </p>
+
+        <p> We wish you all the best on your meeting with ${data.ownerName}! </p>
+
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.email,
+        subject: "WOA Your meeting is about to start!!",
+        name: data.name,
+        html,
+    };
+}
+
+export const SendEmailToOwnerOnClientrCheckIn = (data: any) => {
+    const html = `
+        <h3> Dear ${data.ownerName}, </h3>
+        <p> ${data.name} has checked-in for the meeting! </p>
+
+        <p> If you haven't, please log-in into 
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">FamilyRoomRentals</a></strong>
+            in order to check-in.
+        </p>
+                
+        <h4>How to handle the meeting?</h4>
+        <p>
+            While dealing with a pandemic, receiving visitors could be challenging. Please take all the precautions
+            necessary while meeting with ${data.name}. 
+        </p>
+        <ul> Please wear a face covering </ul>
+        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
+        <ul> Please be on time </ul>
+        <ul> Please ask as many questions as possible  </ul>
+        <ul> Please stay alert while visiting the property. </ul>
+        <ul> Verify that ${data.name} has checked-in on the app before starting the meeting! </ul>
+        <ul> Stay Alert and be safe!! </ul>
+
+        <p>
+            Once the meeting is done, we will send you a follow up email and notification to see how it went. 
+        </p>
+        
+        <p> We wish you all the best on your meeting with ${data.name}! </p>
+
+        <p>Thank you for using FamilyRoomRentals</p>
+        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+    `;
+    return {
+        email: data.ownerEmail,
+        subject: "WOA Your meeting is about to start!!",
+        name: data.ownerName,
+        html,
+    };    
 }
