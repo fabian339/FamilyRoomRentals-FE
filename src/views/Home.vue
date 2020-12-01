@@ -87,8 +87,15 @@
                     <v-btn color="#ffbc00" @click.stop="selectRandomRoom">view ramdom room</v-btn>
                   </v-row>
                 </v-card>
-            </v-col>
+          </v-col>
         </v-row>
+        <v-col
+          class="mb-5"
+          cols="12"
+        >
+          <!-- date -->
+          <MeetingsCalendar />
+        </v-col>
     </v-container>
   </div>
 </template>
@@ -100,13 +107,16 @@ import Room from '@/components/Room/Room.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import ContentLoading from '@/components/layout/ContentLoading.vue';
+import MeetingsCalendar from '@/components/notification/MeetingsCalendar.vue';
+
 // const config = require('./config.json')
 export default {
   name: 'Home',
   components: {
     Room,
     SuccessAlert,
-    ContentLoading
+    ContentLoading,
+    MeetingsCalendar
   },
   computed: {
       ...mapGetters([
