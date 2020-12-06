@@ -131,12 +131,7 @@ export default {
   },
 
   sendEmail: (context: any, emailData: any) => {
-    const path = ['/functions/sendEmailOne', '/functions/sendEmailTwo'];
-    let index = Math.random();
-    if(index < 0.5) index = Math.floor(index)
-    else index = Math.ceil(index)
-    
-    axios.post(path[index], emailData)
+    axios.post("https://familyroomrentals.b4a.app/scheduleEmail", emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
       console.log("Sending Email",res)

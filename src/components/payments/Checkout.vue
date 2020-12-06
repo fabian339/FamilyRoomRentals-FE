@@ -210,6 +210,10 @@ export default {
                     this.paymentSucceeded = true
                     this.sendEmail(userEmailData);
                     this.sendEmail(clientEmailData)
+                    // schedule reminders 2 before actual meeting
+                    
+                    // shcedule followup 2 afte meeting, one hour after meeting time, one date after meeting time
+
                     const {secretId} = this.$router.history.current.params;
                     this.updateRoom({
                         objectId: secretId,
@@ -235,7 +239,7 @@ export default {
             }
         },
         async PaymentIntent(){
-            return (await  axios.post('/functions/paymentIntent') );
+            return (await  axios.post('https://familyroomrentals.b4a.app/paymentIntent') );
         }
 
     }
