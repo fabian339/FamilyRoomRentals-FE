@@ -22,10 +22,10 @@
                 The following will be deleted:
                 <ol>
                   <li>All account information</li>
-                  <li>All rooms and information related to rooms</li>
-                  <li>All notifications</li>
+                  <li>All property shared</li>
+                  <li>All notifications/offers</li>
                   <li>All messages/conversations</li>
-                  <li>You will no longer receive notifications to email/phone</li>
+                  <li>You will no longer receive notifications to your attached email/phone</li>
                 </ol>
                 Do you want to continue?
             </v-card-text>
@@ -283,8 +283,9 @@ export default {
         if(this.$store.getters.currentUserRooms && this.$store.getters.currentUserRooms.length !== 0){
           this.$store.getters.currentUserRooms.forEach(room => roomIds.push(room.objectId));
         }
-        if(this.$store.getters.currentUserNotifications && this.$store.getters.currentUserNotifications.length !== 0){
-          this.$store.getters.currentUserNotifications.forEach(noti => notificationIds.push(noti.objectId));
+        if(this.$store.getters.currentUserOffers && this.$store.getters.currentUserOffers.length !== 0){
+          console.log("heree")
+          this.$store.getters.currentUserOffers.forEach(noti => notificationIds.push(noti.objectId));
         }
 
         console.log({

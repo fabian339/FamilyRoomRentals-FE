@@ -53,7 +53,8 @@ export default {
       delete user.ACL;
       context.commit('SET_USER', user)
       context.commit('AUTH_SUCCESS', token);
-      context.dispatch('fetchUserNotifications', user.objectId);
+      context.dispatch('fetchNotifications')
+      // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
       context.commit('SET_LOADING_USER', false);
   })
@@ -82,7 +83,8 @@ export default {
         if(appRouter.history.current.path !== '/profile'){
           localStorage.setItem('user-token', token);
           context.commit('AUTH_SUCCESS', token);
-          context.dispatch('fetchUserNotifications', user.objectId);
+          context.dispatch('fetchNotifications')
+          // context.dispatch('fetchUserNotifications', user.objectId);
           appRouter.push(`/profile`)
         }
       }
@@ -162,7 +164,7 @@ export default {
     axios.delete(`/users/${userData.userId}`)
     .then((res) => {
       if(userData.roomIds.length !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
-      if(userData.notificationIds.length !== 0) context.dispatch('deleteUserNotifications', userData.notificationIds);
+      if(userData.notificationIds.length !== 0) context.dispatch('deleteUserOffers', userData.notificationIds);
       context.dispatch('logout');
       context.commit('SET_USER_DELETED', true);
       context.commit('SET_LOADING_USER', false);
@@ -184,19 +186,6 @@ export default {
       });
     })
     // console.log(roomIds)
-  },
-
-  deleteUserNotifications: (context: any, notificationIds: []) => {
-    notificationIds.forEach(id => {
-      axios.delete(`/classes/Notifications/${id}`)
-      .then((res) => {
-        context.commit('DELETE_NOTIFICATION', id);
-      })
-      .catch((err) => {
-        context.commit('SET_CONTENT_ERROR', err);
-      });
-    })
-    // console.log(notificationIds)
   },
 
   logout(context: any) {

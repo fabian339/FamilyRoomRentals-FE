@@ -5,10 +5,10 @@
       <div class="logo" >
         <img :src="require('../../../config.json').imgLinks.logo" alt="logo" width="400">
       </div>
-      <div style="width: 100%; margin-bottom: 25px;" v-if="!showFilter">
+      <div style="width: 100%; margin-bottom: 25px;" v-if="!showFilter && contentRooms.length !== 0">
         <v-btn class="ma-2" color="#355f57" @click.stop="showFilter = true" dark >Filter</v-btn>
       </div>
-      <div id="filterContainer" v-else>
+      <div id="filterContainer" v-if="showFilter && contentRooms.length !== 0">
         <v-btn id="closeBtn" small color="red" @click.stop="showFilter = false" dark >x</v-btn>
         <h3>Filter by: </h3>
         <v-row class="text-center" justify="center">
@@ -57,10 +57,13 @@
         cols="12"
         style="marginTop: -30px"
       >
-        <h2 class="headline font-weight-bold mb-3">
+        <h2 class="headline font-weight-bold mb-3" v-if="contentRooms.length !== 0">
           All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
         </h2>
-        <v-container id="roomsContainer">
+        <h2 class="headline font-weight-bold mb-3" style="margin-top: 60px" v-if="contentRooms.length === 0">
+          No Properties Available!
+        </h2>
+        <v-container id="roomsContainer" v-if="contentRooms.length !== 0">
           <v-row no-gutters v-if="filterBy === 'Most Recent'">
             <v-col
               class="mb-8"

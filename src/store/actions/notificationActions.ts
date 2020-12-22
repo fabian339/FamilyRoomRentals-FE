@@ -21,16 +21,18 @@ export default {
     });
   },
 
-  fetchUserNotifications: (context: any, id: string) => {
+  fetchNotifications: (context: any, id: string) => {
     axios.get('/classes/Offers')
     .then((res) => {
-      let myNotifications:any = [];  
+      // let myNotifications:any = [];  
 
       res.data.results.forEach((offer: any)=> {
           if(appRouter.history.current.path.includes(`/offer/${offer.objectId}`)) context.commit('SET_OFFER', offer);
-          if(offer.receiverId === id) myNotifications.push(offer)
+          // if(offer.receiverId === id) myNotifications.push(offer)
       })
-      context.commit('SET_USER_NOTIFICATIONS', myNotifications);
+
+      context.commit('SET_NOTIFICATIONS', res.data.results)
+      // context.commit('SET_USER_NOTIFICATIONS', myNotifications);
       // console.log(appRouter.history)
     })
     .catch((err) => {
@@ -128,6 +130,19 @@ export default {
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', err);
     });
+  },
+
+  deleteUserOffers: (context: any, notificationIds: []) => {
+    notificationIds.forEach(id => {
+      axios.delete(`/classes/Offers/${id}`)
+      .then((res) => {
+        context.commit('DELETE_NOTIFICATION', id);
+      })
+      .catch((err) => {
+        context.commit('SET_CONTENT_ERROR', err);
+      });
+    })
+    // console.log(notificationIds)
   },
 
   sendEmail: (context: any, emailData: any) => {

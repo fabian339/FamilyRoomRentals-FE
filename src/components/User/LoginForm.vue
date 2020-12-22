@@ -42,15 +42,15 @@
             <v-spacer></v-spacer>
             
             <v-btn type="submit" color="#66CDAA">Login</v-btn>
-            <p style="color: red">{{userErrors.responseError}}</p>
+            <p style="color: red; margin: 10px 0 0 0;">{{userErrors.responseError}}</p>
             <div>
               <small>
-                  Forgot your password Reset it <router-link to="/password-reset">HERE</router-link>
+                  Forgot your password Reset it <router-link to="/password-reset">HERE.</router-link>
               </small>
             </div>
             <div>
               <small>
-                  Do not have an account? Don't wait Sign Up <router-link to="/signup">HERE </router-link>
+                  Do not have an account? Don't wait Sign Up <router-link to="/signup">HERE.</router-link>
               </small>
             </div>
         </form>
@@ -71,11 +71,21 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue'
   },
   computed: {
     ...mapGetters([
-      'userErrors',
+      // 'userErrors',
       'isPasswordResetEmailSent',
       'isEmailVerificationSent'
-    ])
-  },
+    ]),
+    //return errors when password or emails do not match
+    userErrors() {
+        return this.$store.getters.userErrors
+      }
+    },
+    watch: {
+      //watch for user error response, clear password if entered incorrectly
+      userErrors() {
+        this.password = ''
+      }
+    },
    data () {
       return {
         email: '',
@@ -84,6 +94,9 @@ import SuccessAlert from '@/components/notification/SuccessAlert.vue'
         value: String
       }
     },
+    // mounted(){
+    //   if(this.userErrors.responseError) this.password = '';
+    // },
      methods:{
         ...mapActions([                  // Add this
             'logInUser'

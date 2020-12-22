@@ -1,5 +1,9 @@
 export default {
     //NOTIFICATIONS
+    SET_NOTIFICATIONS: (state: any, offers: []) => {
+        state.notificationState.notifications = offers;
+    },
+
     SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
         state.notificationState.offerSentByClient = offerSentByClient;
         setTimeout(() => {
@@ -14,12 +18,12 @@ export default {
         }, 8000);
     },
     UPDATE_OFFER: (state: any, updateOfferData: any) => {
-        const index = state.notificationState.userNotifications.findIndex((offer:any = {} ) => offer.objectId === updateOfferData.objectId);
-        let tempOffer = state.notificationState.userNotifications[index];
+        const index = state.notificationState.notifications.findIndex((offer:any = {} ) => offer.objectId === updateOfferData.objectId);
+        let tempOffer = state.notificationState.notifications[index];
         for (const property in updateOfferData) {
           tempOffer[property] = updateOfferData[property]
         }
-        state.notificationState.userNotifications[index] = tempOffer;
+        state.notificationState.notifications[index] = tempOffer;
         state.notificationState.offer = tempOffer;
     },
     SET_OFFER: (state: any, offerData: any) => {
@@ -29,8 +33,8 @@ export default {
         state.notificationState.offerTokenVerified = offerVerified;
     },
     DELETE_NOTIFICATION: (state: any, notificationId: any) => {
-        const index = state.notificationState.userNotifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-        state.notificationState.userNotifications.splice(index, 1);
+        const index = state.notificationState.notifications.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.notificationState.notifications.splice(index, 1);
         state.notificationState.offerDeleted = true;
         setTimeout(() => {
           state.notificationState.offerDeleted = false;

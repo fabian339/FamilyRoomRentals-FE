@@ -36,7 +36,7 @@ export default new Vuex.Store({
       }, 
       notificationState: {
         offer: {},
-        userNotifications: [],
+        notifications: [],
         offerSentByClient: false,
         offerDeleted: false,
         offerTokenVerified: false,
@@ -68,7 +68,7 @@ export default new Vuex.Store({
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
-      currentUserOffers: state => state.notificationState.userNotifications.reverse(),
+      currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
       offerErrors: state => state.notificationState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations, ...NotificationMutations},

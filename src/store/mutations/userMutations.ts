@@ -49,9 +49,9 @@ export default {
         state.userState.errors = errors
     },
 
-    SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
-        state.notificationState.userNotifications = notifications
-    },
+    // SET_USER_NOTIFICATIONS: (state: any, notifications: object) => {
+    //     state.notificationState.userNotifications = notifications
+    // },
 
     CLEAR_USER_ERROR: (state: any) => {
         state.userState.errors = {}
