@@ -8,7 +8,7 @@
             md="10"
         >
             <h2> An email has been sent to {{this.$store.getters.currentUser.email}} for verification.</h2>
-            <h2> Please Verify email, then log back in! </h2>
+            <h2> Please Verify email, then <a @click.stop="$router.go(0)">reload</a> or log back in! </h2>
         </v-col>
     </v-row>
     <v-row class="text-center" justify="center">
@@ -23,9 +23,12 @@ import {mapActions} from 'vuex'
   export default {
 
     beforeMount(){
-        if(!this.$store.getters.currentUser.email || this.$store.getters.currentUser.email === ''){
-            this.$router.push('/login')
-        }
+        // if(!this.$store.getters.currentUser.email || this.$store.getters.currentUser.email === ''){
+        //     this.$router.push('/login')
+        // }
+        // if(!this.$store.getters.currentUser.emailVerified){
+        //     this.$router.push('/profile')
+        // }
     },
     methods: {
         ...mapActions([                  // Add this
@@ -38,7 +41,7 @@ import {mapActions} from 'vuex'
                 this.$router.push("/login")
             }
 
-        }
+        },
     }
   }
 </script>

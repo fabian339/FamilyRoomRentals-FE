@@ -8,7 +8,7 @@
             <div 
                 class="imageContainer"
                 :style="fullScreen ? 'height: 90vh; width: 100%' : 'height: 500px; width: 70%'"
-                 v-if="contentRoom.images && contentRoom.images.length > 0"
+                 v-if="contentRoom.images"
                  @click.stop="fullScreen = !fullScreen"
             >
                 <v-btn
@@ -40,7 +40,7 @@
             <v-row 
                 justify="center" 
                 style="margin: 0px 15%;" 
-                v-if="contentRoom.images && contentRoom.images.length > 0"
+                v-if="contentRoom.images"
             >                   
                 <div v-for="(image, index) in contentRoom.images" :key="image.street1">
                     <div @click.stop="imgToDisplayIndex = index" >
@@ -141,7 +141,7 @@
             <div style="padding: 15px;">
                 <h3>Description:</h3>
                 <p class="font" style="margin: 20px;"> {{contentRoom.description}} </p>
-                <div v-if="contentRoom.propertyRules.length > 0">
+                <div v-if="contentRoom.propertyRules">
                     <h3>Rules:</h3>
                     <div v-for="(rule, index) in contentRoom.propertyRules" :key="index + 10/3">
                         <span class="font">{{index+1}}) {{rule}}</span>
@@ -177,7 +177,7 @@
             <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
-            <p style="color: darkblue;"><strong># of Offers: {{contentRoom.offersAmount}}</strong></p>
+            <p style="color: darkblue;"><strong>Offers made: {{contentRoom.numberOfOffers}}</strong></p>
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
             <v-btn 

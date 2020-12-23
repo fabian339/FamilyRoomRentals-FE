@@ -2,13 +2,13 @@ interface Room {
   title: string,
   location: Location,
   price: number,
-  createdAt: string,
-  objectId: string,
-  updatedAt: string,
-  agreement: boolean, //terms and conditions
   description: string,
   ownerId: string,
-  images: string[]
+  ownerFname: string,
+  ownerLname: string,
+  ownerEmail: string,
+  ownerPhone: string,
+  agreementToShare: boolean, //terms and conditions
 }
 
 interface Location {
@@ -81,7 +81,7 @@ export const validateCreateRoom = (data: Room) => {
   if(isEmpty(data.location.country)) errors.country = 'Must not be empty';
 
   //validation for agreement
-  if(!(data.agreement)) errors.agreement = 'Must accept Terms and Conditions!';
+  if(!(data.agreementToShare)) errors.agreementToShare = 'Must accept Terms and Conditions!';
 
   //validation for price
   if(data.price < 0 || !data.price) errors.price = 'Must enter a positive amount';

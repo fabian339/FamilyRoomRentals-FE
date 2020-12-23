@@ -1,189 +1,206 @@
 <template>
-  <v-row class="text-center" justify="center">
-    <v-col cols="12" sm="10" md="8" lg="6">
-    <div class="logo" >
-        <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
-    </div>
-    <h2 class="headline font-weight-bold mb-3">
-        Publish Your Room
-    </h2>
-    <v-col class="mb-4">
-        <form
-          @submit="submit"
-        >
-            <v-text-field
-                ref="title"
-                v-model="title"
-                label="Room Title"
-                placeholder="Special Room Available in the NYC Area"
-                :error-messages="errors.title"
-            ></v-text-field>
-            <label> <strong>Location</strong> </label>
-            <v-text-field
-                ref="street1"
-                v-model="location.street1"
-                label="Street1"
-                placeholder="76 Columbus St"
-                :error-messages="errors.street1"
-            ></v-text-field>
-            <v-text-field
-                ref="street2"
-                v-model="location.street2"
-                label="Street2"
-                placeholder="Apt: 3b"
-                :error-messages="errors.street2"
-            ></v-text-field>
-            <v-text-field
-                ref="city"
-                v-model="location.city"
-                label="City"
-                placeholder="Brooklyn"
-                :error-messages="errors.city"
-            ></v-text-field>
-            <v-text-field
-                ref="state"
-                v-model="location.state"
-                label="State/Province/Region"
-                placeholder="NY"
-                :error-messages="errors.state"   
-            ></v-text-field>
-            <v-text-field
-                ref="zipCode"
-                v-model="location.zipCode"
-                label="ZIP / Postal Code"
-                type="number"
-                placeholder="75155"
-                :error-messages="errors.zipCode"
-            ></v-text-field>
-            <v-autocomplete
-                ref="country"
-                v-model="location.country"
-                :items="countries"
-                label="Country"
-                placeholder="Select..."
-                :error-messages="errors.country"   
-            ></v-autocomplete>
-            
-            <label> <strong>Description</strong> </label>
-            <v-spacer></v-spacer>
-
-            <v-textarea
-                name="input-7-1"
-                filled
-                label="Details of Property: (What you expect and what you are looking for)"
-                v-model="description"
-                :error-messages="errors.description"   
-            ></v-textarea>   
-
-            <label> <strong>Property Rules</strong> </label>
-            <v-row justify="center">
-                <v-col cols="6" style="display: inline-flex;" >
-                    <v-text-field
-                        ref="rule"
-                        v-model="tempRule"
-                        label="Example: No Pets"
-                        outlined
-                    ></v-text-field>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn 
-                                fab 
-                                color="#008080"
-                                dark
-                                @click="addRule"
-                                v-bind="attrs"
-                                v-on="on">
-                                    <v-icon dark>mdi-plus</v-icon>
-                            </v-btn>
-                        </template>
-                            <span>Add Rule</span>
-                     </v-tooltip>
-                </v-col>
-            </v-row>
-            <v-row style="margin-top: -35px; margin-bottom: 30px;" justify="center">
-                <div v-for="(item, index) in propertyRules" :key="index +10">
-                    <v-chip
-                        class="ma-2"
-                        close
-                        @click:close="propertyRules.splice(index, 1)"
-                    >
-                        {{item}}
-                    </v-chip>                
-                </div>
-            </v-row>
-
-            <label> <strong>Property Price</strong> </label>
-
-            <v-row justify="center">
-                <v-col cols="4">
-                    <v-text-field
-                        ref="price"
-                        v-model="price"
-                        type="number"
-                        label="Price"
-                        full-width
-                        prefix="$"
-                        suffix="/month"
-                        :error-messages="errors.price"   
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-
-            <label> Property Images </label>
-            <div>
-                <div style="margin-top: 20px">
-                        <v-icon large color="green darken-2">mdi-camera</v-icon>
-                    <input 
-                        type="file" 
-                        prepend-icon="mdi-camera" 
-                        accept="image/*" 
-                        :disabled="(6 - images.length) === 0" 
-                        @change="uploadImage">
-                </div>
-                <div id="imgContainer">
-                    <small>({{6 - images.length}} images reminding)</small>
-                    <v-row no-gutters>
-                        <v-col v-for="(image, index) in images" :key="image.street1">
-                            <div>
-                                <img :src="image" alt="img" width="150" height="100">
-                                <div class="my-2" @click="images.splice(index, 1)">
-                                    <v-btn small color="warning">Remove</v-btn>
-                                </div>
-                            </div>
-                        </v-col>
-                    </v-row>
-                </div>
-            </div>
-            <v-col
-                class="mb-12"
-                cols="12"
-                style="marginTop: 10px"
+    <ContentLoading  v-if="isContentLoading"/>
+    <v-row v-else class="text-center" justify="center">
+        <v-col cols="12" sm="10" md="8" lg="6">
+        <div class="logo" >
+            <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
+        </div>
+        <h2 class="headline font-weight-bold mb-3">
+            Publish Your Room
+        </h2>
+        <v-col class="mb-4">
+            <form
+            @submit="submit"
             >
-                <v-checkbox
-                    style="margin: 5px 0px 5px -15px;"
-                    v-model="checkbox"
-                    :error-messages="errors.agreement"
-                >
-                    <template slot="label">
-                    <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
-                    </template>
-                </v-checkbox>
+                <v-text-field
+                    ref="title"
+                    v-model="title"
+                    label="Room Title"
+                    placeholder="Special Room Available in the NYC Area"
+                    :error-messages="errors.title"
+                ></v-text-field>
+                <label> <strong>Location</strong> </label>
+                <v-text-field
+                    ref="street1"
+                    v-model="location.street1"
+                    label="Street1"
+                    placeholder="76 Columbus St"
+                    :error-messages="errors.street1"
+                ></v-text-field>
+                <v-text-field
+                    ref="street2"
+                    v-model="location.street2"
+                    label="Street2"
+                    placeholder="Apt: 3b"
+                    :error-messages="errors.street2"
+                ></v-text-field>
+                <v-text-field
+                    ref="city"
+                    v-model="location.city"
+                    label="City"
+                    placeholder="Brooklyn"
+                    :error-messages="errors.city"
+                ></v-text-field>
+                <v-text-field
+                    ref="state"
+                    v-model="location.state"
+                    label="State/Province/Region"
+                    placeholder="NY"
+                    :error-messages="errors.state"   
+                ></v-text-field>
+                <v-text-field
+                    ref="zipCode"
+                    v-model="location.zipCode"
+                    label="ZIP / Postal Code"
+                    type="number"
+                    placeholder="75155"
+                    :error-messages="errors.zipCode"
+                ></v-text-field>
+                <v-autocomplete
+                    ref="country"
+                    v-model="location.country"
+                    :items="countries"
+                    label="Country"
+                    placeholder="Select..."
+                    :error-messages="errors.country"   
+                ></v-autocomplete>
+                
+                <label> <strong>Description</strong> </label>
+                <v-spacer></v-spacer>
+
+                <v-textarea
+                    name="input-7-1"
+                    filled
+                    label="Details of Property: (What you expect and what you are looking for)"
+                    v-model="description"
+                    :error-messages="errors.description"   
+                ></v-textarea>   
+
+                <label> <strong>Property Rules</strong> </label>
+                <v-row justify="center">
+                    <v-col cols="6" style="display: inline-flex;" >
+                        <v-text-field
+                            ref="rule"
+                            v-model="tempRule"
+                            label="Example: No Pets"
+                            outlined
+                        ></v-text-field>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn 
+                                    fab 
+                                    color="#008080"
+                                    dark
+                                    @click="addRule"
+                                    v-bind="attrs"
+                                    v-on="on">
+                                        <v-icon dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </template>
+                                <span>Add Rule</span>
+                        </v-tooltip>
+                    </v-col>
+                </v-row>
+                <v-row style="margin-top: -35px; margin-bottom: 30px;" justify="center">
+                    <div v-for="(item, index) in propertyRules" :key="index +10">
+                        <v-chip
+                            class="ma-2"
+                            close
+                            @click:close="propertyRules.splice(index, 1)"
+                        >
+                            {{item}}
+                        </v-chip>                
+                    </div>
+                </v-row>
+
+                <label> <strong>Property Price</strong> </label>
+
+                <v-row justify="center">
+                    <v-col cols="4">
+                        <v-text-field
+                            ref="price"
+                            v-model="price"
+                            type="number"
+                            label="Price"
+                            full-width
+                            prefix="$"
+                            suffix="/month"
+                            :error-messages="errors.price"   
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <label> <strong>Property Images</strong> </label>
+                <div>
+                    <v-tooltip right>
+                        <template v-slot:activator="{ on, attrs }">
+                            <label 
+                                fab
+                                id="imgIconLabel" 
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                    <v-file-input
+                                        accept="image/*"
+                                        type="file"
+                                        @change="uploadImage"
+                                        :disabled="(6 - images.length) === 0" 
+                                    ></v-file-input>
+                                <v-icon id="cameraIcon">mdi-camera</v-icon>
+                            </label>
+                        </template>
+                            <span>{{(6 - images.length) === 0 ? 'Maximum amount of images' : 'Add Image'}}</span>
+                    </v-tooltip>
+                
+                    <p style="color: red" v-if="errors.image">{{errors.image}}</p>
+                    <p v-if="images.length === 0" style="color: #3c46d2">Images increase the chances of getting better offers!</p>
+
+                    <div id="imgContainer">
+                        <small>({{6 - images.length}} images reminding)</small>
+                        <v-row no-gutters class="text-center" justify="center">
+                            <!-- <v-col v-for="(image, index) in images" :key="image.street1"> -->
+                                <div v-for="(image, index) in images" :key="image.street1" style="margin: 5px">
+                                    <img :src="image" alt="img" width="150" height="100">
+                                    <div class="my-2" @click="images.splice(index, 1)">
+                                        <v-btn small color="warning">Remove</v-btn>
+                                    </div>
+                                </div>
+                            <!-- </v-col> -->
+                        </v-row>
+                    </div>
+                    <v-checkbox
+                        style="margin: 15px 15%;"
+                        v-model="checkbox"
+                        :error-messages="errors.agreementToShare"
+                    >
+                        <template slot="label">
+                        <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
+                        </template>
+                    </v-checkbox>
+                </div>
+                
                 <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
-            </v-col>
-        </form>
-    </v-col>
-    </v-col>
-  </v-row>
+
+            </form>
+        </v-col>
+        </v-col>
+    </v-row>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 // import noImageForRoom from './noImageForRoom'
+import ContentLoading from '@/components/layout/ContentLoading.vue';
 import {validateCreateRoom} from '../../store/validators'
 
   export default {
+    name: "shareRoom",
+    components: {
+        ContentLoading
+    },
     computed: {
       ...mapGetters([
         'currentUser',
+        'isContentLoading'
       ])
     },
     data () {
@@ -208,42 +225,57 @@ import {validateCreateRoom} from '../../store/validators'
       }
     }, 
     methods:{
-        uploadImage(e){
-            // console.log("Calling1..", e);
-            const image = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = e => this.images.push(e.target.result);
+        ...mapActions([                  // Add this
+            'shareRoom'
+        ]),
+        uploadImage(file){
+            //check if the file is an image
+            if(file) {
+                var pattern = /image-*/;
+                if(!file.type.match(pattern)){
+                    const error = {
+                        image: 'File type must be an image.'
+                    }
+                    this.errors = error;
+                } else {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = e => this.images.push(e.target.result);
+                    file = {}
+                    if(this.errors.image) delete this.errors.image
+                }
+            }
         },
+        // remove an image from array
         removePhoto(index){
-            console.log("Deleting photo",index)
+            // console.log("Deleting photo",index)
             this.images.splice(index, 1);
         },
-        ...mapActions([                  // Add this
-            'addRoom'
-        ]),
         submit(e) {
             e.preventDefault();
-            const room = {
+            let room = {
+                //required
                 title: this.title,
                 location: this.location,
-                propertyRules: this.propertyRules,
                 price: this.price,
                 description: this.description,
+                agreementToShare: this.checkbox,
                 ownerId: this.currentUser.objectId,
                 ownerFname: this.currentUser.fName,
                 ownerLname: this.currentUser.lName,
                 ownerEmail: this.currentUser.email,
-                ownerPhone: this.currentUser.phone,
-                rented: false,
-                offersAmount: 0,
-                images: this.images.length === 0 ? [] : this.images,
-                agreement: this.checkbox
+                ownerPhone: this.currentUser.phone
             }
+            //optionals
+            if(this.images.length > 0) room.images = this.images
+            if(this.propertyRules.length > 0) room.propertyRules = this.propertyRules
+
+            console.log(room)
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;
-            else this.addRoom(room)
+            else this.shareRoom(room)
         },
+        //add rule to property
         addRule(){
             if(this.tempRule !== ''){
                 this.propertyRules.push(this.tempRule);
@@ -255,12 +287,25 @@ import {validateCreateRoom} from '../../store/validators'
   }
 </script>
 
-
-
-
 <style scoped>
     #imgContainer{
         margin-top: 20px;
         border: 2px solid gainsboro;
+        margin: 0 15%;
+    }
+    #cameraIcon{
+        font-size: 50px;
+        color: #62807e;
+        margin: 10px;
+        transition: all 0.5s;
+    }
+
+    #cameraIcon:hover{
+        cursor: pointer;
+        transform: rotate(45deg);
+        /* transform: scale(1.3); */
+    }
+    #imgIconLabel div {
+        display: none;
     }
 </style>

@@ -6,7 +6,7 @@
     <v-img
       class="white--text align-end"
       height="200px"
-      v-bind:src="this.roomData.images.length === 0 ? 'https://i.ibb.co/t85JhCP/no-Room-Img.png' : this.roomData.images[0]"
+      v-bind:src="!this.roomData.images ? 'https://i.ibb.co/t85JhCP/no-Room-Img.png' : this.roomData.images[0]"
     >
     <div id="rented" v-if="this.roomData.rented && new Date() < new Date(new Date(this.roomData.rentedDate).setDate(new Date(this.roomData.rentedDate).getDate() + 2))">
       <v-card-title style="justify-content: center;"> Just Rented </v-card-title>

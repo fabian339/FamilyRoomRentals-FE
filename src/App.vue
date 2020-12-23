@@ -28,7 +28,7 @@ export default {
   },  
 
   created(){
-    axios.defaults.baseURL = "https://parseapi.back4app.com";
+    axios.defaults.baseURL = "https://familyroomrentals.b4a.io";
     axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
     axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
     axios.defaults.headers.common['Content-Type'] = 'application/json'
