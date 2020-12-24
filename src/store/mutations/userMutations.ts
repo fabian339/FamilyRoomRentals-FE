@@ -9,7 +9,7 @@ export default {
     SET_LOADING_USER: (state: any, status: boolean) => {
         state.userState.loadingUser = status
     },
-    AUTH_SUCCESS: (state: any, token: string) => {
+    SET_TOKEN: (state: any, token: string) => {
         state.userState.token = token;
     },
     USER_LOGOUT: (state: any) => {

@@ -17,7 +17,7 @@ import Schedule from '@/components/notification/Schedule.vue'
 import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
 import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
-
+// import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -57,6 +57,9 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     name: 'postRoom',
     component: PostRoom,
     beforeEnter: ifAuthenticated,
+    // meta: {
+    //   requiresAuth: true,
+    // }
   },
   {
     path: '/profile',
@@ -176,5 +179,16 @@ const router = new VueRouter({
   routes
 })
 
+// router.beforeEach((to: any, from: any, next: any) => {
+//   if (to.matched.some((record: any) => record.meta.requiresAuth)) {
+//     if (store.getters.isUserAuthenticated) {
+//       next()
+//       return
+//     }
+//     next('/login')
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

@@ -54,7 +54,7 @@ export default new Vuex.Store({
       isRoomDeleted: state => state.contentState.roomDeleted,
       //USER
       isUserLoading: state => state.userState.loadingUser,
-      isAuthenticated: state => !!state.userState.token,
+      isUserAuthenticated: (state: any) => !!state.userState.token && state.userState.user.emailVerified,
       currentUser: state => state.userState.user,
       isUserUpdated: state => state.userState.userUpdated,
       isUserDeleted: state => state.userState.userDeleted,

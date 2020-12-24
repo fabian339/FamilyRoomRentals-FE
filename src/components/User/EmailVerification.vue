@@ -7,12 +7,31 @@
         <v-col
             md="10"
         >
-            <h2> An email has been sent to {{this.$store.getters.currentUser.email}} for verification.</h2>
-            <h2> Please Verify email, then <a @click.stop="$router.go(0)">reload</a> or log back in! </h2>
+            <h2> 
+                An email has been sent to <span style="text-decoration: underline;">{{this.$store.getters.currentUser.email}}</span> 
+                for verification purposes.
+            </h2>
+            <h2> 
+                After verifying, please 
+                <a @click.stop="$router.go(0)">reload</a> this page or <a @click.stop="$router.push('/login')">log back in</a>
+                to start your journey with us!
+            </h2>
         </v-col>
     </v-row>
     <v-row class="text-center" justify="center">
-        <v-btn color="#66CDAA" style="margin: 20px;" @click.stop="resendEmailVerification">Re-send Email Verification</v-btn>    
+        <v-btn color="#66CDAA" style="margin: 20px;" @click.stop="resendEmailVerification">
+            <v-progress-circular
+                v-if="emailResent && this.$store.getters.isUserLoading"
+                indeterminate
+                color="#f4ffff"
+                :size="35"
+                :width="5"
+            ></v-progress-circular>
+            <span v-else>Re-send Email Verification</span>
+        </v-btn>    
+    </v-row>
+    <v-row v-if="emailResent" class="text-center" justify="center">
+        <p style="color: #00580f">Email Sent!</p>
     </v-row>
   </v-container> 
 </template>
@@ -21,24 +40,28 @@
 import {mapActions} from 'vuex'
 
   export default {
-
-    beforeMount(){
-        // if(!this.$store.getters.currentUser.email || this.$store.getters.currentUser.email === ''){
-        //     this.$router.push('/login')
-        // }
-        // if(!this.$store.getters.currentUser.emailVerified){
-        //     this.$router.push('/profile')
-        // }
+    name: "emailVerification",
+    data: () => {
+        return{
+            emailResent: false
+        }
+    },
+    beforeUpdate(){
+        // console.log("beforeupdate user is authenticated: ", this.isUserAuthenticated)
+        //once the email has been verified, direct user to profile page
+      if(this.$store.getters.isUserAuthenticated){
+            this.$router.push('/profile')
+        }
     },
     methods: {
         ...mapActions([                  // Add this
             'sendEmailVerification'
         ]),
+        //resent email to verify email
         resendEmailVerification(){
-            console.log("email veri",this.$store.getters.currentUser.email)
             if(this.$store.getters.currentUser.email){
                 this.sendEmailVerification({email: this.$store.getters.currentUser.email})
-                this.$router.push("/login")
+                this.emailResent = true
             }
 
         },

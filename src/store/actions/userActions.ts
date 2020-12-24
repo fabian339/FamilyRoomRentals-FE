@@ -3,7 +3,7 @@ import axios from 'axios';
 // import { User } from '../validators'
 import router from '../../router';
 let appRouter: any = router;
-
+// console.log(router.push("/"))
 export default {
 
   registerUser: (context: any, user: any) => {
@@ -14,19 +14,23 @@ export default {
     .then((res) => {
       let currentUser = {
         ...user,
-        ...res.data
+        ...res.data,
       };
       delete currentUser.password;
       delete currentUser.confirmPassword;
       context.commit('SET_USER', currentUser)
-      if(appRouter.history.current.path !== '/email-verification'){
+      console.log(res, currentUser)
+      localStorage.setItem('user-token', currentUser.sessionToken);
+      context.commit('SET_TOKEN', currentUser.sessionToken);
+      if(appRouter.history.current.path !== '/email-verification' ) {
         context.dispatch('sendEmailVerification', {email: currentUser.email})
         appRouter.push(`/email-verification`)
       }
-      context.commit('SET_LOADING_USER', false);
       context.commit('CLEAR_USER_ERROR')
+      context.commit('SET_LOADING_USER', false);
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log("Error: ", error)
       const err = {
         responseError: "Account already exists for this username or email address."
       }
@@ -44,7 +48,7 @@ export default {
       delete user.confirmPassword;
       delete user.ACL;
       context.commit('SET_USER', user)
-      context.commit('AUTH_SUCCESS', token);
+      context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
       // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
@@ -68,15 +72,15 @@ export default {
       delete user.confirmPassword;
       delete user.ACL;
       context.commit('SET_USER', user)
-
+      localStorage.setItem('user-token', token);
+      context.commit('SET_TOKEN', token);
+      context.dispatch('fetchNotifications')
+      //check if user's email is verified
       if(!user.emailVerified){
+        context.dispatch('sendEmailVerification', {email: user.email})
         appRouter.push(`/email-verification`)
       } else {
         if(appRouter.history.current.path !== '/profile'){
-          localStorage.setItem('user-token', token);
-          context.commit('AUTH_SUCCESS', token);
-          context.dispatch('fetchNotifications')
-          // context.dispatch('fetchUserNotifications', user.objectId);
           appRouter.push(`/profile`)
         }
       }
@@ -138,12 +142,12 @@ export default {
   },
 
   sendEmailVerification: (context: any, data: any) => {
-    // context.commit('SET_LOADING_USER', true);
+    context.commit('SET_LOADING_USER', true);
     axios.post(`/verificationEmailRequest`, data)
     .then((res) => {
       // console.log("email Sent Again: ", res);
-      // context.commit('EMAIL_VERIFICATION_SENT', true);
-      // context.commit('SET_LOADING_USER', false);
+      context.commit('EMAIL_VERIFICATION_SENT', true);
+      context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {
       context.commit('SET_USER_ERROR', err);
