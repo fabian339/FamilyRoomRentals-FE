@@ -50,13 +50,24 @@ import {mapActions} from 'vuex'
         // console.log("beforeupdate user is authenticated: ", this.isUserAuthenticated)
         //once the email has been verified, direct user to profile page
       if(this.$store.getters.isUserAuthenticated){
+            //set user authorized token
+            const token = localStorage.getItem('user-token');
+            let data = {
+                token,
+                userEmailVerified: true
+            }
+            this.setUserAuthorization(data)
             this.$router.push('/profile')
         }
     },
     methods: {
         ...mapActions([                  // Add this
-            'sendEmailVerification'
+            'sendEmailVerification',
+            'setUserAuthorization'
         ]),
+        authorizeUser(data){
+            this.setUserAuthorization(data)
+        },
         //resent email to verify email
         resendEmailVerification(){
             if(this.$store.getters.currentUser.email){

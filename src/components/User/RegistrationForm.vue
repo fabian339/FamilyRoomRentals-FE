@@ -63,6 +63,7 @@
                   placeholder="917"
                   v-model="phone1"
                   :rules="[() => !isNaN(phone1) || 'Must be a number']"
+                  maxlength="3"
                 ></v-text-field>
               </v-col>
               <span style="margin: 30px 0;">-</span>
@@ -74,6 +75,7 @@
                   placeholder="450"
                   v-model="phone2"
                   :rules="[() => !isNaN(phone2) || 'Must be a number']"
+                  maxlength="3"
                 ></v-text-field>
               </v-col>
               <span style="margin: 30px 0;">-</span>
@@ -85,6 +87,7 @@
                   placeholder="1452"
                   v-model="phone3"
                   :rules="[() => !isNaN(phone3) || 'Must be a number']"
+                  maxlength="4"
                 ></v-text-field>
               </v-col>
               <p v-if="formErrors.phone && formErrors.phone.length !== 0" style="color: red">{{formErrors.phone}}</p>

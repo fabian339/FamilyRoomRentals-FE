@@ -17,26 +17,32 @@ import Schedule from '@/components/notification/Schedule.vue'
 import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
 import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
-// import store from '../store'
+let jwt = require('jsonwebtoken');
 
 Vue.use(VueRouter)
 
-const ifAuthenticated = (to: any, from: any, next: any) => {
-  const token = localStorage.getItem('user-token');
-  if (token) {
+// decoding user-authorization token set on local storage to identify user access
+const ifAuthorized = (to: any, from: any, next: any) => {
+  const secretKey = localStorage.getItem('user-token');
+  const authToken = localStorage.getItem('AUTHORIZATION')
+  let valid = false;
+  try {
+    var decoded = jwt.verify(authToken, secretKey);
+  } catch(err) {
+    valid = false;
+  }
+  if(decoded){
+    console.log(decoded)
+    if(decoded.data.userToken === secretKey && decoded.data.emailVerified === true) valid = true;
+  }
+
+  if (valid) {
     next()
     return
   }
   next('/login')
 }
 
-// const reRender = (to: any, from: any, next: any) => {
-//   if (to.matched.some((record: any) => record.meta.reuse === false)) {
-//     next()
-//     return
-//   }
-//   next('/login')
-// }
 
   const routes = [
   {
@@ -56,7 +62,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     path: '/create-room',
     name: 'postRoom',
     component: PostRoom,
-    beforeEnter: ifAuthenticated,
+    beforeEnter: ifAuthorized,
     // meta: {
     //   requiresAuth: true,
     // }
@@ -68,13 +74,13 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
     // meta: {
     //   requiresAuth: true,
     // }
-    beforeEnter: ifAuthenticated,
+    beforeEnter: ifAuthorized,
   },
   {
     path: '/room/:roomId/offer/:offerId/schedule',
     name: 'Schedule',
     component: Schedule,
-    beforeEnter: ifAuthenticated,
+    beforeEnter: ifAuthorized,
   },
   {
     path: '/rooms',
@@ -178,17 +184,5 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
 const router = new VueRouter({
   routes
 })
-
-// router.beforeEach((to: any, from: any, next: any) => {
-//   if (to.matched.some((record: any) => record.meta.requiresAuth)) {
-//     if (store.getters.isUserAuthenticated) {
-//       next()
-//       return
-//     }
-//     next('/login')
-//   } else {
-//     next()
-//   }
-// })
 
 export default router

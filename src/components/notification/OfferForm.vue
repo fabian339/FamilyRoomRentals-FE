@@ -25,12 +25,54 @@
                     :error-messages="errors.email"   
                 ></v-text-field>
 
+
+<label for="phoneNumber" style="color: #0000008c">Enter Phone # Ex: (222-222-2222)</label>
+            <!-- phone number format -->
+            <v-row class="text-center" justify="center" style="margin: 0 0 -20px 0;">
+              <v-col
+                cols="3"
+              >
                 <v-text-field
+                  outlined
+                  placeholder="917"
+                  v-model="phone1"
+                  :rules="[() => !isNaN(phone1) || 'Must be a number']"
+                  maxlength="3"
+                ></v-text-field>
+              </v-col>
+              <span style="margin: 30px 0;">-</span>
+              <v-col
+                cols="3"
+              >
+                <v-text-field
+                  outlined
+                  placeholder="450"
+                  v-model="phone2"
+                  :rules="[() => !isNaN(phone2) || 'Must be a number']"
+                  maxlength="3"
+                ></v-text-field>
+              </v-col>
+              <span style="margin: 30px 0;">-</span>
+              <v-col
+                cols="3"
+              >
+                <v-text-field
+                  outlined
+                  placeholder="1452"
+                  v-model="phone3"
+                  :rules="[() => !isNaN(phone3) || 'Must be a number']"
+                  maxlength="4"
+                ></v-text-field>
+              </v-col>
+              <!-- <p v-if="formErrors.phone && formErrors.phone.length !== 0" style="color: red">{{formErrors.phone}}</p> -->
+            <!-- </v-row> -->
+            </v-row>
+                <!-- <v-text-field
                     v-model="phone"
                     label="Phone #: (212-222-2222)"
                     outlined
                     :error-messages="errors.phone"   
-                ></v-text-field>
+                ></v-text-field> -->
                 <label>This room is listed for ${{contentRoom.price}}/month, enter your offer </label>
                 <v-text-field
                     v-model="offer"
@@ -72,6 +114,9 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
       return {
         full_name: '',
         email: '',
+        phone1: '',
+        phone2: '',
+        phone3: '',
         phone: '',
         offer: '',
         openOfferAgreementDialog: false,
@@ -88,7 +133,7 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
             const clientOffer = {
                     full_name: this.full_name,
                     email: this.email,
-                    phone: this.phone,
+                    phone: `${this.phone1}-${this.phone2}-${this.phone3}`,
                     offer: this.offer,
                     receiverId: this.contentRoom.ownerId,
                     roomId: this.contentRoom.objectId,

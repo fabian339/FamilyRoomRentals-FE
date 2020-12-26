@@ -4,10 +4,10 @@ import './plugins/vuetify'
 import router from './router'
 import vuetify from './plugins/vuetify';
 import store from './store'
-import { sync } from 'vuex-router-sync'
+// import { sync } from 'vuex-router-sync'
 
 Vue.config.productionTip = false
-sync(store, router)
+// sync(store, router)
 
 new Vue({
   router,

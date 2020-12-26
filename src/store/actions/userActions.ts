@@ -3,6 +3,8 @@ import axios from 'axios';
 // import { User } from '../validators'
 import router from '../../router';
 let appRouter: any = router;
+let jwt = require('jsonwebtoken');
+
 // console.log(router.push("/"))
 export default {
 
@@ -48,7 +50,7 @@ export default {
       delete user.confirmPassword;
       delete user.ACL;
       context.commit('SET_USER', user)
-      context.commit('SET_TOKEN', token);
+      // context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
       // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
@@ -73,6 +75,10 @@ export default {
       delete user.ACL;
       context.commit('SET_USER', user)
       localStorage.setItem('user-token', token);
+
+      // set user authorization token to local storage, helper function
+      context.dispatch('setUserAuthorization', {token, userEmailVerified: user.emailVerified})
+
       context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
       //check if user's email is verified
@@ -184,9 +190,22 @@ export default {
     // console.log(roomIds)
   },
 
+  setUserAuthorization(context: any, data: any) {
+    let authToken = jwt.sign({
+      data: { 
+          userToken: data.token,
+          emailVerified: data.userEmailVerified
+        }
+      }, data.token);
+  
+    localStorage.setItem('AUTHORIZATION', authToken)
+  },
+
+
   logout(context: any) {
       context.commit('USER_LOGOUT')
       localStorage.removeItem('user-token')
+      localStorage.removeItem('AUTHORIZATION')
       if(appRouter.history.current.path !== '/'){
         appRouter.push(`/`)
       }
