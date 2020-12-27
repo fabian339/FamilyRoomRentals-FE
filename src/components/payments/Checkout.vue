@@ -138,7 +138,7 @@ export default {
         cardpostalCode.mount('#card-postalCode');
         cardpostalCode.on('change', this.handleChange);
         let paymentIntent = await this.PaymentIntent()
-        this.clientSecret = paymentIntent.data.result.clientSecret;
+        this.clientSecret = paymentIntent.data.clientSecret;
     },
        
     methods: {

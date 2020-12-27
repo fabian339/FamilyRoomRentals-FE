@@ -146,6 +146,17 @@ export default {
   },
 
   sendEmail: (context: any, emailData: any) => {
+    axios.post("https://familyroomrentals.b4a.app/sendEmail", emailData)
+    .then((res) => {
+      // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
+      console.log("Sending Email",res)
+    })
+    .catch((err) => {
+      context.commit('SET_OFFER_ERROR', err);
+    });
+  },
+  // schedule a email to be send in the future, espec a date object
+  scheduleEmail: (context: any, emailData: any) => {
     axios.post("https://familyroomrentals.b4a.app/scheduleEmail", emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);

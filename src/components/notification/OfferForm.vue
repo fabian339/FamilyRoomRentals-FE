@@ -26,7 +26,7 @@
                 ></v-text-field>
 
 
-<label for="phoneNumber" style="color: #0000008c">Enter Phone # Ex: (222-222-2222)</label>
+            <label for="phoneNumber" style="color: #0000008c">Enter Phone # Ex: (222-222-2222)</label>
             <!-- phone number format -->
             <v-row class="text-center" justify="center" style="margin: 0 0 -20px 0;">
               <v-col
@@ -64,15 +64,10 @@
                   maxlength="4"
                 ></v-text-field>
               </v-col>
-              <!-- <p v-if="formErrors.phone && formErrors.phone.length !== 0" style="color: red">{{formErrors.phone}}</p> -->
             <!-- </v-row> -->
             </v-row>
-                <!-- <v-text-field
-                    v-model="phone"
-                    label="Phone #: (212-222-2222)"
-                    outlined
-                    :error-messages="errors.phone"   
-                ></v-text-field> -->
+                <p v-if="errors.phone && errors.phone.length !== 0" style="color: red">{{errors.phone}}</p>
+
                 <label>This room is listed for ${{contentRoom.price}}/month, enter your offer </label>
                 <v-text-field
                     v-model="offer"
