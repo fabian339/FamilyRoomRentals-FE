@@ -63,6 +63,21 @@ import axios from 'axios';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import { mapActions, mapGetters } from 'vuex'
 import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../emailTemplates/emails'
+import {
+    SendReminder1ToClient,
+    SendReminder1ToUser,
+    SendReminder2ToClient,
+    SendReminder2ToUser,
+    SendCheckInReminderToClient,
+    SendCheckInReminderToUser,
+    SendFollowup1ToClient,
+    SendFollowup1ToUser,
+    SendFollowup2ToClient,
+    SendFollowup2ToUser,
+    SendFollowup3ToClient,
+    SendFollowup3ToUser
+    } from '../../emailTemplates/scheduleEmails'
+
 
 export default {
     props: ['offerData'],
@@ -145,7 +160,8 @@ export default {
         ...mapActions([
             'updateOffer',
             'updateRoom',
-            'sendEmail'
+            'sendEmail',
+            'scheduleEmail'
         ]),
         // onClickButton (event) {
         //     this.$emit('clicked', 'someValue')
@@ -178,54 +194,189 @@ export default {
                 // this.paymentSucceeded = true
                 // console.log(payload)
                 if(this.offerData){
-                    const clientEmailData = SendEmailToClientOnMeetingScheduled({
-                        email: this.$store.getters.currentOffer.email,
-                        // email: 'rzw17825@bcaoo.com',
-                        name: this.$store.getters.currentOffer.full_name,
-                        ownerName: this.$store.getters.currentOffer.ownerName,
-                        ownerEmail: this.$store.getters.currentOffer.ownerEmail,
-                        ownerPhone: this.$store.getters.currentOffer.ownerPhone,
-                        offer: this.$store.getters.currentOffer.offer,
-                        meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
-                        roomId: this.$store.getters.currentOffer.roomId,
-                        meetingLocation: this.offerData.roomAddress,
-                        token: this.offerData.token,
-                        verificationId: this.offerData.objectId
-                    })
-
-                    const userEmailData = SendEmailToUserOnMeetingScheduled({
-                        email: this.$store.getters.currentOffer.ownerEmail,
-                        name: this.$store.getters.currentOffer.ownerName,
-                        clientName: this.$store.getters.currentOffer.full_name,
-                        offer: this.$store.getters.currentOffer.offer,
-                        roomId: this.$store.getters.currentOffer.roomId,
-                        meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
-                        meetingLocation: this.offerData.roomAddress,
-                        clientEmail: this.$store.getters.currentOffer.email,
-                        clientPhone: this.$store.getters.currentOffer.phone,
-                    })
-
-                    console.log(userEmailData, clientEmailData);
-                    this.loadingPayment = false
-                    this.paymentSucceeded = true
-                    this.sendEmail(userEmailData);
-                    this.sendEmail(clientEmailData)
-                    // schedule reminders 2 before actual meeting
-                    
-                    // shcedule followup 2 afte meeting, one hour after meeting time, one date after meeting time
-
-                    const {secretId} = this.$router.history.current.params;
-                    this.updateRoom({
-                        objectId: secretId,
-                        meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
-                    })
-                    this.updateOffer(this.offerData);
-                    this.$emit('paymentSucceeded', this.paymentSucceeded)
-                    this.startCountDownTimer();
-                } else{
-                    console.log("Donation Payment")
-                } 
+                    //send emails right after completing payment
+                    await this.sendEmailsOnPaymentCompleted()
+                    //schedule reminder and follow up emails after completing payment 
+                    await this.scheduleEmailsOnPaymentCompleted(this.offerData.officialMeetingDate.date, this.offerData.officialMeetingDate.time)
+                    //updates the room
+                    // const {secretId} = this.$router.history.current.params;
+                    // this.updateRoom({
+                    //     objectId: secretId,
+                    //     meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
+                    // })
+                    // //updates the offer
+                    // this.updateOffer(this.offerData);
+                    // this.$emit('paymentSucceeded', this.paymentSucceeded)
+                    // this.startCountDownTimer();
+                }
             }
+        },
+        async sendEmailsOnPaymentCompleted(){
+            const clientEmailData = SendEmailToClientOnMeetingScheduled({
+                email: this.$store.getters.currentOffer.email,
+                // email: 'rzw17825@bcaoo.com',
+                name: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+                ownerPhone: this.$store.getters.currentOffer.ownerPhone,
+                offer: this.$store.getters.currentOffer.offer,
+                meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
+                roomId: this.$store.getters.currentOffer.roomId,
+                meetingLocation: this.offerData.roomAddress,
+                token: this.offerData.token,
+                verificationId: this.offerData.objectId
+            })
+
+            const userEmailData = SendEmailToUserOnMeetingScheduled({
+                email: this.$store.getters.currentOffer.ownerEmail,
+                name: this.$store.getters.currentOffer.ownerName,
+                clientName: this.$store.getters.currentOffer.full_name,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+                meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
+                meetingLocation: this.offerData.roomAddress,
+                clientEmail: this.$store.getters.currentOffer.email,
+                clientPhone: this.$store.getters.currentOffer.phone,
+            })
+
+            console.log(userEmailData, clientEmailData);
+            this.loadingPayment = false
+            this.paymentSucceeded = true
+            // await this.sendEmail(userEmailData);
+            // await this.sendEmail(clientEmailData)
+
+        },
+        scheduleEmailsOnPaymentCompleted(meetingDate, meetingTime){
+            const scheduledDates = this.remindersAndFollowUpDates(meetingDate, meetingTime);
+
+            const clientEmailData = {
+                clientEmail: this.$store.getters.currentOffer.email,
+                // clientEmail: 'justmike347@gmail.com',
+                clientName: this.$store.getters.currentOffer.full_name,
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+                ownerPhone: this.$store.getters.currentOffer.ownerPhone,
+                offer: this.$store.getters.currentOffer.offer,
+                meetingDate: `${meetingDate} at ${meetingTime}`,
+                roomId: this.$store.getters.currentOffer.roomId,
+                meetingLocation: this.offerData.roomAddress,
+                token: this.offerData.token,
+                verificationId: this.offerData.objectId
+            }
+            const userEmailData = {
+                ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+                // ownerEmail: 'monterojose004@gmail.com',
+                ownerName: this.$store.getters.currentOffer.ownerName,
+                clientName: this.$store.getters.currentOffer.full_name,
+                offer: this.$store.getters.currentOffer.offer,
+                roomId: this.$store.getters.currentOffer.roomId,
+                meetingDate: `${meetingDate} at ${meetingTime}`,
+                meetingLocation: this.offerData.roomAddress,
+                clientEmail: this.$store.getters.currentOffer.email,
+                clientPhone: this.$store.getters.currentOffer.phone,
+            }
+            scheduledDates.forEach(date => {
+                // console.log(date)
+                if(date.reminder1){
+                    let emailDataClient = SendReminder1ToClient({...clientEmailData, date: date.reminder1 });
+                    let emailDataUser = SendReminder1ToUser({...userEmailData, date: date.reminder1 });
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                    // console.log({date: date.reminder1})
+                }
+                if(date.reminder2){
+                    let emailDataClient = SendReminder2ToClient({...clientEmailData, date: date.reminder2});
+                    let emailDataUser = SendReminder2ToUser({...userEmailData, date: date.reminder2});
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                }
+                if(date.checkInReminder){
+                    let emailDataClient = SendCheckInReminderToClient({...clientEmailData, date: date.checkInReminder});
+                    let emailDataUser = SendCheckInReminderToUser({...userEmailData, date: date.checkInReminder});
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                }
+                if(date.followUp1){
+                    let emailDataClient = SendFollowup1ToClient({...clientEmailData, date: date.followUp1})
+                    let emailDataUser = SendFollowup1ToUser({...userEmailData, date: date.followUp1});
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                }
+                if(date.followup2){
+                    let emailDataClient = SendFollowup2ToClient({...clientEmailData, date: date.followup2})
+                    let emailDataUser = SendFollowup2ToUser({...userEmailData, date: date.followup2})
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                }
+                if(date.followup3){
+                    let emailDataClient = SendFollowup3ToClient({...clientEmailData, date: date.followup3})
+                    let emailDataUser = SendFollowup3ToUser({...userEmailData, date: date.followup3})
+                    this.sendScheduledEmail(emailDataClient, emailDataUser)
+                }
+            })
+        },
+        sendScheduledEmail(clientEmailData, ownerEmailData){
+            console.log(clientEmailData, ownerEmailData)
+            this.scheduleEmail(clientEmailData)
+            this.scheduleEmail(ownerEmailData)
+        },
+        remindersAndFollowUpDates(meetingDate, meetingTime){
+            let dates = [];
+            //Reminder 1
+            let tempDate1 = new Date(`${meetingDate}, ${meetingTime}`)
+            tempDate1.setDate(tempDate1.getDate() - 2)
+            dates.push({
+                reminder1 : {
+                    date: tempDate1.toDateString(),
+                    time: tempDate1.toLocaleTimeString()
+                }
+            })
+
+            //Reminder 2
+            let tempDate2 = new Date(`${meetingDate}, ${meetingTime}`)
+            // selectedDate.getDate()
+            tempDate2.setDate(tempDate2.getDate() - 1)
+            dates.push({
+                reminder2: {
+                    date: tempDate2.toDateString(),
+                    time: tempDate2.toLocaleTimeString()
+                }
+            })
+
+            //Check-In Reminder 
+            dates.push({
+                checkInReminder: {
+                    date: meetingDate,
+                    time: meetingTime
+                }
+            })
+
+            //Follow-up 1
+            let tempDate3 = new Date(`${meetingDate}, ${meetingTime}`)
+            tempDate3.setHours(tempDate3.getHours() + 1)
+            dates.push({
+                followUp1: {
+                    date: tempDate3.toDateString(),
+                    time: tempDate3.toLocaleTimeString()
+                }
+            })
+
+            //Follow-up 2
+            let tempDate4 = new Date(`${meetingDate}, ${meetingTime}`)
+            tempDate4.setDate(tempDate4.getDate() + 1)
+            dates.push({
+                followup2: {
+                    date: tempDate4.toDateString(),
+                    time: tempDate4.toLocaleTimeString()
+                }
+            })
+
+            //Follow-up 3
+            let tempDate5 = new Date(`${meetingDate}, ${meetingTime}`)
+            tempDate5.setDate(tempDate5.getDate() + 2)
+            dates.push({
+                followup3: {
+                    date: tempDate5.toDateString(),
+                    time: tempDate5.toLocaleTimeString()
+                }
+            })
+
+            return dates;
         },
         startCountDownTimer() {
             if(this.countDown === 0){
@@ -239,7 +390,7 @@ export default {
             }
         },
         async PaymentIntent(){
-            return (await  axios.post('https://familyroomrentals.b4a.app/paymentIntent') );
+            return (await axios.post('https://familyroomrentals.b4a.app/paymentIntent') );
         }
 
     }

@@ -74,7 +74,7 @@
                         <v-row class="text-center" justify="center" style="align-items: center;">
                             <div style="width: 275px;">
                                 <img 
-                                    :src="contentRoom.images.length > 0 ? contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
+                                    :src="(contentRoom.images && contentRoom.images.length > 0) ? contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
                                     alt="roomPhoto" 
                                     width="150" 
                                     height="100"

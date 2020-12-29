@@ -287,123 +287,6 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
     };
 }
 
-export const SendReminderToClient = (data: any) => {
-    // console.log("from email: ", data.logo)
-    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
-    // console.log("from email: ", data.logo)
-    const html = `
-        <h3> Dear ${data.name}, </h3>
-        <p>Your meeting with ${data.ownerName} is two days away!</p>
-        <h4>Information:</h4>
-        <div style="line-height: 5px;">
-            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
-            <p>Offer: <strong>$${data.offer}</strong> </p>
-            <p>Meeting with:  ${data.ownerName}</p>
-            <p>Meeting date:  ${data.meetingDate}</p>
-            <p>Meeting Location:  
-                <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
-                    ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
-                </a>
-            </p>
-            <p>${data.ownerName}'s email:  ${data.ownerEmail}</p>
-            <p>${data.ownerName}'s phone:  ${data.ownerPhone}</p>
-
-        </div>
-
-        <h4>Recomendations:</h4>
-        <p>
-            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
-            necessary while visiting ${data.ownerName}'s property. 
-        </p>
-        <ul> Please wear a face covering </ul>
-        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
-        <ul> Please be on time </ul>
-        <ul> Please ask as many questions as possible  </ul>
-        <ul> Please stay alert while visiting the property. </ul>
-        <ul> Please try to contact ${data.ownerName} prior to the meeting to descuss details. </ul>
-
-        <p>
-            Once the meeting is done, we will send a follow up email to see how it went. 
-        </p>
-        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
-        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
-
-        <div style="line-height: 3px; margin: 40px 0px;">
-            <p>FamilyRoomRentals.Inc</p>
-            <p>New York, NY</p>
-            <p>(347) 389-0868</p>
-            <p>familyroomrentas@dr.com</p>
-            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
-        </div>
-        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
-        `;
-        
-    return {
-        email: data.email,
-        subject: "Meeting Reminder!",
-        name: data.name,
-        html,
-    };
-}
-
-export const SendReminderToUser = (data: any) => {
-    // console.log("from email: ", data.logo)
-    const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
-    // console.log("from email: ", data.logo)
-    const html = `
-        <h3> Dear ${data.ownerName}, </h3>
-        <p>Your meeting with ${data.name} is two days away!</p>
-        <h4>Information:</h4>
-        <div style="line-height: 5px;">
-            <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
-            <p>Offer: <strong>$${data.offer}</strong> </p>
-            <p>Meeting with:  ${data.name}</p>
-            <p>Meeting date:  ${data.meetingDate}</p>
-            <p>Meeting Location:  
-                <a href='https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}' target="_blank">
-                    ${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}                
-                </a>
-            </p>
-            <p>${data.name}'s email:  ${data.email}</p>
-            <p>${data.name}'s phone:  ${data.phone}</p>
-
-        </div>
-
-        <h4>Recomendations:</h4>
-        <p>
-            While dealing with a pandemic, visiting others could be challenging. Please take all the precautions
-            necessary receiving a visit from ${data.name}. 
-        </p>
-        <ul> Please wear a face covering </ul>
-        <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
-        <ul> Please be on time </ul>
-        <ul> Please ask as many questions as possible  </ul>
-        <ul> Please stay alert while visiting the property. </ul>
-        <ul> Please try to contact ${data.name} prior to the meeting to descuss details. </ul>
-
-        <p>
-            Once the meeting is done, we will send a follow up email to see how it went. 
-        </p>
-        <p>We Thank you for using FamilyRoomRentals, and wish you good luck moving forward</p>
-        <p>Stay safe during this critical times and enjoy the rest of your day!</p>
-
-        <div style="line-height: 3px; margin: 40px 0px;">
-            <p>FamilyRoomRentals.Inc</p>
-            <p>New York, NY</p>
-            <p>(347) 389-0868</p>
-            <p>familyroomrentas@dr.com</p>
-            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
-        </div>
-        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
-        `;
-        
-    return {
-        email: data.ownerEmail,
-        subject: "Meeting Reminder!",
-        name: data.name,
-        html,
-    };
-}
 
 export const SendFollowupToClient = (data: any) => {
     // console.log("from email: ", data.logo)
@@ -856,3 +739,5 @@ export const SendEmailToOwnerOnClientrCheckIn = (data: any) => {
         html,
     };    
 }
+
+//ADMINS

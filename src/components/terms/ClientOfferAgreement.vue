@@ -160,7 +160,7 @@ export default {
               this.sendEmail(clientEmailData);
               this.sendOffer(this.$store.getters.currentOffer)
               this.updateRoom({
-                offersAmount: this.$store.getters.contentRoom.offersAmount + 1,
+                numberOfOffers: this.$store.getters.contentRoom.numberOfOffers + 1,
                 objectId: this.$store.getters.contentRoom.objectId
               });
               this.agreementError = ''

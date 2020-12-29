@@ -32,7 +32,7 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     valid = false;
   }
   if(decoded){
-    console.log(decoded)
+    // console.log(decoded)
     if(decoded.data.userToken === secretKey && decoded.data.emailVerified === true) valid = true;
   }
 

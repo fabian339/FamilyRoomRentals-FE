@@ -84,21 +84,22 @@
                         <v-icon dark right>mdi-delete</v-icon>
                     </v-btn>
                 </div>
-                <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">
-                    This room cannot receive offers as it is marked as <strong>rented.</strong> 
-                    To publish it back please unmark it in the edit section.
-                </p>
- 
-                <p v-if="this.contentRoom.disabled && !this.contentRoom.lockedByAdmin" style="color: darkgoldenrod;">
-                    This room is not public and cannot receive offers as it is marked as <strong>disabled.</strong> 
-                    To publish it back please unmark it in the edit section.
-                </p>
-                <p v-if="this.contentRoom.lockedByAdmin" style="color: red;">
-                    This property has been temporary disabled/blocked by <strong>FamilyRoomRentalts.</strong> This is because you either 
-                    violated FamilyRoomRentalts's Terms and Conditions, cancelled a pending meeting for no reason,
-                    or pusblished something inappropriate. Please review our Terms & Conditions for more details. 
-                </p>
-
+                <div style="margin: 0 20%">
+                    <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">
+                        This room cannot receive offers as it is marked as <strong>rented.</strong> 
+                        To publish it back please unmark it in the edit section.
+                    </p>
+    
+                    <p v-if="this.contentRoom.disabled && !this.contentRoom.lockedByAdmin" style="color: darkgoldenrod;">
+                        This room is not public and cannot receive offers as it is marked as <strong>disabled.</strong> 
+                        To publish it back please unmark it in the edit section.
+                    </p>
+                    <p v-if="this.contentRoom.lockedByAdmin" style="color: red;">
+                        This property has been temporary disabled/blocked by <strong>FamilyRoomRentalts.</strong> This is because you either 
+                        violated FamilyRoomRentalts's Terms and Conditions, cancelled a pending meeting for no reason,
+                        or pusblished something inappropriate. Please review our Terms & Conditions for more details. 
+                    </p>
+                </div>
                 <v-dialog
                     v-model="deleteDialog"
                     max-width="290"

@@ -546,7 +546,7 @@ export default {
             }
             return null;
         },
-        cancelMeeting(){
+        async cancelMeeting(){
             //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
             //else send email to both parties cancelling meeting
             let clientEmailData = SendEmailToClientOnMeetingCanceledByOwner({
@@ -569,8 +569,8 @@ export default {
                 roomId: this.$store.getters.currentOffer.roomId,
             });
             // console.log(clientEmailData)
-            this.sendEmail(clientEmailData);
-            this.sendEmail(ownerEmailData);
+            await this.sendEmail(clientEmailData);
+            await this.sendEmail(ownerEmailData);
 
             this.updateOffer({
                 objectId: this.$store.getters.currentOffer.objectId,
@@ -580,7 +580,7 @@ export default {
                 readByReceiver: false,
                 status: `You canceled the meeting proccess on ${new Date().toLocaleDateString()}!`
             })
-
+            //if there was a meeting scheduled, disable the property. Moduficable by admin on admin page
             if(this.$store.getters.currentOffer.meetingScheduled){
                 this.updateRoom({
                     objectId: this.$store.getters.contentRoom.objectId,
