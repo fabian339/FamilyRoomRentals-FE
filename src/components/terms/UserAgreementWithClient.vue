@@ -87,7 +87,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import { SendEmailToClientOnOfferAccepted} from '../../globals/emails'
+import { SendEmailToClientOnOfferAccepted} from '../../emailTemplates/emails'
 let jwt = require('jsonwebtoken');
 
 export default {

@@ -97,7 +97,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import {SendEmailToClientOnOffer, SendEmailToUserOnOffer} from '../../globals/emails'
+import {SendEmailToClientOnOffer, SendEmailToUserOnOffer} from '../../emailTemplates/emails'
 export default {
     name: "ClientOffertAgreement",
     props: {

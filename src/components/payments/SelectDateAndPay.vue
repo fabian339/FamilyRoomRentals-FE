@@ -247,7 +247,7 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
-import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../globals/emails'
+import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../emailTemplates/emails'
 import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import Checkout from './Checkout'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"

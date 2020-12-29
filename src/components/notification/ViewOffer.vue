@@ -383,7 +383,7 @@ import {
     SendEmailToAdminOnPaymentRequested, 
     SendEmailToClientOnMeetingCanceledByOwner,
     SendEmailToOwnerOnMeetingCanceledByOwner 
-} from '../../globals/emails'
+} from '../../emailTemplates/emails'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 

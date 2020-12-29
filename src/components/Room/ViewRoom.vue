@@ -231,7 +231,7 @@ import OfferForm from '@/components/notification/OfferForm.vue';
 import ContentLoading from '@/components/layout/ContentLoading.vue';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
-import {SendEmailToAdminOnRoomReported} from '../../globals/emails'
+import {SendEmailToAdminOnRoomReported} from '../../emailTemplates/emails'
 
   export default {
     name: 'viewRoom',

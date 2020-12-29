@@ -71,7 +71,7 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../globals/emails'
+import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {

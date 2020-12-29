@@ -93,7 +93,7 @@ let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import {validateClientRefundData} from '../../store/validators'
-import {SendEmailToAdminOnRefundRequested} from '../../globals/emails'
+import {SendEmailToAdminOnRefundRequested} from '../../emailTemplates/emails'
 
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
