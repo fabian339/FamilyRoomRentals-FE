@@ -4,12 +4,16 @@ export default {
         state.notificationState.notifications = offers;
     },
 
-    SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
-        state.notificationState.offerSentByClient = offerSentByClient;
-        setTimeout(() => {
-          state.notificationState.offerSentByClient = false;
-        }, 8000);
+    ADD_NOTIFICATION: (state: any, offers: any) => {
+        state.notificationState.notifications.push(offers);
     },
+
+    // SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
+    //     state.notificationState.offerSentByClient = offerSentByClient;
+    //     setTimeout(() => {
+    //       state.notificationState.offerSentByClient = false;
+    //     }, 8000);
+    // },
 
     SET_OFFER_ACCEPTED_BY_OWNER: (state: any, offerAcceptedByOwner: boolean) => {
         state.notificationState.offerAcceptedByOwner = offerAcceptedByOwner;

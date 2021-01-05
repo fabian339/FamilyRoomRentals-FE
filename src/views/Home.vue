@@ -50,12 +50,10 @@
             Recently Shared
           </h1>
           <v-container id="roomsContainer" >
-            <v-row no-gutters>
+            <v-row>
               <v-col
-                class="mb-8"
-                cols="16"
                 v-for="item in contentRooms.slice(0,3)" :key="item.street1"
-                >
+              >
                   <Room :roomData="item"/>
               </v-col>
             </v-row>

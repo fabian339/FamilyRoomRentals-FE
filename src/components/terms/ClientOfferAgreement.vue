@@ -69,11 +69,16 @@
         </v-card-text>
         <v-card-text style="color: red; margin: 0px 0px -25px 0px;">{{agreementError}} </v-card-text>
         <v-card-actions>
-            <v-checkbox
-              style="margin: 0px 0px 0px 15px;"
-              v-model="checkbox"
-              :label="`I agree to the terms and conditions.`"
-            ></v-checkbox>
+            <v-row>
+              <v-checkbox
+                style="margin: 0px 0px -15px 30px;"
+                v-model="checkbox"
+              >
+                <template slot="label">
+                  <label >I agree to the <a @click.stop href="/#/terms-and-conditions/agreements" target="_blank">Terms & Conditions.</a></label>
+                </template>
+              </v-checkbox>
+            </v-row>
           <v-spacer></v-spacer>
           <v-btn
             color="green darken-1"
@@ -150,14 +155,10 @@ export default {
                 offer: this.$store.getters.currentOffer.offer,
                 roomId: this.$store.getters.contentRoom.objectId,
               })
-
-              // console.log(clientEmailData, userEmailData, { 
-              //   email: this.$store.getters.currentOffer.email,
-              //   name: this.$store.getters.currentOffer.full_name,
-              //   offer: this.$store.getters.currentOffer.offer,
-              //   roomId: this.$store.getters.contentRoom.objectId,});
+              //sending emails
               this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
+              // adding offer to db
               this.sendOffer(this.$store.getters.currentOffer)
               this.updateRoom({
                 numberOfOffers: this.$store.getters.contentRoom.numberOfOffers + 1,

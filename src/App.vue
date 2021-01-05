@@ -14,6 +14,7 @@
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import axios from 'axios';
+
 // import {SendReminderToClient, SendReminderToUser, SendFollowupToClient, SendFollowupToUser} from './globals/emails'
 import './styles.css'
 import { mapActions } from 'vuex'
@@ -28,11 +29,10 @@ export default {
   },  
 
   created(){
-    axios.defaults.baseURL = "https://familyroomrentals.b4a.io";
-    axios.defaults.headers.common['X-Parse-Application-Id'] = 'kUx57AUuSOjGF36AotqV2lzjzjREM3mDQfc2a9gn'
-    axios.defaults.headers.common['X-Parse-REST-API-Key'] = '1B647vsxlJr1SCJ732paCCmXB57dKEqxRL3MFE4w'
-    axios.defaults.headers.common['Content-Type'] = 'application/json'
-
+    axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
+    axios.defaults.headers.common['X-Parse-Application-Id'] = process.env.VUE_APP_APPLICATION_ID
+    axios.defaults.headers.common['X-Parse-REST-API-Key'] = process.env.VUE_APP_REST_API_Key
+    axios.defaults.headers.common['Content-Type'] = process.env.VUE_APP_Content_Type
     this.fetchData();
     
     const token = localStorage.getItem('user-token');

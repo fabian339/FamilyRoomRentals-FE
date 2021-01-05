@@ -32,6 +32,19 @@ interface User {
   confirmPassword: string,
 }
 
+interface Offer {
+  clientName: string,
+  clientEmail: string,
+  clientPhone: string,
+  offer: number,
+  receiverId: string,
+  roomId: string,
+  ownerName: string,
+  ownerEmail: string,
+  ownerPhone: string,
+  didClientAgreeToSendOffer: boolean,
+}
+
 interface Login {
   email: string,
   password: string,
@@ -210,22 +223,22 @@ export const validateUserRegistration = (data: User) => {
 
 
 
-export const validateOffer = (data: any) => {
+export const validateOffer = (data: Offer) => {
   let errors:any = {};
 
   //validation for fullname
-  if(isEmpty(data.full_name)) errors.full_name = 'Must not be empty';
+  if(isEmpty(data.clientName)) errors.clientName = 'Must not be empty';
   //validation for email
-  if(isEmpty(data.email)) {
-    errors.email = 'Must not be empty'
-  } else if(!isEmail(data.email)){
-      errors.email = 'Must be a valid email address'
+  if(isEmpty(data.clientEmail)) {
+    errors.clientEmail = 'Must not be empty'
+  } else if(!isEmail(data.clientEmail)){
+      errors.clientEmail = 'Must be a valid email address'
   }  
   //validation for phone
-  if(isEmpty(data.phone)) {
-    errors.phone = 'Must not be empty'
-  } else if(!isPhoneNumber(data.phone)){
-    errors.phone = 'Must be a valid phone number'
+  if(isEmpty(data.clientPhone)) {
+    errors.clientPhone = 'Must not be empty'
+  } else if(!isPhoneNumber(data.clientPhone)){
+    errors.clientPhone = 'Must be a valid phone number'
   } 
   //validation for offer
   if(data.offer < 0 || !data.offer) errors.offer = 'Must enter a positive amount';

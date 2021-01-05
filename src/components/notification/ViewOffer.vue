@@ -9,7 +9,7 @@
                     <span class="headline">Message</span>
                 </v-card-title>
                 <v-card-text>
-                        <p>From: {{currentOffer.full_name}}</p>
+                        <p>From: {{currentOffer.clientName}}</p>
                         <p>Interested Room: <a :href="`/#/room/${currentOffer.roomId}`" target="_blank">Click Here</a></p>
                         <p>Offer: ${{currentOffer.offer}}</p>
                         <div v-if="!currentOffer.followupSent">
@@ -24,7 +24,7 @@
                                 <h3>What would you like to do?</h3>
                                 <p>
                                     If you feel like this is a good match and price for the property,
-                                    please accept <strong>{{currentOffer.full_name}}'s offer</strong> and schedule a meeting 
+                                    please accept <strong>{{currentOffer.clientName}}'s offer</strong> and schedule a meeting 
                                     to show him/her the room. Otherwise, deny such offer.
                                 </p>
                             </div>
@@ -45,10 +45,10 @@
                             Wait for {{currentOffer.full_name}} to check-in to start the meeting!
                         </p>
                         <p v-if="!currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
-                            Please Check-In, {{currentOffer.full_name}} already checked-in!
+                            Please Check-In, {{currentOffer.clientName}} already checked-in!
                         </p>
 
-                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceled">
+                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceled && !currentOffer.offerCompleted">
                             <div v-if="!currentOffer.meetingScheduled">
                                 <p style="margin-bottom: 5px;">Dates submitted: </p>
                                 <div v-for="date in currentOffer.meetingDates" :key="date.date">
@@ -246,7 +246,7 @@
             <v-card v-else>
                 <v-card-title class="headline">Followup Survey</v-card-title>
                 <v-card-text>
-                    This is just a survey to know how things went between you and {{currentOffer.full_name}}.
+                    This is just a survey to know how things went between you and {{currentOffer.clientName}}.
                 </v-card-text>
                 <v-col cols="12">        
                     <form>
@@ -259,7 +259,7 @@
                         ></v-select>
                         <v-select
                             :items="['Yes', 'No']"
-                            :label="`Did you and ${currentOffer.full_name} came to an agreement?`"
+                            :label="`Did you and ${currentOffer.clientName} came to an agreement?`"
                             v-model="surveyData.answer2"
                             :error-messages="errors.answer2"   
                             outlined
@@ -267,7 +267,7 @@
                         <v-select
                             v-if="surveyData.answer2 === 'Yes'"
                             :items="['Yes', 'No', 'Not Sure']"
-                            :label="`Will ${currentOffer.full_name} be moving into the property soon?`"
+                            :label="`Will ${currentOffer.clientName} be moving into the property soon?`"
                             v-model="surveyData.answer3"
                             outlined
                         ></v-select>
@@ -293,15 +293,15 @@
                             v-if="surveyData.answer3 === 'No'"
                             style="color: saddlebrown;"
                         >
-                            A payment can only be requested if {{currentOffer.full_name}} agrees to move in.
+                            A payment can only be requested if {{currentOffer.clientName}} agrees to move in.
                         </p>
                         <p 
                             v-if="surveyData.answer3 === 'Not Sure'"
                             style="color: darkblue;"
                         >
-                            Not a problem, please feel free contact us if {{currentOffer.full_name}} agrees 
+                            Not a problem, please feel free contact us if {{currentOffer.clientName}} agrees 
                             to move in. Please do not delete this offer yet. If this offer gets deleted and 
-                            then {{currentOffer.full_name}} decides to move in, there will not be enough evidence 
+                            then {{currentOffer.clientName}} decides to move in, there will not be enough evidence 
                             to process your payment. 
                         </p>
                         <div

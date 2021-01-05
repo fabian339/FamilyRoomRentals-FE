@@ -64,19 +64,15 @@
           No Properties Available!
         </h2>
         <v-container id="roomsContainer" v-if="contentRooms.length !== 0">
-          <v-row no-gutters v-if="filterBy === 'Most Recent'">
+          <v-row v-if="filterBy === 'Most Recent'">
             <v-col
-              class="mb-8"
-              cols="16"
               v-for="(item) in contentRooms" :key="item.street1"
-              >
+            >
                 <Room :roomData="item"/>
             </v-col>
           </v-row>
-          <v-row no-gutters v-else>
+          <v-row v-else>
             <v-col
-              class="mb-8"
-              cols="16"
               v-for="(item) in filteredRooms" :key="item.street1"
             >
                 <Room :roomData="item" />

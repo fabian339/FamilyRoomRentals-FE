@@ -10,7 +10,12 @@ export default {
     console.log(notification);
     axios.post(`/classes/Offers`, notification)
     .then((res) => {
-      context.commit('SET_OFFER_SENT_BY_CLIENT', true);
+      console.log(res)
+      let offerData = {
+        ...notification,
+        ...res.data
+      }
+      context.commit('ADD_NOTIFICATION', offerData);
   })
   .catch((err) => {
       // const err = {
@@ -155,16 +160,4 @@ export default {
       context.commit('SET_OFFER_ERROR', err);
     });
   },
-  // schedule a email to be send in the future, espec a date object
-  scheduleEmail: (context: any, emailData: any) => {
-    axios.post("https://familyroomrentals.b4a.app/scheduleEmail", emailData)
-    .then((res) => {
-      // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
-      console.log("scheduling Email",res)
-    })
-    .catch((err) => {
-      context.commit('SET_OFFER_ERROR', err);
-    });
-  }
-
 }

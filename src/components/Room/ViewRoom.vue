@@ -2,7 +2,7 @@
     <v-container>
         <ContentLoading  v-if="isContentLoading"/>
         <div class="text-center">
-            <SuccessAlert v-if="isRoomUpdated && !isOfferSent" msg="Room Updated Successfully!" />
+            <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
         </div>
         <v-row class="text-center" v-if="!isContentLoading" justify="center">
             <div 
@@ -170,12 +170,12 @@
         </v-row>
 
         <v-row class="text-center" justify="center" v-if="!isContentLoading">
-            <v-col cols="10" sm="8" md="8" lg="6" v-if="!isOfferSent">
+            <v-col cols="10" sm="8" md="8" lg="6">
                 <OfferForm v-if="!contentRoom.rented && !contentRoom.lockedByAdmin && !contentRoom.disabled" />   
                 <p v-if="contentRoom.rented" style="color: #de1254">No offer can be made as this Room is already rented!</p> 
                 <p v-if="contentRoom.lockedByAdmin" style="color: #de1254">No offer can be made as this Room is temporary disabled!</p> 
             </v-col>
-            <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." />
+            <!-- <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." /> -->
         </v-row>
         <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
             <p style="color: darkblue;"><strong>Offers made: {{contentRoom.numberOfOffers}}</strong></p>
@@ -248,8 +248,7 @@ import {SendEmailToAdminOnRoomReported} from '../../emailTemplates/emails'
             'isContentLoading',
             'currentUser',
             'isRoomUpdated',
-            'isOfferSent',
-            'isAuthenticated'
+            'isUserAuthenticated'
         ]),
     },
     data(){
@@ -302,7 +301,7 @@ import {SendEmailToAdminOnRoomReported} from '../../emailTemplates/emails'
         },
         saveRoom(){
             console.log("saving room")
-            if(this.isAuthenticated){
+            if(this.isUserAuthenticated){
                 // console.log(this.isContentLoading ,this.contentRoom.objectId, this.currentUser.objectId)
                 let roomIds = this.currentUser.savedRoomsIds ? this.currentUser.savedRoomsIds : [];
                 if(!roomIds.includes(this.contentRoom.objectId)){
@@ -322,7 +321,7 @@ import {SendEmailToAdminOnRoomReported} from '../../emailTemplates/emails'
         },
         reportRoom(){
             console.log("reporting room")
-            if(this.isAuthenticated){
+            if(this.isUserAuthenticated){
                 const adminEmailData = SendEmailToAdminOnRoomReported({
                     email: 'familyroomrentals@dr.com',
                     userId: this.$store.getters.currentUser.objectId,

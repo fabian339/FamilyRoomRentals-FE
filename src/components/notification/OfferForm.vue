@@ -15,14 +15,14 @@
                     v-model="full_name"
                     type="text"
                     outlined
-                    :error-messages="errors.full_name"   
+                    :error-messages="errors.clientName"   
                 ></v-text-field>
 
                 <v-text-field
                     v-model="email"
                     label="Email: example@email.com"
                     outlined
-                    :error-messages="errors.email"   
+                    :error-messages="errors.clientEmail"   
                 ></v-text-field>
 
 
@@ -66,7 +66,7 @@
               </v-col>
             <!-- </v-row> -->
             </v-row>
-                <p v-if="errors.phone && errors.phone.length !== 0" style="color: red">{{errors.phone}}</p>
+                <p v-if="errors.clientPhone && errors.clientPhone.length !== 0" style="color: red">{{errors.clientPhone}}</p>
 
                 <label>This room is listed for ${{contentRoom.price}}/month, enter your offer </label>
                 <v-text-field
@@ -126,20 +126,21 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
         ]),
         openAgreementDialog() {
             const clientOffer = {
-                    full_name: this.full_name,
-                    email: this.email,
-                    phone: `${this.phone1}-${this.phone2}-${this.phone3}`,
+                    clientName: this.full_name,
+                    clientEmail: this.email,
+                    clientPhone: `${this.phone1}-${this.phone2}-${this.phone3}`,
                     offer: this.offer,
                     receiverId: this.contentRoom.ownerId,
                     roomId: this.contentRoom.objectId,
                     ownerName: `${this.contentRoom.ownerFname} ${this.contentRoom.ownerLname}`,
                     ownerEmail: this.contentRoom.ownerEmail,
                     ownerPhone: this.contentRoom.ownerPhone,
-                    isOfferAgreementByClientAccepted: false,
+                    didClientAgreeToSendOffer: true,
                 }
             const {valid, errors} = validateOffer(clientOffer);
             if(!valid) this.errors = errors;
             else {
+              console.log(clientOffer)
                 this.SET_OFFER(clientOffer);
                 this.openOfferAgreementDialog = true;
             }
