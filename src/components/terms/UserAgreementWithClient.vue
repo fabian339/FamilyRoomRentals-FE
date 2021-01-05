@@ -120,8 +120,9 @@ export default {
             'updateRoom',
             'sendEmail'
         ]),
+        // add schedule dates, send email to client with token
         addScheduleDates(){
-            if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
+            if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, reject the offer."
             else {
                 let scheduleDates = [];
                 this.offerData.meetingDates.forEach(element => {
@@ -135,7 +136,7 @@ export default {
                   iat: Math.floor(new Date()),
                   exp: new Date().setDate(new Date().getDate() + 60),
                   data: { 
-                      name: this.$store.getters.currentOffer.full_name 
+                      name: this.$store.getters.currentOffer.clientName 
                     }
                   }, this.$store.getters.currentOffer.roomId);
               
@@ -147,22 +148,22 @@ export default {
                   offerToken: token,
                   status: 'Offer accepted, submitted available dates!'
                 };
-              const clientEmailData = SendEmailToClientOnOfferAccepted({
-                email: this.$store.getters.currentOffer.email,
-                name: this.$store.getters.currentOffer.full_name,
-                ownerName: this.$store.getters.currentOffer.ownerName,
-                offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
-                verificationId: this.$store.getters.currentOffer.objectId,
-                token: token
-              })
                 this.updateOffer(offerData)
+                const clientEmailData = SendEmailToClientOnOfferAccepted({
+                  clientEmail: this.$store.getters.currentOffer.clientEmail,
+                  clientName: this.$store.getters.currentOffer.clientName,
+                  ownerName: this.$store.getters.currentOffer.ownerName,
+                  offer: this.$store.getters.currentOffer.offer,
+                  roomId: this.$store.getters.currentOffer.roomId,
+                  verificationId: this.$store.getters.currentOffer.objectId,
+                  token: token
+                })
+                this.sendEmail(clientEmailData);
                 this.updateRoom({
                   objectId: this.$store.getters.currentOffer.roomId,
                   acceptedOffers: this.$store.getters.currentOffer.acceptedOffers + 1
                 })
                 // console.log(offerData, clientEmailData, token)
-                this.sendEmail(clientEmailData);
                 this.agreementError = ''
                 this.show = false;
             }

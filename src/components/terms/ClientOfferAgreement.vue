@@ -142,18 +142,21 @@ export default {
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
           else {
               this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
-              const clientEmailData = SendEmailToClientOnOffer({
-                email: this.$store.getters.currentOffer.email,
-                name: this.$store.getters.currentOffer.full_name,
+              let commonData = {
                 offer: this.$store.getters.currentOffer.offer,
                 roomId: this.$store.getters.contentRoom.objectId,
+              }
+
+              const clientEmailData = SendEmailToClientOnOffer({
+                ...commonData,
+                email: this.$store.getters.currentOffer.clientEmail,
+                name: this.$store.getters.currentOffer.clientName,
               })
 
               const userEmailData = SendEmailToUserOnOffer({
+                ...commonData,  
                 email:this.$store.getters.currentOffer.ownerEmail,
                 name: this.$store.getters.currentOffer.ownerName,
-                offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.contentRoom.objectId,
               })
               //sending emails
               this.sendEmail(userEmailData);

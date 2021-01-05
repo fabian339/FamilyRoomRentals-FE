@@ -76,7 +76,7 @@ export const SendEmailToUserOnOffer = (data: any) => {
 export const SendEmailToClientOnOfferAccepted = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
-        <h3> Dear ${data.name}, </h3>
+        <h3> Dear ${data.clientName}, </h3>
         <p>WOAA You're offer has been accepted!!</p>
         <p>${data.ownerName} has accepted your offer and decided to move forward.</p>
         <h4>Information:</h4>
@@ -89,7 +89,7 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         <h4>What now?</h4>
         <p>Verification Id: <strong>${data.verificationId}</strong> - (you will need this ID to select the meeting date) </p>
         <p>Take a look at the available dates 
-        <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}/select-date-to-meet/${data.token}' target="_blank">HERE</a></strong>.</p>
+        <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}/meeting/${data.token}' target="_blank">HERE</a></strong>.</p>
         <p>
             You have 7 days to select a date, keep in mind that if you do not select a date, the offer will
             be dismiss.
@@ -116,9 +116,9 @@ export const SendEmailToClientOnOfferAccepted = (data: any) => {
         `;
         
     return {
-        email: data.email,
+        email: data.clientEmail,
         subject: "Offer Accepted!",
-        name: data.name,
+        name: data.clientName,
         html,
     };
 }
@@ -143,7 +143,7 @@ export const SendEmailToClientOnOfferRejected = (data: any) => {
         <p>
             <strong>But,</strong> there is a property for everyone. <strong>Do not give up,</strong> 
             we encourage you to keep sending offers at 
-            <a href='http://familyroomrentals.com/#/login'>familyroomrentals.com.</a>
+            <a href='https://familyroomrentals.com'>familyroomrentals.com.</a>
         </p>
             
         <p>Thank you for using FamilyRoomRentals</p>
@@ -170,7 +170,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
     const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
     // console.log("from email: ", data.logo)
     const html = `
-        <h3> Dear ${data.name}, </h3>
+        <h3> Dear ${data.clientName}, </h3>
         <p>YAYY You have offcially scheduled a meeting with ${data.ownerName}!</p>
         <h4>Information:</h4>
         <div>
@@ -202,7 +202,7 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
         <ul> Please be on time </ul>
         <ul> Please ask as many questions as possible  </ul>
         <ul> Please stay alert while visiting the property. </ul>
-        <ul> Please try to contact ${data.clientName} prior to the meeting to descuss details. </ul>
+        <ul> Please try to contact ${data.ownerName} prior to the meeting to discuss details. </ul>
 
         <p>
             Once the meeting is done, we will send a follow up email to see how it went. 
@@ -221,9 +221,9 @@ export const SendEmailToClientOnMeetingScheduled = (data: any) => {
         `;
         
     return {
-        email: data.email,
+        email: data.clientEmail,
         subject: "Your Meeting has been Confirmed!",
-        name: data.name,
+        name: data.clientName,
         html,
     };
 }
@@ -232,8 +232,8 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
     const { street1, street2, city, state, zipCode, country } = data.meetingLocation;
     // console.log("from email: ", data.logo)
     const html = `
-        <h3> Dear ${data.name}, </h3>
-        <p>YAYY A Meeting was scheduled for ${data.clientName}'s offer!</p>
+        <h3> Dear ${data.ownerName}, </h3>
+        <p>YAYY You have scheduled a meeting for ${data.clientName}'s offer!</p>
         <h4>Information:</h4>
         <div>
             <p>Room: <strong><a href='https://familyroomrentals.com/#/room/${data.roomId}'>Room</a></strong> </p>
@@ -280,9 +280,9 @@ export const SendEmailToUserOnMeetingScheduled = (data: any) => {
         `;
         
     return {
-        email: data.email,
+        email: data.ownerEmail,
         subject: "A Meeting has been Confirmed!",
-        name: data.name,
+        name: data.ownerName,
         html,
     };
 }

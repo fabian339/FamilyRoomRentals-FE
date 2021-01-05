@@ -217,25 +217,12 @@
             </div>
             <div v-if="confirmedDate">
                 <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
-                <Checkout @paymentSucceeded="checkPayment" :offerData="{
-                        roomAddress: {
-                            street1: this.$store.getters.contentRoom.location.street1, 
-                            street2: this.$store.getters.contentRoom.location.street2,
-                            city: this.$store.getters.contentRoom.location.city,
-                            state: this.$store.getters.contentRoom.location.state,
-                            zipCode: this.$store.getters.contentRoom.location.zipCode,
-                            country: this.$store.getters.contentRoom.location.country
-                        },
+                <PayForMeeting @paymentSucceeded="checkPayment" :offerData="{
                         officialMeetingDate: {
                             date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
                             time: currentOffer.meetingDates[dateSelectedIndex].time
                         },
-                        whenWasMeetingScheduled: new Date(),
-                        meetingScheduled: true,
-                        readByReceiver: false,
                         status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
-                        objectId: this.$store.getters.currentOffer.objectId,
-                        token: this.$store.getters.currentOffer.offerToken
                     }"/>
             </div>
         </v-col>
@@ -249,12 +236,12 @@ let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
 import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../emailTemplates/emails'
 import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
-import Checkout from './Checkout'
+import PayForMeeting from './PayForMeeting'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
-    components: { Checkout,  MeetingCheckIn},
+    components: { PayForMeeting,  MeetingCheckIn},
     computed: {
       ...mapGetters([
         'isContentLoading',

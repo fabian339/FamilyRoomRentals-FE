@@ -14,8 +14,8 @@ import EmailVerification from '@/components/User/EmailVerification.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
-import SelectDateAndPay from '@/components/payments/SelectDateAndPay.vue'
-import clientRefund from '@/components/payments/clientRefund.vue'
+import SelectMeetingDate from '@/components/clientMeeting/SelectMeetingDate.vue'
+// import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
 let jwt = require('jsonwebtoken');
 
@@ -123,15 +123,15 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     component: Qas
   },
   {
-    path: '/room/:secretId/select-date-to-meet/:token',
+    path: '/room/:secretId/meeting/:token',
     name: 'SelectDateAndPay',
-    component: SelectDateAndPay
+    component: SelectMeetingDate
   },
-  {
-    path: '/request/:secretId/refund/:refundToken',
-    name: 'clientRefund',
-    component: clientRefund
-  },
+  // {
+  //   path: '/request/:secretId/refund/:refundToken',
+  //   name: 'clientRefund',
+  //   component: clientRefund
+  // },
   {
     path: '/email-verification',
     name: 'emailVerification',

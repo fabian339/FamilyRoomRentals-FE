@@ -175,7 +175,7 @@
 
         <v-dialog
             v-model="showDeleteWarning"
-            max-width="350"
+            max-width="435"
         >
             <v-card>
                 <v-card-title class="headline">Are you sure you want to delete this offer?</v-card-title>
@@ -197,7 +197,7 @@
                 <v-btn
                     color="green darken-1"
                     text
-                    @click.stop="deleteMessage"
+                    @click.stop="removeOffer"
                 >
                     Continue
                 </v-btn>
@@ -441,28 +441,31 @@ export default {
             'updateRoom',
             'updateUser'
         ]),
-        deleteMessage(){
+        //will remove the offer
+        removeOffer(){
             this.deleteOffer(this.currentOffer.objectId)
             this.showDeleteWarning = false;
             this.$emit('input', false)
             // console.log("Deleting Notification", id)
         },
+        // will redirect to a scheduler page
         redirectToSchedule(){
             if(this.$router.history.current.path !== `/room/${this.currentOffer.roomId}/offer/${this.currentOffer.objectId}/schedule`){
                 this.$router.push(`/room/${this.currentOffer.roomId}/offer/${this.currentOffer.objectId}/schedule`)
                 this.show = false
             } else this.show = false
         },
+        // will mark offer as rejected, will inform client
         markOfferRejected(){
-            //send email to client on offer rejected!!
             this.updateOffer({
                 objectId: this.currentOffer.objectId,
                 offerRejectedByOwner: true,
-                status: "Offer was rejected!",
+                status: "Offer was rejected. Feel free to delete this offer!",
             });
+            //send email to client on offer rejected!!
             let clientEmailData = SendEmailToClientOnOfferRejected({
-                email: this.$store.getters.currentOffer.email,
-                name: this.$store.getters.currentOffer.full_name,
+                email: this.$store.getters.currentOffer.clientEmail,
+                name: this.$store.getters.currentOffer.clientName,
                 offer: this.$store.getters.currentOffer.offer,
                 roomId: this.$store.getters.currentOffer.roomId,
             });

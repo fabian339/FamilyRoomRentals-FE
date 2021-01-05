@@ -130,13 +130,15 @@ export default {
         SendSchedule(){
             console.log("validating schedule")
             let validSchedule = true;
+            //checks for duplicated dates
             if(this.isThereDuplicatedDates()){
                 this.duplicatedDateError = 'Cannot select duplicated dates!'
                 validSchedule = false;
             }
+            //checks for error in dates
             this.dates.forEach(item => {
-                let withinThreeDatesFromNow = new Date();
-                withinThreeDatesFromNow.setDate(withinThreeDatesFromNow.getDate() + 3);
+                let withinTwoDays = new Date();
+                withinTwoDays.setDate(withinTwoDays.getDate() + 2);
                 let restrictionDate = new Date();
                 restrictionDate.setMonth(restrictionDate.getMonth() + 1);
                 if(new Date(item.date).toISOString() < new Date().toISOString()){
@@ -145,15 +147,15 @@ export default {
                 } else if(!(new Date(item.date).toISOString() < restrictionDate.toISOString())) {
                     item.errorDateMsg = 'Please select a date within one month from today.'
                     validSchedule = false;
-                } else if(new Date(item.date).toISOString() <= withinThreeDatesFromNow.toISOString()) {
-                    item.errorDateMsg = `Available dates are after ${withinThreeDatesFromNow.toISOString().substring(0, 10)}.`
+                } else if(new Date(item.date).toISOString() <= withinTwoDays.toISOString()) {
+                    item.errorDateMsg = `Available dates are after ${withinTwoDays.toISOString().substring(0, 10)}.`
                     validSchedule = false;
                 } else if(item.time === '') {
                     item.errorDateMsg = 'Please select a time for the meeting.'
                     validSchedule = false;
-                } else if(!(new Date("01/01/2000 "+item.time) > new Date("01/01/2000 7:00 AM") &&
-                    new Date("01/01/2000 "+item.time) < new Date("01/01/2000 8:00 PM"))) {
-                    item.errorDateMsg = 'Please select an appropiate time.'
+                } else if(!(new Date("01/01/2000 "+item.time) >= new Date("01/01/2000 7:00 AM") &&
+                    new Date("01/01/2000 "+item.time) <= new Date("01/01/2000 6:00 PM"))) {
+                    item.errorDateMsg = 'Please select an appropiate time. Should be after 7 AM and before 6 PM!'
                     console.log(item.time, "error time")
                     validSchedule = false;
                 } else {
@@ -175,6 +177,7 @@ export default {
                 // console.log('schedule is valid', offerData)
             }
         },
+        //checks for duplicated dates
         isThereDuplicatedDates(){
             let isDuplicated = false;
             if(this.dates[0].date === this.dates[1].date || this.dates[0].date === this.dates[2].date) isDuplicated = true;
