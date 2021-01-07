@@ -69,6 +69,7 @@ export default new Vuex.Store({
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
+      meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)).reverse(),
       offerErrors: state => state.notificationState.errors,
     },
     mutations: {...ContentMutations, ...UserMutations, ...NotificationMutations},

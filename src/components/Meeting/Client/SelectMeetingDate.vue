@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="text-center" justify="center">
         <div class="logo" >
-          <img :src="require('../../assets/logo.png')" alt="logo" width="400">
+          <img :src="require('../../../assets/logo.png')" alt="logo" width="400">
         </div>
         <h2 v-if="tokenError">You are unauthorized to view this page!</h2>
         <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
@@ -234,7 +234,7 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
-import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../emailTemplates/emails'
+import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../../emailTemplates/emails'
 import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import PayForMeeting from './PayForMeeting'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"

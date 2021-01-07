@@ -14,7 +14,7 @@ import EmailVerification from '@/components/User/EmailVerification.vue'
 import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
-import SelectMeetingDate from '@/components/clientMeeting/SelectMeetingDate.vue'
+import SelectMeetingDate from '@/components/Meeting/Client/SelectMeetingDate.vue'
 // import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
 let jwt = require('jsonwebtoken');
