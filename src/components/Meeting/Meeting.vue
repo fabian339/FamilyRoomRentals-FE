@@ -1,56 +1,66 @@
 <template>
     <v-container>
-        <h2 style="margin-bottom: 20px;" >Upcoming Meetings:</h2>       
+        <h2 style="margin-bottom: 20px;" >Upcoming Meetings:</h2>   
         <v-card
-            class="mx-auto meetingWrapper"
+            :class="`mx-auto compressMeetingWrapper ${!meetingData.expanded ? 'transitionOut' : ''}`"
+            color="#daf1a2"
             max-width="350"
-            color="#ccc249"
+            v-if="!meetingData.expanded"
         >
-        <div v-if="!meetingData.expanded" class="circle_holder">
-
-            <div class="top_circle"
-                :style="`
-                    background-image: url(${meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'});
-                    background-size: cover
-                `"
-            >
+            <div class="circle_holder">
+                <div class="top_circle"
+                    :style="`
+                        background-image: url(${meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'});
+                        background-size: cover`"
+                >
+                </div>
+                <div>
+                    <p class="font text-center" style="font-size: 20px; margin: 25px"><strong>Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.</strong></p>
+                </div>
             </div>
-            <div>
-                <p class="font text-center" style="font-size: 20px; margin: 25px"><strong>Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.</strong></p>
+        </v-card>
+        <v-card
+            :class="`mx-auto ${meetingData.expanded ? 'transitionOut' : ''}`"
+            color="#daf1a2"
+            v-else
+        >
+            <div justify="center" class="extendedMeeting">
+                <div style="width: 275px;">
+                    <img 
+                        :src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.pngs'" 
+                        alt="roomPhoto" 
+                        width="150" 
+                        height="100"
+                        @click.stop="openRoom"
+                        class="roomPhoto"
+                    />
+                    <p class="font">You will meet {{meetingData.ownerName}} to see this propery.</p>
+                </div>
+                <div style="width: 275px;">
+                    <h3>When: </h3>
+                    <p class="font"> 
+                            Meeting Scheduled for {{meetingData.meetingDate.date}} at
+                            {{meetingData.meetingDate.time}}. 
+                    </p>
+                </div>
+                <div style="width: 275px;">
+                    <h3>Where: </h3>
+                    <div>
+                        <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
+                    </div>
+                    <p class="font" >
+                        {{meetingData.meetingLocation.street1}}, 
+                        {{meetingData.meetingLocation.street2}},
+                        {{meetingData.meetingLocation.city}},
+                        {{meetingData.meetingLocation.state}},
+                        {{meetingData.meetingLocation.zipCode}},
+                        {{meetingData.meetingLocation.country}}
+                    </p>
+                    <v-btn color="teal" small dark @click.stop="openAddress">
+                        Open Address
+                    </v-btn>
+                </div>
             </div>
-            <!-- <div style="width: 50%">
-            <v-img
-                style="border-radius: 100%"
-                v-bind:src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'"
-            ></v-img>
-            </div>
-            <v-spacer></v-spacer>
-
-            <p class="font text-center" style="font-size: 20px; margin: 10px"><strong>Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.</strong></p> -->
-        </div>
-        <!-- <div id="rented" v-if="this.roomData.rented && new Date() < new Date(new Date(this.roomData.rentedDate).setDate(new Date(this.roomData.rentedDate).getDate() + 2))">
-            <v-card-title style="justify-content: center;"> Just Rented </v-card-title>
-            </div>
-            <div id="rented" v-if="this.roomData.rented && new Date() > new Date(new Date(this.roomData.rentedDate).setDate(new Date(this.roomData.rentedDate).getDate() + 2))">
-            <v-card-title style="justify-content: center;"> Rented </v-card-title>
-            </div>
-            <v-spacer></v-spacer>
-            <div id="price">
-            <v-card-title>${{this.roomData.price}}/month</v-card-title>
-            </div>
-            </v-img>
-            <v-card-subtitle class="pb-0 font">Location: {{this.roomData.location.city}}, {{this.roomData.location.state}}</v-card-subtitle>
-
-            <v-card-text class="text--primary font" style="margin-bottom: -30px;">
-            <p> Publisher: {{this.roomData.ownerFname}} {{this.roomData.ownerLname}}</p>
-            <p class="font text-center" style="font-size: 20px;"><strong>{{this.roomData.title.substring(0, 24).toUpperCase()}}...</strong></p>
-            </v-card-text>
-
-            <v-card-actions class="justify-center">
-
-            <v-btn class="ma-2" tile color="#556B2F" dark @click="viewRoom">View Room</v-btn>
-
-            </v-card-actions> -->
         </v-card>
     </v-container>
 </template>
@@ -72,6 +82,14 @@
       'meetings',
       'currentUserRooms'
     ]),
+    openAddress(){
+        const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
+        this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
+        window.open(this.roomAddress, '_blank');
+    },
+    openRoom(){
+        window.open(`https://familyroomrentals.com/#/room/${this.meetingData.roomId}`, '_blank');
+    }
   }   
 }
 </script>
@@ -84,7 +102,7 @@
         border-left:1px solid gray;
         border-right:1px solid gray;
         height:70%;
-        position:relative;
+        /* position:relative; */
     }
 
     .top_circle div {
@@ -106,27 +124,29 @@
 
     .circle_holder {
         position:relative;
-        width:350px;
         height:350px;
+        /* transition: all 0.5s; */
     }
 
-
-    .meetingWrapper{
+    .compressMeetingWrapper{
         border-top-right-radius: 50%;
-        border-top-left-radius: 50%;
+        border-top-left-radius: 50%;  
     }
-  /* #price{
-    width: 45%;
-    height: 55px;
-    background-color: seagreen;
-    border-top-right-radius: 15px;
-  } */
-  /* #rented{
-    margin: 0px 0px 90px 195px;
-    background-color: goldenrod;
-    width: 45%;
-    height: 55px;
-    border-bottom-left-radius: 15px;
-    justify-content: center;
-  } */
+
+    .circle_holder:hover, .extendedMeeting:hover {
+        border: 5px solid;
+        border-color: #e3ff68 !important;
+        cursor: pointer;
+    }
+
+    .extendedMeeting{
+        align-items: center; 
+        display: flex;
+        padding: 10px;
+    }
+
+    .transitionOut{
+        transition: all 0.5s;
+    }
+
 </style>

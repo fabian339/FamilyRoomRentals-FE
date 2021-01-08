@@ -20,12 +20,14 @@
         v-else
       >
         <div v-if="meetings.length > 0">
-          <div v-for="meeting in meetings" :key="meeting.createdAt">
-            <Meeting @click.stop="meetingExpanded = !meetingExpanded" :meetingData="{
+          <div v-for="meeting in meetings" :key="meeting.createdAt" @click.stop="meetingExpanded = !meetingExpanded">
+            <Meeting :meetingData="{
                 ownerName: meeting.ownerName,
+                roomId: meeting.roomId,
                 expanded: meetingExpanded,
                 image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0],
-                meetingDate: meeting.officialMeetingDate
+                meetingDate: meeting.officialMeetingDate,
+                meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
               }" 
             />
           </div>
