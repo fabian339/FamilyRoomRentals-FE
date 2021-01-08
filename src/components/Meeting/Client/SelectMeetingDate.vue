@@ -65,53 +65,22 @@
             </v-btn>
             <div v-if="currentOffer.meetingScheduled || showTicket">
                 <div v-if="!currentOffer.processCanceled && !currentOffer.didMeetingPassed">
-                    <div class="confirmation">
+                    <div class="confirmation">                   
                         <h2>{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
                                 `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
                             )}}
                         </h2>
-
-                        <v-row class="text-center" justify="center" style="align-items: center;">
-                            <div style="width: 275px;">
-                                <img 
-                                    :src="(contentRoom.images && contentRoom.images.length > 0) ? contentRoom.images[0] : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'" 
-                                    alt="roomPhoto" 
-                                    width="150" 
-                                    height="100"
-                                    @click.stop="openRoom"
-                                    class="roomPhoto"
-                                />
-                                <p class="font">You will meet {{currentOffer.ownerName}} to see this propery</p>
-                            </div>
-                            <div style="width: 275px;">
-                                <h3>When: </h3>
-                                <p class="font"> 
-                                    {{currentOffer.meetingScheduled ? (
-                                        `Meeting Scheduled for ${currentOffer.officialMeetingDate.date} 
-                                    at ${currentOffer.officialMeetingDate.time}`) : (
-                                        `${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()},
-                                    at ${currentOffer.meetingDates[dateSelectedIndex].time}`
-                                    )}}
-                                </p>
-                            </div>
-                            <div style="width: 275px;">
-                                <h3>Where: </h3>
-                                <div>
-                                    <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
-                                </div>
-                                <p class="font" >
-                                    {{contentRoom.location.street1}}, 
-                                    {{contentRoom.location.street2}},
-                                    {{contentRoom.location.city}},
-                                    {{contentRoom.location.state}},
-                                    {{contentRoom.location.zipCode}},
-                                    {{contentRoom.location.country}}
-                                </p>
-                                <v-btn color="teal" small dark @click.stop="openAddress">
-                                    Open Address
-                                </v-btn>
-                            </div>
-                        </v-row>
+                        <Meeting :meetingData="{
+                                ownerName: currentOffer.ownerName,
+                                roomId: currentOffer.roomId,
+                                image: contentRoom.images[0],
+                                meetingDate: {
+                                    date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
+                                    time: currentOffer.meetingScheduled ? currentOffer.meetingDates[dateSelectedIndex].time : currentOffer.meetingDates[dateSelectedIndex].time,
+                                },
+                                meetingLocation: contentRoom.location
+                            }" 
+                        />
                     </div>
                     <div v-if="currentOffer.meetingScheduled && !showTicket">
                         <p v-if="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="status"> 
@@ -237,11 +206,12 @@ import { mapGetters, mapActions } from 'vuex'
 import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../../emailTemplates/emails'
 import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import PayForMeeting from './PayForMeeting'
+import Meeting from '../Meeting'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
-    components: { PayForMeeting,  MeetingCheckIn},
+    components: { PayForMeeting,  MeetingCheckIn, Meeting},
     computed: {
       ...mapGetters([
         'isContentLoading',

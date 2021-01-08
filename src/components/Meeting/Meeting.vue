@@ -1,13 +1,12 @@
 <template>
     <v-container>
-        <h2 style="margin-bottom: 20px;" >Upcoming Meetings:</h2>   
         <v-card
-            :class="`mx-auto compressMeetingWrapper ${!meetingData.expanded ? 'transitionOut' : ''}`"
+            :class="`mx-auto compressMeetingWrapper ${!expanded ? 'transitionOut' : ''}`"
             color="#daf1a2"
             max-width="350"
-            v-if="!meetingData.expanded"
+            v-if="!expanded"
         >
-            <div class="circle_holder">
+            <div class="circle_holder" @click.stop="expanded = !expanded">
                 <div class="top_circle"
                     :style="`
                         background-image: url(${meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'});
@@ -20,11 +19,11 @@
             </div>
         </v-card>
         <v-card
-            :class="`mx-auto ${meetingData.expanded ? 'transitionOut' : ''}`"
+            :class="`mx-auto ${expanded ? 'transitionOut' : ''}`"
             color="#daf1a2"
             v-else
         >
-            <div justify="center" class="extendedMeeting">
+            <div justify="center" class="extendedMeeting" @click.stop="expanded = !expanded">
                 <div style="width: 275px;">
                     <img 
                         :src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.pngs'" 
@@ -74,6 +73,7 @@
     name: 'Meeting',
     props: ['meetingData'],
     data: () => ({
+        expanded: false
     }),
     created() {
   },
@@ -125,7 +125,6 @@
     .circle_holder {
         position:relative;
         height:350px;
-        /* transition: all 0.5s; */
     }
 
     .compressMeetingWrapper{
@@ -135,7 +134,7 @@
 
     .circle_holder:hover, .extendedMeeting:hover {
         border: 5px solid;
-        border-color: #e3ff68 !important;
+        border-color: #faffd0 !important;
         cursor: pointer;
     }
 
@@ -143,6 +142,7 @@
         align-items: center; 
         display: flex;
         padding: 10px;
+        justify-content: center;
     }
 
     .transitionOut{
