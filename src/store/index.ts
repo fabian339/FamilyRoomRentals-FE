@@ -42,7 +42,8 @@ export default new Vuex.Store({
         offerTokenVerified: false,
         offerAcceptedByOwner: false,
         errors: {}
-      }
+      },
+      maintenance: false
     }),
     getters: {
       // Content
@@ -71,6 +72,8 @@ export default new Vuex.Store({
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
       meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)).reverse(),
       offerErrors: state => state.notificationState.errors,
+      //maintenance the whole application, implementation missing
+      isAppInMaintenance: (state: any) => state.maintenance,
     },
     mutations: {...ContentMutations, ...UserMutations, ...NotificationMutations},
     actions: {...ContentActions, ...UserActions, ...NotificationActions }

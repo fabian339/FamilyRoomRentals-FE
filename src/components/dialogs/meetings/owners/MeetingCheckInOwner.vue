@@ -14,25 +14,26 @@
             ></v-progress-linear>
             <v-card v-else>
                 <h2 v-if="!loadingFinished" style="padding: 30px; headline">
-                    {{user === "owner" ? (
-                        `Hey ${currentOffer.ownerName}, are you ready to check-in your meeting with ${currentOffer.full_name}?`) : (
-                        `Hey ${currentOffer.full_name}, are you ready to check-in your meeting with ${currentOffer.ownerName}? ` )}}
+                    Hey {{meeting.ownerName}}, are you ready to check-in your meeting with {{meeting.full_name}}?
+                    <!-- {{user === "owner" ? (
+                        `Hey ${meeting.ownerName}, are you ready to check-in your meeting with ${meeting.full_name}?`) : (
+                        `Hey ${meeting.clientFu}, are you ready to check-in your meeting with ${meeting.ownerName}? ` )}} -->
                 </h2>
                 <div v-if="loadingFinished" style="padding: 30px;">
-                    <h2 v-if="user === 'owner'">
-                        {{currentOffer.clientCheckedInMeeting ? (
-                            `Thank you for checking-in, please start the meeting with ${currentOffer.full_name}!`
+                    <h2>
+                        {{meeting.clientCheckedInMeeting ? (
+                            `Thank you for checking-in, please start the meeting with ${meeting.full_name}!`
                         ) : (
-                            `Thank you for checking-in, please wait for ${currentOffer.full_name} to check-in to start the meeting!`
+                            `Thank you for checking-in, please wait for ${meeting.clientName} to check-in to start the meeting!`
                         )}}
                     </h2>
-                    <h2 v-if="user === 'client'">
-                        {{currentOffer.ownerCheckedInMeeting ? (
-                            `Thank you for checking-in, please start the meeting with ${currentOffer.ownerName}!`
+                    <!-- <h2 v-if="user === 'client'">
+                        {{meeting.ownerCheckedInMeeting ? (
+                            `Thank you for checking-in, please start the meeting with ${meeting.ownerName}!`
                         ) : (
-                            `Thank you for checking-in, please wait for ${currentOffer.ownerName} to check-in to start the meeting!`
+                            `Thank you for checking-in, please wait for ${meeting.ownerName} to check-in to start the meeting!`
                         )}}
-                    </h2>
+                    </h2> -->
 
                     <v-btn
                         style="margin: 10px 0;"
@@ -71,14 +72,14 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../emailTemplates/emails'
+// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
     name: "MeetingCheckIN",
     props: {
         value: Boolean,
-        user: String
+        meetingId: String 
     },
     components: {},
     computed: {
@@ -94,57 +95,62 @@ export default {
         },
         ...mapGetters([
             'currentOffer',
+            'currentUserOffers'
         ]),
     },
     data(){
         return{
             showLoading: false,
             countUp: 0,
-            loadingFinished: false
+            loadingFinished: false,
+            meeting: {}
         }
 
+    },
+    beforeMount(){
+        this.meeting = this.currentUserOffers.filter(offer => offer.objectId === this.meetingId)[0]
     },
     methods: {
         ...mapActions([
             'updateOffer',
-            'sendEmail'
+            'sendEmail',
         ]),
         registerMeeting(){
             // console.log(this.user)
             // check that time match before actually checking in
-            if(this.user === 'owner'){
+           
                 //send email to client on check-in
-                const clientEmailData = SendEmailToClientOnOwnerCheckIn({
-                    email: this.currentOffer.email,
-                    name: this.currentOffer.full_name,
-                    ownerName: this.currentOffer.ownerName,
-                    roomId: this.currentOffer.roomId,
-                    token: this.currentOffer.token,
-                    verificationId: this.currentOffer.objectId
-                })
-                this.sendEmail(clientEmailData)
-                this.updateOffer({
-                    objectId: this.currentOffer.objectId,
-                    ownerCheckedInMeeting: true,
-                    OwnerCheckedInDate: new Date(),
-                    readByReceiver: false,
-                })
-            }
-            if(this.user === 'client'){
-                //send email to owner on check-in
-                const ownerEmailData = SendEmailToOwnerOnClientrCheckIn({
-                    ownerEmail: this.currentOffer.ownerEmail,
-                    name: this.currentOffer.full_name,
-                    ownerName: this.currentOffer.ownerName,
-                })
-                this.sendEmail(ownerEmailData)
-                this.updateOffer({
-                    objectId: this.currentOffer.objectId,
-                    clientCheckedInMeeting: true,
-                    clientCheckedInDate: new Date(),
-                    readByReceiver: false,
-                })
-            }
+                // const clientEmailData = SendEmailToClientOnOwnerCheckIn({
+                //     email: this.meeting.email,
+                //     name: this.meeting.full_name,
+                //     ownerName: this.meeting.ownerName,
+                //     roomId: this.meeting.roomId,
+                //     token: this.meeting.token,
+                //     verificationId: this.meeting.objectId
+                // })
+                // this.sendEmail(clientEmailData)
+                // this.updateOffer({
+                //     objectId: this.meeting.objectId,
+                //     ownerCheckedInMeeting: true,
+                //     OwnerCheckedInDate: new Date(),
+                //     readByReceiver: false,
+                // })
+            
+            // if(this.user === 'client'){
+            //     //send email to owner on check-in
+            //     const ownerEmailData = SendEmailToOwnerOnClientrCheckIn({
+            //         ownerEmail: this.meeting.ownerEmail,
+            //         name: this.meeting.full_name,
+            //         ownerName: this.meeting.ownerName,
+            //     })
+            //     this.sendEmail(ownerEmailData)
+            //     this.updateOffer({
+            //         objectId: this.meeting.objectId,
+            //         clientCheckedInMeeting: true,
+            //         clientCheckedInDate: new Date(),
+            //         readByReceiver: false,
+            //     })
+            // }
             this.countUp = 0
             this.showLoading = true
             this.startCountUpTimer()
@@ -158,7 +164,7 @@ export default {
                 setTimeout(() => {
                     this.countUp += 1
                     this.startCountUpTimer()
-                }, 1000)
+                }, 500)
             }
         },
         

@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <div>
         <v-card
             :class="`mx-auto compressMeetingWrapper ${!expanded ? 'transitionOut' : ''}`"
             color="#daf1a2"
@@ -23,7 +23,8 @@
             color="#daf1a2"
             v-else
         >
-            <div justify="center" class="extendedMeeting" @click.stop="expanded = !expanded">
+        <div justify="center" class="extendedMeeting">
+            <div class="meetingInfo" @click.stop="expanded = !expanded">
                 <div style="width: 275px;">
                     <img 
                         :src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.pngs'" 
@@ -45,9 +46,17 @@
                 <div style="width: 275px;">
                     <h3>Where: </h3>
                     <div>
-                        <v-icon style="font-size: 60px;" large color="green darken-2">mdi-map-marker</v-icon>
+                        <v-icon 
+                            class="openAddress" 
+                            style="font-size: 60px;" 
+                            @click.stop="openAddress" 
+                            large 
+                            color="green darken-2"
+                        >
+                            mdi-map-marker
+                        </v-icon>
                     </div>
-                    <p class="font" >
+                    <p class="font openAddress" @click.stop="openAddress">
                         {{meetingData.meetingLocation.street1}}, 
                         {{meetingData.meetingLocation.street2}},
                         {{meetingData.meetingLocation.city}},
@@ -55,33 +64,84 @@
                         {{meetingData.meetingLocation.zipCode}},
                         {{meetingData.meetingLocation.country}}
                     </p>
-                    <v-btn color="teal" small dark @click.stop="openAddress">
-                        Open Address
-                    </v-btn>
                 </div>
             </div>
+            <div v-if="isUserAuthenticated && currentUser.objectId === meetingData.ownerId">
+            <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
+                <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
+                <v-btn 
+                    style="margin: 0px 5px 0 0" 
+                    small 
+                    rounded
+                    color="error"
+                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || meetingData.didMeetingPassed"
+                    @click.stop="openCancelMeetingWarning = true"
+                >
+                    Cancel Meeting
+                </v-btn> 
+                <v-btn 
+                    style="margin: 0px 0px 0px 5px;" 
+                    small 
+                    rounded 
+                    color="success"
+                    :disabled="(isUserAuthenticated && currentUser.objectId && meetingData.ownerCheckedInMeeting)"
+                    @click.stop="openCheckIn = true"
+                >
+                    {{(isUserAuthenticated && currentUser.objectId && meetingData.ownerCheckedInMeeting) ?
+                        'Already Checked-in' : 'Check-in Meeting'
+                    }}
+                </v-btn> 
+                <v-btn 
+                    style="margin: 5px 5px;" 
+                    small 
+                    color="error" 
+                    @click.stop="showDeleteWarning = true"
+                    :disabled="!meetingData.offerCompleted"
+                >
+                    Delete Meeting
+                </v-btn>
+
+                <CancelMeetingWarningOwner v-model="openCancelMeetingWarning" :meetingId="meetingData.meetingId" />
+                <MeetingCheckInOwner v-model="openCheckIn" :meetingId="meetingData.meetingId" />
+            </div>
+        </div>
+        <!-- <div v-if="isUserAuthenticated && currentUser.objectId === meetingData.ownerId">
+       
+        </div> -->
         </v-card>
-    </v-container>
+    </div>
 </template>
 
 <script>
   // import store from '../store.js'
+  import CancelMeetingWarningOwner from '@/components/dialogs/meetings/owners/CancelMeetingWarningOwner.vue'
+  import MeetingCheckInOwner from '@/components/dialogs/meetings/owners/MeetingCheckInOwner.vue'
+
   import { mapGetters } from 'vuex'
 
   // import axios from 'axios'
   export default {
     name: 'Meeting',
     props: ['meetingData'],
+    components: {
+        CancelMeetingWarningOwner,
+        MeetingCheckInOwner
+    },
     data: () => ({
-        expanded: false
+        expanded: false,
+        openCancelMeetingWarning: false,
+        openCheckIn: false,
+        showDeleteWarning: false
     }),
+    computed: {
+        ...mapGetters([
+        'isUserAuthenticated',
+        'currentUser'
+        ]),
+    },
     created() {
   },
   methods: {
-    ...mapGetters([
-      'meetings',
-      'currentUserRooms'
-    ]),
     openAddress(){
         const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
         this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
@@ -138,7 +198,9 @@
         cursor: pointer;
     }
 
-    .extendedMeeting{
+
+
+    .meetingInfo{
         align-items: center; 
         display: flex;
         padding: 10px;
@@ -147,6 +209,12 @@
 
     .transitionOut{
         transition: all 0.5s;
+    }
+
+    .openAddress:hover{
+        cursor: pointer;
+        color: blue;
+        transform: scale(1.1);
     }
 
 </style>

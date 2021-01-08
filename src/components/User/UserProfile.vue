@@ -21,16 +21,25 @@
       >
         <div v-if="meetings.length > 0">
           <h2 style="margin-bottom: 20px; margin-top: 10px" >Upcoming Meetings:</h2>   
-          <div v-for="meeting in meetings" :key="meeting.createdAt">
-            <Meeting :meetingData="{
-                ownerName: meeting.ownerName,
-                roomId: meeting.roomId,
-                image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0],
-                meetingDate: meeting.officialMeetingDate,
-                meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
-              }" 
-            />
-          </div>
+          <v-row >
+            <v-col v-for="meeting in meetings" :key="meeting.createdAt">
+              <Meeting :meetingData="{
+                  ownerName: meeting.ownerName,
+                  ownerId: meeting.receiverId,
+                  roomId: meeting.roomId,
+                  meetingId: meeting.objectId,
+                  processCanceled: meeting.processCanceled,
+                  offerCompleted: meeting.offerCompleted,
+                  didMeetingPassed: meeting.didMeetingPassed,
+                  ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
+                  clientCheckedInMeeting: meeting.clientCheckedInMeeting,
+                  image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0],
+                  meetingDate: meeting.officialMeetingDate,
+                  meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
+                }" 
+              />
+            </v-col>
+          </v-row>
         </div>
         <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
         <h2 v-if="currentUserRooms.length === 0" style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       

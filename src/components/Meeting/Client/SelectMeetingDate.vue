@@ -195,7 +195,7 @@
                     }"/>
             </div>
         </v-col>
-        <MeetingCheckIn v-model="openCheckIn" user="client"/>
+        <!-- <MeetingCheckIn v-model="openCheckIn" user="client"/> -->
     </v-row>
   </v-container>
 </template>
@@ -204,14 +204,14 @@
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions } from 'vuex'
 import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../../emailTemplates/emails'
-import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
+// import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import PayForMeeting from './PayForMeeting'
 import Meeting from '../Meeting'
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
-    components: { PayForMeeting,  MeetingCheckIn, Meeting},
+    components: { PayForMeeting,   Meeting},
     computed: {
       ...mapGetters([
         'isContentLoading',
