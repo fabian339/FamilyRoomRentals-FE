@@ -441,7 +441,7 @@ export const SendEmailToAdminOnRoomReported = (data: any) => {
 export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
-        <h3> Dear ${data.name}, </h3>
+        <h3> Dear ${data.clientName}, </h3>
         <p> The meeting process with ${data.ownerName} has been cancelled. </p>
 
         <h4>Information:</h4>
@@ -478,9 +478,9 @@ export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
     return {
-        email: data.email,
+        email: data.clientEmail,
         subject: "Your Pending Meeting Has Been Canceled",
-        name: data.name,
+        name: data.clientName,
         html,
     };
 }
@@ -490,7 +490,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear ${data.ownerName}, </h3>
-        <p> The meeting process with ${data.name} has been cancelled. </p>
+        <p> The meeting process with ${data.clientName} has been cancelled. </p>
 
         <h4>Information:</h4>
         <p> 
@@ -505,7 +505,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
         </p>
         <p> 
             ${data.meetingScheduled ? `${data.status} has been cancelled. As a concequence of cancelling a pending meeting, we could disable this property for a period
-            of one week, or more.` : 'This offer is terminated effectibely now!'}
+            of one week, or more.` : 'This offer is terminated effectively now!'}
         </p>
         
             
@@ -522,7 +522,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
     return {
-        email: data.email,
+        email: data.ownerEmail,
         subject: "Meeting Cancelation Confirmed!",
         name: data.ownerName,
         html,
@@ -533,7 +533,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
 export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
-        <h3> Dear ${data.name}, </h3>
+        <h3> Dear ${data.clientName}, </h3>
         <p> You have canceled the meeting process with ${data.ownerName}. </p>
 
         <h4>Information:</h4>
@@ -570,9 +570,9 @@ export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
     return {
-        email: data.email,
+        email: data.clientEmail,
         subject: "Meeting cancelation confirmed!",
-        name: data.name,
+        name: data.clientName,
         html,
     };
 }
@@ -582,7 +582,7 @@ export const SendEmailToOwnerOnMeetingCanceledByClient = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear ${data.ownerName}, </h3>
-        <p> ${data.name} has been canceled the meeting process with you. </p>
+        <p> ${data.clientName} has been canceled the meeting process with you. </p>
 
         <h4>Information:</h4>
         <p> 
@@ -612,38 +612,17 @@ export const SendEmailToOwnerOnMeetingCanceledByClient = (data: any) => {
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
     return {
-        email: data.email,
+        email: data.ownerEmail,
         subject: "Your Meeting Has Been Canceled!!",
         name: data.ownerName,
         html,
     };
 }
 
-export const SendEmailToAdminOnClientMeetingCancelation = (data: any) => {
-    const html = `
-    <h3> Dear admin, </h3>
-    <p>The client ${data.name} has canceled a meeting.</p>
-    
-    <h4>Actions: </h4>
-    <p>
-        Login to check your account 
-        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
-    </p>
-    <p> MeetingID/OfferID: ${data.offerId} </p>
-    <p> Please procee to charge the cancelation feed to client! </p?
-    `;
-    
-return {
-    email: data.email,
-    subject: "New Cancelation Feed To Charge!",
-    name: 'FamilyRoomRentals',
-    html,
-};
-}
 
 export const SendEmailToClientOnOwnerCheckIn = (data: any) => {
     const html = `
-        <h3> Dear ${data.name}, </h3>
+        <h3> Dear ${data.clientName}, </h3>
         <p> ${data.ownerName} has checked-in for the meeting! </p>
 
         <p> If you haven't, please use your verification ID to check-in 
@@ -684,17 +663,17 @@ export const SendEmailToClientOnOwnerCheckIn = (data: any) => {
         <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
     `;
     return {
-        email: data.email,
+        email: data.clientEmail,
         subject: "WOA Your meeting is about to start!!",
-        name: data.name,
+        name: data.clientName,
         html,
     };
 }
 
-export const SendEmailToOwnerOnClientrCheckIn = (data: any) => {
+export const SendEmailToOwnerOnClientCheckIn = (data: any) => {
     const html = `
         <h3> Dear ${data.ownerName}, </h3>
-        <p> ${data.name} has checked-in for the meeting! </p>
+        <p> ${data.clientName} has checked-in for the meeting! </p>
 
         <p> If you haven't, please log-in into 
             <strong><a href='https://familyroomrentals.com/#/login' target="_blank">FamilyRoomRentals</a></strong>
@@ -704,21 +683,21 @@ export const SendEmailToOwnerOnClientrCheckIn = (data: any) => {
         <h4>How to handle the meeting?</h4>
         <p>
             While dealing with a pandemic, receiving visitors could be challenging. Please take all the precautions
-            necessary while meeting with ${data.name}. 
+            necessary while meeting with ${data.clientName}. 
         </p>
         <ul> Please wear a face covering </ul>
         <ul> Please stay in a 6 feet distance between you and any other individual. </ul>
         <ul> Please be on time </ul>
         <ul> Please ask as many questions as possible  </ul>
         <ul> Please stay alert while visiting the property. </ul>
-        <ul> Verify that ${data.name} has checked-in on the app before starting the meeting! </ul>
+        <ul> Verify that ${data.clientName} has checked-in on the app before starting the meeting! </ul>
         <ul> Stay Alert and be safe!! </ul>
 
         <p>
             Once the meeting is done, we will send you a follow up email and notification to see how it went. 
         </p>
         
-        <p> We wish you all the best on your meeting with ${data.name}! </p>
+        <p> We wish you all the best on your meeting with ${data.clientName}! </p>
 
         <p>Thank you for using FamilyRoomRentals</p>
         <p>Stay safe during this critical times and enjoy the rest of your day!</p>
@@ -741,3 +720,23 @@ export const SendEmailToOwnerOnClientrCheckIn = (data: any) => {
 }
 
 //ADMINS
+export const SendEmailToAdminOnClientMeetingCancelation = (data: any) => {
+    const html = `
+    <h3> Dear admin, </h3>
+    <p>The client ${data.clientName} has canceled a meeting.</p>
+    <h4>Actions: </h4>
+    <p>
+        Login to check your account 
+        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+    </p>
+    <p> MeetingID/OfferID: ${data.offerId} </p>
+    <p> Please procee to charge the cancelation feed to client! </p?
+    `;
+    
+    return {
+        email: data.adminEmail,
+        subject: "New Cancelation Feed To Charge!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}

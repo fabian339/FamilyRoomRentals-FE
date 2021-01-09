@@ -23,8 +23,8 @@
             color="#daf1a2"
             v-else
         >
-        <div justify="center" class="extendedMeeting">
-            <div class="meetingInfo" @click.stop="expanded = !expanded">
+        <div justify="center" class="extendedMeeting"  @click.stop="expanded = !expanded">
+            <div class="meetingInfo">
                 <div style="width: 275px;">
                     <img 
                         :src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.pngs'" 
@@ -66,7 +66,7 @@
                     </p>
                 </div>
             </div>
-            <div v-if="isUserAuthenticated && currentUser.objectId === meetingData.ownerId">
+            <div v-if="isOwner()" class="btn-spacing">
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
@@ -84,10 +84,10 @@
                     small 
                     rounded 
                     color="success"
-                    :disabled="(isUserAuthenticated && currentUser.objectId && meetingData.ownerCheckedInMeeting)"
+                    :disabled="(meetingData.ownerCheckedInMeeting || isItToEarlyForMeeting() || meetingData.didMeetingPassed)"
                     @click.stop="openCheckIn = true"
                 >
-                    {{(isUserAuthenticated && currentUser.objectId && meetingData.ownerCheckedInMeeting) ?
+                    {{(meetingData.ownerCheckedInMeeting) ?
                         'Already Checked-in' : 'Check-in Meeting'
                     }}
                 </v-btn> 
@@ -100,22 +100,59 @@
                 >
                     Delete Meeting
                 </v-btn>
-
-                <CancelMeetingWarningOwner v-model="openCancelMeetingWarning" :meetingId="meetingData.meetingId" />
-                <MeetingCheckInOwner v-model="openCheckIn" :meetingId="meetingData.meetingId" />
             </div>
+            <div v-else class="btn-spacing">
+            <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
+                <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
+                <v-btn 
+                    style="margin: 0px 5px 0 0" 
+                    small 
+                    rounded
+                    color="error"
+                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || meetingData.didMeetingPassed"
+                    @click.stop="openCancelMeetingWarning = true"
+                >
+                    Cancel Meeting
+                </v-btn> 
+                <v-btn 
+                    style="margin: 0px 0px 0px 5px;" 
+                    small 
+                    rounded 
+                    color="success"
+                    :disabled="(meetingData.clientCheckedInMeeting || isItToEarlyForMeeting() || meetingData.didMeetingPassed)"
+                    @click.stop="openCheckIn = true"
+                >
+                    {{(meetingData.clientCheckedInMeeting) ?
+                        'Already Checked-in' : 'Check-in Meeting'
+                    }}
+                </v-btn> 
+            </div>
+            <p v-if="isItToEarlyForMeeting()" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
         </div>
-        <!-- <div v-if="isUserAuthenticated && currentUser.objectId === meetingData.ownerId">
-       
-        </div> -->
+        <div>
+            <CancelMeetingWarningOwner 
+                v-model="openCancelMeetingWarning"
+                :data="{
+                    meetingId: meetingData.meetingId,
+                    ownerId: meetingData.ownerId
+                }"
+            />
+            <MeetingCheckInOwner 
+                v-model="openCheckIn" 
+                :data="{
+                    meetingId: meetingData.meetingId,
+                    ownerId: meetingData.ownerId
+                }"
+            />
+        </div>
         </v-card>
     </div>
 </template>
 
 <script>
   // import store from '../store.js'
-  import CancelMeetingWarningOwner from '@/components/dialogs/meetings/owners/CancelMeetingWarningOwner.vue'
-  import MeetingCheckInOwner from '@/components/dialogs/meetings/owners/MeetingCheckInOwner.vue'
+  import CancelMeetingWarningOwner from '@/components/dialogs/meetings/CancelMeetingWarningOwner.vue'
+  import MeetingCheckInOwner from '@/components/dialogs/meetings/MeetingCheckInOwner.vue'
 
   import { mapGetters } from 'vuex'
 
@@ -142,6 +179,46 @@
     created() {
   },
   methods: {
+    isOwner(){
+        return this.isUserAuthenticated && this.currentUser.objectId === this.meetingData.ownerId
+    },
+    isItTimeToCheckIn(){
+        //testing date
+        // let tempDate = {
+        //     date: 'Sat Jan 09 2021',
+        //     time: '12:40 AM'
+        // }
+        let before15Min = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+        let after15Min = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+
+        let currentDate = new Date()
+        // .toLocaleString('en-US', {
+        //         timeZone: 'America/New_York'
+        //     })
+        before15Min.setMinutes(before15Min.getMinutes() - 15)
+        after15Min.setMinutes(after15Min.getMinutes() + 15)
+        // console.log(currentDate, before15Min, after15Min)
+        return (currentDate >= before15Min && currentDate <= after15Min)
+    },
+    isItToEarlyForMeeting(){
+        let before15Min = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+        before15Min.setMinutes(before15Min.getMinutes() - 15)
+        let currentDate = new Date()
+        return currentDate < before15Min;
+    },
+    daysRemainingBeforeMeeting(){
+        let meetingDate = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+        let currentDate = new Date();
+        let daysBeforeMeetingStart = meetingDate.getDate() - currentDate.getDate();
+        var diff = meetingDate.valueOf() - currentDate.valueOf();
+        var diffInHours = ((diff/1000/60/60) - (daysBeforeMeetingStart*24));
+        let hourInt = Math.trunc(diffInHours)
+        let hourFloat = (Number((diffInHours - hourInt).toFixed(2)) * 60).toFixed(0)
+
+        // let diffMinutes = (diffInHours * 60) - (diffInHours.toFixed(0)*60)
+        // console.log(diffInHours,  daysBeforeMeetingStart*24)
+        return (`Be ready, meeting starts in ${daysBeforeMeetingStart} days, ${hourInt} hours, and ${hourFloat} minutes!`)
+    },
     openAddress(){
         const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
         this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
@@ -198,8 +275,6 @@
         cursor: pointer;
     }
 
-
-
     .meetingInfo{
         align-items: center; 
         display: flex;
@@ -215,6 +290,15 @@
         cursor: pointer;
         color: blue;
         transform: scale(1.1);
+    }
+
+    .btn-spacing{
+        margin: 15px;
+    }
+
+    .earlyMeetingDate{
+        color: #1e7a84;
+        font-weight: 600;
     }
 
 </style>

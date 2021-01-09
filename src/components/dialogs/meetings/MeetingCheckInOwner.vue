@@ -14,26 +14,27 @@
             ></v-progress-linear>
             <v-card v-else>
                 <h2 v-if="!loadingFinished" style="padding: 30px; headline">
-                    Hey {{meeting.ownerName}}, are you ready to check-in your meeting with {{meeting.full_name}}?
-                    <!-- {{user === "owner" ? (
-                        `Hey ${meeting.ownerName}, are you ready to check-in your meeting with ${meeting.full_name}?`) : (
-                        `Hey ${meeting.clientFu}, are you ready to check-in your meeting with ${meeting.ownerName}? ` )}} -->
+                    {{isOwner() ? (
+                        `Hey ${meeting.ownerName}, are you ready to start your meeting with ${meeting.clientName}?`
+                        ) : (
+                        `Hey ${meeting.clientName}, are you ready to start your meeting with ${meeting.ownerName}? ` 
+                    )}}
                 </h2>
                 <div v-if="loadingFinished" style="padding: 30px;">
-                    <h2>
-                        {{meeting.clientCheckedInMeeting ? (
-                            `Thank you for checking-in, please start the meeting with ${meeting.full_name}!`
-                        ) : (
-                            `Thank you for checking-in, please wait for ${meeting.clientName} to check-in to start the meeting!`
-                        )}}
-                    </h2>
-                    <!-- <h2 v-if="user === 'client'">
+                    <h2 v-if="isOwner()">
                         {{meeting.ownerCheckedInMeeting ? (
                             `Thank you for checking-in, please start the meeting with ${meeting.ownerName}!`
                         ) : (
                             `Thank you for checking-in, please wait for ${meeting.ownerName} to check-in to start the meeting!`
                         )}}
-                    </h2> -->
+                    </h2>
+                    <h2 v-else>
+                        {{meeting.clientCheckedInMeeting ? (
+                            `Thank you for checking-in, please start the meeting with ${meeting.ownerName}!`
+                        ) : (
+                            `Thank you for checking-in, please wait for ${meeting.clientName} to check-in to start the meeting!`
+                        )}}
+                    </h2>
 
                     <v-btn
                         style="margin: 10px 0;"
@@ -51,7 +52,8 @@
                         rounded
                         outlined 
                         color="#556B2F"
-                        @click.stop="registerMeeting">
+                        @click.stop="isOwner() ? ownerCheckIn() : clientCheckIn()"
+                    >
                         Yes
                     </v-btn> 
                     <v-btn
@@ -72,14 +74,14 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientrCheckIn } from '../../../../emailTemplates/emails'
+// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
-    name: "MeetingCheckIN",
+    name: "MeetingCheckIn",
     props: {
         value: Boolean,
-        meetingId: String 
+        data: Object 
     },
     components: {},
     computed: {
@@ -94,8 +96,9 @@ export default {
             }
         },
         ...mapGetters([
-            'currentOffer',
-            'currentUserOffers'
+            'isUserAuthenticated',
+            'currentUserOffers',
+            'currentUser'
         ]),
     },
     data(){
@@ -108,49 +111,54 @@ export default {
 
     },
     beforeMount(){
-        this.meeting = this.currentUserOffers.filter(offer => offer.objectId === this.meetingId)[0]
+        if(this.isOwner()) this.meeting = this.currentUserOffers.filter(offer => offer.objectId === this.data.meetingId)[0]
+        else this.meeting = this.$store.getters.currentOffer
+        // console.log(this.meeting)
     },
     methods: {
         ...mapActions([
             'updateOffer',
             'sendEmail',
         ]),
-        registerMeeting(){
-            // console.log(this.user)
-            // check that time match before actually checking in
-           
-                //send email to client on check-in
-                // const clientEmailData = SendEmailToClientOnOwnerCheckIn({
-                //     email: this.meeting.email,
-                //     name: this.meeting.full_name,
-                //     ownerName: this.meeting.ownerName,
-                //     roomId: this.meeting.roomId,
-                //     token: this.meeting.token,
-                //     verificationId: this.meeting.objectId
-                // })
-                // this.sendEmail(clientEmailData)
-                // this.updateOffer({
-                //     objectId: this.meeting.objectId,
-                //     ownerCheckedInMeeting: true,
-                //     OwnerCheckedInDate: new Date(),
-                //     readByReceiver: false,
-                // })
-            
-            // if(this.user === 'client'){
-            //     //send email to owner on check-in
-            //     const ownerEmailData = SendEmailToOwnerOnClientrCheckIn({
-            //         ownerEmail: this.meeting.ownerEmail,
-            //         name: this.meeting.full_name,
-            //         ownerName: this.meeting.ownerName,
-            //     })
-            //     this.sendEmail(ownerEmailData)
-            //     this.updateOffer({
-            //         objectId: this.meeting.objectId,
-            //         clientCheckedInMeeting: true,
-            //         clientCheckedInDate: new Date(),
-            //         readByReceiver: false,
-            //     })
-            // }
+        isOwner(){
+            return this.isUserAuthenticated && this.currentUser.objectId === this.data.ownerId
+        },
+        ownerCheckIn(){
+
+            //send email to client on owner check-in
+            // const clientEmailData = SendEmailToClientOnOwnerCheckIn({
+            //     clientEmail: this.meeting.clientEmail,
+            //     clientName: this.meeting.clientName,
+            //     ownerName: this.meeting.ownerName,
+            //     roomId: this.meeting.roomId,
+            //     token: this.meeting.token,
+            //     verificationId: this.meeting.objectId
+            // })
+            // this.sendEmail(clientEmailData)
+            // this.updateOffer({
+            //     objectId: this.meeting.objectId,
+            //     ownerCheckedInMeeting: true,
+            //     OwnerCheckedInDate: new Date(),
+            //     readByReceiver: false,
+            // })
+            this.countUp = 0
+            this.showLoading = true
+            this.startCountUpTimer()
+        },
+        clientCheckIn(){
+            //send email to owner on client check-in
+            // const ownerEmailData = SendEmailToOwnerOnClientCheckIn({
+            //     ownerEmail: this.meeting.ownerEmail,
+            //     clientName: this.meeting.clientName,
+            //     ownerName: this.meeting.ownerName,
+            // })
+            // this.sendEmail(ownerEmailData)
+            // this.updateOffer({
+            //     objectId: this.meeting.objectId,
+            //     clientCheckedInMeeting: true,
+            //     clientCheckedInDate: new Date(),
+            //     readByReceiver: false,
+            // })
             this.countUp = 0
             this.showLoading = true
             this.startCountUpTimer()

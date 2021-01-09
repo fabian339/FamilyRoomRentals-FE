@@ -45,7 +45,7 @@ export default {
     });
   },
 
-  getOffer: (context: any, data: any) => {
+  getOfferOnClientUI: (context: any, data: any) => {
     // console.log('this is a Data22', id)
     context.commit('SET_LOADING_CONTENT', true);
     axios.get(`/classes/Offers/${data.id}`)
@@ -75,7 +75,6 @@ export default {
         error: 'Invalid Verification ID!'
       })
       context.commit('SET_LOADING_CONTENT', false);
-
     })
   },
 
