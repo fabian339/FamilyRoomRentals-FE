@@ -174,6 +174,32 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="font">
+              {{this.$store.getters.meetings.filter(meeting => !meeting.offerCompleted).length}}
+            </v-list-item-title>
+            <v-list-item-subtitle>Meetings Pending</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider inset></v-divider>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="#6B8E23">?</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="font">
+              {{this.$store.getters.meetings.filter(meeting => meeting.offerCompleted).length}}
+            </v-list-item-title>
+            <v-list-item-subtitle>Completed Meetings</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider inset></v-divider>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="#6B8E23">?</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="font">
               {{new Date(currentUser.createdAt).toDateString()}}
             </v-list-item-title>
             <v-list-item-subtitle>User since </v-list-item-subtitle>

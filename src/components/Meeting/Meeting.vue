@@ -2,6 +2,7 @@
     <div>
         <v-card
             :class="`mx-auto compressMeetingWrapper ${!expanded ? 'transitionOut' : ''}`"
+            :style="meetingEnvironmentStyle()"
             color="#daf1a2"
             max-width="350"
             v-if="!expanded"
@@ -74,7 +75,7 @@
                     small 
                     rounded
                     color="error"
-                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || meetingData.didMeetingPassed"
+                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     @click.stop="openCancelMeetingWarning = true"
                 >
                     Cancel Meeting
@@ -101,7 +102,7 @@
                     Delete Meeting
                 </v-btn>
             </div>
-            <div v-else class="btn-spacing">
+            <div v-if="!isOwner() && meetingData.meetingScheduled" class="btn-spacing">
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
@@ -109,7 +110,7 @@
                     small 
                     rounded
                     color="error"
-                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || meetingData.didMeetingPassed"
+                    :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     @click.stop="openCancelMeetingWarning = true"
                 >
                     Cancel Meeting
@@ -127,7 +128,111 @@
                     }}
                 </v-btn> 
             </div>
-            <p v-if="isItToEarlyForMeeting()" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <!-- will only show if is not meeting time, is early -->
+            <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <!-- check if the meeting was canceled -->
+            <div v-if="meetingData.processCanceledByClient || meetingData.processCanceledByOwner">
+                <div v-if="isOwner()">
+                    <p v-if="meetingData.processCanceledByClient" class="font meetingCanceled">Unfortunately, this meeting was canceled by {{meetingData.clientName}}!</p>
+                    <p v-if="meetingData.processCanceledByOwner" class="font meetingCanceled">You canceled this meeting!</p>
+                </div>
+                <div v-else>
+                    <p v-if="meetingData.processCanceledByClient" class="font meetingCanceled">You canceled this meeting!</p>
+                    <p v-if="meetingData.processCanceledByOwner" class="font meetingCanceled">Unfortunately, this meeting was canceled by {{meetingData.ownerName}}!</p>
+                </div>
+                <v-btn 
+                    style="margin: 0px 0px 10px 0px;" 
+                    small 
+                    rounded 
+                    color="warning"
+                    @click.stop="showCancelationDetails = !showCancelationDetails"
+                >
+                   See Cancelation Details
+                </v-btn> 
+                <p v-if="showCancelationDetails" style="color: #6c2598;"> 
+                    {{meetingData.processCanceledByClient ? 
+                        `${meetingData.clientName}`
+                     : `${meetingData.clientName}`
+                    }}
+                    canceled this meeting on {{new Date(`${meetingData.cancelationDate}`).toLocaleString('en-US', {
+                        timeZone: 'America/New_York'
+                    })}}.
+                </p>
+            </div>
+            <!-- different options depening on the check in  -->
+            <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+                <p style="color: #2334A6" class="font">We hope that your meeting was pleasant. We cannot wait to know how it went!</p>
+                <v-btn 
+                    style="margin: 0px 0px 10px 0px;" 
+                    small 
+                    rounded 
+                    light
+                    color="primary"
+                    @click.stop="showFollowUp = true"
+                >
+                  Submit Follow-up
+                </v-btn> 
+            </div>
+            <div v-else-if="!meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+                <p class="font checkInMeetingProblem">
+                    {{isOwner() ? 
+                        'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
+                        `${meetingData.ownerName} did not checked-in into the meeting. We are investigating the process. 
+                        We will reach ${meetingData.ownerName} to make sure everyting is fine.`
+                    }} 
+                </p>
+                <div v-if="meetingData.clientCheckedInMeeting && !isOwner()">
+                    <p style="color: #2334A6" class="font">Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!</p>
+                    <v-btn 
+                        style="margin: 0px 0px 10px 0px;" 
+                        small 
+                        rounded 
+                        light
+                        color="primary"
+                        @click.stop="showFollowUp = true"
+                    >
+                        Submit Follow-up
+                    </v-btn> 
+                </div>
+            </div>
+            <div v-else-if="meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+                <p class="font checkInMeetingProblem">
+                    {{!isOwner() ? 
+                        'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
+                        `${meetingData.clientName} did not checked-in into the meeting. We are investigating the process. 
+                        We will reach ${meetingData.clientName} to make sure everyting is fine.`
+                    }} 
+                </p>
+                <div v-if="meetingData.ownerCheckedInMeeting && isOwner()">
+                    <p style="color: #2334A6" class="font">Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!</p>
+                    <v-btn 
+                        style="margin: 0px 0px 10px 0px;" 
+                        small 
+                        rounded 
+                        light
+                        color="primary"
+                        @click.stop="showFollowUp = true"
+                    >
+                        Submit Follow-up
+                    </v-btn> 
+                </div>
+                
+            </div>
+            <div v-else-if="!meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+                <p class="font checkInMeetingProblem">
+                    You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.
+                </p>               
+            </div>
+            <!-- if meeting is completed -->
+            <div v-if="meetingData.offerCompleted">
+                <p class="font meetingCompleted">
+                    This meeting was completed on 
+                    {{new Date(`${meetingData.offerCompletedDate}`).toLocaleString('en-US', {
+                            timeZone: 'America/New_York'
+                        })
+                    }}.
+                </p>      
+            </div>
         </div>
         <div>
             <CancelMeetingWarningOwner 
@@ -168,7 +273,9 @@
         expanded: false,
         openCancelMeetingWarning: false,
         openCheckIn: false,
-        showDeleteWarning: false
+        showDeleteWarning: false,
+        showCancelationDetails: false,
+        showFollowUp: false,
     }),
     computed: {
         ...mapGetters([
@@ -176,7 +283,9 @@
         'currentUser'
         ]),
     },
-    created() {
+    beforeMount() {
+        // let userToken = localStorage.getItem('user-token');
+        // if(typeof userToken === 'string') this.unauthorizedUser = true;
   },
   methods: {
     isOwner(){
@@ -209,15 +318,30 @@
     daysRemainingBeforeMeeting(){
         let meetingDate = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
         let currentDate = new Date();
-        let daysBeforeMeetingStart = meetingDate.getDate() - currentDate.getDate();
         var diff = meetingDate.valueOf() - currentDate.valueOf();
-        var diffInHours = ((diff/1000/60/60) - (daysBeforeMeetingStart*24));
-        let hourInt = Math.trunc(diffInHours)
-        let hourFloat = (Number((diffInHours - hourInt).toFixed(2)) * 60).toFixed(0)
-
-        // let diffMinutes = (diffInHours * 60) - (diffInHours.toFixed(0)*60)
-        // console.log(diffInHours,  daysBeforeMeetingStart*24)
-        return (`Be ready, meeting starts in ${daysBeforeMeetingStart} days, ${hourInt} hours, and ${hourFloat} minutes!`)
+        var diffInHours = (diff/1000/60/60);
+        let daysBeforeMeetingStart = diffInHours/24;
+        let hoursDecimal = diffInHours - (Math.trunc(daysBeforeMeetingStart) * 24)
+        //extracting hours and minutes
+        let hour = Math.trunc(hoursDecimal)
+        let hourFloat = Number((hoursDecimal - hour).toFixed(2)) * 60
+        let minutes = Math.trunc(hourFloat)
+        // console.log(diffInHours,  hoursDecimal, hourFloat)
+        return (`Be ready, meeting starts in ${Math.trunc(daysBeforeMeetingStart)} days, ${hour} hours, and ${minutes} minutes!`)
+    },
+    meetingEnvironmentStyle(){
+        let style = ''
+        if((this.meetingData.processCanceledByClient || this.meetingData.processCanceledByOwner) || (this.meetingData.didMeetingPassed && !this.meetingData.ownerCheckedInMeeting && !this.meetingData.clientCheckedInMeeting)){
+           style = 'border: 3px solid #ff8c8c'
+        } else if (this.meetingData.didMeetingPassed) {
+           style = 'border: 3px solid #98ffae'
+        } else if(this.meetingData.offerCompleted){
+           style = 'border: 2px solid #bad2ff'
+        }
+        // else {
+        //     style = 'border: 3px solid #ff8c8c'
+        // }
+        return style
     },
     openAddress(){
         const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
@@ -299,6 +423,23 @@
     .earlyMeetingDate{
         color: #1e7a84;
         font-weight: 600;
+    }
+
+    .meetingCanceled{
+        color: #6d2525;
+        font-weight: 600;
+    }
+
+    .checkInMeetingProblem{
+        color: #88562b;
+        font-weight: 600;
+        margin: 10px 20px
+    }
+
+    .meetingCompleted{
+        color: olivedrab;
+        font-weight: 600;
+        margin: 10px 20px
     }
 
 </style>

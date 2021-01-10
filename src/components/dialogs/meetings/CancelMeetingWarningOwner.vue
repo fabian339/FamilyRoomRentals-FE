@@ -110,19 +110,21 @@ export default {
         },
         async cancelMeetingByOwner(){
             //if there was a meeting scheduled, disable the property. Moduficable by admin on admin page
+            // let updatedRoomDate = {
+            //     objectId: this.meeting.roomId,
+            //     processCanceledByOwner: true,
+            //     cancelationDate: new Date()
+            // }
             // if(this.meeting.meetingScheduled){
             //     await this.updateRoom({
-            //         objectId: this.meeting.roomId,
+            //         ...updatedRoomDate,
             //         lockedByAdmin: true,
-            //         processCanceled: true,
             //         lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
             //         meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
             //     })
             // } else {
             //     await this.updateOffer({
-            //         objectId: this.meeting.roomId,
-            //         cancellationDate: new Date(),
-            //         processCanceled: true,
+            //         ...updatedRoomDate,
             //         issueFullRefundToClient: this.meeting.meetingScheduled ? true : false,
             //         readByReceiver: false,
             //         status: `You canceled the meeting proccess on ${new Date().toLocaleDateString()}!`
@@ -160,7 +162,7 @@ export default {
         async cancelMeetingByClient(){
             // await this.updateOffer({
             //     objectId: this.meeting.objectId,
-            //     cancellationDate: new Date(),
+            //     cancelationDate: new Date(),
             //     processCanceled: true,
             //     processCanceledByClient: true,
             //     chargeCancelationFeeToClient: true,
