@@ -456,7 +456,7 @@ export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
         </p>
 
         <p> 
-            ${data.meetingScheduled ? `${data.status} has been cancelled. You will not be charged!!` : 'This offer is terminated!'}
+            ${data.meetingScheduled ? `Proccess canceled by ${data.ownerName}!. You will not be charged!!` : 'This offer is terminated!'}
         </p>
         
         <p>
@@ -504,7 +504,7 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
             result in losing revenue and potentially losing the client.
         </p>
         <p> 
-            ${data.meetingScheduled ? `${data.status} has been cancelled. As a concequence of cancelling a pending meeting, we could disable this property for a period
+            ${data.meetingScheduled ? `Proccess canceled by ${data.ownerName}. As a concequence of cancelling a pending meeting, we could disable this property for a period
             of one week, or more.` : 'This offer is terminated effectively now!'}
         </p>
         

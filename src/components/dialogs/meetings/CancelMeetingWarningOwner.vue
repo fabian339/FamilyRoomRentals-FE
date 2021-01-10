@@ -109,52 +109,47 @@ export default {
             return this.isUserAuthenticated && this.currentUser.objectId === this.data.ownerId
         },
         async cancelMeetingByOwner(){
+            //update offer
+            await this.updateOffer({
+                objectId: this.meeting.roomId,
+                processCanceledByOwner: true,
+                cancelationDate: new Date(),
+                status: `Proccess canceled by ${this.meeting.ownerName}!`,
+                readByReceiver: false,
+                issueFullRefundToClient: true,  
+            })
+
             //if there was a meeting scheduled, disable the property. Moduficable by admin on admin page
-            // let updatedRoomDate = {
-            //     objectId: this.meeting.roomId,
-            //     processCanceledByOwner: true,
-            //     cancelationDate: new Date()
-            // }
-            // if(this.meeting.meetingScheduled){
-            //     await this.updateRoom({
-            //         ...updatedRoomDate,
-            //         lockedByAdmin: true,
-            //         lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
-            //         meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0
-            //     })
-            // } else {
-            //     await this.updateOffer({
-            //         ...updatedRoomDate,
-            //         issueFullRefundToClient: this.meeting.meetingScheduled ? true : false,
-            //         readByReceiver: false,
-            //         status: `You canceled the meeting proccess on ${new Date().toLocaleDateString()}!`
-            //     })
-            // }
+            if(this.meeting.meetingScheduled){
+                await this.updateRoom({                    
+                    lockedByAdmin: true,
+                    lockedByAdminUntil: new Date(new Date().setDate(new Date().getDate() + 7)),
+                    meetingsPending: this.$store.getters.contentRoom.meetingsPending > 0 ? this.$store.getters.contentRoom.meetingsPending - 1 : 0,
+                })
+            } 
+
 
             //if this.currentOffer.meetingScheduled apply penalty, send email to both parties
             //else send email to both parties cancelling meeting
-            let clientEmailData = SendEmailToClientOnMeetingCanceledByOwner({
-                clientEmail: this.meeting.clientEmail,
+            let commonEmailData = {
                 clientName: this.meeting.clientName,
                 ownerName: this.meeting.ownerName,
                 meetingScheduled: this.meeting.meetingScheduled,
-                status: this.meeting.status,
                 offer: this.meeting.offer,
-                roomId: this.meeting.roomId,
+                roomId: this.meeting.roomId
+            }
+            let clientEmailData = SendEmailToClientOnMeetingCanceledByOwner({
+                ...commonEmailData,
+                clientEmail: this.meeting.clientEmail,
             });
 
             let ownerEmailData = SendEmailToOwnerOnMeetingCanceledByOwner({
+                ...commonEmailData,
                 ownerEmail: this.meeting.ownerEmail,
-                clientName: this.meeting.clientName,
-                ownerName: this.meeting.ownerName,
-                meetingScheduled: this.meeting.this.meetingScheduled,
-                status: this.meeting.status,
-                offer: this.meeting.offer,
-                roomId: this.meeting.roomId,
             });
             console.log(clientEmailData, ownerEmailData)
-            // await this.sendEmail(clientEmailData);
-            // await this.sendEmail(ownerEmailData);
+            await this.sendEmail(clientEmailData);
+            await this.sendEmail(ownerEmailData);
             
             //add loading when cancelling
             this.show = false
