@@ -135,6 +135,7 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
                     ownerName: `${this.contentRoom.ownerFname} ${this.contentRoom.ownerLname}`,
                     ownerEmail: this.contentRoom.ownerEmail,
                     ownerPhone: this.contentRoom.ownerPhone,
+                    meetingLocation: this.contentRoom.location,
                     didClientAgreeToSendOffer: true,
                 }
             const {valid, errors} = validateOffer(clientOffer);
