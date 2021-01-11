@@ -74,7 +74,7 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../../emailTemplates/emails'
+import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
@@ -123,42 +123,43 @@ export default {
         isOwner(){
             return this.isUserAuthenticated && this.currentUser.objectId === this.data.ownerId
         },
-        ownerCheckIn(){
+        async ownerCheckIn(){
 
             //send email to client on owner check-in
-            // const clientEmailData = SendEmailToClientOnOwnerCheckIn({
-            //     clientEmail: this.meeting.clientEmail,
-            //     clientName: this.meeting.clientName,
-            //     ownerName: this.meeting.ownerName,
-            //     roomId: this.meeting.roomId,
-            //     token: this.meeting.token,
-            //     verificationId: this.meeting.objectId
-            // })
-            // this.sendEmail(clientEmailData)
-            // this.updateOffer({
-            //     objectId: this.meeting.objectId,
-            //     ownerCheckedInMeeting: true,
-            //     OwnerCheckedInDate: new Date(),
-            //     readByReceiver: false,
-            // })
+            await this.updateOffer({
+                objectId: this.meeting.objectId,
+                ownerCheckedInMeeting: true,
+                OwnerCheckedInDate: new Date(),
+                readByReceiver: false,
+            })
+            const clientEmailData = SendEmailToClientOnOwnerCheckIn({
+                clientEmail: this.meeting.clientEmail,
+                clientName: this.meeting.clientName,
+                ownerName: this.meeting.ownerName,
+                roomId: this.meeting.roomId,
+                token: this.meeting.token,
+                verificationId: this.meeting.objectId
+            })
+            await this.sendEmail(clientEmailData)
             this.countUp = 0
             this.showLoading = true
             this.startCountUpTimer()
         },
-        clientCheckIn(){
-            //send email to owner on client check-in
-            // const ownerEmailData = SendEmailToOwnerOnClientCheckIn({
-            //     ownerEmail: this.meeting.ownerEmail,
-            //     clientName: this.meeting.clientName,
-            //     ownerName: this.meeting.ownerName,
-            // })
-            // this.sendEmail(ownerEmailData)
-            // this.updateOffer({
-            //     objectId: this.meeting.objectId,
-            //     clientCheckedInMeeting: true,
-            //     clientCheckedInDate: new Date(),
-            //     readByReceiver: false,
-            // })
+        async clientCheckIn(){
+            await this.updateOffer({
+                objectId: this.meeting.objectId,
+                clientCheckedInMeeting: true,
+                clientCheckedInDate: new Date(),
+                readByReceiver: false,
+            })
+
+            // send email to owner on client check-in
+            const ownerEmailData = SendEmailToOwnerOnClientCheckIn({
+                ownerEmail: this.meeting.ownerEmail,
+                clientName: this.meeting.clientName,
+                ownerName: this.meeting.ownerName,
+            })
+            await this.sendEmail(ownerEmailData)
             this.countUp = 0
             this.showLoading = true
             this.startCountUpTimer()

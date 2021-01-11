@@ -100,14 +100,15 @@
                     style="margin: 0px 5px 0 0" 
                     small 
                     rounded
-                    color="error"
+                    color="#d44d25"
+                    dark
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     @click.stop="openCancelMeetingWarning = true"
                 >
                     Cancel Meeting
                 </v-btn> 
                 <v-btn 
-                    style="margin: 0px 0px 0px 5px;" 
+                    style="margin: 0px 5px;" 
                     small 
                     rounded 
                     color="success"
@@ -119,8 +120,9 @@
                     }}
                 </v-btn> 
                 <v-btn 
-                    style="margin: 5px 5px;" 
+                    style="margin: 0px 5px;" 
                     small 
+                    rounded 
                     color="error" 
                     @click.stop="showDeleteWarning = true"
                     :disabled="!meetingData.offerCompleted"
@@ -135,7 +137,8 @@
                     style="margin: 0px 5px 0 0" 
                     small 
                     rounded
-                    color="error"
+                    color="#d44d25"
+                    dark
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     @click.stop="openCancelMeetingWarning = true"
                 >
@@ -158,13 +161,14 @@
             <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
             <!-- loading component to show that the meeting is in progress -->
             <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
-                Meeting In Progress!
+                <img style="border-radius: 20px" src="https://media.giphy.com/media/H88dPcYfTecWK3FdEO/giphy.gif" alt="logo" width="150">
+                <p class="font" style="color: #1c1a8c">Meeting In Progress!</p>
             </div>
-            <p v-if="isOwner() && meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
-                Waiting for {{meetingData.clientName}} to check-in to start the meeting!
+            <p style="color: #0f770f; margin: 10px 0" v-if="isOwner() && meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
+                Waiting for {{meetingData.clientName}} to check-in to start the meeting. Reload page to check if status changed!
             </p>
-            <p v-if="!isOwner() && meetingData.clientCheckedInMeeting && !meetingData.ownerCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
-                Waiting for {{meetingData.ownerName}} to check-in to start the meeting!
+            <p style="color: #0f770f; margin: 10px 0" v-if="!isOwner() && meetingData.clientCheckedInMeeting && !meetingData.ownerCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
+                Waiting for {{meetingData.ownerName}} to check-in to start the meeting. Reload page to check if status changed!
             </p>
             
             <!-- check if the meeting was canceled -->
@@ -383,7 +387,7 @@
         let style = ''
         if((this.meetingData.processCanceledByClient || this.meetingData.processCanceledByOwner) || (this.meetingData.didMeetingPassed && !this.meetingData.ownerCheckedInMeeting && !this.meetingData.clientCheckedInMeeting)){
            style = 'border: 3px solid #ff8c8c'
-        } else if (this.meetingData.didMeetingPassed) {
+        } else if (this.meetingData.didMeetingPassed && !this.meetingData.processCanceledByClient && !this.meetingData.processCanceledByOwner) {
            style = 'border: 3px solid #98ffae'
         } else if(this.meetingData.offerCompleted){
            style = 'border: 2px solid #bad2ff'
