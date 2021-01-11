@@ -38,17 +38,8 @@
                                 {{currentOffer.status}}
                             </strong>
                         </p>
-                        <p v-if="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
-                            Meeting In Progress!
-                        </p>
-                        <p v-if="currentOffer.ownerCheckedInMeeting && !currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
-                            Wait for {{currentOffer.full_name}} to check-in to start the meeting!
-                        </p>
-                        <p v-if="!currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting" class="meetingStatus"> 
-                            Please Check-In, {{currentOffer.clientName}} already checked-in!
-                        </p>
 
-                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceled && !currentOffer.offerCompleted">
+                        <div v-if="currentOffer.offerAcceptedByOwner && !currentOffer.meetingScheduled && !currentOffer.processCanceledByOwner">
                             <div v-if="!currentOffer.meetingScheduled">
                                 <p style="margin-bottom: 5px;">Dates submitted: </p>
                                 <div v-for="date in currentOffer.meetingDates" :key="date.date">
@@ -57,20 +48,19 @@
                             </div>
                             <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                             <v-btn 
-                                style="margin: 0px 5px 0 0" 
+                                style="margin: 10px 0 0 0" 
                                 small 
                                 rounded
                                 color="error"
                                 v-if="!currentOffer.meetingScheduled"
-                                :disabled="currentOffer.ownerCheckedInMeeting && currentOffer.clientCheckedInMeeting"
                                 @click.stop="openCancelMeetingWarning = true"
                             >
-                                Cancel Meeting
+                                Cancel Process
                             </v-btn> 
                         </div>
 
 
-                        <div v-if="currentOffer.followupSent && !currentOffer.submittedFollowUpData">
+                        <!-- <div v-if="currentOffer.followupSent && !currentOffer.submittedFollowUpData">
                             <p>Tell us how it went, request payment, and submit feedback.</p>
                             <v-btn 
                                 style="margin: 0px -10px;" 
@@ -81,7 +71,7 @@
                             >
                                 Answer Survey
                             </v-btn> 
-                        </div>
+                        </div> -->
                 </v-card-text>
                 <v-card-actions style="margin-top: -25px; margin-left: 10px;">
                 <!-- <v-spacer></v-spacer> -->
@@ -110,7 +100,7 @@
                         small 
                         color="error" 
                         @click.stop="showDeleteWarning = true"
-                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.offerRemoveable && !currentOffer.processCanceled"
+                        :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceledByOwner && !currentOffer.offerCompleted"
                     >
                         Delete Offer
                     </v-btn>
@@ -154,7 +144,7 @@
         <v-dialog
             v-model="showRejectionDialog"
             max-width="320"
-            >
+        >
             <v-card>
                 <v-card-title class="headline">Are you sure you want to reject this offer?</v-card-title>
                 <v-card-text>
@@ -183,7 +173,7 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog
+        <!-- <v-dialog
             v-model="openSurvey"
             max-width="650"
             :persistent="!surveySubmitted"
@@ -316,9 +306,16 @@
                 </v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
-
-        <!-- <MeetingCheckIn v-model="openCheckIn" user="owner"/> -->
+        </v-dialog> -->
+        <div>
+            <CancelMeetingWarningOwner 
+                v-model="openCancelMeetingWarning"
+                :data="{
+                    meetingId: currentOffer.objectId,
+                    ownerId: currentOffer.receiverId
+                }"
+            />        
+        </div>
     </div>
 </template>
 
@@ -328,7 +325,8 @@ import {
     SendEmailToClientOnOfferRejected, 
     SendEmailToAdminOnPaymentRequested, 
 } from '../../emailTemplates/emails'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import CancelMeetingWarningOwner from '@/components/dialogs/meetings/CancelMeetingWarningOwner.vue'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 
 export default {
@@ -336,7 +334,7 @@ export default {
     props: {
         value: Boolean,
     },
-    components: {SuccessAlert},
+    components: { CancelMeetingWarningOwner },
     computed: {
         show: {
             get () {

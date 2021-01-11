@@ -371,73 +371,6 @@ export const SendFollowupToUser = (data: any) => {
 }
 
 
-export const SendEmailToAdminOnRefundRequested = (data: any) => {
-    // console.log("from email: ", data.logo)
-    // console.log("from email: ", data.logo)
-    const html = `
-        <h3> Dear admin, </h3>
-        <p>A new refund has been requested.</p>
-        
-        <h4>Actions: </h4>
-        <p>
-            Login to check your account 
-            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
-        </p>
-        `;
-        
-    return {
-        email: data.email,
-        subject: "New Refund Requested!",
-        name: 'FamilyRoomRentals',
-        html,
-    };
-}
-
-export const SendEmailToAdminOnPaymentRequested = (data: any) => {
-    // console.log("from email: ", data.logo)
-    // console.log("from email: ", data.logo)
-    const html = `
-        <h3> Dear admin, </h3>
-        <p>A new payment has been requested.</p>
-        
-        <h4>Actions: </h4>
-        <p>
-            Login to check your account 
-            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
-        </p>
-        `;
-        
-    return {
-        email: data.email,
-        subject: "New Refund Requested!",
-        name: 'FamilyRoomRentals',
-        html,
-    };
-}
-
-
-export const SendEmailToAdminOnRoomReported = (data: any) => {
-    const html = `
-    <h3> Dear admin, </h3>
-    <p>
-        The user ${data.userId} reported the property <a href='https://familyroomrentals.com/#/room/${data.propertyId}' target="_blank">HERE.</a>
-    </p>
-    
-    <h4>Actions: </h4>
-    <p>
-        Login to check your account 
-        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
-    </p>
-    `;
-    
-    return {
-        email: data.email,
-        subject: "Property Reported||",
-        name: 'FamilyRoomRentals',
-        html,
-    };
-}
-
 export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
@@ -456,7 +389,7 @@ export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
         </p>
 
         <p> 
-            ${data.meetingScheduled ? `Proccess canceled by ${data.ownerName}!. You will not be charged!!` : 'This offer is terminated!'}
+            ${data.meetingScheduled ? `The meeting proccess was canceled by ${data.ownerName}. You will not be charged!!` : 'This offer is terminated!'}
         </p>
         
         <p>
@@ -504,10 +437,9 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
             result in losing revenue and potentially losing the client.
         </p>
         <p> 
-            ${data.meetingScheduled ? `Proccess canceled by ${data.ownerName}. As a concequence of cancelling a pending meeting, we could disable this property for a period
+            ${data.meetingScheduled ? `You canceled the meeting process with ${data.clientName}. As a concequence of cancelling a pending meeting, we could disable this property for a period
             of one week, or more.` : 'This offer is terminated effectively now!'}
         </p>
-        
             
         <p>Thank you for using FamilyRoomRentals</p>
         <p>Stay safe during this critical times and enjoy the rest of your day!</p>
@@ -550,7 +482,7 @@ export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
         <p> 
             At FamilyRoomRentals, we depend on users posting and sharing their properties. 
             Canceling a pending meeting could result in the lost of revenue and potentially losing the user. 
-            As a concequence of canceling a pending meeting, we will charge a fee of <strong>$5</strong> as the user dedicated 
+            As a concequence of canceling a pending meeting, we could charge a fee of <strong>$5</strong> as the user dedicated 
             his/her time to look foward for this meeting. Please read FamilyRoomRentals property's 
             <strong><a href='https://familyroomrentals.com/#/terms-and-conditions'>Terms & Conditions</a></strong>
             for more details.
@@ -730,12 +662,99 @@ export const SendEmailToAdminOnClientMeetingCancelation = (data: any) => {
         <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
     </p>
     <p> MeetingID/OfferID: ${data.offerId} </p>
-    <p> Please procee to charge the cancelation feed to client! </p?
+    <p> Please proceed to charge the cancelation fee to the client! </p?
     `;
     
     return {
         email: data.adminEmail,
         subject: "New Cancelation Feed To Charge!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}
+
+export const SendEmailToAdminOnOwnerMeetingCancelation = (data: any) => {
+    const html = `
+    <h3> Dear admin, </h3>
+    <p>The property owner ${data.ownerName} has canceled a meeting.</p>
+    <h4>Actions: </h4>
+    <p>
+        Login to check your account 
+        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+    </p>
+    <p> MeetingID/OfferID: ${data.offerId} </p>
+    <p> Please refund money to client! </p?
+    `;
+    
+    return {
+        email: data.adminEmail,
+        subject: "New Cancelation by owner, refund to client!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}
+
+export const SendEmailToAdminOnRoomReported = (data: any) => {
+    const html = `
+    <h3> Dear admin, </h3>
+    <p>
+        The user ${data.userId} reported the property <a href='https://familyroomrentals.com/#/room/${data.propertyId}' target="_blank">HERE.</a>
+    </p>
+    
+    <h4>Actions: </h4>
+    <p>
+        Login to check your account 
+        <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+    </p>
+    `;
+    
+    return {
+        email: data.email,
+        subject: "Property Reported||",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}
+
+export const SendEmailToAdminOnPaymentRequested = (data: any) => {
+    // console.log("from email: ", data.logo)
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear admin, </h3>
+        <p>A new payment has been requested.</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            Login to check your account 
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+        </p>
+        `;
+        
+    return {
+        email: data.email,
+        subject: "New Refund Requested!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}
+
+export const SendEmailToAdminOnRefundRequested = (data: any) => {
+    // console.log("from email: ", data.logo)
+    // console.log("from email: ", data.logo)
+    const html = `
+        <h3> Dear admin, </h3>
+        <p>A new refund has been requested.</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            Login to check your account 
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+        </p>
+        `;
+        
+    return {
+        email: data.email,
+        subject: "New Refund Requested!",
         name: 'FamilyRoomRentals',
         html,
     };

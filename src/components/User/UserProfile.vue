@@ -20,7 +20,7 @@
         v-else
       >
         <div v-if="meetings.length > 0">
-          <h2 style="margin-bottom: 20px; margin-top: 10px" >Upcoming Meetings:</h2>   
+          <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
           <v-row >
             <v-col v-for="meeting in meetings" :key="meeting.createdAt">
               <Meeting :meetingData="{

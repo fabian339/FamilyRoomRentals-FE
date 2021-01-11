@@ -12,9 +12,9 @@
         <div v-else >
             <h4 style="margin: 0 10%;">
                     FamilyRoomRemtals charges a one time fee of $20 for the service provided. To learn more, 
-                    please read our <a href="#"> Terms & Conditions. </a>
+                    please read our  <router-link to="/terms-and-conditions">Terms and Conditions</router-link>.
             </h4>
-            <h2 style="margin-top: 25px; color: darkgreen;">{{this.$store.getters.currentOffer.full_name}}, You are one step away!</h2>
+            <h2 style="margin-top: 25px; color: darkgreen;">{{this.$store.getters.currentOffer.clientName}}, You are one step away!</h2>
             <v-card class="mx-auto" hover id="mycard" width="100%">
                 <v-card-title class="justify-center" style="background-color: darkseagreen">
                     <h2 style="color:rgb(10 60 28)">Payment Information</h2>

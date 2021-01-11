@@ -15,7 +15,33 @@
                 >
                 </div>
                 <div>
-                    <p class="font text-center" style="font-size: 20px; margin: 25px"><strong>Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.</strong></p>
+                    <p
+                        v-if="isItToEarlyForMeeting() && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner"
+                        class="font text-center" 
+                        style="font-size: 20px; margin: 25px"
+                    >
+                        <strong>
+                            Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.
+                        </strong>
+                    </p>
+                    <p
+                        v-if="meetingData.didMeetingPassed && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner"
+                        class="font text-center" 
+                        style="font-size: 20px; margin: 25px"
+                    >
+                        <strong>
+                            The meeting with {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} has passed.
+                        </strong>
+                    </p>
+                    <p
+                        v-if="meetingData.processCanceledByClient || meetingData.processCanceledByOwner"
+                        class="font text-center" 
+                        style="font-size: 20px; margin: 25px"
+                    >
+                        <strong>
+                            The meeting with {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} was updated.
+                        </strong>
+                    </p>
                 </div>
             </div>
         </v-card>
@@ -129,7 +155,18 @@
                 </v-btn> 
             </div>
             <!-- will only show if is not meeting time, is early -->
-            <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <!-- loading component to show that the meeting is in progress -->
+            <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
+                Meeting In Progress!
+            </div>
+            <p v-if="isOwner() && meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
+                Waiting for {{meetingData.clientName}} to check-in to start the meeting!
+            </p>
+            <p v-if="!isOwner() && meetingData.clientCheckedInMeeting && !meetingData.ownerCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
+                Waiting for {{meetingData.ownerName}} to check-in to start the meeting!
+            </p>
+            
             <!-- check if the meeting was canceled -->
             <div v-if="meetingData.processCanceledByClient || meetingData.processCanceledByOwner">
                 <div v-if="isOwner()">
@@ -149,14 +186,27 @@
                 >
                    See Cancelation Details
                 </v-btn> 
-                <p v-if="showCancelationDetails" style="color: #6c2598;"> 
+                <p v-if="showCancelationDetails" style="color: #6c2598; margin: 5px 20px"> 
                     {{meetingData.processCanceledByClient ? 
                         `${meetingData.clientName}`
-                     : `${meetingData.clientName}`
+                     : `${meetingData.ownerName}`
                     }}
                     canceled this meeting on {{new Date(`${meetingData.cancelationDate}`).toLocaleString('en-US', {
                         timeZone: 'America/New_York'
-                    })}}.
+                    })}}.  
+                    <strong>{{isOwner() ? 
+                        `${meetingData.processCanceledByOwner ? 'As a concequence of cancelling a pending meeting, we could disable this property for a period of one week, or more.' 
+                            : 'We are sorry for the inconvenience.'}` : 
+                        `${meetingData.processCanceledByOwner ? 'We are sorry for the inconvenience. You will not be charged!' 
+                            : `As a concequence of canceling a pending meeting, we could charge a fee of $5 as ${meetingData.ownerName} dedicated his/her time looking foward for this meeting.`}`
+                    }}</strong>
+                </p>
+                <p>
+                    <small>
+                        If you have any questions, please read our <router-link to="/qas">QA</router-link>,
+                        our <router-link to="/terms-and-conditions">Terms and Conditions</router-link>,
+                        or feel free to <router-link to="/contact-us">contact us</router-link>.
+                    </small>
                 </p>
             </div>
             <!-- different options depening on the check in  -->

@@ -19,7 +19,7 @@
             >
             </v-progress-circular>
             <v-row class="text-center" justify="center" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
-                <v-col lg="4">
+                <v-col cols="10" sm="6" md="5" lg="4">        
                     <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
                     <form>
                         <v-text-field

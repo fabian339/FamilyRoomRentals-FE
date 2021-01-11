@@ -51,17 +51,9 @@ export default {
     axios.get(`/classes/Offers/${data.id}`)
     .then((res) => {
       if(res.data.offerToken === data.token){
+        context.commit('ADD_NOTIFICATION', res.data)
         context.commit('SET_OFFER', res.data)
         context.commit('SET_OFFER_TOKEN_VERIFIED', true)
-        let date1 = new Date();
-        let date2 = new Date(new Date(`${res.data.officialMeetingDate.date} ${res.data.officialMeetingDate.time}`).setDate(
-          new Date(`${res.data.officialMeetingDate.date} ${res.data.officialMeetingDate.time}`).getDate() + 1));
-        if(!res.data.didMeetingPassed && (date1 > date2)){
-            context.dispatch('updateOffer', {
-              objectId: res.data.objectId,
-              didMeetingPassed: true
-            });
-        }
         context.commit('CLEAR_NOTIFICATIONS_ERROR')
       } else {
         context.commit('SET_OFFER_ERROR', {
@@ -104,6 +96,7 @@ export default {
   },
 
   updateOffer: (context: any, offerData: any) => {
+    console.log("offerData:", offerData)
     axios.put(`/classes/Offers/${offerData.objectId}`, offerData)
     .then((res) => {
       context.commit('UPDATE_OFFER', offerData);
@@ -116,6 +109,7 @@ export default {
       // context.commit('UPDATE_OFFER', offerData);
     })
     .catch((err) => {
+      // console.log(err)
       context.commit('SET_OFFER_ERROR', err);
     });
   },
