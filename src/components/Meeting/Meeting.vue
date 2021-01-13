@@ -93,16 +93,15 @@
                     </p>
                 </div>
             </div>
-            <div v-if="isOwner()" class="btn-spacing">
+            <div v-if="isOwner() && !meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting" class="btn-spacing">
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
-                    style="margin: 0px 5px 0 0" 
+                    style="margin: 0px 5px 0 0; color: #ffffff" 
                     small 
                     rounded
-                    color="#d44d25"
-                    dark
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
+                    color="#d44d25"
                     @click.stop="openCancelMeetingWarning = true"
                 >
                     Cancel Meeting
@@ -130,16 +129,15 @@
                     Delete Meeting
                 </v-btn>
             </div>
-            <div v-if="!isOwner() && meetingData.meetingScheduled" class="btn-spacing">
+            <div v-if="!isOwner() && meetingData.meetingScheduled && !meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting" class="btn-spacing">
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
-                    style="margin: 0px 5px 0 0" 
+                    style="margin: 0px 5px 0 0; color: #ffffff" 
                     small 
                     rounded
-                    color="#d44d25"
-                    dark
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
+                    color="#d44d25"
                     @click.stop="openCancelMeetingWarning = true"
                 >
                     Cancel Meeting
@@ -214,20 +212,20 @@
                 </p>
             </div>
             <!-- different options depening on the check in  -->
-            <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+            <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
                 <p style="color: #2334A6" class="font">We hope that your meeting was pleasant. We cannot wait to know how it went!</p>
                 <v-btn 
-                    style="margin: 0px 0px 10px 0px;" 
+                    style="margin: 0px 0px 10px 0px; color: #ffffff" 
                     small 
                     rounded 
                     light
-                    color="primary"
+                    color="#187f8a"
                     @click.stop="showFollowUp = true"
                 >
                   Submit Follow-up
                 </v-btn> 
             </div>
-            <div v-else-if="!meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+            <div v-else-if="!meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
                 <p class="font checkInMeetingProblem">
                     {{isOwner() ? 
                         'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
@@ -236,20 +234,22 @@
                     }} 
                 </p>
                 <div v-if="meetingData.clientCheckedInMeeting && !isOwner()">
-                    <p style="color: #2334A6" class="font">Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!</p>
+                    <p style="color: #2334A6" class="font">
+                        Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!
+                    </p>
                     <v-btn 
-                        style="margin: 0px 0px 10px 0px;" 
+                        style="margin: 0px 0px 10px 0px; color: #ffffff" 
                         small 
                         rounded 
                         light
-                        color="primary"
+                        color="#187f8a"
                         @click.stop="showFollowUp = true"
                     >
-                        Submit Follow-up
+                    Submit Follow-up
                     </v-btn> 
                 </div>
             </div>
-            <div v-else-if="meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+            <div v-else-if="meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
                 <p class="font checkInMeetingProblem">
                     {{!isOwner() ? 
                         'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
@@ -260,11 +260,11 @@
                 <div v-if="meetingData.ownerCheckedInMeeting && isOwner()">
                     <p style="color: #2334A6" class="font">Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!</p>
                     <v-btn 
-                        style="margin: 0px 0px 10px 0px;" 
+                        style="margin: 0px 0px 10px 0px; color: #ffffff" 
                         small 
                         rounded 
                         light
-                        color="primary"
+                        color="#187f8a"
                         @click.stop="showFollowUp = true"
                     >
                         Submit Follow-up
@@ -272,7 +272,7 @@
                 </div>
                 
             </div>
-            <div v-else-if="!meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && this.meetingData.didMeetingPassed">
+            <div v-else-if="!meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
                 <p class="font checkInMeetingProblem">
                     You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.
                 </p>               
