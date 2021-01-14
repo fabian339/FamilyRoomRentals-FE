@@ -307,7 +307,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog> -->
-        <div>
+        <!-- <div>
             <CancelMeetingWarningOwner 
                 v-model="openCancelMeetingWarning"
                 :data="{
@@ -315,7 +315,7 @@
                     ownerId: currentOffer.receiverId
                 }"
             />        
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -326,7 +326,6 @@ import {
     SendEmailToAdminOnPaymentRequested, 
 } from '../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
-import CancelMeetingWarningOwner from '@/components/dialogs/meetings/CancelMeetingWarningOwner.vue'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 
 export default {
@@ -334,7 +333,6 @@ export default {
     props: {
         value: Boolean,
     },
-    components: { CancelMeetingWarningOwner },
     computed: {
         show: {
             get () {

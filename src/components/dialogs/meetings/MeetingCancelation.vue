@@ -68,7 +68,7 @@ import {
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 
 export default {
-    name: "CancelMeetingWarning",
+    name: "MeetingCancelation",
     props: {
         value: Boolean,
         data: Object 

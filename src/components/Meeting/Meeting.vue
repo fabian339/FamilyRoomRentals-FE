@@ -102,7 +102,7 @@
                     rounded
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     color="#d44d25"
-                    @click.stop="openCancelMeetingWarning = true"
+                    @click.stop="openMeetingCancelation = true"
                 >
                     Cancel Meeting
                 </v-btn> 
@@ -138,7 +138,7 @@
                     rounded
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
                     color="#d44d25"
-                    @click.stop="openCancelMeetingWarning = true"
+                    @click.stop="openMeetingCancelation = true"
                 >
                     Cancel Meeting
                 </v-btn> 
@@ -220,7 +220,7 @@
                     rounded 
                     light
                     color="#187f8a"
-                    @click.stop="showFollowUp = true"
+                    @click.stop="openFollowUp = true"
                 >
                   Submit Follow-up
                 </v-btn> 
@@ -243,7 +243,7 @@
                         rounded 
                         light
                         color="#187f8a"
-                        @click.stop="showFollowUp = true"
+                        @click.stop="openFollowUp = true"
                     >
                     Submit Follow-up
                     </v-btn> 
@@ -265,7 +265,7 @@
                         rounded 
                         light
                         color="#187f8a"
-                        @click.stop="showFollowUp = true"
+                        @click.stop="openFollowUp = true"
                     >
                         Submit Follow-up
                     </v-btn> 
@@ -289,15 +289,22 @@
             </div>
         </div>
         <div>
-            <CancelMeetingWarningOwner 
-                v-model="openCancelMeetingWarning"
+            <MeetingCancelation 
+                v-model="openMeetingCancelation"
                 :data="{
                     meetingId: meetingData.meetingId,
                     ownerId: meetingData.ownerId
                 }"
             />
-            <MeetingCheckInOwner 
+            <MeetingCheckIn 
                 v-model="openCheckIn" 
+                :data="{
+                    meetingId: meetingData.meetingId,
+                    ownerId: meetingData.ownerId
+                }"
+            />
+            <MeetingFollowUp 
+                v-model="openFollowUp" 
                 :data="{
                     meetingId: meetingData.meetingId,
                     ownerId: meetingData.ownerId
@@ -310,8 +317,9 @@
 
 <script>
   // import store from '../store.js'
-  import CancelMeetingWarningOwner from '@/components/dialogs/meetings/CancelMeetingWarningOwner.vue'
-  import MeetingCheckInOwner from '@/components/dialogs/meetings/MeetingCheckInOwner.vue'
+  import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
+  import MeetingCheckIn from '@/components/dialogs/meetings/MeetingCheckIn.vue'
+  import MeetingFollowUp from '@/components/dialogs/meetings/MeetingFollowUp.vue'
 
   import { mapGetters } from 'vuex'
 
@@ -320,16 +328,17 @@
     name: 'Meeting',
     props: ['meetingData'],
     components: {
-        CancelMeetingWarningOwner,
-        MeetingCheckInOwner
+        MeetingCancelation,
+        MeetingCheckIn,
+        MeetingFollowUp
     },
     data: () => ({
         expanded: false,
-        openCancelMeetingWarning: false,
+        openMeetingCancelation: false,
         openCheckIn: false,
         showDeleteWarning: false,
         showCancelationDetails: false,
-        showFollowUp: false,
+        openFollowUp: false,
     }),
     computed: {
         ...mapGetters([
