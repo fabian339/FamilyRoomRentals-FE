@@ -85,6 +85,7 @@
                             processCanceledByOwner: currentOffer.processCanceledByOwner,
                             didClientSubmittedResults: currentOffer.didClientSubmittedResults,
                             didOwnerSubmittedResults: currentOffer.didOwnerSubmittedResults,
+                            ownerCompletedFollowup: currentOffer.ownerCompletedFollowup,
                             offerCompleted: currentOffer.offerCompleted,
                             didMeetingPassed: currentOffer.didMeetingPassed,
                             ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,

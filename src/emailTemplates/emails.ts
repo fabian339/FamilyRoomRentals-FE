@@ -716,14 +716,15 @@ export const SendEmailToAdminOnRoomReported = (data: any) => {
     };
 }
 
-export const SendEmailToAdminOnPaymentRequested = (data: any) => {
+export const SendEmailToAdminOnFollowUpSubmitted = (data: any) => {
     // console.log("from email: ", data.logo)
     // console.log("from email: ", data.logo)
     const html = `
         <h3> Dear admin, </h3>
-        <p>A new payment has been requested.</p>
+        <p>A follow-up has been submitted. Please check!!</p>
         
-        <h4>Actions: </h4>
+        <h2>Information: </h2>
+        <p>Follow up submitted by ${data.owner ? 'owner': 'client'}: ${data.name}, meetingId: ${data.meetingId}</p>
         <p>
             Login to check your account 
             <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
@@ -732,7 +733,7 @@ export const SendEmailToAdminOnPaymentRequested = (data: any) => {
         
     return {
         email: data.email,
-        subject: "New Refund Requested!",
+        subject: "New Follow-up Submitted",
         name: 'FamilyRoomRentals',
         html,
     };

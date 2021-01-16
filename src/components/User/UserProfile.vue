@@ -37,6 +37,7 @@
                   didClientSubmittedResults: meeting.didClientSubmittedResults,
                   didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
                   offerCompleted: meeting.offerCompleted,
+                  ownerCompletedFollowup: meeting.ownerCompletedFollowup,
                   didMeetingPassed: meeting.didMeetingPassed,
                   ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
                   clientCheckedInMeeting: meeting.clientCheckedInMeeting,

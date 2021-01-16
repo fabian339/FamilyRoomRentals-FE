@@ -11,82 +11,85 @@
                 striped
                 color="lime"
             ></v-progress-linear> -->
-            <v-card>
-                <v-card-title class="headline">Followup Survey</v-card-title>
+            <v-card v-if="isOwner()">
+                <v-card-title class="headline">Tell us how it went:</v-card-title>
                 <v-card-text>
                     This is just a survey to know how things went between you and {{meeting.clientName}}.
                 </v-card-text>
                 <v-col cols="12">        
-                    <form>
+                    <form @submit="submitOwnerResults" ref="form">
                         <v-select
                             :items="['Excellent', 'Good', 'Ok', 'Bad', 'Terrible']"
                             label="How was the meeting overall?"
                             v-model="surveyData.answer1"
+                            @change="thereAreErrors = false"
                             outlined
-                            :error-messages="errors.answer1"   
+                            :rules="[() => !!surveyData.answer1 || 'This field is required']"
                         ></v-select>
                         <v-select
                             :items="['Yes', 'No']"
-                            :label="`Did you and ${meeting.clientName} came to an agreement?`"
+                            :label="`Did you and ${meeting.clientName} come to an agreement?`"
                             v-model="surveyData.answer2"
-                            :error-messages="errors.answer2"   
+                            :rules="[() => !!surveyData.answer2 || 'This field is required']"
+                            @change="thereAreErrors = false"
                             outlined
                         ></v-select>
                         <v-select
                             v-if="surveyData.answer2 === 'Yes'"
                             :items="['Yes', 'No', 'Not Sure']"
+                            :rules="[() => (surveyData.answer2 === 'Yes' && !!surveyData.answer3) || 'This field is required']"
                             :label="`Will ${meeting.clientName} be moving into the property soon?`"
                             v-model="surveyData.answer3"
+                            @change="thereAreErrors = false"
                             outlined
                         ></v-select>
                         <v-select
                             v-if="surveyData.answer2 === 'No'"
-                            :items="['I did not like the visitor', 'Visitor was unable to follow property rules', 'Meeting never happened', 'The visitor never showed up', 'I was unavailable', 'Other']"
+                            :items="['I did not like the visitor', 'Visitor was unable to follow property rules', 'Meeting never happened', 'We just disagree', 'I was unavailable', 'Other']"
                             :label="`What went wrong?`"
                             v-model="surveyData.answer4"
+                            :rules="[() => (surveyData.answer2 === 'No' && !!surveyData.answer4) || 'This field is required']"
                             outlined
+                            @change="thereAreErrors = false"
                         ></v-select>
                         <div
-                            v-if="surveyData.answer3 === 'Yes'"
+                            v-if="surveyData.answer3 === 'Yes' && surveyData.answer2 === 'Yes'"
                         >
-                            <p style="color: teal;">That is good too know!</p>
-                            <v-select
-                                :items="['Yes', 'No']"
-                                :label="`Would you like to request your payment?`"
-                                v-model="surveyData.answer5"
-                                outlined
-                            ></v-select>
+                            <p style="color: teal;">
+                                That is good too know! We will review the results, and notify your
+                                when we verify this information.
+                            </p>
                         </div>
                         <p 
-                            v-if="surveyData.answer3 === 'No'"
+                            v-if="(surveyData.answer2 === 'No' && surveyData.answer4.length > 0) || surveyData.answer3 === 'No'"
                             style="color: saddlebrown;"
                         >
-                            A payment can only be requested if {{meeting.clientName}} agrees to move in.
+                            We are sorry to know that it did not work out. Be optimistic, more offers will come.
                         </p>
                         <p 
-                            v-if="surveyData.answer3 === 'Not Sure'"
+                            v-if="surveyData.answer2 === 'Yes' && surveyData.answer3 === 'Not Sure'"
                             style="color: darkblue;"
                         >
                             Not a problem, please feel free contact us if {{meeting.clientName}} agrees 
-                            to move in. Please do not delete this offer yet. If this offer gets deleted and 
-                            then {{meeting.clientName}} decides to move in, there will not be enough evidence 
-                            to process your payment. 
+                            to move in. This meeting status will remain pending until we determine the 
+                            final decision between you  and {{meeting.clientName}}. Once a desicion is made,
+                            you will receive a notification and an email.
                         </p>
                         <v-textarea
                             name="input-7-1"
                             filled
-                            label="Comment: (optional)"
+                            label="Additional Comments: (optional)"
                             v-model="surveyData.comments"
                         ></v-textarea> 
-                    </form>
-                </v-col>
-                <v-card-actions>
-                <v-spacer></v-spacer>
+
+                        <p style="color: red; margin-left: 15px;" v-if="thereAreErrors">
+                            Please respond required questions!
+                        </p>
 
                 <v-btn
                     color="green darken-1"
                     text
-                    @click="show = false"
+                    @click.stop="show = false"
                 >
                     Cancel
                 </v-btn>
@@ -94,22 +97,125 @@
                 <v-btn
                     color="green darken-1"
                     text
-                    @click.stop="submitSurvey"
+                    type="submit"
                 >
                     Submit
                 </v-btn>
+                    </form>
+                </v-col>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
                 </v-card-actions>
             </v-card>
+            <v-card v-else>
+                <v-card-title class="headline">Tell us how it went:</v-card-title>
+                <v-card-text>
+                    This is just a survey to know how things went between you and {{meeting.clientName}}.
+                </v-card-text>
+                <v-col cols="12">        
+                    <form @submit="submitOwnerResults" ref="form">
+                        <v-select
+                            :items="['Excellent', 'Good', 'Ok', 'Bad', 'Terrible']"
+                            label="How was the meeting overall?"
+                            v-model="surveyData.answer1"
+                            @change="thereAreErrors = false"
+                            outlined
+                            :rules="[() => !!surveyData.answer1 || 'This field is required']"
+                        ></v-select>
+                        <v-select
+                            :items="['Yes', 'No']"
+                            :label="`Did you and ${meeting.clientName} come to an agreement?`"
+                            v-model="surveyData.answer2"
+                            :rules="[() => !!surveyData.answer2 || 'This field is required']"
+                            @change="thereAreErrors = false"
+                            outlined
+                        ></v-select>
+                        <v-select
+                            v-if="surveyData.answer2 === 'Yes'"
+                            :items="['Yes', 'No', 'Not Sure']"
+                            :rules="[() => (surveyData.answer2 === 'Yes' && !!surveyData.answer3) || 'This field is required']"
+                            :label="`Will ${meeting.clientName} be moving into the property soon?`"
+                            v-model="surveyData.answer3"
+                            @change="thereAreErrors = false"
+                            outlined
+                        ></v-select>
+                        <v-select
+                            v-if="surveyData.answer2 === 'No'"
+                            :items="['I did not like the visitor', 'Visitor was unable to follow property rules', 'Meeting never happened', 'We just disagree', 'I was unavailable', 'Other']"
+                            :label="`What went wrong?`"
+                            v-model="surveyData.answer4"
+                            :rules="[() => (surveyData.answer2 === 'No' && !!surveyData.answer4) || 'This field is required']"
+                            outlined
+                            @change="thereAreErrors = false"
+                        ></v-select>
+                        <div
+                            v-if="surveyData.answer3 === 'Yes' && surveyData.answer2 === 'Yes'"
+                        >
+                            <p style="color: teal;">
+                                That is good too know! We will review the results, and notify your
+                                when we verify this information.
+                            </p>
+                        </div>
+                        <p 
+                            v-if="(surveyData.answer2 === 'No' && surveyData.answer4.length > 0) || surveyData.answer3 === 'No'"
+                            style="color: saddlebrown;"
+                        >
+                            We are sorry to know that it did not work out. Be optimistic, more offers will come.
+                        </p>
+                        <p 
+                            v-if="surveyData.answer2 === 'Yes' && surveyData.answer3 === 'Not Sure'"
+                            style="color: darkblue;"
+                        >
+                            Not a problem, please feel free contact us if {{meeting.clientName}} agrees 
+                            to move in. This meeting status will remain pending until we determine the 
+                            final decision between you  and {{meeting.clientName}}. Once a desicion is made,
+                            you will receive a notification and an email.
+                        </p>
+                        <v-textarea
+                            name="input-7-1"
+                            filled
+                            label="Additional Comments: (optional)"
+                            v-model="surveyData.comments"
+                        ></v-textarea> 
+
+                        <p style="color: red; margin-left: 15px;" v-if="thereAreErrors">
+                            Please respond required questions!
+                        </p>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click.stop="show = false"
+                >
+                    Cancel
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    type="submit"
+                >
+                    Submit
+                </v-btn>
+                    </form>
+                </v-col>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+
+                </v-card-actions>
+            </v-card>
+
         </v-dialog>
 </template>
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../emailTemplates/emails'
+import { SendEmailToAdminOnFollowUpSubmitted } from '../../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
-    name: "MeetingCheckIn",
+    name: "MeetingFollowup",
     props: {
         value: Boolean,
         data: Object 
@@ -144,13 +250,13 @@ export default {
                 comments: '',
             },
             meeting: {},
-            errors: {}
+            thereAreErrors: false
         }
 
     },
     beforeMount(){
         if(this.isOwner()) this.meeting = this.currentUserOffers.filter(offer => offer.objectId === this.data.meetingId)[0]
-        else this.meeting = this.$store.getters.meeting
+        else this.meeting = this.$store.getters.currentOffer
         // console.log(this.meeting)
     },
     methods: {
@@ -161,38 +267,38 @@ export default {
         isOwner(){
             return this.isUserAuthenticated && this.currentUser.objectId === this.data.ownerId
         },
-    },
-    submitSurvey(){
-        let errors = {};
-        if(this.surveyData.answer1 === '') errors.answer1 = 'Must not be empty'
-        else if(this.surveyData.answer2 === '') errors.answer2 = 'Must not be empty'
-        else if(this.surveyData.answer5 === 'Yes') {
-            if(!this.validateCreditCardNumber(this.surveyData.cardData.cardN)) errors.cardN = 'Invalid card'
-            if(this.surveyData.cardData.cardCvc === '') errors.cardCvc = 'Must not be empty'
-            if(this.surveyData.cardData.cardExp === '') errors.cardExp = 'Must not be empty'
-            if(this.surveyData.cardData.cardZip === '') errors.cardZip = 'Must not be empty'
-        }
-        if(Object.keys(errors).length !== 0) this.errors = errors;
-        else {
-            this.updateOffer({
-                objectId: this.currentOffer.objectId,
-                followUpData: this.surveyData,
-                submittedFollowUpData: true,
-                userRequestedPayment: this.surveyData.answer5 === 'Yes' ? true : false,
-                paymentRequestedCaseOpen: this.surveyData.answer5 === 'Yes' ? true : false,
-                offerRemoveable: this.surveyData.answer5 === 'Yes' ? false : true,
-                status: this.surveyData.answer5 === 'Yes' ? 'Requested Payment.' : 'Nothing else to do!'
-            })
-            if(this.surveyData.answer5 === 'Yes'){
-                // const emailToAdmin = SendEmailToAdminOnPaymentRequested({
-                //     email: 'familyroomrentals@dr.com'
-                // })
-                // this.sendEmail(emailToAdmin);
+        async submitOwnerResults(e){
+            e.stopPropagation();
+            if(this.areThereErrorsForAdmin()) this.thereAreErrors = true
+            else {            
+                this.thereAreErrors = false
+                await this.updateOffer({
+                    objectId: this.meeting.objectId,
+                    ownerCompletedFollowup: true,
+                    ownerResults: this.surveyData,
+                    status: `${this.meeting.ownerName} submitted meeting results.`
+                })
+                
+                const emailToAdmin = SendEmailToAdminOnFollowUpSubmitted({
+                    email: 'familyroomrentals@dr.com',
+                    owner: true,
+                    name: this.meeting.ownerName,
+                    meetingId: this.meeting.objectId
+                })
+                await this.sendEmail(emailToAdmin);
+                
+                this.show = false;
             }
-            this.surveySubmitted = true;
-            // console.log('submitting')
+            
+        },
+        areThereErrorsForAdmin(){
+            if(this.surveyData.answer1 === '' || this.surveyData.answer2 === '') return true;
+            else if(this.surveyData.answer3 === '' && this.surveyData.answer4 === '') return true
+            else if(this.surveyData.answer2 === 'No' && this.surveyData.answer4 === '') return true
+            else if(this.surveyData.answer2 === 'Yes' && this.surveyData.answer3 === '') return true
+            else return false
         }
-    },
+    }
 }
 </script>
 <style scoped>
