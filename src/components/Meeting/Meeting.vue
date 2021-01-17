@@ -61,13 +61,16 @@
                         @click.stop="openRoom"
                         class="roomPhoto"
                     />
-                    <p class="font">You will meet {{meetingData.ownerName}} to see this propery.</p>
+                    <p class="font">
+                        {{meetingData.didMeetingPassed ? 'You met with' : 'You will meet' }}
+                        {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} to see this property.
+                    </p>
                 </div>
                 <div style="width: 275px;">
                     <h3>When: </h3>
                     <p class="font"> 
-                            Meeting Scheduled for {{meetingData.meetingDate.date}} at
-                            {{meetingData.meetingDate.time}}. 
+                            {{meetingData.didMeetingPassed ? 'The meeting was scheduled for' : 'Meeting Scheduled for' }}
+                            {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}. 
                     </p>
                 </div>
                 <div style="width: 275px;">
@@ -211,31 +214,11 @@
                     </small>
                 </p>
             </div>
-            <!-- different options depening on the check in  -->
-            <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
-                <p style="color: #2334A6" class="font">We hope that your meeting was pleasant. We cannot wait to know how it went!</p>
-                <v-btn 
-                    style="margin: 0px 0px 10px 0px; color: #ffffff" 
-                    small 
-                    rounded 
-                    light
-                    color="#187f8a"
-                    @click.stop="openFollowUp = true"
-                >
-                  Submit Follow-up
-                </v-btn> 
-            </div>
-            <div v-else-if="!meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
-                <p class="font checkInMeetingProblem">
-                    {{isOwner() ? 
-                        'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
-                        `${meetingData.ownerName} did not checked-in into the meeting. We are investigating the process. 
-                        We will reach ${meetingData.ownerName} to make sure everyting is fine.`
-                    }} 
-                </p>
-                <div v-if="meetingData.clientCheckedInMeeting && !isOwner()">
+            <!-- different options depening on the check in for owner -->
+            <div v-if="isOwner() && !meetingData.ownerCompletedFollowup">
+                <div v-if="meetingData.ownerCheckedInMeeting && meetingData.didMeetingPassed">
                     <p style="color: #2334A6" class="font">
-                        Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!
+                        We hope that your meeting was pleasant. We cannot wait to know how it went!
                     </p>
                     <v-btn 
                         style="margin: 0px 0px 10px 0px; color: #ffffff" 
@@ -248,17 +231,18 @@
                     Submit Follow-up
                     </v-btn> 
                 </div>
+                <div v-else-if="!meetingData.ownerCheckedInMeeting && meetingData.didMeetingPassed">
+                    <p class="font checkInMeetingProblem">
+                        You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
+                    </p>
+                </div>
             </div>
-            <div v-else-if="meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
-                <p class="font checkInMeetingProblem">
-                    {{!isOwner() ? 
-                        'You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.' : 
-                        `${meetingData.clientName} did not checked-in into the meeting. We are investigating the process. 
-                        We will reach ${meetingData.clientName} to make sure everyting is fine.`
-                    }} 
-                </p>
-                <div v-if="meetingData.ownerCheckedInMeeting && isOwner()">
-                    <p style="color: #2334A6" class="font">Meanwhile, we hope that the meeting was pleasant. We cannot wait to know how it went!</p>
+            <!-- different options depening on the check in for client -->
+            <div v-if="!isOwner() && !meetingData.clientCompletedFollowup">
+                <div v-if="meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
+                    <p style="color: #2334A6" class="font">
+                        We hope that your meeting was pleasant. We cannot wait to know how it went!
+                    </p>
                     <v-btn 
                         style="margin: 0px 0px 10px 0px; color: #ffffff" 
                         small 
@@ -269,14 +253,81 @@
                     >
                         Submit Follow-up
                     </v-btn> 
+                    
                 </div>
-                
+                <div v-else-if="!meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
+                    <p class="font checkInMeetingProblem">
+                        You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.
+                    </p>               
+                </div>
             </div>
-            <div v-else-if="!meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
-                <p class="font checkInMeetingProblem">
-                    You did not checked-in into the meeting. We are investigating the process. We will reach you out to make sure everyting is fine.
-                </p>               
+
+            <!-- ********************************************************************************* -->
+            <!-- if owner completed followup -->
+            <div v-if="isOwner() && meetingData.ownerCompletedFollowup">
+                <!-- loading component if data is not reviewed  -->
+                <div v-if="!meetingData.meetingResultsReviewed">
+                    <img style="border-radius: 20px" src="https://media.giphy.com/media/GpB0GFpjVZra8ilOhn/giphy.gif" alt="logo" width="150" height="135">
+                    <p style="color: #2334A6" class="font">Thank you for letting us know how it went. We are reviewing the results!</p>
+                    <p style="color: #2334A6" class="font"><strong>We will notify you when a decision is make!</strong></p>
+                </div>
+                <!-- if meeting results are reviewed -->
+                <div v-else> 
+                    <!-- if owner should receive payment, enter credit card information -->
+                    <div v-if="meetingData.ownerShouldGetPay">
+                        <!-- btn -->
+                        <v-btn 
+                            style="margin: 15px 0;" 
+                            small 
+                            rounded 
+                            color="success"
+                            v-if="!meetingData.ownerPaymentInformationProvided"
+                            @click.stop="openPaymentInformation = true"
+                        >
+                            Submit Payment Information
+                        </v-btn>
+                        <!-- if payment data submitted -->
+                        <div v-else>
+                            <p style="color: #5347ff"> Infomation received. Please allow 2-4 business days to be proccess. </p>
+                            <p><small>This meeting will be deleted automatically on {{meetingWillBeDeletedOn()}}!</small></p>
+                        </div>
+                    </div>
+                    <!-- if owner is not getting pay, just output message -->
+                    <div v-else>
+                        <p style="color: #5347ff"> Thank you for using FamilyRoomRents, we hope you get many more offers! </p>
+                        <p><small>This meeting will be deleted automatically on {{meetingWillBeDeletedOn()}}!</small></p>
+                    </div>
+                </div>
             </div>
+            <!-- if client completed followup -->
+            <div v-if="!isOwner() && meetingData.clientCompletedFollowup">
+                <!-- loading component if data is not reviewed  -->
+                <div v-if="!meetingData.meetingResultsReviewed">
+                    <img style="border-radius: 20px" src="https://media.giphy.com/media/GpB0GFpjVZra8ilOhn/giphy.gif" alt="logo" width="150" height="135">
+                    <p style="color: #2334A6" class="font">Thank you for letting us know how it went. We are reviewing the results!</p>
+                    <p style="color: #2334A6" class="font"><strong>We will notify you when a decision is make!</strong></p>
+                </div>
+                <div v-else>
+                    <!-- if the client will move in no payment is needed -->
+                    <div v-if="meetingData.clientWillMoveIn" style="padding: 0 50px; color: #5347ff">
+                        <p>
+                            Thank you for using FamilyRoomRents, we hope you enjoy your new place. Please fell free to
+                            contact us at any moment.
+                        </p>
+                    </div>
+                    <!-- if the client is not moving, issue a refund to the client -->
+                    <div v-else style="padding: 0 50px; color: #5347ff">
+                        <p>
+                            We are really sorry to see that it did not work out. But keep sending offers, there is
+                            a property for everyone. We issued a refund of $15 to your account. Allow 2-4 business
+                            days for it to be proccess.
+                        </p>
+                    </div>
+                    <p><small>Please keep in mind that this page will expire on {{meetingWillBeDeletedOn()}}!</small></p>
+                </div>
+            </div>
+            <!-- ********************************************************************************* -->
+
             <!-- if meeting is completed -->
             <div v-if="meetingData.offerCompleted">
                 <p class="font meetingCompleted">
@@ -310,6 +361,14 @@
                     ownerId: meetingData.ownerId
                 }"
             />
+
+            <OwnerPayment 
+                v-model="openPaymentInformation" 
+                :data="{
+                    meetingId: meetingData.meetingId,
+                    ownerId: meetingData.ownerId
+                }"
+            />
         </div>
         </v-card>
     </div>
@@ -320,6 +379,7 @@
   import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
   import MeetingCheckIn from '@/components/dialogs/meetings/MeetingCheckIn.vue'
   import MeetingFollowUp from '@/components/dialogs/meetings/MeetingFollowUp.vue'
+  import OwnerPayment from '@/components/dialogs/meetings/OwnerPayment.vue'
 
   import { mapGetters } from 'vuex'
 
@@ -330,7 +390,8 @@
     components: {
         MeetingCancelation,
         MeetingCheckIn,
-        MeetingFollowUp
+        MeetingFollowUp,
+        OwnerPayment
     },
     data: () => ({
         expanded: false,
@@ -339,6 +400,7 @@
         showDeleteWarning: false,
         showCancelationDetails: false,
         openFollowUp: false,
+        openPaymentInformation: false
     }),
     computed: {
         ...mapGetters([
@@ -391,6 +453,11 @@
         let minutes = Math.trunc(hourFloat)
         // console.log(diffInHours,  hoursDecimal, hourFloat)
         return (`Be ready, meeting starts in ${Math.trunc(daysBeforeMeetingStart)} days, ${hour} hours, and ${minutes} minutes!`)
+    },
+    meetingWillBeDeletedOn(){
+        return new Date(`${this.meetingData.meetingDeletionDate}`).toLocaleString('en-US', {
+                            timeZone: 'America/New_York'
+                        })
     },
     meetingEnvironmentStyle(){
         let style = ''

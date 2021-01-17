@@ -321,10 +321,7 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-import { 
-    SendEmailToClientOnOfferRejected, 
-    SendEmailToAdminOnPaymentRequested, 
-} from '../../emailTemplates/emails'
+import { SendEmailToClientOnOfferRejected } from '../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 
@@ -411,37 +408,6 @@ export default {
             });
             this.sendEmail(clientEmailData);
             this.showRejectionDialog = false
-        },
-        submitSurvey(){
-            let errors = {};
-            if(this.surveyData.answer1 === '') errors.answer1 = 'Must not be empty'
-            else if(this.surveyData.answer2 === '') errors.answer2 = 'Must not be empty'
-            else if(this.surveyData.answer5 === 'Yes') {
-                if(!this.validateCreditCardNumber(this.surveyData.cardData.cardN)) errors.cardN = 'Invalid card'
-                if(this.surveyData.cardData.cardCvc === '') errors.cardCvc = 'Must not be empty'
-                if(this.surveyData.cardData.cardExp === '') errors.cardExp = 'Must not be empty'
-                if(this.surveyData.cardData.cardZip === '') errors.cardZip = 'Must not be empty'
-            }
-            if(Object.keys(errors).length !== 0) this.errors = errors;
-            else {
-                this.updateOffer({
-                    objectId: this.currentOffer.objectId,
-                    followUpData: this.surveyData,
-                    submittedFollowUpData: true,
-                    userRequestedPayment: this.surveyData.answer5 === 'Yes' ? true : false,
-                    paymentRequestedCaseOpen: this.surveyData.answer5 === 'Yes' ? true : false,
-                    offerRemoveable: this.surveyData.answer5 === 'Yes' ? false : true,
-                    status: this.surveyData.answer5 === 'Yes' ? 'Requested Payment.' : 'Nothing else to do!'
-                })
-                if(this.surveyData.answer5 === 'Yes'){
-                    const emailToAdmin = SendEmailToAdminOnPaymentRequested({
-                        email: 'familyroomrentals@dr.com'
-                    })
-                    this.sendEmail(emailToAdmin);
-                }
-                this.surveySubmitted = true;
-                // console.log('submitting')
-            }
         },
         // returns true or false
         validateCreditCardNumber(cardNumber) {

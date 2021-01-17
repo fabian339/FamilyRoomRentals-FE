@@ -168,6 +168,7 @@ export default {
                 card: elements.getElement('cardNumber'),
                 billing_details: {
                         name: this.cardName,
+                        productId: this.$store.getters.currentOffer.objectId
                         // email: 
                     },
                 }

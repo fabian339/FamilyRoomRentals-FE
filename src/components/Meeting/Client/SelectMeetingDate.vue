@@ -86,6 +86,11 @@
                             didClientSubmittedResults: currentOffer.didClientSubmittedResults,
                             didOwnerSubmittedResults: currentOffer.didOwnerSubmittedResults,
                             ownerCompletedFollowup: currentOffer.ownerCompletedFollowup,
+                            clientCompletedFollowup: currentOffer.clientCompletedFollowup,
+                            meetingResultsReviewed: currentOffer.meetingResultsReviewed,
+                            ownerShouldGetPay: currentOffer.ownerShouldGetPay,
+                            clientWillMoveIn: currentOffer.clientWillMoveIn,
+                            meetingDeletionDate: currentOffer.meetingDeletionDate,
                             offerCompleted: currentOffer.offerCompleted,
                             didMeetingPassed: currentOffer.didMeetingPassed,
                             ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,
@@ -113,7 +118,8 @@
                 <PayForMeeting @paymentSucceeded="checkPayment" :offerData="{
                         officialMeetingDate: {
                             date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
-                            time: currentOffer.meetingDates[dateSelectedIndex].time
+                            time: currentOffer.meetingDates[dateSelectedIndex].time,
+                            meetingDeletionDate: this.meetingDeletionDate
                         },
                         status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
                     }"/>
@@ -156,6 +162,7 @@ import Meeting from '../Meeting'
             tokenError: false,
             userAuthorized: true,
             id: '',
+            meetingDeletionDate: '',
             showForm: true,
             showDates: false,
             processCanceledByClient: false,
@@ -167,7 +174,7 @@ import Meeting from '../Meeting'
             confirmedDate: false,
             timerCount : 10,
             // showCountDown: this.$refs.checkoutRef.$data,
-            errors: {}
+            errors: {},
         }
     },
     
@@ -185,7 +192,8 @@ import Meeting from '../Meeting'
             this.tokenError = true;
         }
         if(decoded){
-            console.log(decoded)
+            // console.log(decoded)
+            this.meetingDeletionDate = new Date(decoded.exp);
             if(new Date() > new Date(decoded.exp)) this.tokenExpired = true;
             else this.data = decoded.data
         }

@@ -13,9 +13,7 @@
                 color="lime"
             ></v-progress-linear> -->
             <v-card>
-                <div
-                    v-if="surveyData.answer5 === 'Yes'" 
-                >
+                <div>
                     <p><strong>To receive your $10 payment, please enter card information:</strong> </p>
                     <p>Please make sure that the information is correct!</p>
                     <v-row justify="center" style="border: 2px solid darkgray;border-radius: 45px;margin-bottom: 15px;">
@@ -61,7 +59,7 @@
 
 <script>
 import {mapActions, mapGetters } from 'vuex'
-import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../emailTemplates/emails'
+// import { SendEmailToClientOnOwnerCheckIn, SendEmailToOwnerOnClientCheckIn } from '../../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
@@ -95,7 +93,8 @@ export default {
                 cardCvc: '',
                 cardExp: '',
                 cardZip: ''
-            }
+            },
+            errors: {}
         }
 
     },
