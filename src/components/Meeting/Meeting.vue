@@ -275,17 +275,19 @@
                 <div v-else> 
                     <!-- if owner should receive payment, enter credit card information -->
                     <div v-if="meetingData.ownerShouldGetPay">
-                        <!-- btn -->
-                        <v-btn 
-                            style="margin: 15px 0;" 
-                            small 
-                            rounded 
-                            color="success"
-                            v-if="!meetingData.ownerPaymentInformationProvided"
-                            @click.stop="openPaymentInformation = true"
-                        >
-                            Submit Payment Information
-                        </v-btn>
+                        <!-- if owner will get pay -->
+                        <div v-if="!meetingData.ownerPaymentInformationProvided">
+                            <v-btn 
+                                style="margin: 15px 0;" 
+                                small 
+                                rounded 
+                                color="success"
+                                @click.stop="openPaymentInformation = true"
+                            >
+                                Submit Payment Information
+                            </v-btn>
+                            <p style="color: #295600">Congratulations, you are elegible to get $10 for the service you provided to {{meetingData.clientName}}.</p>
+                        </div>
                         <!-- if payment data submitted -->
                         <div v-else>
                             <p style="color: #5347ff"> Infomation received. Please allow 2-4 business days to be proccess. </p>

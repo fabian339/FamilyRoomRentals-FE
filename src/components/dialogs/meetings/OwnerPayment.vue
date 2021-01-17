@@ -12,44 +12,108 @@
                 striped
                 color="lime"
             ></v-progress-linear> -->
-            <v-card>
-                <div>
-                    <p><strong>To receive your $10 payment, please enter card information:</strong> </p>
-                    <p>Please make sure that the information is correct!</p>
-                    <v-row justify="center" style="border: 2px solid darkgray;border-radius: 45px;margin-bottom: 15px;">
-                        <v-col cols="5">
+            <v-card>                
+                <v-card-title 
+                    class="headline justify-center font"
+                    style="color: #1a7cab; margin: 10px 0"
+                >
+                    Submit Payment Information
+                </v-card-title>
+                <v-card-text class="justify-center font" style="text-align: center">
+                    Please make sure that the information is correct!
+                </v-card-text>
+                    <v-row class="text-center" justify="center" style="margin: 0 12px;">
+                        <v-checkbox
+                            v-model="checkbox"
+                        >
+                            <template slot="label" :aria-disabled="!checkbox">
+                                <label >Billing Address: {{billingAddress}}</label>
+                            </template>
+                        </v-checkbox>
+                    </v-row>
+                <v-row class="text-center" justify="center" style="margin: 0 12px;">
+                    <v-col cols="10" sm="6" md="5" lg="8"> 
+                        <div v-if="!checkbox">
+                            <h2>Billing Address Information: </h2>
+                            <v-text-field
+                                ref="street1"
+                                v-model="location.street1"
+                                label="Street1"
+                                placeholder="76 Columbus St"
+                                :error-messages="errors.street1"
+                            ></v-text-field>
+                            <v-text-field
+                                ref="street2"
+                                v-model="location.street2"
+                                label="Street2"
+                                placeholder="Apt: 3b"
+                                :error-messages="errors.street2"
+                            ></v-text-field>
+                            <v-text-field
+                                ref="city"
+                                v-model="location.city"
+                                label="City"
+                                placeholder="Brooklyn"
+                                :error-messages="errors.city"
+                            ></v-text-field>
+                            <v-text-field
+                                ref="state"
+                                v-model="location.state"
+                                label="State/Province/Region"
+                                placeholder="NY"
+                                :error-messages="errors.state"   
+                            ></v-text-field>
+                            <v-text-field
+                                ref="zipCode"
+                                v-model="location.zipCode"
+                                label="ZIP / Postal Code"
+                                type="number"
+                                placeholder="75155"
+                                :error-messages="errors.zipCode"
+                            ></v-text-field>
+                            <v-autocomplete
+                                ref="country"
+                                v-model="location.country"
+                                :items="countries"
+                                label="Country"
+                                placeholder="Select..."
+                                :error-messages="errors.country"   
+                            ></v-autocomplete>
+                        </div>
+                        <div>
+                            <h2>Credit Card Information: </h2>
                             <v-text-field
                             label="1234 1234 1234 123"
                             :append-icon="cardType('424242424242424') || ''"
                             v-model="cardData.cardN"
+                            :rules="[() => cardData.cardN.length <= 15 || 'Invalid credit card number.']"
                             :error-messages="errors.cardN"   
                             ></v-text-field>
-                        </v-col>
-                        <v-col cols="2.3">
+                       
                             <v-text-field
                             label="MM/YY"
                             v-model="cardData.cardExp"
+                            :rules="[() => (cardData.cardExp.length <= 5) || 'Invalid expiration date.', cardData.cardExp[2] === '/' || 'Missing the / character.']"
                             :error-messages="errors.cardExp"   
                             ></v-text-field>
-                        </v-col>
-                        <v-col cols="2">
+                       
                             <v-text-field
                             label="CVC"
                             v-model="cardData.cardCvc"
+                            :rules="[() => cardData.cardCvc.length <= 3 || 'Invalid card verification code.']"
                             :error-messages="errors.cardCvc"
                             ></v-text-field>
-                        </v-col>
-                        <v-col cols="2.3">
+                       
                             <v-text-field
                             label="Zipcode"
                             v-model="cardData.cardZip"
+                            :rules="[() => cardData.cardZip.length <= 5 || 'Invalid card verification code.']"
                             :error-messages="errors.cardZip"
                             ></v-text-field>
-                        </v-col>
+                        </div>
                         <p>Allow us two business days to review the information and process the payment.</p>
+                    </v-col>
                     </v-row>
-                </div>
-
                 <v-card-actions>              
                 </v-card-actions>
             </v-card>
@@ -63,7 +127,7 @@ import {mapActions, mapGetters } from 'vuex'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
-    name: "MeetingCheckIn",
+    name: "OwnerPayment",
     props: {
         value: Boolean,
         data: Object 
@@ -94,6 +158,18 @@ export default {
                 cardExp: '',
                 cardZip: ''
             },
+            location: {
+                street1: '',
+                street2: '',
+                city: '',
+                state: '',
+                zipCode: '',
+                country: ''
+            },
+            countries: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anguilla', 'Antigua &amp; Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia &amp; Herzegovina', 'Botswana', 'Brazil', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Chad', 'Chile', 'China', 'Colombia', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote D Ivoire', 'Croatia', 'Cruise Ship', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Polynesia', 'French West Indies', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Kyrgyz Republic', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Norway', 'Oman', 'Pakistan', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Pierre &amp; Miquelon', 'Samoa', 'San Marino', 'Satellite', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'St Kitts &amp; Nevis', 'St Lucia', 'St Vincent', 'St. Lucia', 'Sudan', 'Suriname', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', "Timor L'Este", 'Togo', 'Tonga', 'Trinidad &amp; Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks &amp; Caicos', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Virgin Islands (US)', 'Yemen', 'Zambia', 'Zimbabwe'],
+            meeting: {},
+            checkbox: true,
+            billingAddress: '',
             errors: {}
         }
 
@@ -101,6 +177,9 @@ export default {
     beforeMount(){
         if(this.isOwner()) this.meeting = this.currentUserOffers.filter(offer => offer.objectId === this.data.meetingId)[0]
         else this.meeting = this.$store.getters.currentOffer
+        const {street1, street2, city, state, zipCode, country} = this.meeting.meetingLocation;
+        this.billingAddress = `${street1}, ${street2}, ${city}, ${state}, ${zipCode}, ${country}`;
+
         // console.log(this.meeting)
     },
     methods: {
