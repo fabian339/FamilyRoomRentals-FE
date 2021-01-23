@@ -411,6 +411,10 @@
         ]),
     },
     beforeMount() {
+        
+        if(this.$router.history.current.name === "SelectDateAndPay" && !this.meetingData.meetingScheduled){
+            this.expanded = true;
+        }
         // let userToken = localStorage.getItem('user-token');
         // if(typeof userToken === 'string') this.unauthorizedUser = true;
   },

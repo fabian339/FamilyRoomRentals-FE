@@ -15,40 +15,22 @@
                     please read our  <router-link to="/terms-and-conditions">Terms and Conditions</router-link>.
             </h4>
             <h2 style="margin-top: 25px; color: darkgreen;">{{this.$store.getters.currentOffer.clientName}}, You are one step away!</h2>
-            <v-card class="mx-auto" hover id="mycard" width="100%">
-                <v-card-title class="justify-center" style="background-color: darkseagreen">
-                    <h2 style="color:rgb(10 60 28)">Payment Information</h2>
-                </v-card-title>
-                <form @submit="this.handleSubmit" class="formClass">
-                    <v-text-field
-                        placeholder="Name on card"
-                        style="margin: 10px;"
-                        v-model="cardName"
-                        :rules="[cardName.length > 0 || 'Please enter name on card!']"
-                        required
-                    ></v-text-field>
-                    <div id="card-number" class="elementContainer"></div>
-                    <div id="expiry-cvc-postalCode-container">
-                        <div id="card-expiry" class="elementContainer adjustWidth"></div>
-                        <div id="card-cvc" class="elementContainer adjustWidth "></div>
-                        <div id="card-postalCode" class="elementContainer adjustWidth"></div>
-                    </div>
-                    <v-card-actions v-if="!paymentSucceeded" class="justify-center">
-                        <v-btn color="#1f4e41" width="100%" style="margin-top: 10px; color:silver" type="submt"> 
-                            <v-progress-circular
-                                v-if="loadingPayment"
-                                color="silver"
-                                :size="35"
-                                :width="5"
-                                indeterminate
-                            >
-                            </v-progress-circular>
-                            <span v-else>Pay Service Fee</span>
-                        </v-btn>
-                    </v-card-actions>
-                    <p id="card-errors"></p>
-                </form>
-            </v-card>
+                <v-btn 
+                    color="#1f4e41" 
+                    width="30%" 
+                    style="margin-top: 10px; color:silver"
+                    @click.stop="redirectToCheckout"
+                > 
+                    <v-progress-circular
+                        v-if="loadingPayment"
+                        color="silver"
+                        :size="35"
+                        :width="5"
+                        indeterminate
+                    >
+                    </v-progress-circular>
+                    <span v-else>Pay Service Fee</span>
+                </v-btn>
         </div>
     </v-row>
 </template>
@@ -85,62 +67,7 @@ export default {
         }
     },
     async mounted() {
-        var elementStyles = {
-            base: {
-                color: '#32325D',
-                fontWeight: 500,
-                fontFamily: 'Source Code Pro, Consolas, Menlo, monospace',
-                fontSize: '20px',
-                fontSmoothing: 'antialiased',
-                '::placeholder': {
-                    color: '#CFD7DF',
-                },
-                ':-webkit-autofill': {
-                    color: '#e39f48',
-                },
-            },
-            invalid: {
-                iconColor: '#FFC7EE',
-                color: '#FFC7EE',
-            },
-        };
-
-        var elementClasses = {
-            focus: 'focused',
-            empty: 'empty',
-            invalid: 'invalid',
-        };
-
-        var cardNumber = elements.create('cardNumber', {
-            style: elementStyles,
-            showIcon: true,
-            // placeholder: 'Card Number',
-            classes: elementClasses,
-        });
-        cardNumber.mount('#card-number');
-        cardNumber.on('change', this.handleChange);
-        var cardExpiry = elements.create('cardExpiry', {
-            style: elementStyles,
-            classes: elementClasses,
-        });
-        cardExpiry.mount('#card-expiry');
-        cardExpiry.on('change', this.handleChange);
-
-        var cardCvc = elements.create('cardCvc', {
-            style: elementStyles,
-            classes: elementClasses,
-        });
-        cardCvc.mount('#card-cvc');
-        cardCvc.on('change', this.handleChange);
-
-        var cardpostalCode = elements.create('postalCode', {
-            style: elementStyles,
-            classes: elementClasses,
-        });
-        cardpostalCode.mount('#card-postalCode');
-        cardpostalCode.on('change', this.handleChange);
-        let paymentIntent = await this.PaymentIntent()
-        this.clientSecret = paymentIntent.data.clientSecret;
+        // this.clientSecret = paymentIntent.data.clientSecret;
     },
        
     methods: {
@@ -208,6 +135,33 @@ export default {
                     // this.startCountDownTimer();
                 }
             }
+        },
+        async redirectToCheckout(e){
+            e.preventDefault()
+            this.loadingPayment = true
+            let data = {
+                name: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
+                account: "acct_1IAg9fR60Ak0zuqu",
+                image: "https://i.ibb.co/2PNy7yB/guitar.png",
+                success_url: "https://www.google.com/",
+                cancel_url: "https://www.yahoo.com/",
+                offerId: this.$store.getters.currentOffer.objectId
+            }
+            await axios.post('https://familyroomrentals.b4a.app/checkout', data)
+                .then(res => {
+                    console.log(res.data.sessionId)
+                    stripe.redirectToCheckout({
+                        // Make the id field from the Checkout Session creation API response
+                        // available to this file, so you can provide it as argument here
+                        // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                        sessionId: res.data.sessionId
+                        // sessionId: ",kgkgkug"
+                    });
+                })
+                .catch(err => {
+                    console.log("Error: ", err)
+                })
+            // console.log("payingg")
         },
         //send emails after completing payment
         async sendEmailsOnPaymentCompleted(){
@@ -304,7 +258,14 @@ export default {
         //     }
         // },
         async PaymentIntent(){
-            return (await axios.post('https://familyroomrentals.b4a.app/paymentIntent') );
+            let data = {
+                name: "Service: Meetin with Montero Jose on 2/2/2020 at 3:00pm",
+                account: "acct_1IAg9fR60Ak0zuqu",
+                image: "https://i.ibb.co/2PNy7yB/guitar.png",
+                success_url: "https://www.google.com/",
+                cancel_url: "https://www.yahoo.com/"
+            }
+            return (await axios.post('https://familyroomrentals.b4a.app/checkout', data) );
         }
 
     }
