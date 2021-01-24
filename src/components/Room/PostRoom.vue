@@ -191,6 +191,8 @@ import { mapActions, mapGetters } from 'vuex'
 // import noImageForRoom from './noImageForRoom'
 import ContentLoading from '@/components/layout/ContentLoading.vue';
 import {validateCreateRoom} from '../../store/validators'
+import axios from 'axios'
+
 
   export default {
     name: "shareRoom",
@@ -240,11 +242,32 @@ import {validateCreateRoom} from '../../store/validators'
                 } else {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
-                    reader.onload = e => this.images.push(e.target.result);
+                    // reader.onload = e => this.images.push(e.target.result);
+                    reader.onload = e =>{
+                        console.log(file)
+                        this.addPhoto(e.target.result)
+                    }
                     file = {}
                     if(this.errors.image) delete this.errors.image
                 }
             }
+        },
+        async addPhoto(img){
+            // console.log(img)
+            let body = new FormData()
+            body.append('image', img)
+
+            await axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload?key=d1a285fc13a3a234cc2c83991242e2f6',
+                image: body,
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log("EROOR:", err)
+            })
         },
         // remove an image from array
         removePhoto(index){
