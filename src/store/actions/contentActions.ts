@@ -66,5 +66,15 @@ export default {
     .catch((err) => {
       context.commit('SET_CONTENT_ERROR', err);
     });
-  }
+  },
+
+  postImage: (context: any, formData: any) => {
+    axios.post('https://familyroomrentals.b4a.app/hostImage', formData)
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.log("EROOR:", err)
+    })
+  },
 }

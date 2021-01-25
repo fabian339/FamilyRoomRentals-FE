@@ -192,6 +192,7 @@ import { mapActions, mapGetters } from 'vuex'
 import ContentLoading from '@/components/layout/ContentLoading.vue';
 import {validateCreateRoom} from '../../store/validators'
 import axios from 'axios'
+// const imgbbUploader = require("imgbb-uploader");
 
 
   export default {
@@ -228,9 +229,11 @@ import axios from 'axios'
     }, 
     methods:{
         ...mapActions([                  // Add this
-            'shareRoom'
+            'shareRoom',
         ]),
-        uploadImage(file){
+        
+        async uploadImage(file){
+            console.log(file)
             //check if the file is an image
             if(file) {
                 var pattern = /image-*/;
@@ -240,35 +243,36 @@ import axios from 'axios'
                     }
                     this.errors = error;
                 } else {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
+                    // imgbbUploader(
+                    // "d1a285fc13a3a234cc2c83991242e2f6",
+                    // "absolute/path/to/your/image/image.png",
+                    // )
+                    // .then((response) => console.log(response))
+                    // .catch((error) => console.error(error));
+                    // const formData = new FormData();
+                    // formData.append('image', file);
+                    // this.postImage(formData)
+                    // const reader = new FileReader();
+                    // reader.readAsDataURL(file);
                     // reader.onload = e => this.images.push(e.target.result);
-                    reader.onload = e =>{
-                        console.log(file)
-                        this.addPhoto(e.target.result)
-                    }
+                    // reader.onload = e =>{
+                        // console.log(e)
+                            const formData = new FormData();
+                            formData.append('image', file);
+                        axios.post('https://api.imgbb.com/1/upload?key=d1a285fc13a3a234cc2c83991242e2f6', formData)
+                        .then(res => {
+                            console.log(res)
+                        })
+                        .catch(err => {
+                            console.log("EROOR:", err)
+                        })                        // this.addPhoto(file)
+                    // }
                     file = {}
                     if(this.errors.image) delete this.errors.image
                 }
             }
         },
-        async addPhoto(img){
-            // console.log(img)
-            let body = new FormData()
-            body.append('image', img)
-
-            await axios({
-                method: 'post',
-                url: 'https://api.imgbb.com/1/upload?key=d1a285fc13a3a234cc2c83991242e2f6',
-                image: body,
-            })
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log("EROOR:", err)
-            })
-        },
+    
         // remove an image from array
         removePhoto(index){
             // console.log("Deleting photo",index)
