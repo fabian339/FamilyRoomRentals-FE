@@ -38,8 +38,8 @@
 <script>
 // import {loadStripe} from '@stripe/stripe-js';
 // const {loadStripe} = require('@stripe/stripe-js')
-var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn'),
-    elements = stripe.elements();
+// var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn')
+    // elements = stripe.elements();
 // let stripe;
 import axios from 'axios';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
@@ -84,85 +84,85 @@ export default {
             var displayError = document.getElementById('card-errors');
             displayError.textContent = (event.error ? event.error.message : '')
         }, 
-        async handleSubmit(ev) {
-            ev.preventDefault();
-            this.loadingPayment = true
+        // async handleSubmit(ev) {
+        //     ev.preventDefault();
+        //     this.loadingPayment = true
 
-            //  4242 4242 4242 4242  08 / 24  123  94107
-            // if(this.cardName === '') 
-            const payload = await stripe.confirmCardPayment(this.clientSecret, {
-            payment_method: {
-                card: elements.getElement('cardNumber'),
-                billing_details: {
-                        name: this.cardName,
-                        productId: this.$store.getters.currentOffer.objectId
-                        // email: 
-                    },
-                }
-            });
-             if (payload.error) {
-                var displayError = document.getElementById('card-errors');
-                displayError.textContent = `Payment failed, ${payload.error.message}`;
-                this.loadingPayment = false
-            } else {
-                // this.loadingPayment = false
-                // this.paymentSucceeded = true
-                // console.log(payload)
-                if(this.offerData){
-                    //updates the room
-                    const {secretId} = this.$router.history.current.params;
-                    this.updateRoom({
-                        objectId: secretId,
-                        countOfOffersScheduled: this.$store.getters.contentRoom.countOfOffersScheduled + 1,
-                        meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
-                    })
+        //     //  4242 4242 4242 4242  08 / 24  123  94107
+        //     // if(this.cardName === '') 
+        //     const payload = await stripe.confirmCardPayment(this.clientSecret, {
+        //     payment_method: {
+        //         card: elements.getElement('cardNumber'),
+        //         billing_details: {
+        //                 name: this.cardName,
+        //                 productId: this.$store.getters.currentOffer.objectId
+        //                 // email: 
+        //             },
+        //         }
+        //     });
+        //      if (payload.error) {
+        //         var displayError = document.getElementById('card-errors');
+        //         displayError.textContent = `Payment failed, ${payload.error.message}`;
+        //         this.loadingPayment = false
+        //     } else {
+        //         // this.loadingPayment = false
+        //         // this.paymentSucceeded = true
+        //         // console.log(payload)
+        //         if(this.offerData){
+        //             //updates the room
+        //             const {secretId} = this.$router.history.current.params;
+        //             this.updateRoom({
+        //                 objectId: secretId,
+        //                 countOfOffersScheduled: this.$store.getters.contentRoom.countOfOffersScheduled + 1,
+        //                 meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
+        //             })
 
-                    //object of dates to send reminder and follow up 
-                    let datesToSendRemindersAndFollowUps = this.remindersAndFollowUpDates(this.offerData.officialMeetingDate.date, this.offerData.officialMeetingDate.time)
-                        console.log('The dates are:', datesToSendRemindersAndFollowUps)
-                    // updates the offer
-                    this.updateOffer({
-                        ...this.offerData,
-                        whenWasMeetingScheduled: new Date(),
-                        meetingScheduled: true,
-                        readByReceiver: false,
-                        objectId: this.$store.getters.currentOffer.objectId,
-                        remindersAndFollowUpDates: datesToSendRemindersAndFollowUps
-                    });
-                    this.$emit('paymentSucceeded', this.paymentSucceeded)
-                    // send emails right after completing payment
-                    await this.sendEmailsOnPaymentCompleted()
-                    // this.startCountDownTimer();
-                }
-            }
-        },
-        async redirectToCheckout(e){
-            e.preventDefault()
-            this.loadingPayment = true
-            let data = {
-                name: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
-                account: "acct_1IAg9fR60Ak0zuqu",
-                image: "https://i.ibb.co/2PNy7yB/guitar.png",
-                success_url: "https://www.google.com/",
-                cancel_url: "https://www.yahoo.com/",
-                offerId: this.$store.getters.currentOffer.objectId
-            }
-            await axios.post('https://familyroomrentals.b4a.app/checkout', data)
-                .then(res => {
-                    console.log(res.data.sessionId)
-                    stripe.redirectToCheckout({
-                        // Make the id field from the Checkout Session creation API response
-                        // available to this file, so you can provide it as argument here
-                        // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-                        sessionId: res.data.sessionId
-                        // sessionId: ",kgkgkug"
-                    });
-                })
-                .catch(err => {
-                    console.log("Error: ", err)
-                })
-            // console.log("payingg")
-        },
+        //             //object of dates to send reminder and follow up 
+        //             let datesToSendRemindersAndFollowUps = this.remindersAndFollowUpDates(this.offerData.officialMeetingDate.date, this.offerData.officialMeetingDate.time)
+        //                 console.log('The dates are:', datesToSendRemindersAndFollowUps)
+        //             // updates the offer
+        //             this.updateOffer({
+        //                 ...this.offerData,
+        //                 whenWasMeetingScheduled: new Date(),
+        //                 meetingScheduled: true,
+        //                 readByReceiver: false,
+        //                 objectId: this.$store.getters.currentOffer.objectId,
+        //                 remindersAndFollowUpDates: datesToSendRemindersAndFollowUps
+        //             });
+        //             this.$emit('paymentSucceeded', this.paymentSucceeded)
+        //             // send emails right after completing payment
+        //             await this.sendEmailsOnPaymentCompleted()
+        //             // this.startCountDownTimer();
+        //         }
+        //     }
+        // },
+        // async redirectToCheckout(e){
+        //     e.preventDefault()
+        //     this.loadingPayment = true
+        //     let data = {
+        //         name: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
+        //         account: "acct_1IAg9fR60Ak0zuqu",
+        //         image: "https://i.ibb.co/2PNy7yB/guitar.png",
+        //         success_url: "https://www.google.com/",
+        //         cancel_url: "https://www.yahoo.com/",
+        //         offerId: this.$store.getters.currentOffer.objectId
+        //     }
+        //     await axios.post('https://familyroomrentals.b4a.app/checkout', data)
+        //         .then(res => {
+        //             console.log(res.data.sessionId)
+        //             stripe.redirectToCheckout({
+        //                 // Make the id field from the Checkout Session creation API response
+        //                 // available to this file, so you can provide it as argument here
+        //                 // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+        //                 sessionId: res.data.sessionId
+        //                 // sessionId: ",kgkgkug"
+        //             });
+        //         })
+        //         .catch(err => {
+        //             console.log("Error: ", err)
+        //         })
+        //     // console.log("payingg")
+        // },
         //send emails after completing payment
         async sendEmailsOnPaymentCompleted(){
             let commonData = {

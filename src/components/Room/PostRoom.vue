@@ -143,7 +143,7 @@
                                     <v-file-input
                                         accept="image/*"
                                         type="file"
-                                        @change="uploadImage"
+                                        @change="addImage"
                                         :disabled="(6 - images.length) === 0" 
                                     ></v-file-input>
                                 <v-icon id="cameraIcon">mdi-camera</v-icon>
@@ -232,7 +232,7 @@ import axios from 'axios'
             'shareRoom',
         ]),
         
-        async uploadImage(file){
+        async addImage(file){
             console.log(file)
             //check if the file is an image
             if(file) {
@@ -243,29 +243,23 @@ import axios from 'axios'
                     }
                     this.errors = error;
                 } else {
-                    // imgbbUploader(
-                    // "d1a285fc13a3a234cc2c83991242e2f6",
-                    // "absolute/path/to/your/image/image.png",
-                    // )
-                    // .then((response) => console.log(response))
-                    // .catch((error) => console.error(error));
-                    // const formData = new FormData();
-                    // formData.append('image', file);
-                    // this.postImage(formData)
-                    // const reader = new FileReader();
-                    // reader.readAsDataURL(file);
-                    // reader.onload = e => this.images.push(e.target.result);
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = e => this.images.push(e.target.result);
                     // reader.onload = e =>{
-                        // console.log(e)
-                            const formData = new FormData();
-                            formData.append('image', file);
-                        axios.post('https://api.imgbb.com/1/upload?key=d1a285fc13a3a234cc2c83991242e2f6', formData)
-                        .then(res => {
-                            console.log(res)
-                        })
-                        .catch(err => {
-                            console.log("EROOR:", err)
-                        })                        // this.addPhoto(file)
+                    //     console.log(e)
+                    //     const formData = new FormData();
+                    //     formData.append("file", file);
+                    //     formData.append("upload_preset", "ure7xgev");
+                    //     // formData.append("folder", folderName);  
+                    //     // await this.getImgUrl(formData)
+                    //     axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData)
+                    //     .then(res => {
+                    //         console.log(res)
+                    //     })
+                    //     .catch(err => {
+                    //         console.log("EROOR:", err)
+                    //     }) 
                     // }
                     file = {}
                     if(this.errors.image) delete this.errors.image
@@ -278,7 +272,7 @@ import axios from 'axios'
             // console.log("Deleting photo",index)
             this.images.splice(index, 1);
         },
-        submit(e) {
+        async submit(e) {
             e.preventDefault();
             let room = {
                 //required
@@ -294,13 +288,17 @@ import axios from 'axios'
                 ownerPhone: this.currentUser.phone
             }
             //optionals
-            if(this.images.length > 0) room.images = this.images
+            if(this.images.length > 0) {
+                let imagesFolderName = this.randomStringName();
+                room.images = await this.roomImages(imagesFolderName)
+            }
             if(this.propertyRules.length > 0) room.propertyRules = this.propertyRules
 
-            console.log(room)
+            // console.log(room)
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;
-            else this.shareRoom(room)
+            else console.log("Room:", room)
+            // else this.shareRoom(room)
         },
         //add rule to property
         addRule(){
@@ -308,8 +306,45 @@ import axios from 'axios'
                 this.propertyRules.push(this.tempRule);
                 this.tempRule = '';
             }
+        },
+        roomImages(folderName){ //Conect to server
+            // for (const img of this.images) {
+                // console.log(img, folderName)
+                const formData = new FormData();
+                formData.append("file", this.images[0]);
+                formData.append("upload_preset", "ure7xgev");
+                formData.append("folder", folderName);  
+                // await this.getImgUrl(formData)
+                axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData,{
+                    'Access-Control-Allow-Origin': '*'
+                })
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log("EROOR:", err)
+                })  
+            // }
+        },
+        async getImgUrl(formData){
+            await axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log("EROOR:", err)
+            })  
+        },
+        randomStringName(){
+            var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz_-";
+            var string_length = 6;
+            var randomstring = '';
+            for (var i=0; i<string_length; i++) {
+                var rnum = Math.floor(Math.random() * chars.length);
+                randomstring += chars.substring(rnum,rnum+1);
+            }
+            return `room_${randomstring}`
         }
-
     }
   }
 </script>
