@@ -200,12 +200,24 @@ export default {
   
     localStorage.setItem('AUTHORIZATION', authToken)
   },
-
-
+  // remove all images within the folder name in localstorage, 
+  // this is in case user refreshes page of change tab while 
+  // creating a room
+  removeResources(context: any, prefix: any){
+    axios.post('https://familyroomrentals-be.herokuapp.com/api/delete-resources', {prefix})
+    .then(() => { console.log("Resources deleted!") })
+    .catch(() => { console.log("Problem while deleting resources!")})
+  },
   logout(context: any) {
       context.commit('USER_LOGOUT')
       localStorage.removeItem('user-token')
       localStorage.removeItem('AUTHORIZATION')
+      let folderName = localStorage.getItem('img-folder-name')
+      if(folderName && folderName.length > 0){
+        let prefix = `${folderName}/`
+        context.dispatch('removeResources', prefix) 
+        localStorage.removeItem('img-folder-name')
+      }
       if(appRouter.history.current.path !== '/'){
         appRouter.push(`/`)
       }

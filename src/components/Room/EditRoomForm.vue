@@ -1,15 +1,28 @@
 <template>
-    <v-dialog
-        v-model="show"
-        max-width="600px"
+    <v-row justify="center">
+        <v-dialog
+            v-model="show"
+            v-if="!isUserLoading" 
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
         >
             <v-card>
-                <v-card-title>
-                    <span class="headline">Edit Room</span>
-                </v-card-title>
-                <v-card-text>
-                    <v-container class="text-center" style="margin-bottom: -110px;">
-                        <form>
+                <v-toolbar dark color="#2F4F4F">
+                    <v-btn icon dark @click.stop="closeModal">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>
+                        <span class="headline">EDIT ROOM</span>
+                    </v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn dark text @click="saveUpdatedRoomData">Save Changes</v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-row class="text-center" justify="center">>
+                    <v-col lg="4">
+                        <!-- <form> -->
                             <v-radio-group
                                 v-model="rentedRadioChecked"
                                 @change="roomRented"
@@ -170,21 +183,27 @@
                             <label> Property Images </label>
                             <div>
                                 <div style="margin-top: 20px">
-                                        <v-icon large color="green darken-2">mdi-camera</v-icon>
-                                    <input 
-                                        type="file" 
-                                        prepend-icon="mdi-camera" 
-                                        accept="image/*" 
-                                        :disabled="(6 - images.length) === 0" 
-                                        @change="uploadImage"
-                                    >
+                                    <v-tooltip right>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <label 
+                                                fab
+                                                id="imgIconLabel" 
+                                                v-bind="attrs"
+                                                v-on="on"
+                                            >
+                                                <v-icon @click="openUploadModal" id="cameraIcon">mdi-camera</v-icon>
+
+                                            </label>
+                                        </template>
+                                            <span>{{(6 - images.length) === 0 ? 'Maximum amount of images' : 'Add Image'}}</span>
+                                    </v-tooltip>
                                 </div>
                                 <div id="imgContainer">
                                     <small>({{6 - images.length}} images reminding)</small>
                                     <v-row no-gutters>
                                         <v-col v-for="(image, index) in images" :key="image.street1">
                                             <div>
-                                                <img :src="image" alt="img" width="150" height="100">
+                                                <img :src="image.source" alt="img" width="150" height="100">
                                                 <div class="my-2" @click="removeImage(index)">
                                                     <v-btn small color="warning">Remove</v-btn>
                                                 </div>
@@ -198,22 +217,19 @@
                                 cols="12"
                             >
                             </v-col>
-                        </form>
-                    </v-container>
-                </v-card-text>
-                <p class="errorMsg">{{errors.message}}</p>
-                <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click.stop="show = false">Cancel</v-btn>
-                <v-btn color="blue darken-1" type="submit" text @click="saveUpdatedRoomData">Save</v-btn>
-                </v-card-actions>
+                        <!-- </form> -->
+                    </v-col>
+                                    <p class="errorMsg">{{errors.message}}</p>
+                </v-row>
             </v-card>
-    </v-dialog>
+        </v-dialog>
+    </v-row>
 </template>
 
 <script>
 import {validateUpdateRoom} from '../../store/validators'
-import {mapActions} from 'vuex'
+import axios from 'axios'
+import {mapActions, mapGetters} from 'vuex'
 export default {
     name: "EditRoomForm",
     props: {
@@ -229,7 +245,10 @@ export default {
                     this.$emit('input', value)
                 }
             }
-        }
+        },
+        ...mapGetters([
+            'isUserLoading',
+        ]),
     },
     data(){
         return{
@@ -249,6 +268,7 @@ export default {
             propertyRules: this.$store.getters.contentRoom.propertyRules === undefined ? [] : [...this.$store.getters.contentRoom.propertyRules],
             images: this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images],
             tempRule: '',
+            imagesToBeDeleted: [],
             changes: [],
             errors: {},
             rentedRadioChecked: this.$store.getters.contentRoom.rented === false ? 0 : 1,
@@ -262,14 +282,8 @@ export default {
             'updateRoom'
         ]),
         removeImage(index){
+            this.imagesToBeDeleted.push(this.images[index]);
             this.images.splice(index, 1)
-            this.changes.push('images');
-        },
-        uploadImage(e){
-            const image = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = e => this.images.push(e.target.result);
             this.changes.push('images');
         },
         removeRule(index){
@@ -282,6 +296,31 @@ export default {
                 this.changes.push('propertyRules');
                 this.tempRule = '';
             }
+        },
+        openUploadModal() {
+            let folderName = this.$store.getters.contentRoom.cloudinaryFolderName;
+            localStorage.setItem('img-folder-name', folderName);   
+            window.cloudinary.openUploadWidget(
+                { 
+                    cloud_name: 'dr4l6xat9',
+                    upload_preset: 'ure7xgev',
+                    maxFiles: 1,
+                    resourceType: 'image',
+                    folder: folderName,
+                }, (error, result) => {
+                if(error){
+                    console.log(error)
+                }
+                else if (!error && result && result.event === "success") {
+                    // console.log('Done uploading..: ', result.info);
+                    this.images.push({
+                        source: result.info.secure_url,
+                        public_id: result.info.public_id,
+                    })
+                    this.changes.push('images');
+                    if(this.errors.image) delete this.errors.image
+                }
+            }).open();
         },
         roomRented(e){
             this.changes.push('rented');
@@ -311,6 +350,11 @@ export default {
                     }
                 });
                 if(locationBeingUpdated === false) delete data.location
+                if(this.imagesToBeDeleted.length > 0){
+                    this.imagesToBeDeleted.forEach(img =>{
+                        this.removeCloudImage(img.public_id)
+                    })
+                }
 
                 const {valid, errors} = validateUpdateRoom(data);
                 if(!valid) this.errors = errors;
@@ -318,8 +362,9 @@ export default {
                     if(data.rented && data.rented === true) data.rentedDate = new Date()
                     data.objectId = this.$store.getters.contentRoom.objectId;
                     this.updateRoom(data);
+                    localStorage.removeItem('img-folder-name')
                     this.show = false;
-                    console.log(data);
+                    // console.log(data);
                 }
             } else {
                 let errors = {
@@ -329,9 +374,75 @@ export default {
             }
             
         },
+        removeCloudImage(public_id){
+            // console.log("Deleting photo",index)
+            axios.post(process.env.VUE_APP_DELETE_IMG, {public_id})
+            .then(() => { console.log("Removed imgs!")})
+            .catch(() => { console.log("Could not remove img!")})
+            // this.images.splice(index, 1);
+        },
+        closeModal(){
+            this.resetValues();
+            // console.log("caling close");
+            if(this.show) this.show = false
+        },
+        resetValues(){
+            if(this.changes.length > 0){
+                let copyImages = this.images;
+                let orginalImages = this.$store.getters.contentRoom.images;
+                //if images were uploaded and then the dialog was closed, deleted them
+                if(copyImages.length > orginalImages.length){
+                    this.deleteUploadedImgs(copyImages, orginalImages);
+                } 
+                // reseting values
+                this.title = this.$store.getters.contentRoom.title,
+                this.location = {
+                    street1: this.$store.getters.contentRoom.location.street1,
+                    street2: this.$store.getters.contentRoom.location.street2,
+                    city: this.$store.getters.contentRoom.location.city,
+                    state: this.$store.getters.contentRoom.location.state,
+                    zipCode: this.$store.getters.contentRoom.location.zipCode,
+                    country: this.$store.getters.contentRoom.location.country,
+                },
+                this.price = this.$store.getters.contentRoom.price,
+                // propertyOwner: false,
+                this.description = this.$store.getters.contentRoom.description,
+                this.propertyRules = this.$store.getters.contentRoom.propertyRules === undefined ? [] : [...this.$store.getters.contentRoom.propertyRules],
+                this.images = this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images],
+                this.tempRule = '',
+                this.imagesToBeDeleted = [],
+                this.changes = [],
+                this.errors = {},
+                this.rentedRadioChecked = this.$store.getters.contentRoom.rented === false ? 0 : 1,
+                this.rented = this.$store.getters.contentRoom.rented,
+                this.disabledRadioChecked = this.$store.getters.contentRoom.disabled === false ? 0 : 1,
+                this.disabled = this.$store.getters.contentRoom.disabled
+            }
+        },
+        // images that were uploaded but editing process was not completed
+        deleteUploadedImgs(copyImages, orginalImages){ 
+            //if the room actually has images
+            if(orginalImages){
+                //find the different images and delete them
+                let diffImgs = copyImages.filter(x => !orginalImages.includes(x));
+                if(diffImgs.length > 0){
+                    diffImgs.forEach(img => {
+                        this.removeCloudImage(img.public_id)
+                    })
+                    //reset images value
+                    this.images = this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images]
+                }
+            } else { // if the room dont have images but images where uploaded then delete all new images added
+                copyImages.forEach(img => {
+                    this.removeCloudImage(img.public_id)
+                })
+                //reset images value
+                this.images = this.$store.getters.contentRoom.images === undefined ? [] : [...this.$store.getters.contentRoom.images]
+            }
+        },
         onKeyboardPressed(e){
             this.changes.push(e.target.name);
-            console.log('focus' ,e.target.name)
+            // console.log('focus' ,e.target.name)
         }
     }
 }
@@ -345,5 +456,18 @@ export default {
         color: red;
         text-align: center;
         margin: 10px;
+    }
+    #cameraIcon{
+        font-size: 50px;
+        color: #62807e;
+        margin: 10px;
+        transition: all 0.5s;
+    }
+
+    #cameraIcon:hover{
+        cursor: pointer;
+        transform: rotate(45deg);
+        color: #3bcccc
+        /* transform: scale(1.3); */
     }
 </style>

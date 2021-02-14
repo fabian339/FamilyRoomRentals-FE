@@ -1,6 +1,12 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-if="!isUserLoading" v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog 
+        v-if="!isUserLoading" 
+        v-model="show" 
+        fullscreen 
+        hide-overlay 
+        transition="dialog-bottom-transition"
+    >
         <v-card>
             <v-toolbar dark color="#2F4F4F">
             <v-btn icon dark @click="show = false">
@@ -12,8 +18,8 @@
                 <v-btn dark text @click="submitUpdateUser">Save Changes</v-btn>
             </v-toolbar-items>
             </v-toolbar>
-                <v-row class="text-center" justify="center">
-                    <v-col lg="4">
+            <v-row class="text-center" justify="center">
+                <v-col lg="4">
                     <div id="logo" >
                         <img style="margin: 10px" :src="require('../../assets/logo.png')" alt="logo" width="400">
                     </div>
@@ -24,99 +30,99 @@
                     <h2 class="headline font-weight-bold mb-3">
                         Update User
                     </h2>
-                        <v-text-field
-                            name="fName"
-                            v-model="fName"
-                            label="First Name"
-                            @keydown="onKeyboardPressed"
-                            :error-messages="formErrors.fName"   
-                        ></v-text-field>
+                    <v-text-field
+                        name="fName"
+                        v-model="fName"
+                        label="First Name"
+                        @keydown="onKeyboardPressed"
+                        :error-messages="formErrors.fName"   
+                    ></v-text-field>
 
-                        <v-text-field
-                            name="lName"
-                            v-model="lName"
-                            label="Last Name"
-                            @keydown="onKeyboardPressed"
-                            :error-messages="formErrors.lName"   
-                        ></v-text-field>
+                    <v-text-field
+                        name="lName"
+                        v-model="lName"
+                        label="Last Name"
+                        @keydown="onKeyboardPressed"
+                        :error-messages="formErrors.lName"   
+                    ></v-text-field>
 
-                        <v-text-field
-                            name="username"
-                            v-model="username"
-                            label="Enter an username"
-                            @keydown="onKeyboardPressed"
-                            :error-messages="formErrors.username"
-                        ></v-text-field>
+                    <v-text-field
+                        name="username"
+                        v-model="username"
+                        label="Enter an username"
+                        @keydown="onKeyboardPressed"
+                        :error-messages="formErrors.username"
+                    ></v-text-field>
 
-                        <v-text-field
-                            name="email"
-                            v-model="email"
-                            label="Email: example@email.com"
-                            @keydown="onKeyboardPressed"
-                            :error-messages="formErrors.email"
-                        ></v-text-field>
+                    <v-text-field
+                        name="email"
+                        v-model="email"
+                        label="Email: example@email.com"
+                        @keydown="onKeyboardPressed"
+                        :error-messages="formErrors.email"
+                    ></v-text-field>
 
-                        <v-text-field
-                            name="phone"
-                            v-model="phone"
-                            label="phone: (222-222-2222)"
-                            @keydown="onKeyboardPressed"
-                            :error-messages="formErrors.phone"
-                        ></v-text-field>
+                    <v-text-field
+                        name="phone"
+                        v-model="phone"
+                        label="phone: (222-222-2222)"
+                        @keydown="onKeyboardPressed"
+                        :error-messages="formErrors.phone"
+                    ></v-text-field>
 
-                        <div id="profilePhotoContainer">
-                            <p>Change profile picture</p>
-                            <img :src="`${userPhoto ? userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`" alt="img" width="150" height="100">
-                            <div style="width: 60%; margin: auto;">
-                                <v-file-input
-                                    accept="image/*"
-                                    label="Choose Photo"
-                                    @change="uploadUserImage"
-                                    prepend-icon="mdi-camera"
-                                ></v-file-input>
-                            </div>
-                            <p class="errorMsg">{{formErrors.invalidFile}}</p>
+                    <div id="profilePhotoContainer">
+                        <p>Change profile picture</p>
+                        <img :src="`${userPhoto ? userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`" alt="img" width="150" height="100">
+                        <div style="width: 60%; margin: auto;">
+                            <v-file-input
+                                accept="image/*"
+                                label="Choose Photo"
+                                @change="uploadUserImage"
+                                prepend-icon="mdi-camera"
+                            ></v-file-input>
                         </div>
+                        <p class="errorMsg">{{formErrors.invalidFile}}</p>
+                    </div>
 
-                        <v-btn style="margin: 15px auto" small color="#66CDAA" @click.stop="showPasswordDialog = true">
-                            <v-icon color="black">mdi-lock</v-icon>
-                            Change Current Password
-                            <v-icon color="black">mdi-lock</v-icon>
-                        </v-btn>
-                    </v-col>
-                <v-dialog
-                    v-model="showPasswordDialog"
-                    max-width="350"
+                    <v-btn style="margin: 15px auto" small color="#66CDAA" @click.stop="showPasswordDialog = true">
+                        <v-icon color="black">mdi-lock</v-icon>
+                        Change Current Password
+                        <v-icon color="black">mdi-lock</v-icon>
+                    </v-btn>
+                </v-col>
+                <!-- <v-dialog
+                v-model="showPasswordDialog"
+                max-width="350"
+                >
+                <v-card>
+                    <v-card-title class="headline">Request Password Change:</v-card-title>
+                    <v-card-text>
+                        An email will be send with easy instructions on how to change password. 
+                        Check the email address you use to login with us!
+                    </v-card-text>
+
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="showPasswordDialog = false"
                     >
-                    <v-card>
-                        <v-card-title class="headline">Request Password Change:</v-card-title>
-                        <v-card-text>
-                            An email will be send with easy instructions on how to change password. 
-                            Check the email address you use to login with us!
-                        </v-card-text>
+                        Cancel
+                    </v-btn>
 
-                        <v-card-actions>
-                        <v-spacer></v-spacer>
-
-                        <v-btn
-                            color="green darken-1"
-                            text
-                            @click="showPasswordDialog = false"
-                        >
-                            Cancel
-                        </v-btn>
-
-                        <v-btn
-                            color="green darken-1"
-                            text
-                            @click.stop="changePassword"
-                        >
-                            Send Email
-                        </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                 </v-dialog>
-                </v-row>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click.stop="changePassword"
+                    >
+                        Send Email
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+                </v-dialog> -->
+            </v-row>
         </v-card>
     </v-dialog>
   </v-row>

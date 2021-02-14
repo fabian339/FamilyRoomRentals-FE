@@ -4,11 +4,12 @@
         <div class="text-center">
             <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
         </div>
+
         <v-row class="text-center" v-if="!isContentLoading" justify="center">
             <div 
                 class="imageContainer"
                 :style="fullScreen ? 'height: 90vh; width: 100%' : 'height: 500px; width: 70%'"
-                 v-if="contentRoom.images"
+                 v-if="contentRoom.images.length > 0"
                  @click.stop="fullScreen = !fullScreen"
             >
                 <v-btn
@@ -61,6 +62,7 @@
             >
             <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}} by {{contentRoom.ownerFname}}, {{contentRoom.ownerLname}}</small>
             <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
+
                 <div v-if="!this.contentRoom.lockedByAdmin">
                     <v-btn 
                         class="ma-2" 
@@ -72,8 +74,6 @@
                         <v-icon dark>mdi-pencil</v-icon>
                     </v-btn> 
 
-                    <EditRoomForm v-model="updateDialog"/>
-
                     <v-btn 
                         class="ma-2" 
                         color="red" 
@@ -83,6 +83,10 @@
                         Delete Room
                         <v-icon dark right>mdi-delete</v-icon>
                     </v-btn>
+                    
+                    <div>
+                        <EditRoomForm v-model="updateDialog"/>
+                    </div>
                 </div>
                 <div style="margin: 0 20%">
                     <p v-if="this.contentRoom.rented" style="color: darkgoldenrod;">

@@ -232,14 +232,31 @@ import axios from 'axios'
         errors: {}
       }
     }, 
+    beforeMount(){
+        // console.log("entering..")
+        let folderName = localStorage.getItem('img-folder-name')
+        if(folderName && folderName.length > 0){
+            let prefix = `${folderName}/`
+            this.removeResources(prefix);
+        }
+    },
+    beforeDestroy(){
+        // console.log('leaving...')
+        let folderName = localStorage.getItem('img-folder-name')
+        if(folderName && folderName.length > 0){
+            let prefix = `${folderName}/`
+            this.removeResources(prefix);
+        }
+    },
     methods:{
-        ...mapActions([                  // Add this
+        ...mapActions([  
+            'removeResources',
             'shareRoom',
         ]),
 
         openUploadModal() {
             let folderName = this.getFolderName()
-
+            
             window.cloudinary.openUploadWidget(
                 { 
                     cloud_name: 'dr4l6xat9',
@@ -264,17 +281,12 @@ import axios from 'axios'
         },
 
         getFolderName(){
-          let folderName = localStorage.getItem('img-folder-name')
-            if(folderName && folderName.length > 0){
-                console.log("delete images...") 
-                // delete the folder with that name on cloudinary, 
-                // remove item from local storage,
-                // give another folder name for new proccessing
-            } else {
+            let folderName = localStorage.getItem('img-folder-name')
+            if(!folderName){
                 folderName = this.randomStringName()
                 localStorage.setItem('img-folder-name', folderName);   
             }
-            return folderName
+            return folderName;
         },
         // remove an image from array
         removeImage(index){
