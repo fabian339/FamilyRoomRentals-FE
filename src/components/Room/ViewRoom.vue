@@ -27,7 +27,7 @@
                 >
                     <v-icon>mdi-arrow-right</v-icon>
                 </v-btn>
-                <img :src="contentRoom.images[imgToDisplayIndex]" alt="img" width="100%" height="100%">
+                <img :src="contentRoom.images[imgToDisplayIndex].source" alt="img" width="100%" height="100%">
             </div>
             <div                 
                 class="imageContainer"
@@ -45,7 +45,7 @@
                 <div v-for="(image, index) in contentRoom.images" :key="image.street1">
                     <div @click.stop="imgToDisplayIndex = index" >
                         <img 
-                            :src="image" 
+                            :src="image.source" 
                             alt="img" 
                             width="100" 
                             height="50"

@@ -10,7 +10,7 @@
         </h2>
         <v-col class="mb-4">
             <form
-            @submit="submit"
+                @submit="submit"
             >
                 <v-text-field
                     ref="title"
@@ -140,17 +140,13 @@
                                 v-bind="attrs"
                                 v-on="on"
                             >
-                                    <v-file-input
-                                        accept="image/*"
-                                        type="file"
-                                        @change="addImage"
-                                        :disabled="(6 - images.length) === 0" 
-                                    ></v-file-input>
-                                <v-icon id="cameraIcon">mdi-camera</v-icon>
+                                <v-icon @click="openUploadModal" id="cameraIcon">mdi-camera</v-icon>
+
                             </label>
                         </template>
                             <span>{{(6 - images.length) === 0 ? 'Maximum amount of images' : 'Add Image'}}</span>
                     </v-tooltip>
+
                 
                     <p style="color: red" v-if="errors.image">{{errors.image}}</p>
                     <p v-if="images.length === 0" style="color: #3c46d2">Images increase the chances of getting better offers!</p>
@@ -160,9 +156,17 @@
                         <v-row no-gutters class="text-center" justify="center">
                             <!-- <v-col v-for="(image, index) in images" :key="image.street1"> -->
                                 <div v-for="(image, index) in images" :key="image.street1" style="margin: 5px">
-                                    <img :src="image" alt="img" width="150" height="100">
-                                    <div class="my-2" @click="images.splice(index, 1)">
-                                        <v-btn small color="warning">Remove</v-btn>
+                                    <img :src="image.source" alt="img" width="150" height="100">
+                                    <div class="my-2">
+                                        <v-btn small color="warning" @click.stop="removeImage(index)">
+                                            <v-progress-circular
+                                                v-if="imgLoading"
+                                                    indeterminate
+                                                    color="#9e3333"
+                                                >
+                                            </v-progress-circular>
+                                            {{!imgLoading ? 'Remove' : '' }}
+                                        </v-btn>
                                     </div>
                                 </div>
                             <!-- </v-col> -->
@@ -224,6 +228,7 @@ import axios from 'axios'
         propertyRules: [],
         tempRule: '',
         images: [],
+        imgLoading: false,
         errors: {}
       }
     }, 
@@ -231,46 +236,60 @@ import axios from 'axios'
         ...mapActions([                  // Add this
             'shareRoom',
         ]),
-        
-        async addImage(file){
-            console.log(file)
-            //check if the file is an image
-            if(file) {
-                var pattern = /image-*/;
-                if(!file.type.match(pattern)){
-                    const error = {
-                        image: 'File type must be an image.'
-                    }
-                    this.errors = error;
-                } else {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = e => this.images.push(e.target.result);
-                    // reader.onload = e =>{
-                    //     console.log(e)
-                    //     const formData = new FormData();
-                    //     formData.append("file", file);
-                    //     formData.append("upload_preset", "ure7xgev");
-                    //     // formData.append("folder", folderName);  
-                    //     // await this.getImgUrl(formData)
-                    //     axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData)
-                    //     .then(res => {
-                    //         console.log(res)
-                    //     })
-                    //     .catch(err => {
-                    //         console.log("EROOR:", err)
-                    //     }) 
-                    // }
-                    file = {}
+
+        openUploadModal() {
+            let folderName = this.getFolderName()
+
+            window.cloudinary.openUploadWidget(
+                { 
+                    cloud_name: 'dr4l6xat9',
+                    upload_preset: 'ure7xgev',
+                    maxFiles: 1,
+                    resourceType: 'image',
+                    folder: folderName,
+                },
+            (error, result) => {
+                if(error){
+                    console.log(error)
+                }
+                else if (!error && result && result.event === "success") {
+                    // console.log('Done uploading..: ', result.info);
+                    this.images.push({
+                        source: result.info.secure_url,
+                        public_id: result.info.public_id,
+                    })
                     if(this.errors.image) delete this.errors.image
                 }
-            }
+            }).open();
         },
-    
+
+        getFolderName(){
+          let folderName = localStorage.getItem('img-folder-name')
+            if(folderName && folderName.length > 0){
+                console.log("delete images...") 
+                // delete the folder with that name on cloudinary, 
+                // remove item from local storage,
+                // give another folder name for new proccessing
+            } else {
+                folderName = this.randomStringName()
+                localStorage.setItem('img-folder-name', folderName);   
+            }
+            return folderName
+        },
         // remove an image from array
-        removePhoto(index){
+        removeImage(index){
             // console.log("Deleting photo",index)
-            this.images.splice(index, 1);
+            this.imgLoading = true;
+            axios.post(process.env.VUE_APP_DELETE_IMG, {public_id: this.images[index].public_id})
+            .then(() => {
+                this.images.splice(index, 1);
+                this.imgLoading = false
+            })
+            .catch(() => { //if there is an error while deleting the img, delete it from the array, it will just be loose in cloudinary
+                this.images.splice(index, 1)
+                this.imgLoading = false
+            })
+            // this.images.splice(index, 1);
         },
         async submit(e) {
             e.preventDefault();
@@ -289,16 +308,19 @@ import axios from 'axios'
             }
             //optionals
             if(this.images.length > 0) {
-                let imagesFolderName = this.randomStringName();
-                room.images = await this.roomImages(imagesFolderName)
+                room.cloudinaryFolderName = localStorage.getItem('img-folder-name')
+                room.images = this.images
             }
             if(this.propertyRules.length > 0) room.propertyRules = this.propertyRules
 
             // console.log(room)
             const {valid, errors} = validateCreateRoom(room);
             if(!valid) this.errors = errors;
-            else console.log("Room:", room)
-            // else this.shareRoom(room)
+            else {
+                // console.log("Room:", room)
+                this.shareRoom(room)
+                localStorage.removeItem('img-folder-name')
+            }
         },
         //add rule to property
         addRule(){
@@ -307,34 +329,7 @@ import axios from 'axios'
                 this.tempRule = '';
             }
         },
-        roomImages(folderName){ //Conect to server
-            // for (const img of this.images) {
-                // console.log(img, folderName)
-                const formData = new FormData();
-                formData.append("file", this.images[0]);
-                formData.append("upload_preset", "ure7xgev");
-                formData.append("folder", folderName);  
-                // await this.getImgUrl(formData)
-                axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData,{
-                    'Access-Control-Allow-Origin': '*'
-                })
-                .then(res => {
-                    console.log(res)
-                })
-                .catch(err => {
-                    console.log("EROOR:", err)
-                })  
-            // }
-        },
-        async getImgUrl(formData){
-            await axios.post('https://api.cloudinary.com/v1_1/dr4l6xat9/image/upload', formData)
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log("EROOR:", err)
-            })  
-        },
+
         randomStringName(){
             var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz_-";
             var string_length = 6;
@@ -365,6 +360,7 @@ import axios from 'axios'
     #cameraIcon:hover{
         cursor: pointer;
         transform: rotate(45deg);
+        color: #3bcccc
         /* transform: scale(1.3); */
     }
     #imgIconLabel div {
