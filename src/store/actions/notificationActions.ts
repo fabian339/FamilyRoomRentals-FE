@@ -144,7 +144,7 @@ export default {
   },
 
   sendEmail: (context: any, emailData: any) => {
-    axios.post("https://familyroomrentals.b4a.app/sendEmail", emailData)
+    axios.post("https://familyroomrentals-be.herokuapp.com/sendEmail", emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
       console.log("Sending Email",res)

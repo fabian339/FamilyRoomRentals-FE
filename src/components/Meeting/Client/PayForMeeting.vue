@@ -36,9 +36,9 @@
 </template>
 
 <script>
-// import {loadStripe} from '@stripe/stripe-js';
+// import {stripe} from '@stripe/stripe-js';
 // const {loadStripe} = require('@stripe/stripe-js')
-// var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn')
+var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLjEYpYlc7EhPoyZcZtJHUSieWnVnaBPTgtHHRE3neumb8SP00FqpVZSGn')
     // elements = stripe.elements();
 // let stripe;
 import axios from 'axios';
@@ -54,6 +54,7 @@ export default {
     name: 'Checkout',
     computed: {
         ...mapGetters([
+            'content'
         ]),
     },
     data(){
@@ -136,33 +137,45 @@ export default {
         //         }
         //     }
         // },
-        // async redirectToCheckout(e){
-        //     e.preventDefault()
-        //     this.loadingPayment = true
-        //     let data = {
-        //         name: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
-        //         account: "acct_1IAg9fR60Ak0zuqu",
-        //         image: "https://i.ibb.co/2PNy7yB/guitar.png",
-        //         success_url: "https://www.google.com/",
-        //         cancel_url: "https://www.yahoo.com/",
-        //         offerId: this.$store.getters.currentOffer.objectId
-        //     }
-        //     await axios.post('https://familyroomrentals.b4a.app/checkout', data)
-        //         .then(res => {
-        //             console.log(res.data.sessionId)
-        //             stripe.redirectToCheckout({
-        //                 // Make the id field from the Checkout Session creation API response
-        //                 // available to this file, so you can provide it as argument here
-        //                 // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-        //                 sessionId: res.data.sessionId
-        //                 // sessionId: ",kgkgkug"
-        //             });
-        //         })
-        //         .catch(err => {
-        //             console.log("Error: ", err)
-        //         })
-        //     // console.log("payingg")
-        // },
+        async redirectToCheckout(e){
+            e.preventDefault()
+            this.loadingPayment = true
+            let data = {
+                metadata: {
+                    // ...this.offerData,
+                    date: this.offerData.officialMeetingDate.date,
+                    time: this.offerData.officialMeetingDate.time,
+                    meetingDeletionDate: this.offerData.officialMeetingDate.meetingDeletionDate,
+                    customerType: "client",
+                    roomImage: this.offerData.roomImage,
+                    status: this.offerData.status,
+                    offerId: this.$store.getters.currentOffer.objectId,
+                },
+                clientName: this.$store.getters.currentOffer.clientName,
+                clientEmail: this.$store.getters.currentOffer.clientEmail,
+                clientPhone: this.$store.getters.currentOffer.clientPhone,
+                itemName: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
+                account: "acct_1IAg9fR60Ak0zuqu",
+                cancel_url: "https://www.yahoo.com/",
+            }
+            await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
+                .then(res => {
+                    // console.log(res.data)
+                    stripe.redirectToCheckout({
+                        // Make the id field from the Checkout Session creation API response
+                        // available to this file, so you can provide it as argument here
+                        // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                        sessionId: res.data.session.id
+                        // sessionId: ",kgkgkug"
+                    });
+                    this.loadingPayment = false
+                })
+                .catch(err => {
+                    console.log("Error: ", err)
+                    this.loadingPayment = false
+                })
+            // console.log("payingg")
+        },
         //send emails after completing payment
         async sendEmailsOnPaymentCompleted(){
             let commonData = {
@@ -193,58 +206,6 @@ export default {
             await this.sendEmail(userEmailData);
             await this.sendEmail(clientEmailData)
 
-        },
-        //calculates dates for reminders and followups to be sent
-        remindersAndFollowUpDates(meetingDate, meetingTime){
-            let dates = {};
-            //Reminder 1
-            let tempDate1 = new Date(`${meetingDate}, ${meetingTime}`)
-            tempDate1.setDate(tempDate1.getDate() - 2)
-            dates.reminder1 = {
-                    date: tempDate1.toDateString(),
-                    time: tempDate1.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                }
-
-            //Reminder 2
-            let tempDate2 = new Date(`${meetingDate}, ${meetingTime}`)
-            // selectedDate.getDate()
-            tempDate2.setDate(tempDate2.getDate() - 1)
-            dates.reminder2 = {
-                    date: tempDate2.toDateString(),
-                    time: tempDate2.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                }
-        
-            //Check-In Reminder 
-            dates.checkInReminder = {
-                    date: meetingDate,
-                    time: meetingTime
-                }
-
-            //Follow-up 1
-            let tempDate3 = new Date(`${meetingDate}, ${meetingTime}`)
-            tempDate3.setMinutes(tempDate3.getMinutes() + 15)
-            dates.followup1 = {
-                    date: tempDate3.toDateString(),
-                    time: tempDate3.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                }
-     
-            //Follow-up 2
-            let tempDate4 = new Date(`${meetingDate}, ${meetingTime}`)
-            tempDate4.setDate(tempDate4.getDate() + 1)
-            dates.followup2 = {
-                    date: tempDate4.toDateString(),
-                    time: tempDate4.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                }
-
-            //Follow-up 3
-            let tempDate5 = new Date(`${meetingDate}, ${meetingTime}`)
-            tempDate5.setDate(tempDate5.getDate() + 2)
-            dates.followup3 = {
-                    date: tempDate5.toDateString(),
-                    time: tempDate5.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                }
-
-            return dates;
         },
         // startCountDownTimer() {
         //     if(this.countDown === 0){

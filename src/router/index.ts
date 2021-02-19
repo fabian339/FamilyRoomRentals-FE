@@ -15,6 +15,8 @@ import UserProfile from '@/components/User/UserProfile.vue'
 import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
 import SelectMeetingDate from '@/components/Meeting/Client/SelectMeetingDate.vue'
+import SuccessPayment from '@/components/Meeting/Client/SuccessPayment.vue'
+
 // import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
 let jwt = require('jsonwebtoken');
@@ -127,11 +129,11 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     name: 'SelectDateAndPay',
     component: SelectMeetingDate
   },
-  // {
-  //   path: '/request/:secretId/refund/:refundToken',
-  //   name: 'clientRefund',
-  //   component: clientRefund
-  // },
+  {
+    path: '/payment/success/:session_id',
+    name: 'clientRefund',
+    component: SuccessPayment
+  },
   {
     path: '/email-verification',
     name: 'emailVerification',

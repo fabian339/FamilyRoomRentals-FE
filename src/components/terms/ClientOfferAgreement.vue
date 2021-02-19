@@ -161,6 +161,7 @@ export default {
               //sending emails
               this.sendEmail(userEmailData);
               this.sendEmail(clientEmailData);
+              // Add error handler here, in case emails are not sent
               // adding offer to db
               this.sendOffer(this.$store.getters.currentOffer)
               this.updateRoom({

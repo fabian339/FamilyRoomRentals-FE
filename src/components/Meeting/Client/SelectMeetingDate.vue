@@ -96,7 +96,7 @@
                             ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,
                             clientCheckedInMeeting: currentOffer.clientCheckedInMeeting,
                             offerCompletedDate: currentOffer.offerCompletedDate,
-                            image: contentRoom.images[0],
+                            image: contentRoom.images[0].source,
                             meetingDate: {
                                 date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
                                 time: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time,
@@ -119,8 +119,9 @@
                         officialMeetingDate: {
                             date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
                             time: currentOffer.meetingDates[dateSelectedIndex].time,
-                            meetingDeletionDate: this.meetingDeletionDate
+                            meetingDeletionDate: this.meetingDeletionDate,
                         },
+                        roomImage: contentRoom.images[0].source,
                         status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
                     }"/>
             </div>
