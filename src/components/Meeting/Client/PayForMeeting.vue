@@ -144,6 +144,7 @@ export default {
 
             let data = {
                 metadata: {
+                    sprite_client_customerId: this.$store.getters.currentOffer.sprite_client_customerId,
                     meetingUrlPath: `/#/room/${secretId}/meeting/${token}`,
                     meetingDate: this.offerData.officialMeetingDate.date,
                     meetingTime: this.offerData.officialMeetingDate.time,
