@@ -4,14 +4,14 @@
       <div class="logo" >
           <img :src="require('../../assets/logo.png')" alt="logo" width="400">
       </div>
-    <v-row class="text-center" justify="center">
-      <v-col
-        md="6"
-      >
-        <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
-        <SuccessAlert v-if="isEmailVerificationSent" msg="Email Verification was sent successfully!" />
-      </v-col>
-    </v-row>
+      <v-row class="text-center" justify="center">
+        <v-col
+          md="6"
+        >
+          <SuccessAlert v-if="isPasswordResetEmailSent" msg="Reset password email sent successfully!" />
+          <SuccessAlert v-if="isEmailVerificationSent" msg="Email Verification was sent successfully!" />
+        </v-col>
+      </v-row>
     </v-row>
     <v-row class="text-center" justify="center">
         <v-col cols="10" sm="6" md="5" lg="4">        

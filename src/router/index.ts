@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
+import HandlingMeetings from '../views/HandlingMeetings.vue'
 import Career from '../views/Career.vue'
 import Contact from '../views/Contact.vue'
 import Qas from '../views/Qas.vue'
@@ -16,6 +17,7 @@ import PasswordReset from '@/components/User/PasswordReset.vue'
 import Schedule from '@/components/notification/Schedule.vue'
 import SelectMeetingDate from '@/components/Meeting/Client/SelectMeetingDate.vue'
 import SuccessPayment from '@/components/Meeting/Client/SuccessPayment.vue'
+import UnsuccessfulPayment from '@/components/Meeting/Client/UnsuccessfulPayment.vue'
 
 // import clientRefund from '@/components/payments/clientRefund.vue'
 import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
@@ -135,6 +137,11 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     component: SuccessPayment
   },
   {
+    path: '/payment/unsuccessful-payment',
+    name: 'UnsuccessfulPayment',
+    component: UnsuccessfulPayment
+  },
+  {
     path: '/email-verification',
     name: 'emailVerification',
     component: EmailVerification
@@ -179,6 +186,11 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     path: '/terms-and-conditions/safety',
     name: 'Safety',
     component: TermsAndConditions,
+  },
+  {
+    path: '/meetings/handling-meetings',
+    name: 'HandlingMeetings',
+    component: HandlingMeetings,
   },
 ]
 

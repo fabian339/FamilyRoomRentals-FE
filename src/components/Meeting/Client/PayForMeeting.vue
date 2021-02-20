@@ -140,22 +140,24 @@ export default {
         async redirectToCheckout(e){
             e.preventDefault()
             this.loadingPayment = true
+            const {secretId, token} = this.$router.history.current.params;
+
             let data = {
                 metadata: {
-                    // ...this.offerData,
-                    date: this.offerData.officialMeetingDate.date,
-                    time: this.offerData.officialMeetingDate.time,
+                    meetingUrlPath: `/#/room/${secretId}/meeting/${token}`,
+                    meetingDate: this.offerData.officialMeetingDate.date,
+                    meetingTime: this.offerData.officialMeetingDate.time,
                     meetingDeletionDate: this.offerData.officialMeetingDate.meetingDeletionDate,
                     customerType: "client",
                     roomImage: this.offerData.roomImage,
                     status: this.offerData.status,
                     offerId: this.$store.getters.currentOffer.objectId,
+                    clientName: this.$store.getters.currentOffer.clientName,
+                    clientEmail: this.$store.getters.currentOffer.clientEmail,
+                    clientPhone: this.$store.getters.currentOffer.clientPhone,
                 },
-                clientName: this.$store.getters.currentOffer.clientName,
-                clientEmail: this.$store.getters.currentOffer.clientEmail,
-                clientPhone: this.$store.getters.currentOffer.clientPhone,
                 itemName: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
-                account: "acct_1IAg9fR60Ak0zuqu",
+                account: process.env.VUE_APP_STRIPE_CONNECTED_ACCOUNT,
                 cancel_url: "https://www.yahoo.com/",
             }
             await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
