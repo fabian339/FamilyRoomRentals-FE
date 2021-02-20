@@ -5,23 +5,21 @@
         <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
       </div>
       <v-col lg="6">
-        <h2 class="headline font-weight-bold mb-3">
-          {{name}}, <span style="color:green">Congratulations!</span> Your appointment has been 
-          <span style="color:green">officially</span> scheduled. 
-          A confirmation email has been sent and we really hope your meeting goes well.
-        </h2>
-      </v-col>
-    </v-row>
-    <v-row class="text-center" justify="center">
-      <v-col lg="8">
-        <h2 style="color: #226158">WHAT'S NEXT?</h2>
-        <div style="margin-top: 20px; display: inline-grid">
-          <v-btn small class="btn" type="submit" dark color="#0f825a" to="/meetings/handling-meetings">How To Handle Meetings</v-btn>
-          <v-btn small class="btn" type="submit" dark color="#7a2184" @click.stop="openMeetingPage">Check meeting Status</v-btn>
-          <v-btn small class="btn" type="submit" dark color="#00799e" to="/qas">Questions & Answers</v-btn>
-          <v-btn small class="btn" type="submit" dark color="#476500" to="/rooms">
-            <v-icon>mdi-arrow-left</v-icon> Check More Properties
-          </v-btn>
+        <div>
+          <h2 class="headline font-weight-bold mb-3">
+            {{thereIsAnError ? '' : `${name},`}} <span style="color:green">Congratulations!</span> Your appointment has been 
+            <span style="color:green">officially</span> scheduled. 
+            A confirmation email has been sent and we really hope your meeting goes well.
+          </h2>
+          <h2 style="color: #226158; margin-top: 25px">WHAT'S NEXT?</h2>
+          <div style="margin-top: 20px; display: inline-grid">
+            <v-btn small class="btn" type="submit" dark color="#0f825a" to="/meetings/handling-meetings">How To Handle Meetings</v-btn>
+            <v-btn small class="btn" type="submit" dark color="#7a2184" @click.stop="openMeetingPage">Check meeting Status</v-btn>
+            <v-btn small class="btn" type="submit" dark color="#00799e" to="/qas">Questions & Answers</v-btn>
+            <v-btn small class="btn" type="submit" dark color="#476500" to="/rooms">
+              <v-icon>mdi-arrow-left</v-icon> Check More Properties
+            </v-btn>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -38,7 +36,8 @@ import axios from 'axios'
     data: () => {
         return{
             name: '',
-            meetingUrlPath: ''
+            meetingUrlPath: '',
+            thereIsAnError: false
         }
     },
     beforeMount(){
@@ -52,6 +51,7 @@ import axios from 'axios'
           this.meetingUrlPath = res.data.meetingUrlPath
         })
         .catch(err => {
+          this.thereIsAnError = true;
           console.log("ERROR", err) // if there is an error redirect to homepage
         });
     },

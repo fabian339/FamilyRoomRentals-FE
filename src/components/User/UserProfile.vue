@@ -47,7 +47,7 @@
                   didMeetingPassed: meeting.didMeetingPassed,
                   ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
                   clientCheckedInMeeting: meeting.clientCheckedInMeeting,
-                  image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0],
+                  image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
                   meetingDate: meeting.officialMeetingDate,
                   meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
                 }" 

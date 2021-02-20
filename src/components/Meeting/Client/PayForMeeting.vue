@@ -85,31 +85,7 @@ export default {
             var displayError = document.getElementById('card-errors');
             displayError.textContent = (event.error ? event.error.message : '')
         }, 
-        // async handleSubmit(ev) {
-        //     ev.preventDefault();
-        //     this.loadingPayment = true
-
-        //     //  4242 4242 4242 4242  08 / 24  123  94107
-        //     // if(this.cardName === '') 
-        //     const payload = await stripe.confirmCardPayment(this.clientSecret, {
-        //     payment_method: {
-        //         card: elements.getElement('cardNumber'),
-        //         billing_details: {
-        //                 name: this.cardName,
-        //                 productId: this.$store.getters.currentOffer.objectId
-        //                 // email: 
-        //             },
-        //         }
-        //     });
-        //      if (payload.error) {
-        //         var displayError = document.getElementById('card-errors');
-        //         displayError.textContent = `Payment failed, ${payload.error.message}`;
-        //         this.loadingPayment = false
-        //     } else {
-        //         // this.loadingPayment = false
-        //         // this.paymentSucceeded = true
-        //         // console.log(payload)
-        //         if(this.offerData){
+        
         //             //updates the room
         //             const {secretId} = this.$router.history.current.params;
         //             this.updateRoom({
@@ -141,7 +117,6 @@ export default {
             e.preventDefault()
             this.loadingPayment = true
             const {secretId, token} = this.$router.history.current.params;
-
             let data = {
                 metadata: {
                     sprite_client_customerId: this.$store.getters.currentOffer.sprite_client_customerId,
@@ -149,6 +124,9 @@ export default {
                     meetingDate: this.offerData.officialMeetingDate.date,
                     meetingTime: this.offerData.officialMeetingDate.time,
                     meetingDeletionDate: this.offerData.officialMeetingDate.meetingDeletionDate,
+                    roomId: secretId,
+                    countOfOffersScheduled: this.$store.getters.contentRoom.countOfOffersScheduled + 1,
+                    meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
                     customerType: "client",
                     roomImage: this.offerData.roomImage,
                     status: this.offerData.status,
@@ -161,6 +139,7 @@ export default {
                 account: process.env.VUE_APP_STRIPE_CONNECTED_ACCOUNT,
                 cancel_url: "https://www.yahoo.com/",
             }
+            console.log("Data to send", data)
             await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
                 .then(res => {
                     // console.log(res.data)
