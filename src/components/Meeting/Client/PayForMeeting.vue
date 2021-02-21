@@ -134,6 +134,8 @@ export default {
                     clientName: this.$store.getters.currentOffer.clientName,
                     clientEmail: this.$store.getters.currentOffer.clientEmail,
                     clientPhone: this.$store.getters.currentOffer.clientPhone,
+                    ownerName: this.$store.getters.currentOffer.ownerName,
+                    ownerEmail: this.$store.getters.currentOffer.ownerEmail,
                 },
                 itemName: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
                 account: process.env.VUE_APP_STRIPE_CONNECTED_ACCOUNT,

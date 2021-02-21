@@ -90,9 +90,51 @@
           <v-btn
             color="green darken-1"
             text
-            @click.stop="addOfferToThisRoom"
+            @click.stop="OpenOfferEmailVerification"
           >
             Continue
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="showVerificationForm"
+      persistent
+      width="600px"
+    >
+      <v-card>
+        <v-card-title>
+          <span style="font-size: 30px;"><strong> Verify Your Email </strong></span>
+        </v-card-title>
+        <hr style="margin: 15px 25px;">
+        <v-card-text>    
+          An Email Verification Number has been sent to {{clientEmail}}.
+        </v-card-text>
+
+        <v-text-field
+          label="Enter Verification Code"
+          outlined
+          placeholder="xxx-xxx"
+          v-model="verificationNumber"
+          :rules="[() => !isNaN(verificationNumber) || 'Must be a number']"
+          maxlength="6"
+          style="width: 50%; margin: 0 25%; font-size: 25px;"
+        ></v-text-field>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click.stop="show = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click.stop="VerifyAndAddOfferToThisRoom"
+          >
+            Send Offer
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -107,6 +149,7 @@ export default {
     name: "ClientOffertAgreement",
     props: {
         value: Boolean,
+        clientEmail: String
     },
     computed: {
         show: {
@@ -124,13 +167,13 @@ export default {
         return {
             checkbox: false,
             agreementError: '',
-            logo: ''
+            showVerificationForm: false,
+            verificationNumber: '',
+            offerVerificationgCode: ''
         }
     },
     created(){
-      this.getDataUri(require('../../assets/logo.png'), (dataUri) => {
-         this.logo = dataUri
-      });
+      console.log(this.randomString())
     },
     methods: {
       ...mapActions([
@@ -138,7 +181,10 @@ export default {
           'sendEmail',
           'updateRoom'
       ]),
-      addOfferToThisRoom(){
+      OpenOfferEmailVerification(){
+        this.showVerificationForm = true;
+      },
+      VerifyAndAddOfferToThisRoom(){
           if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
           else {
               this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
@@ -172,20 +218,15 @@ export default {
               this.show = false;
           }
       },
-     getDataUri(url, callback) {
-      var image = new Image();
-      image.onload = function () {
-      var canvas = document.createElement('canvas');
-      canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-      canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
-      canvas.getContext('2d').drawImage(this, 0, 0);
-      // Get raw image data
-      // callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
-      // ... or get as Data URI
-      callback(canvas.toDataURL('image/png'));
-      };
-
-      image.src = url;
+      randomString() {
+        var chars = "0123456789";
+        var string_length = 6;
+        var randomstring = '';
+        for (var i=0; i<string_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          randomstring += chars.substring(rnum,rnum+1);
+        }
+        return randomstring
       }
     }
 }

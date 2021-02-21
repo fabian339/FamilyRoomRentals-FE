@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="offerContainer">
-            <ClientOfferAgreement v-model="openOfferAgreementDialog" />
+            <ClientOfferAgreement v-model="openOfferAgreementDialog" :clientEmail="email" />
             <h2 class="headline font-weight-bold mb-3">
                 Interested? Don't wait!
             </h2>
