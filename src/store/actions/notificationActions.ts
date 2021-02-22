@@ -147,7 +147,7 @@ export default {
     axios.post("https://familyroomrentals-be.herokuapp.com/sendEmail", emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
-      console.log("Sending Email",res)
+      // console.log("Sending Email",res)
     })
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', err);

@@ -4565,11 +4565,6 @@ image-to-uri@^1.0.0:
   resolved "https://registry.yarnpkg.com/image-to-uri/-/image-to-uri-1.0.0.tgz#6ca7e193019fa453ec90a3d3eff51ba2a0072284"
   integrity sha1-bKfhkwGfpFPskKPT7/UboqAHIoQ=
 
-imgbb-uploader@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/imgbb-uploader/-/imgbb-uploader-1.2.0.tgz#12f1adf8f16217603fa0e2dbcc9857b5366af0c0"
-  integrity sha512-Sz7s11zSRcGmfhWZU06Kk9n7LEDhlzfl/L7gRTvT6CuqDbi78AZQsa1Vgd9iN+c/6KoIneP0NppKNjORtLPQnw==
-
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"

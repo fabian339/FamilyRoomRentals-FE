@@ -166,8 +166,6 @@ export const SendEmailToClientOnOfferRejected = (data: any) => {
     };
 }
 
-
-
 export const SendFollowupToClient = (data: any) => {
     // console.log("from email: ", data.logo)
     // console.log("from email: ", data.logo)
@@ -211,6 +209,33 @@ export const SendFollowupToClient = (data: any) => {
     };
 }
 
+export const SendVerificationCodeOnOfferMade = (data: any) => {
+    const html = `
+        <h3> Dear ${data.name}, </h3>
+
+        <p>Please verify this email before completing the offer submission.</p>
+        
+        <h4>Verification Code: <span style="color: blue;">${data.verificationCode}</span></h4>
+
+        <p>We Thank you for using FamilyRoomRentals, and stay safe during this critical times.</p>
+
+        <div style="line-height: 3px; margin: 40px 0px;">
+            <p>FamilyRoomRentals.Inc</p>
+            <p>New York, NY</p>
+            <p>(347) 389-0868</p>
+            <p>familyroomrentas@dr.com</p>
+            <p><a href='https://familyroomrentals.com'>familyroomrentals.com</a> </p>
+        </div>
+        <img src="https://i.ibb.co/DrcHFyW/logo.png" style="margin-left: -20px;" alt="logo" border="0" width="200">
+        `;
+        
+    return {
+        email: data.email,
+        subject: "FamilyRoomRentals, Email Verification",
+        name: data.name,
+        html,
+    };
+}
 
 export const SendFollowupToUser = (data: any) => {
     // console.log("from email: ", data.logo)
@@ -249,7 +274,6 @@ export const SendFollowupToUser = (data: any) => {
         html,
     };
 }
-
 
 export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
@@ -298,7 +322,6 @@ export const SendEmailToClientOnMeetingCanceledByOwner = (data: any) => {
     };
 }
 
-
 export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
@@ -340,7 +363,6 @@ export const SendEmailToOwnerOnMeetingCanceledByOwner = (data: any) => {
         html,
     };
 }
-
 
 export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
     // console.log("from email: ", data.logo)
@@ -389,7 +411,6 @@ export const SendEmailToClientOnMeetingCanceledByClient = (data: any) => {
     };
 }
 
-
 export const SendEmailToOwnerOnMeetingCanceledByClient = (data: any) => {
     // console.log("from email: ", data.logo)
     const html = `
@@ -430,7 +451,6 @@ export const SendEmailToOwnerOnMeetingCanceledByClient = (data: any) => {
         html,
     };
 }
-
 
 export const SendEmailToClientOnOwnerCheckIn = (data: any) => {
     const html = `
