@@ -142,7 +142,9 @@ export default {
                 cancel_url: "https://www.yahoo.com/",
             }
             console.log("Data to send", data)
-            await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
+            // await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
+            // new heroku url
+            await axios.post('https://my-first-heroku-app-api.herokuapp.com/checkout', data)
                 .then(res => {
                     // console.log(res.data)
                     stripe.redirectToCheckout({

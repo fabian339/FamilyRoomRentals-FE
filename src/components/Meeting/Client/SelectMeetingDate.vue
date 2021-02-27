@@ -69,7 +69,7 @@
             </v-btn>
             <div v-if="currentOffer.meetingScheduled || showTicket">
                 <div class="confirmation">                   
-                    <h2>{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
+                    <h2 style="margin-bottom: 10px">{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
                             `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
                         )}}
                     </h2>

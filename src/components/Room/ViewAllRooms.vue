@@ -58,7 +58,7 @@
         style="marginTop: -30px"
       >
         <h2 class="headline font-weight-bold mb-3" v-if="contentRooms.length !== 0">
-          All Rooms {{filterBy !== "Most Recent" ? `(filter by: ${filterBy})`: ""}}
+          All Rooms {{filterBy !== "Most Recent" ? `(filtered by: ${filterBy})`: ""}}
         </h2>
         <h2 class="headline font-weight-bold mb-3" style="margin-top: 60px" v-if="contentRooms.length === 0">
           No Properties Available!

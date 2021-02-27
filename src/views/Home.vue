@@ -38,7 +38,7 @@
           <v-col class="element4">
             <div style="margin-top: 5%;">
               <h2> Sending Offers</h2>
-              <iframe style="border: 2px solid;" src="https://streamable.com/e/geigaz" width="350" height="200" frameborder="0" allowfullscreen></iframe>            
+              <!-- <iframe style="border: 2px solid;" src="https://streamable.com/e/geigaz" width="350" height="200" frameborder="0" allowfullscreen></iframe>             -->
             </div>
         </v-col>
         </v-row>

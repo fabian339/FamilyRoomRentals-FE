@@ -660,3 +660,25 @@ export const SendEmailToAdminOnRefundRequested = (data: any) => {
         html,
     };
 }
+
+export const SendEmailToAdminOnRewardRequested = (data: any) => {
+    const html = `
+        <h3> Dear admin, </h3>
+        <p>A new Reward has been requested.</p>
+
+        <p>Please send ${data.rewardName} gift card to ${data.ownerName} from offer ${data.offerId}.</p>
+        
+        <h4>Actions: </h4>
+        <p>
+            Login to check your account 
+            <strong><a href='https://familyroomrentals.com/#/login' target="_blank">HERE.</a></strong>
+        </p>
+        `;
+        
+    return {
+        email: data.email,
+        subject: "URGENT ACTION, New Reward Requested!",
+        name: 'FamilyRoomRentals',
+        html,
+    };
+}

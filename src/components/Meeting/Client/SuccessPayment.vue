@@ -44,7 +44,9 @@ import axios from 'axios'
         const {session_id} = this.$router.history.current.params;
         // let data = { session_id: session_id}
         console.log("Asucces payment", session_id)
-        axios.get(`https://familyroomrentals-be.herokuapp.com/new-client/${session_id}`)
+        // axios.get(`https://familyroomrentals-be.herokuapp.com/new-client/${session_id}`)
+        // new heroku url
+        axios.get(`https://my-first-heroku-app-api.herokuapp.com/new-client/${session_id}`)
         .then(res => {
           console.log(res)
           this.name = res.data.clientName;

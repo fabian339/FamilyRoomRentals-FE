@@ -144,7 +144,9 @@ export default {
   },
 
   sendEmail: (context: any, emailData: any) => {
-    axios.post("https://familyroomrentals-be.herokuapp.com/sendEmail", emailData)
+    // axios.post("https://familyroomrentals-be.herokuapp.com/sendEmail", emailData)
+    //new heroku url
+    axios.post("https://my-first-heroku-app-api.herokuapp.com/sendEmail", emailData)
     .then((res) => {
       // context.commit('SET_OFFER_SENT_BY_CLIENT', true);
       // console.log("Sending Email",res)

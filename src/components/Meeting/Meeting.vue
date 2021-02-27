@@ -16,7 +16,7 @@
                 </div>
                 <div>
                     <p
-                        v-if="isItToEarlyForMeeting() && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner"
+                        v-if="isItToEarlyForMeeting() && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner && !meetingData.didMeetingPassed"
                         class="font text-center" 
                         style="font-size: 20px; margin: 25px"
                     >
@@ -100,7 +100,7 @@
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
-                    style="margin: 0px 5px 0 0; color: #ffffff" 
+                    style="margin: 5px 5px; color: #ffffff" 
                     small 
                     rounded
                     :disabled="(meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting) || (meetingData.processCanceledByClient ||  meetingData.processCanceledByOwner)  || meetingData.didMeetingPassed || meetingData.offerCompleted"
@@ -110,7 +110,7 @@
                     Cancel Meeting
                 </v-btn> 
                 <v-btn 
-                    style="margin: 0px 5px;" 
+                    style="margin: 5px 5px;" 
                     small 
                     rounded 
                     color="success"
@@ -122,7 +122,7 @@
                     }}
                 </v-btn> 
                 <v-btn 
-                    style="margin: 0px 5px;" 
+                    style="margin: 5px 5px;" 
                     small 
                     rounded 
                     color="error" 
@@ -160,6 +160,44 @@
             </div>
             <!-- will only show if is not meeting time, is early -->
             <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <!-- once meeting is scheduled show helful links btn -->
+            <p v-if="!meetingData.offerCompleted" class="helpful-links" @click.stop="showHelfulLinks = !showHelfulLinks">View Helful Links</p>
+            <!-- will show helful links to meetings -->
+            <div v-if="showHelfulLinks" style="margin-bottom: 10px">
+                <v-btn 
+                    small 
+                    style="margin: 5px 5px;" 
+                    class="btn" 
+                    type="submit" 
+                    dark 
+                    color="#0f825a" 
+                    to="/meetings/handling-meetings"
+                >
+                    How To Handle Meetings
+                </v-btn>
+                <v-btn 
+                    small 
+                    style="margin: 5px 5px;" 
+                    class="btn" 
+                    type="submit" 
+                    dark 
+                    color="#7a2184" 
+                    to="/contact-us"
+                > 
+                    Contact Us
+                </v-btn>
+                <v-btn 
+                    small 
+                    style="margin: 5px 5px;" 
+                    class="btn" 
+                    type="submit" 
+                    dark 
+                    color="#00799e" 
+                    to="/qas"
+                >
+                    Questions & Answers
+                </v-btn>
+            </div>
             <!-- loading component to show that the meeting is in progress -->
             <div v-if="meetingData.ownerCheckedInMeeting && meetingData.clientCheckedInMeeting && !meetingData.didMeetingPassed" class="meetingStatus"> 
                 <img style="border-radius: 20px" src="https://media.giphy.com/media/H88dPcYfTecWK3FdEO/giphy.gif" alt="logo" width="150">
@@ -217,7 +255,7 @@
             <!-- different options depening on the check in for owner -->
             <div v-if="isOwner() && !meetingData.ownerCompletedFollowup">
                 <div v-if="meetingData.ownerCheckedInMeeting && meetingData.didMeetingPassed">
-                    <p style="color: #2334A6" class="font">
+                    <p style="color: #2334A6; margin: 10px" class="font">
                         We hope that your meeting was pleasant. We cannot wait to know how it went!
                     </p>
                     <v-btn 
@@ -240,7 +278,7 @@
             <!-- different options depening on the check in for client -->
             <div v-if="!isOwner() && !meetingData.clientCompletedFollowup">
                 <div v-if="meetingData.clientCheckedInMeeting && meetingData.didMeetingPassed">
-                    <p style="color: #2334A6" class="font">
+                    <p style="color: #2334A6; margin: 10px" class="font">
                         We hope that your meeting was pleasant. We cannot wait to know how it went!
                     </p>
                     <v-btn 
@@ -273,25 +311,48 @@
                 </div>
                 <!-- if meeting results are reviewed -->
                 <div v-else> 
-                    <!-- if owner should receive payment, enter credit card information -->
-                    <div v-if="meetingData.ownerShouldGetPay">
-                        <!-- if owner will get pay -->
-                        <div v-if="!meetingData.ownerPaymentInformationProvided">
-                            <v-btn 
-                                style="margin: 15px 0;" 
-                                small 
-                                rounded 
-                                color="success"
-                                @click.stop="openPaymentInformation = true"
-                            >
-                                Submit Payment Information
-                            </v-btn>
-                            <p style="color: #295600">Congratulations, you are elegible to get $10 for the service you provided to {{meetingData.clientName}}.</p>
+                    <!-- if owner should receive reward, let owner choose a reward -->
+                    <div v-if="meetingData.ownerShouldReceiveReward">
+                        <!-- if no reward have been send to owner -->
+                        <div v-if="!meetingData.rewardSentToOwner">
+                            <!-- if reward hasn't expire -->
+                            <div v-if="!didRewardExpired()">
+                                <div v-if="!meetingData.ownerRewarded" >
+                                    <p style="color: #295600; margin: 10px 10px">
+                                        Congratulations, you are elegible to receive a 
+                                        <strong>reward</strong>
+                                        for the service you provided to {{meetingData.clientName}}.
+                                    </p>
+                                    <p style="color: #a0522d; margin-bottom: 10px">
+                                        <small>Your reward must be claimed before: {{new Date(meetingData.ownerRewardExpirationDate).toLocaleString()}}, otherwise, you won't be rewarded.</small>
+                                    </p>
+                                </div>
+                                <div v-else>
+                                    <p 
+                                        v-if="meetingData.ownerRewarded" 
+                                        style="color: #295600; margin: 10px 10px"
+                                    >
+                                        A Reward was assigned to your account.
+                                    </p>
+                                </div>
+
+                                <v-btn 
+                                    style="margin-bottom: 15px;" 
+                                    small 
+                                    rounded 
+                                    color="success"
+                                    @click.stop="openRewardClaim = true"
+                                >
+                                    {{!meetingData.ownerRewarded ? 'Claim Reward' : 'View Reward' }}
+                                </v-btn>
+                            </div>
+                            <div v-else>
+                                <p style="color: #841d80">Unfortunately, your reward  expired.</p>
+                            </div>
                         </div>
-                        <!-- if payment data submitted -->
+                        <!-- if reward was sent to owner -->
                         <div v-else>
-                            <p style="color: #5347ff"> Infomation received. Please allow 2-4 business days to be proccess. </p>
-                            <p><small>This meeting will be deleted automatically on {{meetingWillBeDeletedOn()}}!</small></p>
+                            <p style="color: #334207"> A reward was sent to the email associated with your FamilyRoomRentals account. </p>
                         </div>
                     </div>
                     <!-- if owner is not getting pay, just output message -->
@@ -313,6 +374,9 @@
                     <!-- if the client will move in no payment is needed -->
                     <div v-if="meetingData.clientWillMoveIn" style="padding: 0 50px; color: #5347ff">
                         <p>
+                            As you and {{meetingData.ownerName}} came to an agreement, we wish you all the best moving forward.
+                        </p>
+                        <p>
                             Thank you for using FamilyRoomRents, we hope you enjoy your new place. Please fell free to
                             contact us at any moment.
                         </p>
@@ -331,14 +395,15 @@
             <!-- ********************************************************************************* -->
 
             <!-- if meeting is completed -->
-            <div v-if="meetingData.offerCompleted">
+            <div v-if="isOwner() && meetingData.offerCompleted">
                 <p class="font meetingCompleted">
-                    This meeting was completed on 
+                    The meeting/offer process was completed on 
                     {{new Date(`${meetingData.offerCompletedDate}`).toLocaleString('en-US', {
                             timeZone: 'America/New_York'
                         })
                     }}.
-                </p>      
+                </p>    
+                <p><small>Please keep in mind that this meeting will be deleted automatically on {{meetingWillBeDeletedOn()}}!</small></p>  
             </div>
         </div>
         <div>
@@ -364,11 +429,14 @@
                 }"
             />
 
-            <OwnerPayment 
-                v-model="openPaymentInformation" 
+            <OwnerClaimReward 
+                v-model="openRewardClaim" 
                 :data="{
                     meetingId: meetingData.meetingId,
-                    ownerId: meetingData.ownerId
+                    ownerId: meetingData.ownerId,
+                    ownerRewarded: meetingData.ownerRewarded,
+                    ownerReward: meetingData.ownerReward,
+                    ownerName: meetingData.ownerName
                 }"
             />
         </div>
@@ -381,7 +449,7 @@
   import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
   import MeetingCheckIn from '@/components/dialogs/meetings/MeetingCheckIn.vue'
   import MeetingFollowUp from '@/components/dialogs/meetings/MeetingFollowUp.vue'
-  import OwnerPayment from '@/components/dialogs/meetings/OwnerPayment.vue'
+  import OwnerClaimReward from '@/components/dialogs/meetings/OwnerClaimReward.vue'
 
   import { mapGetters } from 'vuex'
 
@@ -393,7 +461,7 @@
         MeetingCancelation,
         MeetingCheckIn,
         MeetingFollowUp,
-        OwnerPayment
+        OwnerClaimReward
     },
     data: () => ({
         expanded: false,
@@ -402,7 +470,8 @@
         showDeleteWarning: false,
         showCancelationDetails: false,
         openFollowUp: false,
-        openPaymentInformation: false
+        openRewardClaim: false,
+        showHelfulLinks: false
     }),
     computed: {
         ...mapGetters([
@@ -422,6 +491,11 @@
     isOwner(){
         return this.isUserAuthenticated && this.currentUser.objectId === this.meetingData.ownerId
     },
+    // testing
+    // isItTimeToCheckIn(){
+    //     return false
+    // },
+
     isItTimeToCheckIn(){
         //testing date
         // let tempDate = {
@@ -440,6 +514,12 @@
         // console.log(currentDate, before15Min, after15Min)
         return (currentDate >= before15Min && currentDate <= after15Min)
     },
+    
+    
+    // testing
+    // isItToEarlyForMeeting(){
+    //     return false;
+    // },
     isItToEarlyForMeeting(){
         let before15Min = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
         before15Min.setMinutes(before15Min.getMinutes() - 15)
@@ -478,6 +558,9 @@
         //     style = 'border: 3px solid #ff8c8c'
         // }
         return style
+    },
+    didRewardExpired(){
+        return new Date() > new Date(this.meetingData.ownerRewardExpirationDate)
     },
     openAddress(){
         const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
@@ -576,6 +659,16 @@
         color: olivedrab;
         font-weight: 600;
         margin: 10px 20px
+    }
+
+    .helpful-links{
+        font-size: 15px;
+        color: blue;
+        /* text-decoration: underline; */
+    }
+    .helpful-links:hover{
+        text-decoration: underline;
+        cursor: pointer;
     }
 
 </style>

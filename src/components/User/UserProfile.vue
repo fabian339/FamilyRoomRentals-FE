@@ -19,45 +19,60 @@
         md="8"
         v-else
       >
-        <div v-if="meetings.length > 0">
+        <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
+        <!-- viewing user meetings -->
+        <div  v-if="meetings.length === 0">
+          <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!:</h2>   
+        </div>
+        <div v-else>
           <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
           <v-row >
             <v-col v-for="meeting in meetings" :key="meeting.createdAt">
-              <Meeting :meetingData="{
-                  ownerName: meeting.ownerName,
-                  ownerId: meeting.receiverId,
-                  clientName: meeting.clientName,
-                  roomId: meeting.roomId,
-                  meetingId: meeting.objectId,
-                  cancelationDate: meeting.cancelationDate,
-                  meetingScheduled: meeting.meetingScheduled,
-                  offerCompletedDate: meeting.offerCompletedDate,
-                  processCanceledByClient: meeting.processCanceledByClient,
-                  processCanceledByOwner: meeting.processCanceledByOwner,
-                  didClientSubmittedResults: meeting.didClientSubmittedResults,
-                  didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
-                  offerCompleted: meeting.offerCompleted,
-                  ownerCompletedFollowup: meeting.ownerCompletedFollowup,
-                  clientCompletedFollowup: meeting.clientCompletedFollowup,
-                  meetingResultsReviewed: meeting.meetingResultsReviewed,
-                  ownerShouldGetPay: meeting.ownerShouldGetPay,
-                  clientWillMoveIn: meeting.clientWillMoveIn,
-                  ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided,
-                  meetingDeletionDate: meeting.meetingDeletionDate,
-                  didMeetingPassed: meeting.didMeetingPassed,
-                  ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
-                  clientCheckedInMeeting: meeting.clientCheckedInMeeting,
-                  image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
-                  meetingDate: meeting.officialMeetingDate,
-                  meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
-                }" 
-              />
+              <div v-if="meeting.offerCompleted">
+                <Meeting :meetingData="{
+                    ownerName: meeting.ownerName,
+                    ownerId: meeting.receiverId,
+                    clientName: meeting.clientName,
+                    roomId: meeting.roomId,
+                    meetingId: meeting.objectId,
+                    cancelationDate: meeting.cancelationDate,
+                    meetingScheduled: meeting.meetingScheduled,
+                    offerCompletedDate: meeting.offerCompletedDate,
+                    processCanceledByClient: meeting.processCanceledByClient,
+                    processCanceledByOwner: meeting.processCanceledByOwner,
+                    didClientSubmittedResults: meeting.didClientSubmittedResults,
+                    didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
+                    offerCompleted: meeting.offerCompleted,
+                    ownerCompletedFollowup: meeting.ownerCompletedFollowup,
+                    clientCompletedFollowup: meeting.clientCompletedFollowup,
+                    meetingResultsReviewed: meeting.meetingResultsReviewed,
+                    ownerShouldReceiveReward: meeting.ownerShouldReceiveReward,
+                    ownerRewarded: meeting.ownerRewarded,
+                    ownerReward: meeting.ownerReward,
+                    rewardSentToOwner: meeting.rewardSentToOwner,
+                    ownerRewardExpirationDate: meeting.ownerRewardExpirationDate,
+                    clientWillMoveIn: meeting.clientWillMoveIn,
+                    ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided,
+                    meetingDeletionDate: meeting.meetingDeletionDate,
+                    didMeetingPassed: meeting.didMeetingPassed,
+                    ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
+                    clientCheckedInMeeting: meeting.clientCheckedInMeeting,
+                    image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
+                    meetingDate: meeting.officialMeetingDate,
+                    meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
+                  }" 
+                />
+              </div>
             </v-col>
           </v-row>
         </div>
-        <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
-        <h2 v-if="currentUserRooms.length === 0" style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       
+        <!-- viewing user rooms -->
+        <div v-if="currentUserRooms.length === 0">
+          <h2 style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       
+          <p>Show Something</p>
+        </div>
         <div v-else>
+          <h2 style="margin-top: 15px;" >Your Properties:</h2>       
           <v-row class="text-center" justify="center" style="margin-bottom: -5px;">
             <v-radio-group v-model="filterBy" row>
                 <div style="display: flex;">
@@ -161,7 +176,7 @@ export default {
   #roomsContainer{
     background-color: white !important;
     overflow: auto;
-    height: 750px;
+    height: 400px;
     margin-top: 10px;
     padding: 0;
   }
