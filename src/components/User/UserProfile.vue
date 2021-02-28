@@ -1,107 +1,110 @@
 <template>
-  <v-container>
-    <v-row class="text-center" style="margin-top: -20px;">
-      <v-col
-        md="4"
-      > 
-        <h2 id="userName">{{this.$store.getters.currentUser.fName}} {{this.$store.getters.currentUser.lName}}</h2>
-        <Profile style="margin-top: 10px;"/>
-      </v-col>
-      <v-progress-circular
-        v-if="isContentLoading"
-        color="green"
-        :size="100"
-        :width="15"
-        indeterminate
-      ></v-progress-circular>
-      <v-col
-        cols="12"
-        md="8"
-        v-else
-      >
-        <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
-        <!-- viewing user meetings -->
-        <div  v-if="meetings.length === 0">
-          <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!:</h2>   
-        </div>
-        <div v-else>
-          <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
-          <v-row >
-            <v-col v-for="meeting in meetings" :key="meeting.createdAt">
-              <div v-if="meeting.offerCompleted">
-                <Meeting :meetingData="{
-                    ownerName: meeting.ownerName,
-                    ownerId: meeting.receiverId,
-                    clientName: meeting.clientName,
-                    roomId: meeting.roomId,
-                    meetingId: meeting.objectId,
-                    cancelationDate: meeting.cancelationDate,
-                    meetingScheduled: meeting.meetingScheduled,
-                    offerCompletedDate: meeting.offerCompletedDate,
-                    processCanceledByClient: meeting.processCanceledByClient,
-                    processCanceledByOwner: meeting.processCanceledByOwner,
-                    didClientSubmittedResults: meeting.didClientSubmittedResults,
-                    didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
-                    offerCompleted: meeting.offerCompleted,
-                    ownerCompletedFollowup: meeting.ownerCompletedFollowup,
-                    clientCompletedFollowup: meeting.clientCompletedFollowup,
-                    meetingResultsReviewed: meeting.meetingResultsReviewed,
-                    ownerShouldReceiveReward: meeting.ownerShouldReceiveReward,
-                    ownerRewarded: meeting.ownerRewarded,
-                    ownerReward: meeting.ownerReward,
-                    rewardSentToOwner: meeting.rewardSentToOwner,
-                    ownerRewardExpirationDate: meeting.ownerRewardExpirationDate,
-                    clientWillMoveIn: meeting.clientWillMoveIn,
-                    ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided,
-                    meetingDeletionDate: meeting.meetingDeletionDate,
-                    didMeetingPassed: meeting.didMeetingPassed,
-                    ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
-                    clientCheckedInMeeting: meeting.clientCheckedInMeeting,
-                    image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
-                    meetingDate: meeting.officialMeetingDate,
-                    meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
-                  }" 
-                />
-              </div>
-            </v-col>
-          </v-row>
-        </div>
-        <!-- viewing user rooms -->
-        <div v-if="currentUserRooms.length === 0">
-          <h2 style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       
-          <p>Show Something</p>
-        </div>
-        <div v-else>
-          <h2 style="margin-top: 15px;" >Your Properties:</h2>       
-          <v-row class="text-center" justify="center" style="margin-bottom: -5px;">
-            <v-radio-group v-model="filterBy" row>
-                <div style="display: flex;">
-                  <v-radio 
-                    v-for="(item, index) in ['All Rooms', 'Active Rooms', 'Rented Rooms', 'Disabled Rooms']" :key="index - 20"
-                    color="pink" 
-                    style="margin: auto 10px;" 
-                    :label="item" 
-                    @click.stop="radioClick(index)" 
-                    :value="item">
-                  </v-radio> 
+  <div>
+    <UserPageLoading  v-model="isPageLoading" :seconds="2000"/>
+    <v-container v-if="!isPageLoading">
+      <v-row class="text-center" style="margin-top: -20px;">
+        <v-col
+          md="4"
+        > 
+          <h2 id="userName">{{this.$store.getters.currentUser.fName}} {{this.$store.getters.currentUser.lName}}</h2>
+          <Profile style="margin-top: 10px;"/>
+        </v-col>
+        <v-progress-circular
+          v-if="isContentLoading"
+          color="green"
+          :size="100"
+          :width="15"
+          indeterminate
+        ></v-progress-circular>
+        <v-col
+          cols="12"
+          md="8"
+          v-else
+        >
+          <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
+          <!-- viewing user meetings -->
+          <div  v-if="meetings.length === 0">
+            <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!:</h2>   
+          </div>
+          <div v-else>
+            <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
+            <v-row >
+              <v-col v-for="meeting in meetings" :key="meeting.createdAt">
+                <div v-if="meeting.offerCompleted">
+                  <Meeting :meetingData="{
+                      ownerName: meeting.ownerName,
+                      ownerId: meeting.receiverId,
+                      clientName: meeting.clientName,
+                      roomId: meeting.roomId,
+                      meetingId: meeting.objectId,
+                      cancelationDate: meeting.cancelationDate,
+                      meetingScheduled: meeting.meetingScheduled,
+                      offerCompletedDate: meeting.offerCompletedDate,
+                      processCanceledByClient: meeting.processCanceledByClient,
+                      processCanceledByOwner: meeting.processCanceledByOwner,
+                      didClientSubmittedResults: meeting.didClientSubmittedResults,
+                      didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
+                      offerCompleted: meeting.offerCompleted,
+                      ownerCompletedFollowup: meeting.ownerCompletedFollowup,
+                      clientCompletedFollowup: meeting.clientCompletedFollowup,
+                      meetingResultsReviewed: meeting.meetingResultsReviewed,
+                      ownerShouldReceiveReward: meeting.ownerShouldReceiveReward,
+                      ownerRewarded: meeting.ownerRewarded,
+                      ownerReward: meeting.ownerReward,
+                      rewardSentToOwner: meeting.rewardSentToOwner,
+                      ownerRewardExpirationDate: meeting.ownerRewardExpirationDate,
+                      clientWillMoveIn: meeting.clientWillMoveIn,
+                      ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided,
+                      meetingDeletionDate: meeting.meetingDeletionDate,
+                      didMeetingPassed: meeting.didMeetingPassed,
+                      ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
+                      clientCheckedInMeeting: meeting.clientCheckedInMeeting,
+                      image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
+                      meetingDate: meeting.officialMeetingDate,
+                      meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
+                    }" 
+                  />
                 </div>
-            </v-radio-group>
-          </v-row>
-          <v-container id="roomsContainer">
-            <v-row no-gutters>
-              <v-col
-                class="mb-8"
-                cols="16"
-                v-for="item in !filter ? currentUserRooms : filteredUserRooms" :key="item.street1"
-              >
-                <Room :roomData="item" />
-            </v-col>
-          </v-row>
-          </v-container>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
+              </v-col>
+            </v-row>
+          </div>
+          <!-- viewing user rooms -->
+          <div v-if="currentUserRooms.length === 0">
+            <h2 style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       
+            <p>Show Something</p>
+          </div>
+          <div v-else>
+            <h2 style="margin-top: 15px;" >Your Properties:</h2>       
+            <v-row class="text-center" justify="center" style="margin-bottom: -5px;">
+              <v-radio-group v-model="filterBy" row>
+                  <div style="display: flex;">
+                    <v-radio 
+                      v-for="(item, index) in ['All Rooms', 'Active Rooms', 'Rented Rooms', 'Disabled Rooms']" :key="index - 20"
+                      color="pink" 
+                      style="margin: auto 10px;" 
+                      :label="item" 
+                      @click.stop="radioClick(index)" 
+                      :value="item">
+                    </v-radio> 
+                  </div>
+              </v-radio-group>
+            </v-row>
+            <v-container id="roomsContainer">
+              <v-row no-gutters>
+                <v-col
+                  class="mb-8"
+                  cols="16"
+                  v-for="item in !filter ? currentUserRooms : filteredUserRooms" :key="item.street1"
+                >
+                  <Room :roomData="item" />
+              </v-col>
+            </v-row>
+            </v-container>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -111,6 +114,7 @@ import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import Meeting from '@/components/Meeting/Meeting.vue'
+import UserPageLoading from '@/components/Loading/UserPageLoading.vue';
 
 import { mapGetters } from 'vuex'
 
@@ -120,7 +124,8 @@ export default {
     Room,
     SuccessAlert,
     Profile,
-    Meeting
+    Meeting,
+    UserPageLoading
   },
   computed: {
       ...mapGetters([
@@ -137,10 +142,12 @@ export default {
       filter: false,
       meetingExpanded: false,
       filterBy: 'All Rooms',
-      filteredUserRooms: []
+      filteredUserRooms: [],
+      isPageLoading: false
     }
   },
   created(){
+    this.isPageLoading = true
   },
   methods:{
     radioClick(index){

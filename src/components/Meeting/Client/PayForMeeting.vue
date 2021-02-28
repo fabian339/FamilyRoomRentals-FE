@@ -44,7 +44,7 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
 import axios from 'axios';
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import { mapActions, mapGetters } from 'vuex'
-import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../../emailTemplates/emails'
+// import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../../emailTemplates/emails'
 
 
 
@@ -163,36 +163,36 @@ export default {
             // console.log("payingg")
         },
         //send emails after completing payment
-        async sendEmailsOnPaymentCompleted(){
-            let commonData = {
-                clientEmail: this.$store.getters.currentOffer.clientEmail,
-                clientName: this.$store.getters.currentOffer.clientName,
-                ownerName: this.$store.getters.currentOffer.ownerName,
-                ownerEmail: this.$store.getters.currentOffer.ownerEmail,
-                offer: this.$store.getters.currentOffer.offer,
-                roomId: this.$store.getters.currentOffer.roomId,
-                meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
-                meetingLocation: this.$store.getters.contentRoom.location,
-            }
-            const clientEmailData = SendEmailToClientOnMeetingScheduled({
-                ...commonData,
-                ownerPhone: this.$store.getters.currentOffer.ownerPhone,
-                token: this.$store.getters.currentOffer.offerToken,
-                verificationId: this.$store.getters.currentOffer.objectId
-            })
+        // async sendEmailsOnPaymentCompleted(){
+        //     let commonData = {
+        //         clientEmail: this.$store.getters.currentOffer.clientEmail,
+        //         clientName: this.$store.getters.currentOffer.clientName,
+        //         ownerName: this.$store.getters.currentOffer.ownerName,
+        //         ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+        //         offer: this.$store.getters.currentOffer.offer,
+        //         roomId: this.$store.getters.currentOffer.roomId,
+        //         meetingDate: `${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}`,
+        //         meetingLocation: this.$store.getters.contentRoom.location,
+        //     }
+        //     const clientEmailData = SendEmailToClientOnMeetingScheduled({
+        //         ...commonData,
+        //         ownerPhone: this.$store.getters.currentOffer.ownerPhone,
+        //         token: this.$store.getters.currentOffer.offerToken,
+        //         verificationId: this.$store.getters.currentOffer.objectId
+        //     })
 
-            const userEmailData = SendEmailToUserOnMeetingScheduled({
-                ...commonData,
-                clientPhone: this.$store.getters.currentOffer.clientPhone,
-            })
+        //     const userEmailData = SendEmailToUserOnMeetingScheduled({
+        //         ...commonData,
+        //         clientPhone: this.$store.getters.currentOffer.clientPhone,
+        //     })
 
-            console.log(userEmailData, clientEmailData);
-            this.loadingPayment = false
-            this.paymentSucceeded = true
-            await this.sendEmail(userEmailData);
-            await this.sendEmail(clientEmailData)
+        //     console.log(userEmailData, clientEmailData);
+        //     this.loadingPayment = false
+        //     this.paymentSucceeded = true
+        //     await this.sendEmail(userEmailData);
+        //     await this.sendEmail(clientEmailData)
 
-        },
+        // },
         // startCountDownTimer() {
         //     if(this.countDown === 0){
         //         this.$router.push('/')

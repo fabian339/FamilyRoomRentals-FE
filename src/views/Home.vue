@@ -1,8 +1,8 @@
 <template>
-<div>
-    <ContentLoading  v-if="isContentLoading"/>
+  <div>
+    <PageLoading  v-model="isPageLoading" :seconds="1500"/>
 
-    <v-container v-else>
+    <v-container v-if="!isPageLoading">
       <v-row class="text-center" justify="center">
         <div class="logo" >
           <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
@@ -104,7 +104,7 @@ import Room from '@/components/Room/Room.vue'
 // import store from '@/actions/store'
 import { mapGetters, mapMutations } from 'vuex'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
-import ContentLoading from '@/components/layout/ContentLoading.vue';
+import PageLoading from '@/components/Loading/PageLoading.vue';
 import MeetingsCalendar from '@/components/notification/MeetingsCalendar.vue';
 
 // const config = require('./config.json')
@@ -113,18 +113,22 @@ export default {
   components: {
     Room,
     SuccessAlert,
-    ContentLoading,
+    PageLoading,
     MeetingsCalendar
   },
+  data: () => ({
+    isPageLoading: false,
+  }),
   computed: {
       ...mapGetters([
-        'isContentLoading',
         'contentRooms',
         'isUserDeleted'
       ])
   },
   created(){
-
+    console.log("Entering Route")
+    this.isPageLoading = true
+    // next()
   },
   methods:{
     ...mapMutations([

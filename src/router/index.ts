@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import About from '../views/About.vue'
+// import About from '../views/About.vue'
 import HandlingMeetings from '../views/HandlingMeetings.vue'
 import Career from '../views/Career.vue'
 import Contact from '../views/Contact.vue'
@@ -60,7 +60,8 @@ const ifAuthorized = (to: any, from: any, next: any) => {
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: About
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    // component: About
   },
   {
     path: '/create-room',

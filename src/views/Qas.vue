@@ -1,35 +1,45 @@
 <template>
-  <v-container>
-    <v-row class="text-center" justify="center">
-      <div class="logo" >
-        <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
-      </div>
-    <v-col lg="4">
-      <h2 class="headline font-weight-bold mb-3">Questions / Answers</h2>
-      <p>Have a Questions? Please <router-link to="/contact-us">contact us.</router-link></p>
-      </v-col>
-    </v-row>
-    <v-row class="text-center" justify="center">
-      <div id="container">
-        <div class="message" v-for="(QA, index) in list" :key="index + 20">
-            <p>Q: {{QA.Q}}</p>
-            <p>A: {{QA.A}}</p>          
+  <div>
+    <PageLoading v-model="isPageLoading" :seconds="1000"/>
+    <v-container v-if="!isPageLoading">
+      <v-row class="text-center" justify="center">
+        <div class="logo" >
+          <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
         </div>
-      </div>
-    </v-row>
-  </v-container>
-
+      <v-col lg="4">
+        <h2 class="headline font-weight-bold mb-3">Questions / Answers</h2>
+        <p>Have a Question? Please please do not hesitate to <router-link to="/contact-us">contact us.</router-link></p>
+        </v-col>
+      </v-row>
+      <v-row class="text-center" justify="center">
+        <div id="container">
+          <div class="message" v-for="(QA, index) in list" :key="index + 20">
+              <p>Q: {{QA.Q}}</p>
+              <p>A: {{QA.A}}</p>          
+          </div>
+        </div>
+      </v-row>
+    </v-container>
+  </div>
     
 </template>
 
 <script>
 import qaList from '../globals/qaList'
+import PageLoading from '@/components/Loading/PageLoading.vue';
 
 export default {
+  name: 'QuestionsAndAnswers',
+  components: { PageLoading },
   data() {
     return {
-      list: []
+      list: [],
+      isPageLoading: false,
     }
+  },
+  created(){
+    this.isPageLoading = true
+    // next()
   },
   beforeMount(){
     this.list = qaList
@@ -94,6 +104,18 @@ export default {
     border-right: 16px solid transparent;
     bottom: -1px;
     right: -17px;
+}
+
+.message:hover, .message:hover::before, .message:hover::after {
+  cursor: pointer;
+  background-color: rgb(118, 203, 224);
+  transition: all 0.7s;
+  transform: scale(1.02);
+  border: 0;
+      /* border-left-color: transparent; */
+
+  /* border-bttom */
+  
 }
 
 </style>

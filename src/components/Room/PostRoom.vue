@@ -1,199 +1,201 @@
 <template>
-    <ContentLoading  v-if="isContentLoading"/>
-    <v-row v-else class="text-center" justify="center">
-        <v-col cols="12" sm="10" md="8" lg="6">
-        <div class="logo" >
-            <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
-        </div>
-        <h2 class="headline font-weight-bold mb-3">
-            Publish Your Room
-        </h2>
-        <v-col class="mb-4">
-            <form
-                @submit="submit"
-            >
-                <v-text-field
-                    ref="title"
-                    v-model="title"
-                    label="Room Title"
-                    placeholder="Special Room Available in the NYC Area"
-                    :error-messages="errors.title"
-                ></v-text-field>
-                <label> <strong>Location</strong> </label>
-                <v-text-field
-                    ref="street1"
-                    v-model="location.street1"
-                    label="Street1"
-                    placeholder="76 Columbus St"
-                    :error-messages="errors.street1"
-                ></v-text-field>
-                <v-text-field
-                    ref="street2"
-                    v-model="location.street2"
-                    label="Street2"
-                    placeholder="Apt: 3b"
-                    :error-messages="errors.street2"
-                ></v-text-field>
-                <v-text-field
-                    ref="city"
-                    v-model="location.city"
-                    label="City"
-                    placeholder="Brooklyn"
-                    :error-messages="errors.city"
-                ></v-text-field>
-                <v-text-field
-                    ref="state"
-                    v-model="location.state"
-                    label="State/Province/Region"
-                    placeholder="NY"
-                    :error-messages="errors.state"   
-                ></v-text-field>
-                <v-text-field
-                    ref="zipCode"
-                    v-model="location.zipCode"
-                    label="ZIP / Postal Code"
-                    type="number"
-                    placeholder="75155"
-                    :error-messages="errors.zipCode"
-                ></v-text-field>
-                <v-autocomplete
-                    ref="country"
-                    v-model="location.country"
-                    :items="countries"
-                    label="Country"
-                    placeholder="Select..."
-                    :error-messages="errors.country"   
-                ></v-autocomplete>
-                
-                <label> <strong>Description</strong> </label>
-                <v-spacer></v-spacer>
+    <div>
+        <PageLoading  v-model="isPageLoading" :seconds="1000"/>
+        <v-row v-if="!isPageLoading" class="text-center" justify="center">
+            <v-col cols="12" sm="10" md="8" lg="6">
+            <div class="logo" >
+                <img src="https://i.ibb.co/DrcHFyW/logo.png" alt="logo" width="400">
+            </div>
+            <h2 class="headline font-weight-bold mb-3">
+                Publish Your Room
+            </h2>
+            <v-col class="mb-4">
+                <form
+                    @submit="submit"
+                >
+                    <v-text-field
+                        ref="title"
+                        v-model="title"
+                        label="Room Title"
+                        placeholder="Special Room Available in the NYC Area"
+                        :error-messages="errors.title"
+                    ></v-text-field>
+                    <label> <strong>Location</strong> </label>
+                    <v-text-field
+                        ref="street1"
+                        v-model="location.street1"
+                        label="Street1"
+                        placeholder="76 Columbus St"
+                        :error-messages="errors.street1"
+                    ></v-text-field>
+                    <v-text-field
+                        ref="street2"
+                        v-model="location.street2"
+                        label="Street2"
+                        placeholder="Apt: 3b"
+                        :error-messages="errors.street2"
+                    ></v-text-field>
+                    <v-text-field
+                        ref="city"
+                        v-model="location.city"
+                        label="City"
+                        placeholder="Brooklyn"
+                        :error-messages="errors.city"
+                    ></v-text-field>
+                    <v-text-field
+                        ref="state"
+                        v-model="location.state"
+                        label="State/Province/Region"
+                        placeholder="NY"
+                        :error-messages="errors.state"   
+                    ></v-text-field>
+                    <v-text-field
+                        ref="zipCode"
+                        v-model="location.zipCode"
+                        label="ZIP / Postal Code"
+                        type="number"
+                        placeholder="75155"
+                        :error-messages="errors.zipCode"
+                    ></v-text-field>
+                    <v-autocomplete
+                        ref="country"
+                        v-model="location.country"
+                        :items="countries"
+                        label="Country"
+                        placeholder="Select..."
+                        :error-messages="errors.country"   
+                    ></v-autocomplete>
+                    
+                    <label> <strong>Description</strong> </label>
+                    <v-spacer></v-spacer>
 
-                <v-textarea
-                    name="input-7-1"
-                    filled
-                    label="Details of Property: (What you expect and what you are looking for)"
-                    v-model="description"
-                    :error-messages="errors.description"   
-                ></v-textarea>   
+                    <v-textarea
+                        name="input-7-1"
+                        filled
+                        label="Details of Property: (What you expect and what you are looking for)"
+                        v-model="description"
+                        :error-messages="errors.description"   
+                    ></v-textarea>   
 
-                <label> <strong>Property Rules</strong> </label>
-                <v-row justify="center">
-                    <v-col cols="6" style="display: inline-flex;" >
-                        <v-text-field
-                            ref="rule"
-                            v-model="tempRule"
-                            label="Example: No Pets"
-                            outlined
-                        ></v-text-field>
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn 
-                                    fab 
-                                    color="#008080"
-                                    dark
-                                    @click="addRule"
-                                    v-bind="attrs"
-                                    v-on="on">
-                                        <v-icon dark>mdi-plus</v-icon>
-                                </v-btn>
-                            </template>
-                                <span>Add Rule</span>
-                        </v-tooltip>
-                    </v-col>
-                </v-row>
-                <v-row style="margin-top: -35px; margin-bottom: 30px;" justify="center">
-                    <div v-for="(item, index) in propertyRules" :key="index +10">
-                        <v-chip
-                            class="ma-2"
-                            close
-                            @click:close="propertyRules.splice(index, 1)"
-                        >
-                            {{item}}
-                        </v-chip>                
-                    </div>
-                </v-row>
-
-                <label> <strong>Property Price</strong> </label>
-
-                <v-row justify="center">
-                    <v-col cols="4">
-                        <v-text-field
-                            ref="price"
-                            v-model="price"
-                            type="number"
-                            label="Price"
-                            full-width
-                            prefix="$"
-                            suffix="/month"
-                            :error-messages="errors.price"   
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-
-                <label> <strong>Property Images</strong> </label>
-                <div>
-                    <v-tooltip right>
-                        <template v-slot:activator="{ on, attrs }">
-                            <label 
-                                fab
-                                id="imgIconLabel" 
-                                v-bind="attrs"
-                                v-on="on"
+                    <label> <strong>Property Rules</strong> </label>
+                    <v-row justify="center">
+                        <v-col cols="6" style="display: inline-flex;" >
+                            <v-text-field
+                                ref="rule"
+                                v-model="tempRule"
+                                label="Example: No Pets"
+                                outlined
+                            ></v-text-field>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn 
+                                        fab 
+                                        color="#008080"
+                                        dark
+                                        @click="addRule"
+                                        v-bind="attrs"
+                                        v-on="on">
+                                            <v-icon dark>mdi-plus</v-icon>
+                                    </v-btn>
+                                </template>
+                                    <span>Add Rule</span>
+                            </v-tooltip>
+                        </v-col>
+                    </v-row>
+                    <v-row style="margin-top: -35px; margin-bottom: 30px;" justify="center">
+                        <div v-for="(item, index) in propertyRules" :key="index +10">
+                            <v-chip
+                                class="ma-2"
+                                close
+                                @click:close="propertyRules.splice(index, 1)"
                             >
-                                <v-icon @click="openUploadModal" id="cameraIcon">mdi-camera</v-icon>
+                                {{item}}
+                            </v-chip>                
+                        </div>
+                    </v-row>
 
-                            </label>
-                        </template>
-                            <span>{{(6 - images.length) === 0 ? 'Maximum amount of images' : 'Add Image'}}</span>
-                    </v-tooltip>
+                    <label> <strong>Property Price</strong> </label>
 
-                
-                    <p style="color: red" v-if="errors.image">{{errors.image}}</p>
-                    <p v-if="images.length === 0" style="color: #3c46d2">Images increase the chances of getting better offers!</p>
+                    <v-row justify="center">
+                        <v-col cols="4">
+                            <v-text-field
+                                ref="price"
+                                v-model="price"
+                                type="number"
+                                label="Price"
+                                full-width
+                                prefix="$"
+                                suffix="/month"
+                                :error-messages="errors.price"   
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
 
-                    <div id="imgContainer">
-                        <small>({{6 - images.length}} images reminding)</small>
-                        <v-row no-gutters class="text-center" justify="center">
-                            <!-- <v-col v-for="(image, index) in images" :key="image.street1"> -->
-                                <div v-for="(image, index) in images" :key="image.street1" style="margin: 5px">
-                                    <img :src="image.source" alt="img" width="150" height="100">
-                                    <div class="my-2">
-                                        <v-btn small color="warning" @click.stop="removeImage(index)">
-                                            <v-progress-circular
-                                                v-if="imgLoading"
-                                                    indeterminate
-                                                    color="#9e3333"
-                                                >
-                                            </v-progress-circular>
-                                            {{!imgLoading ? 'Remove' : '' }}
-                                        </v-btn>
+                    <label> <strong>Property Images</strong> </label>
+                    <div>
+                        <v-tooltip right>
+                            <template v-slot:activator="{ on, attrs }">
+                                <label 
+                                    fab
+                                    id="imgIconLabel" 
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon @click="openUploadModal" id="cameraIcon">mdi-camera</v-icon>
+
+                                </label>
+                            </template>
+                                <span>{{(6 - images.length) === 0 ? 'Maximum amount of images' : 'Add Image'}}</span>
+                        </v-tooltip>
+
+                    
+                        <p style="color: red" v-if="errors.image">{{errors.image}}</p>
+                        <p v-if="images.length === 0" style="color: #3c46d2">Images increase the chances of getting better offers!</p>
+
+                        <div id="imgContainer">
+                            <small>({{6 - images.length}} images reminding)</small>
+                            <v-row no-gutters class="text-center" justify="center">
+                                <!-- <v-col v-for="(image, index) in images" :key="image.street1"> -->
+                                    <div v-for="(image, index) in images" :key="image.street1" style="margin: 5px">
+                                        <img :src="image.source" alt="img" width="150" height="100">
+                                        <div class="my-2">
+                                            <v-btn small color="warning" @click.stop="removeImage(index)">
+                                                <v-progress-circular
+                                                    v-if="imgLoading"
+                                                        indeterminate
+                                                        color="#9e3333"
+                                                    >
+                                                </v-progress-circular>
+                                                {{!imgLoading ? 'Remove' : '' }}
+                                            </v-btn>
+                                        </div>
                                     </div>
-                                </div>
-                            <!-- </v-col> -->
-                        </v-row>
+                                <!-- </v-col> -->
+                            </v-row>
+                        </div>
+                        <v-checkbox
+                            style="margin: 15px 15%;"
+                            v-model="checkbox"
+                            :error-messages="errors.agreementToShare"
+                        >
+                            <template slot="label">
+                            <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
+                            </template>
+                        </v-checkbox>
                     </div>
-                    <v-checkbox
-                        style="margin: 15px 15%;"
-                        v-model="checkbox"
-                        :error-messages="errors.agreementToShare"
-                    >
-                        <template slot="label">
-                        <label >I agree to the <a @click.stop href="/#/terms-and-conditions" target="_blank">   Terms & Conditions.</a></label>
-                        </template>
-                    </v-checkbox>
-                </div>
-                
-                <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
+                    
+                    <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
 
-            </form>
-        </v-col>
-        </v-col>
-    </v-row>
+                </form>
+            </v-col>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 // import noImageForRoom from './noImageForRoom'
-import ContentLoading from '@/components/layout/ContentLoading.vue';
+import PageLoading from '@/components/Loading/PageLoading.vue';
 import {validateCreateRoom} from '../../store/validators'
 import axios from 'axios'
 // const imgbbUploader = require("imgbb-uploader");
@@ -202,7 +204,7 @@ import axios from 'axios'
   export default {
     name: "shareRoom",
     components: {
-        ContentLoading
+        PageLoading
     },
     computed: {
       ...mapGetters([
@@ -229,9 +231,15 @@ import axios from 'axios'
         tempRule: '',
         images: [],
         imgLoading: false,
-        errors: {}
+        errors: {},
+        isPageLoading: false
       }
     }, 
+    created(){
+        console.log("Entering Route")
+        this.isPageLoading = true
+        // next()
+    },
     beforeMount(){
         // console.log("entering..")
         let folderName = localStorage.getItem('img-folder-name')

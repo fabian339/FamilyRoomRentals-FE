@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <ContentLoading v-if="isContentLoading"/>
-    <v-row class="text-center" v-if="!isContentLoading">
+    <PageLoading  v-model="isPageLoading" :seconds="1500"/>
+    <v-row class="text-center" v-if="!isPageLoading">
       <div class="logo" >
         <img :src="require('../../../config.json').imgLinks.logo" alt="logo" width="400">
       </div>
@@ -87,7 +87,7 @@
 <script>
 // @ is an alias to /src
 import Room from '@/components/Room/Room.vue'
-import ContentLoading from '@/components/layout/ContentLoading.vue'
+import PageLoading from '@/components/Loading/PageLoading.vue';
 
 // import store from '@/actions/store'
 import { mapGetters } from 'vuex'
@@ -96,12 +96,11 @@ export default {
   name: 'ViewAllRooms',
   components: {
     Room,
-    ContentLoading
+    PageLoading
   },
   computed: {
       ...mapGetters([
         'contentRooms',
-        'isContentLoading'
       ])
   },
   data() {
@@ -110,7 +109,13 @@ export default {
       filters: ["Most Recent", "Price Low to High", "Price High to Low"],
       filterBy: "Most Recent",
       showFilter: false,
+      isPageLoading: false
     }
+  },
+  created(){
+    console.log("Entering Route")
+    this.isPageLoading = true
+    // next()
   },
   methods:{
     radioClick(index){
