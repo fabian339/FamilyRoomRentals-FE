@@ -1,11 +1,11 @@
 <template>
         <div v-if="show">
-            <!-- <div class="dot-carousel"></div> -->
-            <div class="circle left"></div>
-            <div class="small-circle small-left"></div>
-            <div class="small-circle small-right"></div>
-            <div class="circle right"></div>
-            <p class="app-title">FamilyRoomRentals</p>
+            <div class="dot-carousel"></div>
+            <div class="small-circle first-left"></div>
+            <div class="small-circle first-right"></div>
+            <div class="circle second-left"></div>
+            <div class="circle second-right"></div>
+            <div class="title-container"><p class="app-title">FamilyRoomRentals</p></div>
         </div>
 
 </template>
@@ -34,42 +34,53 @@ export default {
         },
         ...mapGetters([
             'isContentLoading',
-            'currentUserOffers',
-            'currentUser'
+            'isUserLoading'
         ]),
     },
     data(){
         return{
-          countUp: 0
+          countUp: 0,
+          timeoutID: Number
       }
 
     },
     beforeMount(){
-      // if(!this.isContentLoading) {
-        // console.log("HEREE", this.isContentLoading)
         this.startCountUpTimer()
       // }
     },
     methods: {
         startCountUpTimer() {
             if(this.countUp === this.seconds){
-                this.show = false
-                this.countUp = 0
+              this.clearTimeOut()
+              this.countUp = 0
+              this.show = false
             }
             if(this.countUp < this.seconds) {
-                setTimeout(() => {
-                  if(this.didFetchingStop()){
-                    this.countUp += 500
-                    this.startCountUpTimer()
-                  }
-                }, 500)
+              this.timeoutID = setTimeout(() => {
+                if(this.didFetchingStop()){
+                  this.countUp += 500
+                  this.startCountUpTimer()
+                }
+              }, 500)
             }
         },
       
       didFetchingStop(){
         // console.log("did Fetching stopped?", !this.isContentLoading)
-        return !this.isContentLoading
+        return !this.isContentLoading && !this.isUserLoading
+      },
+      clearTimeOut(){
+        window.clearTimeout(this.timeoutID);
+      },
+      randomCircleColor(){
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
       }
+
         
     }
 }
@@ -77,23 +88,44 @@ export default {
 
 <style scoped>
 .app-title{
-  position: fixed;
-  top: 52%;
-  left: 43.5%;
+  /* position: absolute; */
+  /* top: 50%;
+  left: 50%; */
   /* border: 2px solid black; */
   font-family: 'Rochester', cursive;
   font-size: 35px;
   /* margin: 10px; */
   color: #2b2b2b;
-  animation:zoomIn 1.8s 0s ease-in-out;
-
+  animation: zoomIn 1.8s 0s ease-in-out;
 }
+
+.title-container{
+    /* border: 2px solid black; */
+    /* text-align: center; */
+    position: absolute;
+    top: 50%;
+    /* right: 43.5%; */
+    /* left: 43.5%; */
+    width: 100%;
+    text-align: center;
+}
+
+.circles-container{
+    /* width: 100px;
+    height: 100px;
+    margin: 100px auto; */
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
+    display: flex;
+} 
+
 
 .circle {
   /* position: relative;
   left: -9999px; */
-  position: fixed;
-  top: 45%;
+  /* position: fixed; */
+  /* top: 45%; */
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -106,47 +138,57 @@ export default {
 }
 
 .small-circle{
-  position: fixed;
-  top: 45%;
+  /* position: fixed; */
+  /* top: 45%; */
   width: 25px;
   height: 25px;
   border-radius: 50%;
   background-color: #43cc4e;
 }
 
-.small-left{
-    left: 0;
-    animation: small-left 1.5s infinite linear;
+.second-left{
+     position: absolute;
+    left: 35%;
+    top: 65%;
+    animation: second-left 1.5s infinite linear;
 }
-.left{
-  left: 0;
-    animation: left 1.5s infinite linear;
+.second-right{
+  position: absolute;
+  right: 35%;
+  top: 65%;
+  animation: second-right 1.5s infinite linear;
 }
-.right{
-  right: 0;
-  animation: right 1.5s infinite linear;
+
+.first-left{
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    animation: first-left 1.5s infinite linear;
 }
-.small-right{
-    right: 0;
-    animation: small-right 1.5s infinite linear;
+
+.first-right{
+    position: absolute;
+    right: 45%;
+    top: 45%;
+    animation: first-right 1.5s infinite linear;
 }
-  @keyframes left {
+  @keyframes second-left {
     0% {left: 25%;}
     50% {left: 47.5%;}
     100% {left: 25%;}
   }
 
-    @keyframes small-left {
+    @keyframes first-left {
     0% {left: 30%;}
     50% {left: 45%;}
     100% {left: 30%;}
   }
-  @keyframes small-right {
+  @keyframes first-right {
     0% {right: 30%;}
     50% {right: 45%;}
     100% {right: 30%;}
   }
-    @keyframes right {
+    @keyframes second-right {
     0% {right: 25%;}
     50% {right: 47.5%;}
     100% {right: 25%;}
@@ -157,31 +199,8 @@ export default {
           transform: scale(0.4) rotate(0deg);
         }
         100%{
-          transform: scale(1) rotate(0deg);
+          transform: scale(1) rotate(360deg);
         }
       }
-/* @-webkit-keyframes dot-carousel {
-  0% {
-    box-shadow: 10084px 0 0 -1px #9880ff, 9999px 0 0 1px #9880ff, 10014px 0 0 -1px #9880ff;
-  }
-  100% {
-    box-shadow: 10014px 0 0 -1px #9880ff, 9984px 0 0 -1px #9880ff, 9999px 0 0 1px #9880ff;
-  }
-  100% {
-    box-shadow: 9999px 0 0 1px #9880ff, 10014px 0 0 -1px #9880ff, 9984px 0 0 -1px #9880ff;
-  }
-} */
-
-/* @keyframes wefw {
-  0% {
-    box-shadow: 10984px 0 0 -1px #9880ff, 9999px 0 0 1px #9880ff, 10014px 0 0 -1px #9880ff;
-  }
-  50% {
-    box-shadow: 10014px 0 0 -1px #9880ff, 9984px 0 0 -1px #9880ff, 9999px 0 0 1px #9880ff;
-  }
-  100% {
-    box-shadow: 9999px 0 0 1px #9880ff, 10014px 0 0 -1px #9880ff, 9984px 0 0 -1px #9880ff;
-  }
-} */
 
 </style>

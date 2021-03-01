@@ -1,15 +1,13 @@
 <template>
-      <v-col
-        class="py-4 text-center white--text"
-        cols="12"
+      <div
         v-if="show"
       >   
 
         <div class="sk-cube-grid">
           <!-- <p style="color: black">Seconds: {{countUp}}</p> -->
-          <div >
+          <!-- <div >
             <img style="margin: 0 0px -15px -50px" :src="require('../../../config.json').imgLinks.logo" alt="logo" width="200">
-          </div>
+          </div> -->
             <div class="sk-cube sk-cube1"></div>
             <div class="sk-cube sk-cube2"></div>
             <div class="sk-cube sk-cube3"></div>
@@ -20,7 +18,8 @@
             <div class="sk-cube sk-cube8"></div>
             <div class="sk-cube sk-cube9"></div>
         </div>
-    </v-col>
+                    <div class="title-container"><p class="app-title">FamilyRoomRentals</p></div>
+    </div>
 </template>
 
 <script>
@@ -53,7 +52,8 @@ export default {
     },
     data(){
         return{
-          countUp: 0
+          countUp: 0,
+          timeoutID: Number
       }
 
     },
@@ -66,11 +66,12 @@ export default {
     methods: {
         startCountUpTimer() {
             if(this.countUp === this.seconds){
+                this.clearTimeOut()
                 this.show = false
                 this.countUp = 0
             }
             if(this.countUp < this.seconds) {
-                setTimeout(() => {
+              this.timeoutID = setTimeout(() => {
                   if(this.didFetchingStop()){
                     this.countUp += 500
                     this.startCountUpTimer()
@@ -82,13 +83,42 @@ export default {
       didFetchingStop(){
         // console.log("did Fetching stopped?", !this.isContentLoading)
         return !this.isContentLoading
-      }
+      },
+      
+      clearTimeOut(){
+        window.clearTimeout(this.timeoutID);
+      },
+      
         
     }
 }
 </script>
 
 <style scoped>
+
+.title-container{
+    /* border: 2px solid black; */
+    /* text-align: center; */
+    /* position: absolute; */
+    /* top: 62%; */
+    /* right: 43.5%; */
+    /* left: 43.5%; */
+        margin-top: -80px;
+    width: 100%;
+    text-align: center;
+}
+
+.app-title{
+  /* position: absolute; */
+  /* top: 50%;
+  left: 50%; */
+  /* border: 2px solid black; */
+  font-family: 'Rochester', cursive;
+  font-size: 35px;
+  /* margin: 10px; */
+  color: #2b2b2b;
+  animation: zoomIn 1.8s 0s ease-in-out;
+}
 
 .sk-cube-grid {
   width: 100px;
@@ -151,4 +181,13 @@ export default {
             transform: scale3D(0, 0, 1);
   } 
 }
+
+   @keyframes zoomIn{
+        0%{
+          transform: scale(0.4) rotate(0deg);
+        }
+        100%{
+          transform: scale(1) rotate(0deg);
+        }
+      }
 </style>
