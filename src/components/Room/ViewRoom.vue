@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PageLoading  v-model="isPageLoading" :seconds="2000"/>
+        <PageLoading  v-model="isPageLoading" :seconds="1000"/>
         <v-container v-if="!isPageLoading">
             <ContentLoading  v-if="isContentLoading"/>
             <div class="text-center">

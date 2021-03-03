@@ -25,7 +25,6 @@ export default {
     isPageLoading: false,
   }),
   created(){
-    console.log("Entering Route")
     this.isPageLoading = true
     // next()
   }
