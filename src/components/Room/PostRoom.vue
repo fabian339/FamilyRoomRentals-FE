@@ -1,6 +1,13 @@
 <template>
     <div>
-        <PageLoading  v-model="isPageLoading" :seconds="1000"/>
+        <PageLoading  
+        v-model="isPageLoading" 
+        :component="{
+            seconds: 1000,
+            type: 'content',
+            color: ''
+        }"
+        />        
         <v-row v-if="!isPageLoading" class="text-center" justify="center">
             <v-col cols="12" sm="10" md="8" lg="6">
             <div class="logo" >

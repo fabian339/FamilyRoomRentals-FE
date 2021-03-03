@@ -114,7 +114,7 @@
         <v-text-field
           label="Enter Verification Code"
           outlined
-          placeholder="xxx-xxx"
+          placeholder="******"
           v-model="inputVerificationCode"
           :rules="[() => !isNaN(inputVerificationCode) || 'Must be a number']"
           maxlength="6"
@@ -146,7 +146,18 @@
             text
             @click.stop="VerifyAndAddOfferToThisRoom"
           >
-            Send Offer
+            <span v-if="!sendingOffer">Send Offer</span>
+            <PageLoading  
+              v-else
+              v-model="sendingOffer" 
+              @loadingFinished="LoadingFinished"
+              :component="{
+                seconds: 2500,
+                type: 'inline',
+                color: '#54865f'
+              }"
+            />
+            
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -157,12 +168,15 @@
 <script>
 import {mapActions} from 'vuex'
 import {SendEmailToClientOnOffer, SendEmailToUserOnOffer, SendVerificationCodeOnOfferMade} from '../../emailTemplates/emails'
+import PageLoading from '@/components/Loading/PageLoading.vue';
+
 export default {
     name: "ClientOffertAgreement",
     props: {
         value: Boolean,
         clientData: Object
     },
+    components: { PageLoading },
     computed: {
         show: {
             get () {
@@ -183,7 +197,8 @@ export default {
             inputVerificationCode: '',
             offerVerificationCode: '',
             verificationCodeError: '',
-            codeResentMsg: ""
+            codeResentMsg: "",
+            sendingOffer: false
         }
     },
     methods: {
@@ -211,12 +226,13 @@ export default {
         this.OpenOfferEmailVerification();
         this.codeResentMsg = "A new code has been sent.";
       },
-      VerifyAndAddOfferToThisRoom(){
+      async VerifyAndAddOfferToThisRoom(){
         if(this.inputVerificationCode !== this.offerVerificationCode){
           this.verificationCodeError = "Codes do not match. Please try again!"
           this.codeResentMsg = "";
         } else {
           // console.log("Codes MAtch")
+          this.sendingOffer = true
           this.verificationCodeError = ""
           this.codeResentMsg = "";
           this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
@@ -237,22 +253,30 @@ export default {
             name: this.$store.getters.currentOffer.ownerName,
           })
           //sending emails
-          console.log(userEmailData, clientEmailData)
-          this.sendEmail(userEmailData);
-          this.sendEmail(clientEmailData);
-          // Add error handler here, in case emails are not sent
-          // adding offer to db
-          this.sendOffer(this.$store.getters.currentOffer)
-          this.updateRoom({
+          // console.log(userEmailData, clientEmailData)
+          await this.sendEmail(userEmailData);
+          await this.sendEmail(clientEmailData);
+          // updating room
+          await this.updateRoom({
             numberOfOffers: this.$store.getters.contentRoom.numberOfOffers + 1,
             objectId: this.$store.getters.contentRoom.objectId
-          });
+          }); 
+          // adding offer to db
+          await this.sendOffer(this.$store.getters.currentOffer)
+        }
+        //after everithing is updated, it will wait for LoadingFinished() to close the modals
+      },
+
+      //emitted from child component to finish loading stage
+      LoadingFinished(value){
+        if(value) {
           this.agreementError = ''
           this.offerVerificationCode = ''
           this.showVerificationForm = false;
           this.show = false;
+          this.sendingOffer = false;
+          this.$emit('offerSent', true)
         }
-    
       },
       randomString() {
         var chars = "0123456789";

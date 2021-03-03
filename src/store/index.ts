@@ -17,7 +17,6 @@ export default new Vuex.Store({
     // instantiated multiple times
     state: () => ({
       contentState: {
-        loadingContent: false,
         rooms: [],
         room: {},
         roomUpdated: false,
@@ -26,7 +25,6 @@ export default new Vuex.Store({
       },
       userState:{
         user: {},
-        loadingUser: false,
         userUpdated: false,
         userDeleted: false,
         passwordResetEmailSent: false,
@@ -43,18 +41,21 @@ export default new Vuex.Store({
         offerAcceptedByOwner: false,
         errors: {}
       },
+      loadingState: {
+        loadingContent: false,
+        loadingUser: false,
+        sendingOffer: false
+      },
       maintenance: false
     }),
     getters: {
       // Content
-      isContentLoading: state => state.contentState.loadingContent,
       contentRooms: state => state.contentState.rooms.filter((room: any) => (!room.rented && !room.disabled && !room.lockedByAdmin) || (room.rented && new Date() < new Date(new Date(room.rentedDate).setDate(new Date(room.rentedDate).getDate() + 2)))).reverse(),
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
       isRoomUpdated: state => state.contentState.roomUpdated,
       isRoomDeleted: state => state.contentState.roomDeleted,
       //USER
-      isUserLoading: state => state.userState.loadingUser,
       isUserAuthenticated: (state: any) => !!state.userState.token && state.userState.user.emailVerified,
       currentUser: state => state.userState.user,
       isUserUpdated: state => state.userState.userUpdated,
@@ -72,6 +73,10 @@ export default new Vuex.Store({
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
       meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)),
       offerErrors: state => state.notificationState.errors,
+      //Loading
+      isContentLoading: state => state.loadingState.loadingContent,
+      isUserLoading: state => state.loadingState.loadingUser,
+      isOfferSending: state => state.loadingState.sendingOffer,
       //maintenance the whole application, implementation missing
       isAppInMaintenance: (state: any) => state.maintenance,
     },

@@ -7,15 +7,17 @@ let appRouter: any = router;
 export default {
 
   sendOffer: (context: any, notification: any) => {
-    console.log(notification);
+    // console.log(notification);
+    context.commit('SET_OFFER_SENDING', true);
     axios.post(`/classes/Offers`, notification)
     .then((res) => {
-      console.log(res)
+      // console.log(res)
       let offerData = {
         ...notification,
         ...res.data
       }
       context.commit('ADD_NOTIFICATION', offerData);
+      context.commit('SET_OFFER_SENDING', false);
   })
   .catch((err) => {
       // const err = {

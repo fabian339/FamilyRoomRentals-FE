@@ -1,6 +1,13 @@
 <template>
   <div>
-    <UserPageLoading  v-model="isPageLoading" :seconds="2000"/>
+    <PageLoading  
+      v-model="isPageLoading" 
+      :component="{
+          seconds: 2000,
+          type: 'user',
+          color: ''
+      }"
+    />
     <v-container v-if="!isPageLoading">
       <v-row class="text-center" style="margin-top: -20px;">
         <v-col
@@ -114,7 +121,7 @@ import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
 import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 import Meeting from '@/components/Meeting/Meeting.vue'
-import UserPageLoading from '@/components/Loading/UserPageLoading.vue';
+import PageLoading from '@/components/Loading/PageLoading.vue';
 
 import { mapGetters } from 'vuex'
 
@@ -125,7 +132,7 @@ export default {
     SuccessAlert,
     Profile,
     Meeting,
-    UserPageLoading
+    PageLoading
   },
   computed: {
       ...mapGetters([

@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <PageLoading  v-model="isPageLoading" :seconds="1500"/>
+    <PageLoading  
+      v-model="isPageLoading" 
+      :component="{
+        seconds: 1500,
+        type: 'content',
+        color: ''
+      }"
+    />
     <v-row class="text-center" v-if="!isPageLoading">
       <div class="logo" >
         <img :src="require('../../../config.json').imgLinks.logo" alt="logo" width="400">

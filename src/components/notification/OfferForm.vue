@@ -1,10 +1,20 @@
 <template>
     <div>
         <div id="offerContainer">
-            <ClientOfferAgreement v-model="openOfferAgreementDialog" :clientData="{
-              clientName: full_name,
-              clientEmail: email
-            }" />
+            <ClientOfferAgreement 
+              v-model="openOfferAgreementDialog" 
+              @offerSent="didOfferSent"
+              :clientData="{
+                clientName: full_name,
+                clientEmail: email
+              }" />
+
+            <Alert 
+              v-model="offerSent"
+              :component="{
+                type: 'success',
+                message: 'Offer Sent Successfully!'
+              }" />
             <h2 class="headline font-weight-bold mb-3">
                 Interested? Don't wait!
             </h2>
@@ -97,19 +107,11 @@
 import {mapGetters, mapMutations} from 'vuex'
 import {validateOffer} from '../../store/validators'
 import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
+import Alert from '@/components/Alert/Alert.vue'
 
-  export default {
-    name: 'OfferForm',
-    components: {
-        ClientOfferAgreement
-    },
-    computed: {
-        ...mapGetters([
-            'contentRoom',
-        ]),
-    },
-   data () {
-      return {
+  // outside of the component state
+  function initialState (){
+    return {        
         full_name: '',
         email: '',
         phone1: '',
@@ -118,8 +120,23 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
         phone: '',
         offer: '',
         openOfferAgreementDialog: false,
-        errors: {}
+        errors: {},
+        offerSent: false
       }
+  }
+  export default {
+    name: 'OfferForm',
+    components: {
+        ClientOfferAgreement,
+        Alert
+    },
+    computed: {
+        ...mapGetters([
+            'contentRoom',
+        ]),
+    },
+    data () {
+      return initialState();
     },
     created() {
     },
@@ -148,7 +165,14 @@ import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
                 this.SET_OFFER(clientOffer);
                 this.openOfferAgreementDialog = true;
             }
-        }
+        },
+        didOfferSent(value){
+          if(value){
+            //clears the data from the form
+            Object.assign(this.$data, initialState());
+            this.offerSent = true;
+          }
+        },
     }
   }
 

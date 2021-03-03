@@ -8,6 +8,9 @@ export default {
         state.notificationState.notifications.push(offers);
     },
 
+    SET_OFFER_SENDING: (state: any, value: Boolean) => {
+        state.loadingState.sendingOffer = value;
+    },
     // SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
     //     state.notificationState.offerSentByClient = offerSentByClient;
     //     setTimeout(() => {
