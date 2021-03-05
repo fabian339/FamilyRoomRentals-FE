@@ -1,20 +1,30 @@
 <template>
     <div>
-        <div id="offerContainer">
-            <ClientOfferAgreement 
-              v-model="openOfferAgreementDialog" 
-              @offerSent="didOfferSent"
-              :clientData="{
-                clientName: full_name,
-                clientEmail: email
-              }" />
+        <ClientOfferAgreement 
+          v-model="openOfferAgreementDialog" 
+          @offerSent="didOfferSent"
+          :clientData="{
+            clientName: full_name,
+            clientEmail: email
+        }" />
 
-            <Alert 
-              v-model="offerSent"
-              :component="{
-                type: 'success',
-                message: 'Offer Sent Successfully!'
-              }" />
+        <Alert 
+          v-model="offerSent"
+          v-if="!clientLoading.sendingOffer"
+          :component="{
+            type: 'success',
+            message: 'Offer Sent Successfully!'
+          }" />
+        <div v-if="clientLoading.sendingOffer">
+            <h3 style="text-align: center">Sending Offer...</h3>
+            <v-progress-circular
+              color="#4b634d"
+              :size="30"
+              :width="5"
+              indeterminate
+            ></v-progress-circular>
+        </div>
+        <div id="offerContainer" v-else>
             <h2 class="headline font-weight-bold mb-3">
                 Interested? Don't wait!
             </h2>
@@ -133,6 +143,8 @@ import Alert from '@/components/Alert/Alert.vue'
     computed: {
         ...mapGetters([
             'contentRoom',
+            'offerSentByClient',
+            'clientLoading'
         ]),
     },
     data () {

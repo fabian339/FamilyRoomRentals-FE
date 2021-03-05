@@ -9,7 +9,7 @@ export default {
       state.contentState.rooms.push(room)
     },
     SET_LOADING_CONTENT: (state: any, status: boolean) => {
-      state.contentState.loadingContent = status
+      state.loadingState.content.loadingRooms = status
     },
     SET_ROOM: (state: any, room: {}) => {
       state.contentState.room = room

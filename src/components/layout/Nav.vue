@@ -84,7 +84,14 @@
                 </div>
 
                 <v-btn color="#e9ffd4" @click="logoutUser" text>
-                    <span>Log out</span>
+                    <span v-if="!userLoading.userLoggingOut">Log out</span>
+                    <v-progress-circular
+                        v-else
+                        color="#ffffff"
+                        :size="30"
+                        :width="5"
+                        indeterminate
+                    ></v-progress-circular>
                 </v-btn>
             </template>
 
@@ -114,6 +121,7 @@ export default {
         ...mapGetters([
             'isUserAuthenticated',
             'currentUserOffers',
+            'userLoading'
         ])
     },
     data: () => ({

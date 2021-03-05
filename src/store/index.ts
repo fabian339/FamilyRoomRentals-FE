@@ -35,13 +35,23 @@ export default new Vuex.Store({
       notificationState: {
         offer: {},
         notifications: [],
-        offerSentByClient: false,
         offerDeleted: false,
         offerTokenVerified: false,
         offerAcceptedByOwner: false,
         errors: {}
       },
       loadingState: {
+        user: {
+          userLoggingIn: false,
+          userLoggingOut: false, //used for logging-out, and userDeletingAccoutn
+          userRegistering: false,
+        },
+        client: {
+          sendingOffer: false
+        },
+        content: {
+          loadingRooms: false
+        },
         loadingContent: false,
         loadingUser: false,
         sendingOffer: false
@@ -66,7 +76,6 @@ export default new Vuex.Store({
       userErrors: state => state.userState.errors,
       //Notifications/Offers
       currentOffer: state => state.notificationState.offer,
-      isOfferSent: state => state.notificationState.offerSentByClient,
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
@@ -74,9 +83,9 @@ export default new Vuex.Store({
       meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)),
       offerErrors: state => state.notificationState.errors,
       //Loading
-      isContentLoading: state => state.loadingState.loadingContent,
-      isUserLoading: state => state.loadingState.loadingUser,
-      isOfferSending: state => state.loadingState.sendingOffer,
+      userLoading: state => state.loadingState.user,
+      clientLoading: state => state.loadingState.client,
+      contentLoading: state => state.loadingState.content,
       //maintenance the whole application, implementation missing
       isAppInMaintenance: (state: any) => state.maintenance,
     },

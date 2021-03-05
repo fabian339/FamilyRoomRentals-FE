@@ -4,7 +4,7 @@
       v-model="isPageLoading" 
       :component="{
         seconds: 1000,
-        type: 'content',
+        type: '',
         color: ''
       }"
     />    
@@ -50,7 +50,19 @@
 
               <v-spacer></v-spacer>
               
-              <v-btn type="submit" color="#66CDAA">Login</v-btn>
+              <v-btn 
+                type="submit" 
+                color="#66CDAA"
+              >
+                <span v-if="!userLoading.userLoggingIn">Login</span>
+                <v-progress-circular
+                  v-else
+                  color="#4b634d"
+                  :size="30"
+                  :width="5"
+                  indeterminate
+                ></v-progress-circular>
+              </v-btn>
               <p style="color: red; margin: 10px 0 0 0;">{{userErrors.responseError}}</p>
               <div>
                 <small>
@@ -83,7 +95,7 @@ import PageLoading from '@/components/Loading/PageLoading.vue';
   },
   computed: {
     ...mapGetters([
-      // 'userErrors',
+      'userLoading',
       'isPasswordResetEmailSent',
       'isEmailVerificationSent'
     ]),

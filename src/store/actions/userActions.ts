@@ -11,7 +11,7 @@ export default {
   registerUser: (context: any, user: any) => {
     // console.log("trying to register User", user);
     axios.defaults.headers.common['X-Parse-Revocable-Session'] = 1;
-    context.commit('SET_LOADING_USER', true);
+    context.commit('SET_USER_REGISTERING', true);
     axios.post(`/users`, user)
     .then((res) => {
       let currentUser = {
@@ -24,15 +24,14 @@ export default {
       console.log(res, currentUser)
       localStorage.setItem('user-token', currentUser.sessionToken);
       context.commit('SET_TOKEN', currentUser.sessionToken);
-      if(appRouter.history.current.path !== '/email-verification' ) {
-        context.dispatch('sendEmailVerification', {email: currentUser.email})
-        appRouter.push(`/email-verification`)
-      }
-      context.commit('CLEAR_USER_ERROR')
-      context.commit('SET_LOADING_USER', false);
+      //a loading type for loading component
+      currentUser.loadingType = 'registering';
+      //changing routes and setting timer on loading
+      context.dispatch('userLoading', currentUser)
     })
     .catch((error) => {
-      console.log("Error: ", error)
+      // console.log("Error: ", error)
+      context.commit('SET_USER_REGISTERING', false);
       const err = {
         responseError: "Account already exists for this username or email address."
       }
@@ -64,7 +63,7 @@ export default {
 
   logInUser: (context: any, user: object) => {
     axios.defaults.headers.common['X-Parse-Revocable-Session'] = 1;
-    context.commit('SET_LOADING_USER', true);
+    context.commit('SET_USER_LOGGING_IN', true);
     axios.post(`/login`, user)
     .then((res) => {
       console.log('loging user', res)
@@ -81,19 +80,13 @@ export default {
 
       context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
-      //check if user's email is verified
-      if(!user.emailVerified){
-        context.dispatch('sendEmailVerification', {email: user.email})
-        appRouter.push(`/email-verification`)
-      } else {
-        if(appRouter.history.current.path !== '/profile'){
-          appRouter.push(`/profile`)
-        }
-      }
-      context.commit('SET_LOADING_USER', false);
-      context.commit('CLEAR_USER_ERROR')
+      //a loading type for loading component
+      user.loadingType = 'logging-in';
+      //changing routes and setting timer on loading
+      context.dispatch('userLoading', user)
   })
   .catch(() => {
+    context.commit('SET_USER_LOGGING_IN', false);
     // console.log(error)
       const err = {
         responseError: "Invalid email/password."
@@ -162,16 +155,18 @@ export default {
 
   deleteUserAccount: (context: any, userData: any) => {
     console.log(userData)
-    context.commit('SET_LOADING_USER', true);
+    //almost same process for logging out, using the same loading
+    context.commit('SET_USER_LOGGING_OUT', true)
     axios.delete(`/users/${userData.userId}`)
     .then((res) => {
       if(userData.roomIds.length !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
       if(userData.notificationIds.length !== 0) context.dispatch('deleteUserOffers', userData.notificationIds);
       context.dispatch('logout');
       context.commit('SET_USER_DELETED', true);
-      context.commit('SET_LOADING_USER', false);
+      // context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {
+      context.commit('SET_USER_LOGGING_OUT', false)
       context.commit('SET_USER_ERROR', err);
     });
   },
@@ -208,19 +203,68 @@ export default {
     .then(() => { console.log("Resources deleted!") })
     .catch(() => { console.log("Problem while deleting resources!")})
   },
+
   logout(context: any) {
-      context.commit('USER_LOGOUT')
-      localStorage.removeItem('user-token')
-      localStorage.removeItem('AUTHORIZATION')
-      let folderName = localStorage.getItem('img-folder-name')
-      if(folderName && folderName.length > 0){
-        let prefix = `${folderName}/`
-        context.dispatch('removeResources', prefix) 
-        localStorage.removeItem('img-folder-name')
-      }
-      if(appRouter.history.current.path !== '/'){
-        appRouter.push(`/`)
-      }
-      context.commit('CLEAR_USER_ERROR')
-  }
+    if(!context.state.loadingState.user.userLoggingOut){
+      context.commit('SET_USER_LOGGING_OUT', true)
+    }
+      //a loading type for loading component
+      let user = {loadingType: 'logging-out'}
+      context.dispatch('userLoading', user)
+  },
+
+  userLoading: (context: any, user: any) => {
+    switch (user.loadingType) {
+      case 'logging-in':
+        setTimeout(() => {
+          console.log('logging-innngggg')
+          // check if user's email is verified
+          if(!user.emailVerified){
+            context.dispatch('sendEmailVerification', {email: user.email})
+            appRouter.push(`/email-verification`)
+          } else {
+            if(appRouter.history.current.path !== '/profile'){
+              appRouter.push(`/profile`)
+            }
+          }
+          context.commit('CLEAR_USER_ERROR')
+          context.commit('SET_USER_LOGGING_IN', false);
+        }, 1500);
+        break;
+      case 'logging-out':
+        console.log("LOGGIN OUTT")
+        setTimeout(() => {
+          localStorage.removeItem('user-token')
+          localStorage.removeItem('AUTHORIZATION')
+          var folderName = localStorage.getItem('img-folder-name')
+          if(folderName && folderName.length > 0){
+            let prefix = `${folderName}/`
+            context.dispatch('removeResources', prefix) 
+            localStorage.removeItem('img-folder-name')
+          }
+          if(appRouter.history.current.path !== '/'){
+            appRouter.push(`/`)
+          }
+          context.commit('CLEAR_USER_ERROR')
+          context.commit('SET_USER_LOGGING_OUT', false)
+        }, 1500);
+        break;
+      case 'registering':
+        setTimeout(() => {
+          if(appRouter.history.current.path !== '/email-verification' ) {
+            context.dispatch('sendEmailVerification', {email: user.email})
+            appRouter.push(`/email-verification`)
+          }
+          context.commit('CLEAR_USER_ERROR')
+          context.commit('SET_USER_REGISTERING', false);
+        }, 2000);        // expected output: "Mangoes and papayas are $2.79 a pound."
+        break;
+      default:
+        console.log(`Sorry, we are out of.`);
+    }
+    // window.clearTimeout(timerId);
+
+  },
 }
+
+

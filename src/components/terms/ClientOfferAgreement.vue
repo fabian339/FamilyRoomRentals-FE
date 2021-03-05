@@ -146,17 +146,14 @@
             text
             @click.stop="VerifyAndAddOfferToThisRoom"
           >
-            <span v-if="!sendingOffer">Send Offer</span>
-            <PageLoading  
+            <span v-if="!clientLoading.sendingOffer">Send Offer</span>
+            <v-progress-circular
               v-else
-              v-model="sendingOffer" 
-              @loadingFinished="LoadingFinished"
-              :component="{
-                seconds: 2500,
-                type: 'inline',
-                color: '#54865f'
-              }"
-            />
+              color="#4b634d"
+              :size="30"
+              :width="5"
+              indeterminate
+            ></v-progress-circular>
             
           </v-btn>
         </v-card-actions>
@@ -166,129 +163,137 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 import {SendEmailToClientOnOffer, SendEmailToUserOnOffer, SendVerificationCodeOnOfferMade} from '../../emailTemplates/emails'
-import PageLoading from '@/components/Loading/PageLoading.vue';
-
+// import PageLoading from '@/components/Loading/PageLoading.vue';
+  // outside of the component state
+  function initialState (){
+    return {        
+        checkbox: false,
+        agreementError: '',
+        showVerificationForm: false,
+        inputVerificationCode: '',
+        offerVerificationCode: '',
+        verificationCodeError: '',
+        codeResentMsg: "",
+      }
+  }
 export default {
-    name: "ClientOffertAgreement",
-    props: {
-        value: Boolean,
-        clientData: Object
-    },
-    components: { PageLoading },
-    computed: {
-        show: {
-            get () {
-                return this.value
-            },
-            set (value) {
-                if (!value) {
-                    this.$emit('input', value)
-                }
-            }
-        }
-    },
-    data(){
-        return {
-            checkbox: false,
-            agreementError: '',
-            showVerificationForm: false,
-            inputVerificationCode: '',
-            offerVerificationCode: '',
-            verificationCodeError: '',
-            codeResentMsg: "",
-            sendingOffer: false
-        }
-    },
-    methods: {
-      ...mapActions([
-          'sendOffer',
-          'sendEmail',
-          'updateRoom'
-      ]),
-      OpenOfferEmailVerification(){
-        if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
-        else {
-          //get code
-          this.offerVerificationCode = this.randomString();
-          const clientEmailData = SendVerificationCodeOnOfferMade({
-            name: this.clientData.clientName,
-            email: this.clientData.clientEmail,
-            verificationCode: this.offerVerificationCode
-          })
-          this.sendEmail(clientEmailData)
-          //Send email
-          this.showVerificationForm = true;
-        }
+  name: "ClientOffertAgreement",
+  props: {
+      value: Boolean,
+      clientData: Object
+  },
+  // components: { PageLoading },
+  computed: {
+    ...mapGetters([
+      'clientLoading',
+      'isOfferSent'
+    ]),        
+    show: {
+      get () {
+          return this.value
       },
-      resendCode(){
-        this.OpenOfferEmailVerification();
-        this.codeResentMsg = "A new code has been sent.";
-      },
-      async VerifyAndAddOfferToThisRoom(){
-        if(this.inputVerificationCode !== this.offerVerificationCode){
-          this.verificationCodeError = "Codes do not match. Please try again!"
-          this.codeResentMsg = "";
-        } else {
-          // console.log("Codes MAtch")
-          this.sendingOffer = true
-          this.verificationCodeError = ""
-          this.codeResentMsg = "";
-          this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
-          let commonData = {
-            offer: this.$store.getters.currentOffer.offer,
-            roomId: this.$store.getters.contentRoom.objectId,
+      set (value) {
+          if (!value) {
+              this.$emit('input', value)
           }
-
-          const clientEmailData = SendEmailToClientOnOffer({
-            ...commonData,
-            email: this.$store.getters.currentOffer.clientEmail,
-            name: this.$store.getters.currentOffer.clientName,
-          })
-
-          const userEmailData = SendEmailToUserOnOffer({
-            ...commonData,  
-            email:this.$store.getters.currentOffer.ownerEmail,
-            name: this.$store.getters.currentOffer.ownerName,
-          })
-          //sending emails
-          // console.log(userEmailData, clientEmailData)
-          await this.sendEmail(userEmailData);
-          await this.sendEmail(clientEmailData);
-          // updating room
-          await this.updateRoom({
-            numberOfOffers: this.$store.getters.contentRoom.numberOfOffers + 1,
-            objectId: this.$store.getters.contentRoom.objectId
-          }); 
-          // adding offer to db
-          await this.sendOffer(this.$store.getters.currentOffer)
-        }
-        //after everithing is updated, it will wait for LoadingFinished() to close the modals
-      },
-
-      //emitted from child component to finish loading stage
-      LoadingFinished(value){
-        if(value) {
-          this.agreementError = ''
-          this.offerVerificationCode = ''
-          this.showVerificationForm = false;
-          this.show = false;
-          this.sendingOffer = false;
-          this.$emit('offerSent', true)
-        }
-      },
-      randomString() {
-        var chars = "0123456789";
-        var string_length = 6;
-        var randomstring = '';
-        for (var i=0; i<string_length; i++) {
-          var rnum = Math.floor(Math.random() * chars.length);
-          randomstring += chars.substring(rnum,rnum+1);
-        }
-        return randomstring
       }
     }
+  },
+  data(){
+      return initialState();
+  },
+  methods: {
+    ...mapActions([
+        'sendOffer',
+        'sendEmail',
+        'updateRoom'
+    ]),
+    OpenOfferEmailVerification(){
+      if(!this.checkbox) this.agreementError = "Must accept agreement, otherwise, cancel the offer."
+      else {
+        //get code
+        this.offerVerificationCode = this.randomString();
+        const clientEmailData = SendVerificationCodeOnOfferMade({
+          name: this.clientData.clientName,
+          email: this.clientData.clientEmail,
+          verificationCode: this.offerVerificationCode
+        })
+        this.sendEmail(clientEmailData)
+        //Send email
+        this.showVerificationForm = true;
+      }
+    },
+    resendCode(){
+      this.OpenOfferEmailVerification();
+      this.codeResentMsg = "A new code has been sent.";
+    },
+    async VerifyAndAddOfferToThisRoom(){
+      if(this.inputVerificationCode !== this.offerVerificationCode){
+        this.verificationCodeError = "Codes do not match. Please try again!"
+        this.codeResentMsg = "";
+      } else {
+        // console.log("Codes MAtch")
+        this.verificationCodeError = ""
+        this.codeResentMsg = "";
+        this.$store.getters.currentOffer.isOfferAgreementByClientAccepted = this.checkbox;
+        let commonData = {
+          offer: this.$store.getters.currentOffer.offer,
+          roomId: this.$store.getters.contentRoom.objectId,
+        }
+
+        const clientEmailData = SendEmailToClientOnOffer({
+          ...commonData,
+          email: this.$store.getters.currentOffer.clientEmail,
+          name: this.$store.getters.currentOffer.clientName,
+        })
+
+        const userEmailData = SendEmailToUserOnOffer({
+          ...commonData,  
+          email:this.$store.getters.currentOffer.ownerEmail,
+          name: this.$store.getters.currentOffer.ownerName,
+        })
+        //sending emails
+        // console.log(userEmailData, clientEmailData)
+        await this.sendEmail(userEmailData);
+        await this.sendEmail(clientEmailData);
+        // updating room
+        await this.updateRoom({
+          numberOfOffers: this.$store.getters.contentRoom.numberOfOffers + 1,
+          objectId: this.$store.getters.contentRoom.objectId
+        }); 
+        // adding offer to db
+        await this.sendOffer(this.$store.getters.currentOffer)
+        Object.assign(this.$data, initialState());
+        this.$emit('offerSent', true)
+        this.show = false
+      }
+      //after everithing is updated, it will wait for LoadingFinished() to close the modals
+    },
+
+    //emitted from child component to finish loading stage
+    LoadingFinished(value){
+      if(value) {
+        this.agreementError = ''
+        this.offerVerificationCode = ''
+        this.showVerificationForm = false;
+        this.show = false;
+        this.sendingOffer = false;
+        // this.$emit('offerSent', true)
+      }
+    },
+    randomString() {
+      var chars = "0123456789";
+      var string_length = 6;
+      var randomstring = '';
+      for (var i=0; i<string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        randomstring += chars.substring(rnum,rnum+1);
+      }
+      return randomstring
+    }
+  }
 }
 </script>
 <style scoped>

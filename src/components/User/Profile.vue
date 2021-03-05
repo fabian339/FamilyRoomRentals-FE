@@ -1,15 +1,14 @@
 <template>
   <v-container>
-    <v-progress-linear
+    <!-- <v-progress-linear
       indeterminate
       height="15"
       color="teal"
       v-if="isUserLoading"
-    ></v-progress-linear>
+    ></v-progress-linear> -->
     <v-card
       max-width="375"
       class="mx-auto"
-      v-else
     >
       <v-dialog
         v-model="deleteUser"
@@ -46,7 +45,14 @@
                 text
                 @click="userRemoval"
             >
-                Continue
+            <span v-if="!userLoading.userLoggingOut">Continue</span>
+              <v-progress-circular
+                  v-else
+                  color="#7d3333"
+                  :size="30"
+                  :width="5"
+                  indeterminate
+              ></v-progress-circular>
             </v-btn>
             </v-card-actions>
         </v-card>
@@ -54,10 +60,10 @@
       <v-alert type="error" v-if="Object.keys(userErrors).length !== 0">
         Error while updating user information. To view and resolve error click <a style="text-decoration: underline;" @click.stop="editUser = true">here</a>.
       </v-alert>
-      <SuccessAlert v-if="isOfferDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
+      <!-- <SuccessAlert v-if="isOfferDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
       <SuccessAlert v-if="isUserUpdated && !isUserLoading" msg="User data successfully updated!" />
       <SuccessAlert v-if="isPasswordResetEmailSent && !isUserLoading" msg="Reset password email sent successfully!" />
-      <SuccessAlert v-if="isOfferAcceptedByOwner && !isUserLoading" msg="Offer Accepted Successfully, we will notify you when a meeting date is selected." />
+      <SuccessAlert v-if="isOfferAcceptedByOwner && !isUserLoading" msg="Offer Accepted Successfully, we will notify you when a meeting date is selected." /> -->
       <v-img
         :src="`${currentUser.userPhoto ? currentUser.userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`"
         height="300px"
@@ -237,19 +243,19 @@
 import Room from '@/components/Room/Room.vue'
 import EditUserForm from '@/components/User/EditUserForm.vue'
 import { mapGetters, mapActions } from 'vuex'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 
 export default {
   name: 'Profile',
   components: {
     EditUserForm,
-    SuccessAlert,
+    // SuccessAlert,
     Room
   },
   computed: {
       ...mapGetters([
         'currentUser',
-        'isUserLoading',
+        'userLoading',
         'userErrors',
         'isOfferDeleted',
         'isUserUpdated',

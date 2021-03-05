@@ -140,7 +140,19 @@
               </v-row>
 
               <v-spacer></v-spacer>
-              <v-btn type="submit" color="#66CDAA">Register</v-btn>
+              <v-btn 
+                type="submit" 
+                color="#66CDAA"
+              >
+                <span v-if="!userLoading.userRegistering">Register</span>
+                <v-progress-circular
+                  v-else
+                  color="#d7fae0"
+                  :size="30"
+                  :width="5"
+                  indeterminate
+                ></v-progress-circular>
+              </v-btn>
               <p style="color: red; margin: 10px 0 0 0;">{{userErrors.responseError}}</p>
               <small>
                     Already have an account? Log In <router-link to="/login">HERE.</router-link>
@@ -166,6 +178,7 @@ import PageLoading from '@/components/Loading/PageLoading.vue';
     computed: {
     ...mapGetters([
       'userErrors',
+      'userLoading'
     ])
   },
    data () {

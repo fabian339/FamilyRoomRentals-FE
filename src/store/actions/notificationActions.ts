@@ -17,9 +17,12 @@ export default {
         ...res.data
       }
       context.commit('ADD_NOTIFICATION', offerData);
-      context.commit('SET_OFFER_SENDING', false);
+      let offer = {loadingType: 'sending-offer'}
+      context.dispatch('offerLoading', offer)
+
   })
   .catch((err) => {
+      context.commit('SET_OFFER_SENDING', false);
       // const err = {
       //   responseError: "Invalid email/password.."
       // }
@@ -156,5 +159,28 @@ export default {
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', err);
     });
+  },
+
+  offerLoading: (context: any, offer: any) => {
+    switch (offer.loadingType) {
+      case 'sending-offer':
+        setTimeout(() => {
+          context.commit('SET_OFFER_SENDING', false);
+          context.commit('SET_OFFER_SENT_BY_CLIENT', true);
+        }, 2000);
+        break;
+      case 'logging-out':
+        setTimeout(() => {
+        }, 1500);
+        break;
+      case 'registering':
+        setTimeout(() => {
+        }, 2000);        // expected output: "Mangoes and papayas are $2.79 a pound."
+        break;
+      default:
+        console.log(`Sorry, we are out of.`);
+    }
+    // window.clearTimeout(timerId);
+
   },
 }

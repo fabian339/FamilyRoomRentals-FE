@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.component.type === 'content'">
+    <div v-if="this.component.type === 'content' || this.component.type === ''">
       <div v-if="show">   
         <div class="sk-cube-grid">
             <div class="sk-cube sk-cube1"></div>
@@ -23,16 +23,6 @@
         <div class="circle second-left"></div>
         <div class="circle second-right"></div>
         <div class="title-container-user"><p class="app-title-user">FamilyRoomRentals</p></div>
-      </div>
-    </div>
-    <div v-else-if="this.component.type === 'inline'">
-        <div v-if="show">   
-          <v-progress-circular
-            :color="!this.component.color || this.component.color === '' ? 'blue' : this.component.color"
-            :size="30"
-            :width="6"
-            indeterminate
-          ></v-progress-circular>
       </div>
     </div>
 </template>
@@ -63,17 +53,18 @@ export default {
             }
         },
         ...mapGetters([
-            'isContentLoading',
-            'isUserLoading',
-            'isOfferSending'
+            'userLoading',
+            'isOfferSending',
+            'contentLoading',
+            'userLoading'
         ]),
     },
     data(){
         return{
           countUp: 0,
-          timeoutID: Number
+          timeoutID: Number,
+          stopTimer: false
       }
-
     },
     beforeMount(){
       // if(!this.isContentLoading) {
@@ -84,16 +75,19 @@ export default {
     methods: {
         startCountUpTimer() {
             if(this.countUp === this.component.seconds){
-                this.clearTimeOut()
-                this.show = false
-                this.countUp = 0
-                if(this.component.type === 'inline') this.finishedLoading()
-            }
-            if(this.countUp < this.component.seconds) {
+                this.clearTimeOut();
+                this.show = false;
+                this.countUp = 0;
+                this.stopTimer = true;
+            } 
+            if(this.countUp < this.component.seconds && !this.stopTimer) {
               this.timeoutID = setTimeout(() => {
+                console.log("counting", this.didFetchingStop())
                   if(this.didFetchingStop()){
                     this.countUp += 500
                     this.startCountUpTimer()
+                  } else {
+                    console.log("rooms loading")
                   }
                 }, 500)
             }
@@ -101,20 +95,15 @@ export default {
       
       didFetchingStop(){
         // console.log("did Fetching stopped?", !this.isContentLoading)
-        if(this.component.type === 'content') return !this.isContentLoading
-        else if(this.component.type === 'user') return !this.isContentLoading && !this.isUserLoading
-        else if(this.component.type === 'inline') return !this.isOfferSending
+        if(this.component.type === 'content') return !this.contentLoading.loadingRooms;
+        else if(this.component.type === 'user') return !this.userLoading.userRegistering || this.userLoading.userLoggingIn;
+        else if(this.component.type === '') return true;
       },
       
-      // only for inline loading
-      finishedLoading(){
-        this.$emit('loadingFinished', true)
-      },
       
       clearTimeOut(){
         window.clearTimeout(this.timeoutID);
       },
-      
         
     }
 }

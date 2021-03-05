@@ -9,14 +9,11 @@ export default {
     },
 
     SET_OFFER_SENDING: (state: any, value: Boolean) => {
-        state.loadingState.sendingOffer = value;
+        state.loadingState.client.sendingOffer = value;
     },
-    // SET_OFFER_SENT_BY_CLIENT: (state: any, offerSentByClient: boolean) => {
-    //     state.notificationState.offerSentByClient = offerSentByClient;
-    //     setTimeout(() => {
-    //       state.notificationState.offerSentByClient = false;
-    //     }, 8000);
-    // },
+    SET_OFFER_SENT_BY_CLIENT: (state: any, value: boolean) => {
+        state.notificationState.offerSentByClient = value;
+    },
 
     SET_OFFER_ACCEPTED_BY_OWNER: (state: any, offerAcceptedByOwner: boolean) => {
         state.notificationState.offerAcceptedByOwner = offerAcceptedByOwner;

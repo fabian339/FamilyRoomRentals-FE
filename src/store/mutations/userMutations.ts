@@ -6,15 +6,23 @@ export default {
         // console.log("HEREEE", room)
         state.userState.user = user;
     },
-    SET_LOADING_USER: (state: any, status: boolean) => {
-        state.userState.loadingUser = status
+    SET_USER_REGISTERING: (state: any, status: boolean) => {
+        state.loadingState.user.userRegistering = status
+    },
+    SET_USER_LOGGING_IN: (state: any, status: boolean) => {
+        state.loadingState.user.userLoggingIn = status
     },
     SET_TOKEN: (state: any, token: string) => {
         state.userState.token = token;
     },
-    USER_LOGOUT: (state: any) => {
-        state.userState.token = '';
-        state.userState.user = {};
+    SET_USER_LOGGING_OUT: (state: any, status: boolean) => {
+        if(status){
+            state.loadingState.user.userLoggingOut = status
+        } else {
+            state.userState.token = '';
+            state.userState.user = {};
+            state.loadingState.user.userLoggingOut = status
+        }
     },
     UPDATE_USER: (state: any, updatedUserData: any) => {
         let tempUser = state.userState.user;
