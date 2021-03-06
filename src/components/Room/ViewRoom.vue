@@ -8,11 +8,6 @@
         }"
         />        
         <v-container v-if="!isPageLoading">
-            <ContentLoading  v-if="isContentLoading"/>
-            <div class="text-center">
-                <SuccessAlert v-if="isRoomUpdated" msg="Room Updated Successfully!" />
-            </div>
-
             <v-row class="text-center" justify="center">
                 <div 
                     class="imageContainer"
@@ -69,14 +64,31 @@
                     cols="12"
                 >
                 <small>Posted on {{new Date(this.contentRoom.createdAt).toLocaleString('en-US')}} by {{contentRoom.ownerFname}}, {{contentRoom.ownerLname}}</small>
-                <div v-if="this.contentRoom.ownerId === this.currentUser.objectId">
-
+                <div v-if="this.isPropertyOwner()">
+                    <div class="text-center">
+                        <Alert 
+                            v-model="isRoomUpdated"
+                            :component="{
+                                type: 'success',
+                                message: 'Room Updated Successfully!',
+                                mutation: 'roomUpdated'
+                            }" 
+                        />
+                        <Alert 
+                            v-model="wasNewRoomAdded"
+                            :component="{
+                                type: 'success',
+                                message: 'Room Posted Successfully!',
+                                mutation: 'newRoomAdded'
+                            }" 
+                        />
+                    </div>
                     <div v-if="!this.contentRoom.lockedByAdmin">
                         <v-btn 
                             class="ma-2" 
                             color="#008080"  
                             dark
-                            @click.stop="updateDialog = true" 
+                            @click.stop="openRoomUpdatingDialog" 
                         >
                             Edit Room
                             <v-icon dark>mdi-pencil</v-icon>
@@ -93,7 +105,7 @@
                         </v-btn>
                         
                         <div>
-                            <EditRoomForm v-model="updateDialog"/>
+                            <EditRoomForm v-model="shouldUpdatingRoomDialogBeOpen"/>
                         </div>
                     </div>
                     <div style="margin: 0 20%">
@@ -119,7 +131,9 @@
                         <v-card>
                             <v-card-title class="headline">Are you sure you want to delete this room?</v-card-title>
                             <v-card-text>
-                                Once this is done, we cannot recover this data. Do you want to continue?
+                                Once this is done, we cannot recover this data. 
+                                All the offers and other associated data will be deleted
+                                as well. <span style="color: red">Do you want to continue?</span>
                             </v-card-text>
 
                             <v-card-actions>
@@ -138,7 +152,14 @@
                                 text
                                 @click="deleteRoomData"
                             >
-                                Continue
+                                <span v-if="!contentLoading.contentRoomBeingDeleted">Continue</span>
+                                <v-progress-circular
+                                    v-else
+                                    color="#714c4c"
+                                    :size="30"
+                                    :width="5"
+                                    indeterminate
+                                ></v-progress-circular>
                             </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -189,10 +210,10 @@
                 </v-col>
                 <!-- <SuccessAlert v-if="isOfferSent" msg="Your offer was sent and received. Kindly wait for a response to the email or phone# you provided." /> -->
             </v-row>
-            <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
+            <v-row class="text-center" justify="center" v-if="!contentRoom.rented">
                 <p style="color: darkblue;"><strong>Offers made: {{contentRoom.numberOfOffers}}</strong></p>
             </v-row>
-            <v-row class="text-center" justify="center" v-if="!isContentLoading && !contentRoom.rented">
+            <v-row class="text-center" justify="center" v-if="!contentRoom.rented">
                 <v-btn 
                     small 
                     color="#8dbade" 
@@ -213,7 +234,7 @@
                     {{reportBtnDiasabled ? 'Reported' : 'Report Property'}}
                 </v-btn>
             </v-row>
-            <v-row class="text-center" justify="center" style="margin-top: 20px;" v-if="!isContentLoading && !contentRoom.rented">
+            <v-row class="text-center" justify="center" style="margin-top: 20px;" v-if="!contentRoom.rented">
                 <v-expand-transition>
                     <v-card
                         v-show="showSaveBtnWarning"
@@ -240,30 +261,35 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import OfferForm from '@/components/notification/OfferForm.vue';
-import ContentLoading from '@/components/layout/ContentLoading.vue';
-import SuccessAlert from '@/components/notification/SuccessAlert.vue';
+// import ContentLoading from '@/components/layout/ContentLoading.vue';
+// import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'
 import {SendEmailToAdminOnRoomReported} from '../../emailTemplates/emails'
 import PageLoading from '@/components/Loading/PageLoading.vue';
+import Alert from '@/components/Alert/Alert.vue'
 
   export default {
     name: 'viewRoom',
     components: {
         OfferForm,
         EditRoomForm,
-        SuccessAlert,
-        ContentLoading,
-        PageLoading
+        // SuccessAlert,
+        // ContentLoading,
+        PageLoading,
+        Alert
     },
     computed: {
         ...mapGetters([
             'contentRoom',
-            'isContentLoading',
             'currentUser',
             'isRoomUpdated',
-            'isUserAuthenticated'
+            'isUserAuthenticated',
+            'shouldUpdatingRoomDialogBeOpen',
+            'wasOfferSentByClient',
+            'contentLoading',
+            'wasNewRoomAdded'
         ]),
     },
     data(){
@@ -287,11 +313,20 @@ import PageLoading from '@/components/Loading/PageLoading.vue';
         // next()
     },
     methods:{
+        ...mapMutations([
+            'SHOW_ROOM_UPDATING_DIALOG',
+        ]),
         ...mapActions([
             'deleteRoom',
             'updateUser',
             'sendEmail'
         ]),
+        isPropertyOwner(){
+            return this.isUserAuthenticated && this.currentUser.objectId === this.contentRoom.ownerId
+        },
+        openRoomUpdatingDialog(){
+            this.SHOW_ROOM_UPDATING_DIALOG(true)
+        },
         deleteRoomData(){
             this.deleteRoom(this.$route.params.id);
         },

@@ -27,7 +27,7 @@
                 </v-btn>
 
                 <div class="text-center" style="margin: auto 15px;">
-                    <v-menu open-on-hover bottom offset-y>
+                    <v-menu open-on-hover open-on-click bottom offset-y>
                         <template v-slot:activator="{ on, attrs }">
                         <div
                             v-bind="attrs"

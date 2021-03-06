@@ -6,10 +6,10 @@ let appRouter: any = router;
 
 export default {
 
-  sendOffer: (context: any, notification: any) => {
+  sendOffer: async (context: any, notification: any) => {
     // console.log(notification);
     context.commit('SET_OFFER_SENDING', true);
-    axios.post(`/classes/Offers`, notification)
+    await axios.post(`/classes/Offers`, notification)
     .then((res) => {
       // console.log(res)
       let offerData = {
@@ -161,7 +161,7 @@ export default {
     });
   },
 
-  offerLoading: (context: any, offer: any) => {
+  offerLoading: async (context: any, offer: any) => {
     switch (offer.loadingType) {
       case 'sending-offer':
         setTimeout(() => {

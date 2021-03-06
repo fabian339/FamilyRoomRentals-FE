@@ -19,8 +19,10 @@ export default new Vuex.Store({
       contentState: {
         rooms: [],
         room: {},
+        newRoomAdded: false,
         roomUpdated: false,
         roomDeleted: false,
+        showRoomUpdatingDialog: false, //used to show dialog to update room
         errors: {},
       },
       userState:{
@@ -35,6 +37,7 @@ export default new Vuex.Store({
       notificationState: {
         offer: {},
         notifications: [],
+        offerSentByClient: false,
         offerDeleted: false,
         offerTokenVerified: false,
         offerAcceptedByOwner: false,
@@ -45,16 +48,17 @@ export default new Vuex.Store({
           userLoggingIn: false,
           userLoggingOut: false, //used for logging-out, and userDeletingAccoutn
           userRegistering: false,
+          retrievingUser: false,
         },
         client: {
           sendingOffer: false
         },
         content: {
-          loadingRooms: false
+          addingContent: false,
+          loadingRooms: false,
+          contentRoomUpdating: false,
+          contentRoomBeingDeleted: false,
         },
-        loadingContent: false,
-        loadingUser: false,
-        sendingOffer: false
       },
       maintenance: false
     }),
@@ -63,8 +67,10 @@ export default new Vuex.Store({
       contentRooms: state => state.contentState.rooms.filter((room: any) => (!room.rented && !room.disabled && !room.lockedByAdmin) || (room.rented && new Date() < new Date(new Date(room.rentedDate).setDate(new Date(room.rentedDate).getDate() + 2)))).reverse(),
       contentRoom: state => state.contentState.room,
       contentErrors: state => state.contentState.errors,
+      wasNewRoomAdded: state => state.contentState.newRoomAdded,
       isRoomUpdated: state => state.contentState.roomUpdated,
       isRoomDeleted: state => state.contentState.roomDeleted,
+      shouldUpdatingRoomDialogBeOpen: state => state.contentState.showRoomUpdatingDialog,
       //USER
       isUserAuthenticated: (state: any) => !!state.userState.token && state.userState.user.emailVerified,
       currentUser: state => state.userState.user,
@@ -79,6 +85,7 @@ export default new Vuex.Store({
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
+      wasOfferSentByClient: state => state.notificationState.offerSentByClient,
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
       meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)),
       offerErrors: state => state.notificationState.errors,

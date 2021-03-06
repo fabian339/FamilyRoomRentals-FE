@@ -15,6 +15,9 @@ export default {
     SET_TOKEN: (state: any, token: string) => {
         state.userState.token = token;
     },
+    SET_RETRIEVING_USER: (state: any, value: Boolean) => {
+        state.loadingState.user.retrievingUser = value;
+    },
     SET_USER_LOGGING_OUT: (state: any, status: boolean) => {
         if(status){
             state.loadingState.user.userLoggingOut = status

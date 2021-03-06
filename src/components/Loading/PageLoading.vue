@@ -96,7 +96,7 @@ export default {
       didFetchingStop(){
         // console.log("did Fetching stopped?", !this.isContentLoading)
         if(this.component.type === 'content') return !this.contentLoading.loadingRooms;
-        else if(this.component.type === 'user') return !this.userLoading.userRegistering || this.userLoading.userLoggingIn;
+        else if(this.component.type === 'user') return !this.userLoading.userRegistering || this.userLoading.userLoggingIn || this.userLoading.retrievingUser;
         else if(this.component.type === '') return true;
       },
       

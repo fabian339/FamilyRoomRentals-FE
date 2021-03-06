@@ -22,7 +22,7 @@ export default {
   },
 
   shareRoom: (context: any, roomData: any = {}) => {
-    context.commit('SET_LOADING_CONTENT', true);
+    context.commit('SET_NEW_ROOM_BEING_ADDED', true);
     axios.post('/classes/Rooms', roomData)
     .then((res) => {
       let room = {
@@ -31,8 +31,9 @@ export default {
       }
       context.commit('ADD_ROOM', room)
       context.commit('SET_ROOM', room)
-      context.commit('SET_LOADING_CONTENT', false);
-      appRouter.push(`/room/${room.objectId}`)
+
+      let content = {loadingType: 'adding-room', roomId: room.objectId}
+      context.dispatch('contentLoading', content)
     })
     .catch((err) => {
       context.commit('SET_CONTENT_ERROR', err);
@@ -41,29 +42,28 @@ export default {
 
   updateRoom: (context: any, roomData: any) => {
     // console.log('this is a Data22', roomData)
-    context.commit('SET_LOADING_CONTENT', true);
+    context.commit('SET_ROOM_UPDATING', true);
     axios.put(`/classes/Rooms/${roomData.objectId}`, roomData)
-    .then((res) => {
+    .then(() => {
       // console.log("update Room Response: ", res);
       context.commit('UPDATE_ROOM', roomData);
-      context.commit('SET_LOADING_CONTENT', false);
+      let content = {loadingType: 'room-updating'}
+      context.dispatch('contentLoading', content)
     })
     .catch((err) => {
       context.commit('SET_CONTENT_ERROR', err);
     });
   },
 
-  deleteRoom: (context: any, id: string) => {
-    context.commit('SET_LOADING_CONTENT', true);
-    axios.delete(`/classes/Rooms/${id}`)
+  deleteRoom: async (context: any, id: string) => {
+    context.commit('SET_ROOM_BEING_DELETED', true);
+    await axios.delete(`/classes/Rooms/${id}`)
     .then((res) => {
-      context.commit('DELETE_ROOM', id);
-      context.commit('SET_LOADING_CONTENT', false);
-      if(appRouter.history.current.path !== '/profile'){
-        appRouter.push(`/profile`)
-      }
+      let content = {loadingType: 'deleting-room', roomId: id}
+      context.dispatch('contentLoading', content)
     })
     .catch((err) => {
+      context.commit('SET_ROOM_BEING_DELETED', false);
       context.commit('SET_CONTENT_ERROR', err);
     });
   },
@@ -76,5 +76,37 @@ export default {
     .catch(err => {
         console.log("EROOR:", err)
     })
+  },
+
+  contentLoading: (context: any, content: any) => {
+    switch (content.loadingType) {
+      case 'room-updating':
+        setTimeout(() => {
+          context.commit('SET_ROOM_UPDATING', false);
+          context.commit('SET_ROOM_UPDATED', true);
+        }, 2000);
+        break;
+      case 'deleting-room':
+        setTimeout(() => {
+          context.commit('DELETE_ROOM', content.roomId);
+          context.commit('SET_ROOM_BEING_DELETED', false);
+          context.commit('SET_ROOM_DELETED', true);
+          if(appRouter.history.current.path !== '/profile'){
+            appRouter.push(`/profile`)
+          }
+        }, 2000);
+        break;
+      case 'adding-room':
+        setTimeout(() => {
+          context.commit('SET_NEW_ROOM_BEING_ADDED', false);
+          context.commit('SET_NEW_ROOM_ADDED', true);
+          appRouter.push(`/room/${content.roomId}`)
+        }, 2000);        
+        break;
+      default:
+        console.log(`Sorry, we are out of.`);
+    }
+    // window.clearTimeout(timerId);
+
   },
 }

@@ -4,7 +4,7 @@
       v-model="isPageLoading" 
       :component="{
         seconds: 1000,
-        type: 'content'
+        type: ''
       }"
     />
 

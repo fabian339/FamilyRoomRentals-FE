@@ -1,7 +1,6 @@
 <template>
   <v-row justify="center">
     <v-dialog 
-        v-if="!isUserLoading" 
         v-model="show" 
         fullscreen 
         hide-overlay 
@@ -140,7 +139,6 @@ import {validateUpdateUser} from '../../store/validators'
     computed: {
         ...mapGetters([
             'userErrors',
-            'isUserLoading',
             'currentUser'
         ]),
         show: {

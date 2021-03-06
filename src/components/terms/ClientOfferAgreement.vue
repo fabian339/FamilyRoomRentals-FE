@@ -130,7 +130,7 @@
         </v-btn>
 
         <p style="color: red; margin: 10px 25%">{{verificationCodeError}}</p>
-        <p style="color: blue; margin: 10px 25%">{{codeResentMsg}}</p>
+        <p style="color: blue; margin: 10px 25%: text-align: center">{{codeResentMsg}}</p>
 
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -188,7 +188,6 @@ export default {
   computed: {
     ...mapGetters([
       'clientLoading',
-      'isOfferSent'
     ]),        
     show: {
       get () {
@@ -265,23 +264,16 @@ export default {
         }); 
         // adding offer to db
         await this.sendOffer(this.$store.getters.currentOffer)
-        Object.assign(this.$data, initialState());
-        this.$emit('offerSent', true)
-        this.show = false
+        this.loadingFinished()
       }
       //after everithing is updated, it will wait for LoadingFinished() to close the modals
     },
 
     //emitted from child component to finish loading stage
-    LoadingFinished(value){
-      if(value) {
-        this.agreementError = ''
-        this.offerVerificationCode = ''
-        this.showVerificationForm = false;
-        this.show = false;
-        this.sendingOffer = false;
-        // this.$emit('offerSent', true)
-      }
+    loadingFinished(){
+        Object.assign(this.$data, initialState());
+        this.$emit('offerSent', true)
+        this.show = false
     },
     randomString() {
       var chars = "0123456789";

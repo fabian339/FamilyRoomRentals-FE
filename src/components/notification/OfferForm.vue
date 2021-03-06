@@ -9,14 +9,14 @@
         }" />
 
         <Alert 
-          v-model="offerSent"
-          v-if="!clientLoading.sendingOffer"
+          v-model="wasOfferSentByClient"
           :component="{
             type: 'success',
-            message: 'Offer Sent Successfully!'
+            message: 'Offer Sent Successfully!',
+            mutation: 'offerSentByClient'
           }" />
         <div v-if="clientLoading.sendingOffer">
-            <h3 style="text-align: center">Sending Offer...</h3>
+            <h3 style="color: #179661">Sending Offer...</h3>
             <v-progress-circular
               color="#4b634d"
               :size="30"
@@ -105,9 +105,17 @@
                 <div>
                     <small style="color: darkcyan">(Tipically Respond within 24 hours)</small>
                 </div>
-                <v-btn @click.stop="openAgreementDialog" color="#2e8b57" dark>
+                <v-btn 
+                  @click.stop="openAgreementDialog" 
+                  color="#2e8b57" 
+                  :dark="!this.isPropertyOwner()"
+                  :disabled="this.isPropertyOwner()"
+                >
                     Send Offer
                 </v-btn>
+                <div v-if="this.isPropertyOwner()">
+                    <small style="color: darkred">You are the property owner, cannot send offer to yourself.</small>
+                </div>
             </form>
         </div>
     </div>
@@ -131,7 +139,6 @@ import Alert from '@/components/Alert/Alert.vue'
         offer: '',
         openOfferAgreementDialog: false,
         errors: {},
-        offerSent: false
       }
   }
   export default {
@@ -144,7 +151,10 @@ import Alert from '@/components/Alert/Alert.vue'
         ...mapGetters([
             'contentRoom',
             'offerSentByClient',
-            'clientLoading'
+            'clientLoading',
+            'wasOfferSentByClient',
+            'isUserAuthenticated',
+            'currentUser'
         ]),
     },
     data () {
@@ -182,8 +192,10 @@ import Alert from '@/components/Alert/Alert.vue'
           if(value){
             //clears the data from the form
             Object.assign(this.$data, initialState());
-            this.offerSent = true;
           }
+        },
+        isPropertyOwner(){
+            return this.isUserAuthenticated && this.currentUser.objectId === this.contentRoom.ownerId
         },
     }
   }

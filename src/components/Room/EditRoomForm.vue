@@ -2,7 +2,6 @@
     <v-row justify="center">
         <v-dialog
             v-model="show"
-            v-if="!isUserLoading" 
             fullscreen
             hide-overlay
             transition="dialog-bottom-transition"
@@ -13,14 +12,27 @@
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                     <v-toolbar-title>
-                        <span class="headline">EDIT ROOM</span>
+                        <span class="headline">UPDATE ROOM</span>
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        <v-btn dark text @click="saveUpdatedRoomData">Save Changes</v-btn>
+                        <v-btn 
+                            dark 
+                            text 
+                            @click="saveUpdatedRoomData"
+                        > 
+                            <span v-if="!contentLoading.contentRoomUpdating">Save Changes</span>
+                            <v-progress-circular
+                                v-else
+                                color="#ffffff"
+                                :size="30"
+                                :width="5"
+                                indeterminate
+                            ></v-progress-circular>
+                        </v-btn>
                     </v-toolbar-items>
                 </v-toolbar>
-                <v-row class="text-center" justify="center">>
+                <v-row class="text-center" justify="center">
                     <v-col lg="4">
                         <!-- <form> -->
                             <v-radio-group
@@ -229,7 +241,8 @@
 <script>
 import {validateUpdateRoom} from '../../store/validators'
 import axios from 'axios'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
+
 export default {
     name: "EditRoomForm",
     props: {
@@ -247,7 +260,7 @@ export default {
             }
         },
         ...mapGetters([
-            'isUserLoading',
+            'contentLoading'
         ]),
     },
     data(){
@@ -278,6 +291,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            'SHOW_ROOM_UPDATING_DIALOG',
+        ]),
         ...mapActions([
             'updateRoom'
         ]),
@@ -363,7 +379,7 @@ export default {
                     data.objectId = this.$store.getters.contentRoom.objectId;
                     this.updateRoom(data);
                     localStorage.removeItem('img-folder-name')
-                    this.show = false;
+                    // this.show = false;
                     // console.log(data);
                 }
             } else {
@@ -382,9 +398,11 @@ export default {
             // this.images.splice(index, 1);
         },
         closeModal(){
-            this.resetValues();
             // console.log("caling close");
-            if(this.show) this.show = false
+            if(this.changes.length > 0){
+                this.resetValues();
+            }
+            this.SHOW_ROOM_UPDATING_DIALOG(false)
         },
         resetValues(){
             if(this.changes.length > 0){

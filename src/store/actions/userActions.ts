@@ -40,7 +40,7 @@ export default {
   },
 
   getCurrentUser: (context: any, token: string) => {
-    context.commit('SET_LOADING_USER', true);
+    context.commit('SET_RETRIEVING_USER', true);
     axios.defaults.headers.common['X-Parse-Session-Token'] = token;
     axios.get(`/users/me`)
     .then((res) => {
@@ -53,7 +53,7 @@ export default {
       context.dispatch('fetchNotifications')
       // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
-      context.commit('SET_LOADING_USER', false);
+      context.commit('SET_RETRIEVING_USER', false);
   })
   .catch((err) => {
       context.commit('SET_USER_ERROR', err);

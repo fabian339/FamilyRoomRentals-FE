@@ -14,14 +14,13 @@ export default {
     SET_ROOM: (state: any, room: {}) => {
       state.contentState.room = room
     },
-    DELETE_ROOM: (state: any, id: string) => {
-      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === id);
-      state.contentState.rooms.splice(index, 1);
-      state.contentState.room = {};
-      state.contentState.roomDeleted = true;
-      setTimeout(() => {
-        state.contentState.roomDeleted = false;
-      }, 5000);
+
+    //ROOM UPDATING
+    SHOW_ROOM_UPDATING_DIALOG: (state: any, value: any) => {
+      state.contentState.showRoomUpdatingDialog = value;
+    },
+    SET_ROOM_UPDATING: (state: any, value: any) => {
+      state.loadingState.content.contentRoomUpdating = value;
     },
     UPDATE_ROOM: (state: any, updatedRoomData: any) => {
       const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === updatedRoomData.objectId);
@@ -31,11 +30,35 @@ export default {
       }
       state.contentState.rooms[index] = tempRoom;
       state.contentState.room = tempRoom;
-      state.contentState.roomUpdated = true;
-      setTimeout(() => {
-        state.contentState.roomUpdated = false;
-      }, 5000);
     },
+    SET_ROOM_UPDATED: (state: any, value: any) => {
+      state.contentState.roomUpdated = value;
+    },
+
+    // ROOM DELETED
+    SET_ROOM_BEING_DELETED: (state: any, value: any) => {
+      state.loadingState.content.contentRoomBeingDeleted = value;
+    },
+    
+    DELETE_ROOM: (state: any, id: string) => {
+      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === id);
+      state.contentState.rooms.splice(index, 1);
+      state.contentState.room = {};
+    },
+
+    SET_ROOM_DELETED: (state: any, value: any) => {
+      state.contentState.roomDeleted = value;
+    },
+
+    //ADDING ROOM
+    SET_NEW_ROOM_BEING_ADDED: (state: any, value: any) => {
+      state.loadingState.content.addingContent = value;
+    },
+
+    SET_NEW_ROOM_ADDED: (state: any, value: any) => {
+      state.contentState.newRoomAdded = value;
+    },
+    //ERROR
     SET_CONTENT_ERROR: (state: any, errors: object) => {
       state.contentState.errors = errors
     }

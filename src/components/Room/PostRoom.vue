@@ -190,8 +190,30 @@
                             </template>
                         </v-checkbox>
                     </div>
+                    <!-- <v-btn 
+                        rounded 
+                        color="#2E8B57" 
+                        dark
+                    >
+                        View Priview
+                    </v-btn> -->
+                      
                     
-                    <v-btn type="submit"  rounded color="#2E8B57" dark>Post Room</v-btn>
+                    <v-btn 
+                        type="submit"  
+                        rounded 
+                        color="#2E8B57" 
+                        dark
+                    >
+                        <span v-if="!contentLoading.addingContent">Post Room</span>
+                        <v-progress-circular
+                            v-else
+                            color="#12f4ff"
+                            :size="30"
+                            :width="5"
+                            indeterminate
+                        ></v-progress-circular>
+                    </v-btn>
 
                 </form>
             </v-col>
@@ -216,7 +238,7 @@ import axios from 'axios'
     computed: {
       ...mapGetters([
         'currentUser',
-        'isContentLoading'
+        'contentLoading'
       ])
     },
     data () {
@@ -274,15 +296,15 @@ import axios from 'axios'
             
             window.cloudinary.openUploadWidget(
                 { 
-                    cloud_name: 'dr4l6xat9',
-                    upload_preset: 'ure7xgev',
+                    cloud_name: process.env.VUE_APP_CLOUDINARY_NAME,
+                    upload_preset: process.env.VUE_APP_CLOUDINARY_UPLOAD_PRESET,
                     maxFiles: 1,
                     resourceType: 'image',
                     folder: folderName,
                 },
             (error, result) => {
                 if(error){
-                    console.log(error)
+                    console.log('error', error)
                 }
                 else if (!error && result && result.event === "success") {
                     // console.log('Done uploading..: ', result.info);

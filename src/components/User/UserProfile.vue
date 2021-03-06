@@ -16,19 +16,18 @@
           <h2 id="userName">{{this.$store.getters.currentUser.fName}} {{this.$store.getters.currentUser.lName}}</h2>
           <Profile style="margin-top: 10px;"/>
         </v-col>
-        <v-progress-circular
-          v-if="isContentLoading"
-          color="green"
-          :size="100"
-          :width="15"
-          indeterminate
-        ></v-progress-circular>
         <v-col
           cols="12"
           md="8"
-          v-else
         >
-          <SuccessAlert v-if="isRoomDeleted" msg="Room Successfully Deleted!" />
+          <Alert 
+            v-model="isRoomDeleted"
+            :component="{
+              type: 'success',
+              message: 'Property removed Successfully!',
+              mutation: 'roomDeleted'
+            }" 
+          />
           <!-- viewing user meetings -->
           <div  v-if="meetings.length === 0">
             <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!:</h2>   
@@ -119,7 +118,7 @@
 // import store from '@/actions/store'
 import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import Alert from '@/components/Alert/Alert.vue'
 import Meeting from '@/components/Meeting/Meeting.vue'
 import PageLoading from '@/components/Loading/PageLoading.vue';
 
@@ -129,19 +128,18 @@ export default {
   name: 'UserProfile',
   components: {
     Room,
-    SuccessAlert,
+    Alert,
     Profile,
     Meeting,
     PageLoading
   },
   computed: {
       ...mapGetters([
-        'isContentLoading',
         'currentUserRooms',
-        'isUserUpdated',
         'isPasswordResetEmailSent',
         'isRoomDeleted',
-        'meetings'
+        'meetings',
+        'isRoomDeleted'
       ])
   },
   data(){
