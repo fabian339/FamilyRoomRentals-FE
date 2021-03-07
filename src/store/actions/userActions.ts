@@ -99,7 +99,7 @@ export default {
   updateUser: (context: any, userData: any) => {
     // console.log('this is a Data', userData)
     axios.defaults.headers.common['X-Parse-Session-Token'] = localStorage.getItem('user-token');
-    context.commit('SET_LOADING_USER', true);
+    context.commit('SET_UPDATING_USER', true);
     axios.put(`/users/${userData.objectId}`, userData)
     .then(() => {
       context.commit('UPDATE_USER', userData);
@@ -116,10 +116,14 @@ export default {
             }) 
           });
       }
-      context.commit('SET_LOADING_USER', false);
-      context.commit('CLEAR_USER_ERROR')
+
+      //a loading type for loading component
+      let user = {loadingType: 'user-updating'};
+      //changing routes and setting timer on loading
+      context.dispatch('userLoading', user)
     })
     .catch(() => {
+      context.commit('SET_UPDATING_USER', false);
       const err = {
         responseError: "Account already exists for this username or email address."
       }
@@ -258,6 +262,13 @@ export default {
           context.commit('CLEAR_USER_ERROR')
           context.commit('SET_USER_REGISTERING', false);
         }, 2000);        // expected output: "Mangoes and papayas are $2.79 a pound."
+        break;
+      case 'user-updating':
+        setTimeout(() => {
+          context.commit('SET_UPDATING_USER', false);
+          context.commit('SET_USER_UPDATED', true);
+          context.commit('CLEAR_USER_ERROR')
+        }, 1500);
         break;
       default:
         console.log(`Sorry, we are out of.`);

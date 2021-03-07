@@ -29,6 +29,7 @@ export default new Vuex.Store({
         user: {},
         userUpdated: false,
         userDeleted: false,
+        showUserUpdatingDialog: false, //used to show dialog to update user
         passwordResetEmailSent: false,
         emailVerificationSent: false,
         token: localStorage.getItem('user-token') || '',
@@ -39,6 +40,7 @@ export default new Vuex.Store({
         notifications: [],
         offerSentByClient: false,
         offerDeleted: false,
+        showUserDeletingOfferDialog: false,
         offerTokenVerified: false,
         offerAcceptedByOwner: false,
         errors: {}
@@ -49,6 +51,10 @@ export default new Vuex.Store({
           userLoggingOut: false, //used for logging-out, and userDeletingAccoutn
           userRegistering: false,
           retrievingUser: false,
+          userUpdating: false,
+          userOffer: {
+            deletingOffer: false
+          }
         },
         client: {
           sendingOffer: false
@@ -78,6 +84,7 @@ export default new Vuex.Store({
       isUserDeleted: state => state.userState.userDeleted,
       isPasswordResetEmailSent: state => state.userState.passwordResetEmailSent,
       isEmailVerificationSent: state => state.userState.emailVerificationSent,
+      shouldUpdatingUserDialogBeOpen: state => state.userState.showUserUpdatingDialog,
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
       //Notifications/Offers
@@ -86,6 +93,7 @@ export default new Vuex.Store({
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
       wasOfferSentByClient: state => state.notificationState.offerSentByClient,
+      shouldDeletingOfferDialogBeOpen: state => state.notificationState.showUserDeletingOfferDialog,
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
       meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)),
       offerErrors: state => state.notificationState.errors,

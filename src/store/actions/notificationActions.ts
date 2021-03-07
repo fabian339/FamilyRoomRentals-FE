@@ -119,16 +119,16 @@ export default {
     });
   },
 
-  deleteOffer: (context: any, id: string) => {
-    // context.commit('SET_LOADING_CONTENT', true);
-    axios.delete(`/classes/Offers/${id}`)
+  deleteOffer: async (context: any, id: string) => {
+    context.commit('SET_DELETING_OFFER', true);
+    await axios.delete(`/classes/Offers/${id}`)
     .then((res) => {
       context.commit('DELETE_NOTIFICATION', id);
       // context.commit('SET_LOADING_CONTENT', false);
       // console.log(appRouter)
-      if(appRouter.history.current.path !== '/profile'){
-        appRouter.push(`/profile`)
-      }
+
+      let offer = {loadingType: 'deleting-offer'}
+      context.dispatch('offerLoading', offer)
     })
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', err);
@@ -173,9 +173,14 @@ export default {
         setTimeout(() => {
         }, 1500);
         break;
-      case 'registering':
+      case 'deleting-offer':
         setTimeout(() => {
-        }, 2000);        // expected output: "Mangoes and papayas are $2.79 a pound."
+          context.commit('SET_DELETING_OFFER', false);
+          context.commit('SET_OFFER_DELETED', true);
+          if(appRouter.history.current.path !== '/profile'){
+            appRouter.push(`/profile`)
+          }
+        }, 2000);
         break;
       default:
         console.log(`Sorry, we are out of.`);

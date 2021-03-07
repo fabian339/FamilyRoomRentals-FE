@@ -27,17 +27,29 @@ export default {
             state.loadingState.user.userLoggingOut = status
         }
     },
+
+    // Updating USER
+    SET_UPDATING_USER: (state: any, value: Boolean) => {
+        state.loadingState.user.userUpdating = value;
+    },
+
+
     UPDATE_USER: (state: any, updatedUserData: any) => {
         let tempUser = state.userState.user;
         for (const property in updatedUserData) {
             tempUser[property] = updatedUserData[property]
         }
         state.userState.tempUser = tempUser;
-        state.userState.userUpdated = true;
-        setTimeout(() => {
-          state.userState.userUpdated = false;
-        }, 5000);
     },
+
+    SET_USER_UPDATED: (state: any, value: Boolean) => {
+        state.userState.userUpdated = value;
+    },
+
+    SHOW_USER_UPDATING_DIALOG: (state: any, value: Boolean) => {
+        state.userState.showUserUpdatingDialog = value;
+    },
+
     SET_USER_DELETED: (state: any, value: boolean) => {
         state.userState.userDeleted = true;
         setTimeout(() => {

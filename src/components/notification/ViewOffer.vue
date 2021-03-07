@@ -99,7 +99,7 @@
                         style="margin: 5px 5px;" 
                         small 
                         color="error" 
-                        @click.stop="showDeleteWarning = true"
+                        @click.stop="openDeletingOfferDialog"
                         :disabled="currentOffer.offerAcceptedByOwner && !currentOffer.processCanceledByOwner && !currentOffer.offerCompleted"
                     >
                         Delete Offer
@@ -110,13 +110,15 @@
         </v-dialog>
 
         <v-dialog
-            v-model="showDeleteWarning"
+            v-model="shouldDeletingOfferDialogBeOpen"
             max-width="435"
+            persistent
         >
             <v-card>
                 <v-card-title class="headline">Are you sure you want to delete this offer?</v-card-title>
                 <v-card-text>
-                    Once this is done, we cannot recover this data. Do you want to continue?
+                    Once this is done, we cannot recover this data. 
+                    <span style="color: red">Do you want to continue?</span>
                 </v-card-text>
 
                 <v-card-actions>
@@ -125,7 +127,7 @@
                 <v-btn
                     color="green darken-1"
                     text
-                    @click="showDeleteWarning = false"
+                    @click="closeDeleteOfferDialog"
                 >
                     Cancel
                 </v-btn>
@@ -135,7 +137,14 @@
                     text
                     @click.stop="removeOffer"
                 >
-                    Continue
+                    <span v-if="!userLoading.userOffer.deletingOffer">Continue</span>
+                    <v-progress-circular
+                        v-else
+                        color="#692b2b"
+                        :size="30"
+                        :width="5"
+                        indeterminate
+                    ></v-progress-circular>
                 </v-btn>
                 </v-card-actions>
             </v-card>
@@ -320,7 +329,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters } from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
 import { SendEmailToClientOnOfferRejected } from '../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
@@ -343,6 +352,8 @@ export default {
         },
         ...mapGetters([
             'currentOffer',
+            'userLoading',
+            'shouldDeletingOfferDialogBeOpen'
         ]),
     },
     data(){
@@ -371,6 +382,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            'SHOW_OFFER_DELETING_DIALOG'
+        ]),
         ...mapActions([
             'deleteOffer',
             'updateOffer',
@@ -378,10 +392,16 @@ export default {
             'updateRoom',
             'updateUser'
         ]),
+        openDeletingOfferDialog(){
+            this.SHOW_OFFER_DELETING_DIALOG(true)
+        },
+        closeDeleteOfferDialog(){
+            this.SHOW_OFFER_DELETING_DIALOG(false)
+        },
         //will remove the offer
-        removeOffer(){
-            this.deleteOffer(this.currentOffer.objectId)
-            this.showDeleteWarning = false;
+        async removeOffer(){
+            await this.deleteOffer(this.currentOffer.objectId)
+            // this.showDeleteWarning = false;
             this.$emit('input', false)
             // console.log("Deleting Notification", id)
         },

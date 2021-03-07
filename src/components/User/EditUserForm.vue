@@ -8,13 +8,22 @@
     >
         <v-card>
             <v-toolbar dark color="#2F4F4F">
-            <v-btn icon dark @click="show = false">
+            <v-btn icon dark @click.stop="closeDialog">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
             <v-toolbar-title>Edit User</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-btn dark text @click="submitUpdateUser">Save Changes</v-btn>
+                <v-btn dark text @click="submitUpdateUser">
+                    <span v-if="!userLoading.userUpdating">Save Changes</span>
+                    <v-progress-circular
+                        v-else
+                        color="#ffffff"
+                        :size="30"
+                        :width="5"
+                        indeterminate
+                    ></v-progress-circular>
+                </v-btn>
             </v-toolbar-items>
             </v-toolbar>
             <v-row class="text-center" justify="center">
@@ -48,8 +57,9 @@
                     <v-text-field
                         name="username"
                         v-model="username"
-                        label="Enter an username"
+                        label="Username"
                         @keydown="onKeyboardPressed"
+                        disabled
                         :error-messages="formErrors.username"
                     ></v-text-field>
 
@@ -128,7 +138,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
 import {validateUpdateUser} from '../../store/validators'
 
   export default {
@@ -139,7 +149,8 @@ import {validateUpdateUser} from '../../store/validators'
     computed: {
         ...mapGetters([
             'userErrors',
-            'currentUser'
+            'currentUser',
+            'userLoading'
         ]),
         show: {
             get () {
@@ -166,10 +177,16 @@ import {validateUpdateUser} from '../../store/validators'
       }
     },
     methods:{
+        ...mapMutations([
+            'SHOW_USER_UPDATING_DIALOG'
+        ]),
         ...mapActions([
             'updateUser',
             'changeUserPassword'
         ]),
+        closeDialog(){
+            this.SHOW_USER_UPDATING_DIALOG(false)
+        },
 
         submitUpdateUser(e) {
             e.preventDefault();
@@ -190,7 +207,7 @@ import {validateUpdateUser} from '../../store/validators'
                 if(!valid) this.formErrors = errors;
                 else {//if(Object.keys(this.userErrors).length === 0) {
                     this.updateUser(updatedUserData)
-                    this.show = false;
+                    // this.show = false;
                 }
             } else {
                 let errors = {

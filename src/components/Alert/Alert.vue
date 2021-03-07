@@ -57,7 +57,12 @@ export default {
             'SHOW_ROOM_UPDATING_DIALOG',
             'SET_OFFER_SENT_BY_CLIENT',
             'SET_ROOM_DELETED',
-            'SET_NEW_ROOM_ADDED'
+            'SET_NEW_ROOM_ADDED',
+            'SET_USER_UPDATED',
+            'SHOW_USER_UPDATING_DIALOG',
+            'SET_OFFER_ACCEPTED_BY_OWNER',
+            'SET_OFFER_DELETED',
+            'SHOW_OFFER_DELETING_DIALOG'
         ]),
         closeAlert(){
             switch (this.component.mutation) {
@@ -73,6 +78,17 @@ export default {
                 break;
             case 'newRoomAdded':
                 this.SET_NEW_ROOM_ADDED(false)
+                break;
+            case 'userUpdated':
+                this.SET_USER_UPDATED(false)
+                this.SHOW_USER_UPDATING_DIALOG(false)
+                break;
+            case 'offerAcceptedByOwner':
+                this.SET_OFFER_ACCEPTED_BY_OWNER(false)
+                break;
+            case 'offerDeleted':
+                this.SHOW_OFFER_DELETING_DIALOG(false)
+                this.SET_OFFER_DELETED(false)
                 break;
             default:
                 this.show = false;

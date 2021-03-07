@@ -61,15 +61,40 @@
         Error while updating user information. To view and resolve error click <a style="text-decoration: underline;" @click.stop="editUser = true">here</a>.
       </v-alert>
       <!-- <SuccessAlert v-if="isOfferDeleted && !isUserLoading" msg="Notification Successfully Deleted!" />
-      <SuccessAlert v-if="isUserUpdated && !isUserLoading" msg="User data successfully updated!" />
       <SuccessAlert v-if="isPasswordResetEmailSent && !isUserLoading" msg="Reset password email sent successfully!" />
       <SuccessAlert v-if="isOfferAcceptedByOwner && !isUserLoading" msg="Offer Accepted Successfully, we will notify you when a meeting date is selected." /> -->
+      <Alert 
+        v-model="isOfferDeleted"
+        :component="{
+            type: 'success',
+            message: 'Offer Successfully Deleted!',
+            mutation: 'offerDeleted'
+        }" 
+      />
+      
+      <Alert 
+        v-model="isUserUpdated"
+        :component="{
+            type: 'success',
+            message: 'Account Updated Successfully!',
+            mutation: 'userUpdated'
+        }" 
+      />
+      <Alert 
+        v-model="isOfferAcceptedByOwner"
+        :component="{
+            type: 'success',
+            message: 'Offer Accepted Successfully, we will notify you when a meeting date is selected.',
+            mutation: 'offerAcceptedByOwner'
+        }" 
+      />
+      
       <v-img
         :src="`${currentUser.userPhoto ? currentUser.userPhoto : 'https://i.ibb.co/bNrgM0Q/default-User-Photo.jpg'}`"
         height="300px"
         dark
       >
-        <EditUserForm v-model="editUser" />
+        <EditUserForm v-model="shouldUpdatingUserDialogBeOpen" />
         <v-card-title>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -79,7 +104,7 @@
                   class="mr-4"
                   v-bind="attrs"
                   v-on="on"
-                  @click="editUser = true"
+                  @click.stop="openUserUpdatinDialog"
                   >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -242,14 +267,14 @@
 // import store from '@/actions/store'
 import Room from '@/components/Room/Room.vue'
 import EditUserForm from '@/components/User/EditUserForm.vue'
-import { mapGetters, mapActions } from 'vuex'
-// import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import { mapGetters, mapActions, mapMutations} from 'vuex'
+import Alert from '@/components/Alert/Alert.vue'
 
 export default {
   name: 'Profile',
   components: {
     EditUserForm,
-    // SuccessAlert,
+    Alert,
     Room
   },
   computed: {
@@ -261,7 +286,9 @@ export default {
         'isUserUpdated',
         'isPasswordResetEmailSent',
         'isOfferAcceptedByOwner',
-      ])
+        'shouldUpdatingUserDialogBeOpen',
+        'shouldDeletingOfferDialogBeOpen'
+      ]),
   },
   data(){
     return {
@@ -279,10 +306,17 @@ export default {
     // this.myRooms = this.contentRooms.filter(room => room.ownerId === objectId);
   },
   methods:{
+      ...mapMutations([
+        'SHOW_USER_UPDATING_DIALOG',
+      ]),
       ...mapActions([
           'deleteUserAccount',
           'updateUser'
       ]),
+      openUserUpdatinDialog(){
+        this.SHOW_USER_UPDATING_DIALOG(true)
+      },
+
       userRemoval(e){
         e.preventDefault();
         const roomIds = [];
