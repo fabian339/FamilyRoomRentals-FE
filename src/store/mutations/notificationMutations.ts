@@ -11,6 +11,9 @@ export default {
     SET_OFFER_SENDING: (state: any, value: Boolean) => {
         state.loadingState.client.sendingOffer = value;
     },
+    SET_OFFER_CANCELED: (state: any, value: Boolean) => {
+        state.notificationState.offerCanceled = value;
+    },
     SET_OFFER_SENT_BY_CLIENT: (state: any, value: boolean) => {
         state.notificationState.offerSentByClient = value;
     },

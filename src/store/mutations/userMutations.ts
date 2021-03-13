@@ -12,9 +12,6 @@ export default {
     SET_USER_LOGGING_IN: (state: any, status: boolean) => {
         state.loadingState.user.userLoggingIn = status
     },
-    SET_TOKEN: (state: any, token: string) => {
-        state.userState.token = token;
-    },
     SET_RETRIEVING_USER: (state: any, value: Boolean) => {
         state.loadingState.user.retrievingUser = value;
     },
@@ -27,7 +24,9 @@ export default {
             state.loadingState.user.userLoggingOut = status
         }
     },
-
+    SET_TOKEN: (state: any, token: string) => {
+        state.userState.token = token;
+    },
     // Updating USER
     SET_UPDATING_USER: (state: any, value: Boolean) => {
         state.loadingState.user.userUpdating = value;
@@ -49,12 +48,18 @@ export default {
     SHOW_USER_UPDATING_DIALOG: (state: any, value: Boolean) => {
         state.userState.showUserUpdatingDialog = value;
     },
+    
+    // USER DELETION
+    SET_USER_BEIN_DELETED: (state: any, value: Boolean) => {
+        state.loadingState.user.userBeinDeleted = value;
+    },
+    SET_CLEAR_USER: (state: any) => {
+        state.userState.token = '';
+        state.userState.user = {};
+    },
 
     SET_USER_DELETED: (state: any, value: boolean) => {
-        state.userState.userDeleted = true;
-        setTimeout(() => {
-          state.userState.userDeleted = false;
-        }, 8000);
+        state.userState.userDeleted = value;
     },
     PASSWORD_RESET_EMAIL_SENT: (state: any, emailSent: boolean) => {
         state.userState.passwordResetEmailSent = true;

@@ -40,6 +40,7 @@ export default new Vuex.Store({
         notifications: [],
         offerSentByClient: false,
         offerDeleted: false,
+        offerCanceled: false,
         showUserDeletingOfferDialog: false,
         offerTokenVerified: false,
         offerAcceptedByOwner: false,
@@ -52,6 +53,7 @@ export default new Vuex.Store({
           userRegistering: false,
           retrievingUser: false,
           userUpdating: false,
+          userBeinDeleted: false,
           userOffer: {
             deletingOffer: false
           }
@@ -92,6 +94,7 @@ export default new Vuex.Store({
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
       isOfferDeleted: state => state.notificationState.offerDeleted,
       isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
+      wasOfferCanceled: state => state.notificationState.offerCanceled,
       wasOfferSentByClient: state => state.notificationState.offerSentByClient,
       shouldDeletingOfferDialogBeOpen: state => state.notificationState.showUserDeletingOfferDialog,
       currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),

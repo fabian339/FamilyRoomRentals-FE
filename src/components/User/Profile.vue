@@ -16,7 +16,7 @@
         >
         <v-card>
             <v-card-title class="headline">Are you sure you want to eliminate this account??</v-card-title>
-            <v-card-text>
+            <v-card-text style="color: red">
                 Once this is done, we cannot recover any data.
                 The following will be deleted:
                 <ol>
@@ -45,7 +45,8 @@
                 text
                 @click="userRemoval"
             >
-            <span v-if="!userLoading.userLoggingOut">Continue</span>
+            <span v-if="!userLoading.userBeinDeleted && !userLoading.userLoggingOut">Continue</span>
+            <!-- <span v-if="!userLoading.userBeinDeleted && !userLoading.userLoggingOut">Continue</span> -->
               <v-progress-circular
                   v-else
                   color="#7d3333"
@@ -337,6 +338,7 @@ export default {
           userId: this.$store.getters.currentUser.objectId,
           roomIds,
           notificationIds,
+          sessionToken: localStorage.getItem('user-token') || ''
         })
       },
       openSavedRooms(){

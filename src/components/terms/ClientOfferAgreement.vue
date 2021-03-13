@@ -130,7 +130,7 @@
         </v-btn>
 
         <p style="color: red; margin: 10px 25%">{{verificationCodeError}}</p>
-        <p style="color: blue; margin: 10px 25%: text-align: center">{{codeResentMsg}}</p>
+        <p style="color: blue; margin: 10px 25%; text-align: center;">{{codeResentMsg}}</p>
 
         <v-card-actions>
           <v-spacer></v-spacer>

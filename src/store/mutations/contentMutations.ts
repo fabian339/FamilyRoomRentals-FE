@@ -14,7 +14,10 @@ export default {
     SET_ROOM: (state: any, room: {}) => {
       state.contentState.room = room
     },
-
+    SET_ROOM_WITH_ID: (state: any, roomID: String) => {
+      const index = state.contentState.rooms.findIndex((room:any = {} ) => room.objectId === roomID);
+      state.contentState.room = state.contentState.rooms[index];
+    },
     //ROOM UPDATING
     SHOW_ROOM_UPDATING_DIALOG: (state: any, value: any) => {
       state.contentState.showRoomUpdatingDialog = value;

@@ -107,9 +107,9 @@ export default {
       context.commit('UPDATE_OFFER', offerData);
       if(offerData.offerAcceptedByOwner) {
         context.commit('SET_OFFER_ACCEPTED_BY_OWNER', true);
-        if(appRouter.history.current.path !== '/profile'){
-          appRouter.push(`/profile`)
-        }
+      }
+      if(appRouter.history.current.path !== '/profile'){
+        appRouter.push(`/profile`)
       }
       // context.commit('UPDATE_OFFER', offerData);
     })
@@ -176,6 +176,7 @@ export default {
       case 'deleting-offer':
         setTimeout(() => {
           context.commit('SET_DELETING_OFFER', false);
+          context.commit('SHOW_OFFER_DELETING_DIALOG', false);
           context.commit('SET_OFFER_DELETED', true);
           if(appRouter.history.current.path !== '/profile'){
             appRouter.push(`/profile`)

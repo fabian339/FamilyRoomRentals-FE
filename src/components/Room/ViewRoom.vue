@@ -12,7 +12,7 @@
                 <div 
                     class="imageContainer"
                     :style="fullScreen ? 'height: 90vh; width: 100%' : 'height: 500px; width: 70%'"
-                    v-if="contentRoom.images.length > 0"
+                    v-if="contentRoom.images && contentRoom.images.length > 0"
                     @click.stop="fullScreen = !fullScreen"
                 >
                     <v-btn
@@ -311,16 +311,26 @@ import Alert from '@/components/Alert/Alert.vue'
     created(){
         this.isPageLoading = true
         // next()
+        this.setRoom()
     },
     methods:{
         ...mapMutations([
             'SHOW_ROOM_UPDATING_DIALOG',
+            'SET_ROOM_WITH_ID'
         ]),
         ...mapActions([
             'deleteRoom',
             'updateUser',
             'sendEmail'
         ]),
+        setRoom(){
+            if(this.$router.history.current.name === 'ViewRoom'){
+                const { id } = this.$router.history.current.params;
+                // console.log('set room', id)
+            // path.includes(`/room/${room.objectId}`)){
+                this.SET_ROOM_WITH_ID(id)
+            } 
+        },
         isPropertyOwner(){
             return this.isUserAuthenticated && this.currentUser.objectId === this.contentRoom.ownerId
         },

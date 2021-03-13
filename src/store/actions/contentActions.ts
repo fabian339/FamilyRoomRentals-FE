@@ -9,9 +9,9 @@ export default {
       context.commit('SET_LOADING_CONTENT', true);
       axios.get('/classes/Rooms')
       .then((res) => {
-        res.data.results.forEach((room: any)=> {
-            if(appRouter.history.current.path.includes(`/room/${room.objectId}`)) context.commit('SET_ROOM', room);
-        })
+        // res.data.results.forEach((room: any)=> {
+        //     if(appRouter.history.current.path.includes(`/room/${room.objectId}`)) context.commit('SET_ROOM', room);
+        // })
 
         context.commit('SET_ROOMS', res.data.results);
         context.commit('SET_LOADING_CONTENT', false);

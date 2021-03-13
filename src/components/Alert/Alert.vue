@@ -62,7 +62,9 @@ export default {
             'SHOW_USER_UPDATING_DIALOG',
             'SET_OFFER_ACCEPTED_BY_OWNER',
             'SET_OFFER_DELETED',
-            'SHOW_OFFER_DELETING_DIALOG'
+            'SHOW_OFFER_DELETING_DIALOG',
+            'SET_USER_DELETED',
+            'SET_OFFER_CANCELED'
         ]),
         closeAlert(){
             switch (this.component.mutation) {
@@ -89,6 +91,12 @@ export default {
             case 'offerDeleted':
                 this.SHOW_OFFER_DELETING_DIALOG(false)
                 this.SET_OFFER_DELETED(false)
+                break;
+            case 'userDeleted':
+                this.SET_USER_DELETED(false)
+                break;
+            case 'offerCanceled':
+                this.SET_OFFER_CANCELED(false)
                 break;
             default:
                 this.show = false;

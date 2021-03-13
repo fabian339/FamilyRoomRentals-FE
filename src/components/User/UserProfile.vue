@@ -28,9 +28,20 @@
               mutation: 'roomDeleted'
             }" 
           />
+
+          <Alert 
+            v-model="wasOfferCanceled"
+            :component="{
+              type: 'success',
+              message: 'Offer canceled Successfully!',
+              mutation: 'offerCanceled'
+            }" 
+          />
           <!-- viewing user meetings -->
           <div  v-if="meetings.length === 0">
             <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!</h2>   
+            <p>Show Something</p>
+
           </div>
           <div v-else>
             <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
@@ -139,7 +150,8 @@ export default {
         'isPasswordResetEmailSent',
         'isRoomDeleted',
         'meetings',
-        'isRoomDeleted'
+        'isRoomDeleted',
+        'wasOfferCanceled'
       ])
   },
   data(){

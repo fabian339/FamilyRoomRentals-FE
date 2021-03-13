@@ -30,7 +30,7 @@ export default {
       context.dispatch('userLoading', currentUser)
     })
     .catch((error) => {
-      // console.log("Error: ", error)
+      console.log("Error: ", error)
       context.commit('SET_USER_REGISTERING', false);
       const err = {
         responseError: "Account already exists for this username or email address."
@@ -132,12 +132,12 @@ export default {
   },
 
   changeUserPassword: (context: any, data: any) => {
-    context.commit('SET_LOADING_USER', true);
+    // context.commit('SET_LOADING_USER', true);
     axios.post(`/requestPasswordReset`, data)
     .then((res) => {
       // console.log("update password: ", res);
       context.commit('PASSWORD_RESET_EMAIL_SENT', true);
-      context.commit('SET_LOADING_USER', false);
+      // context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {
       context.commit('SET_USER_ERROR', err);
@@ -145,12 +145,12 @@ export default {
   },
 
   sendEmailVerification: (context: any, data: any) => {
-    context.commit('SET_LOADING_USER', true);
+    // context.commit('SET_LOADING_USER', true);
     axios.post(`/verificationEmailRequest`, data)
     .then((res) => {
       // console.log("email Sent Again: ", res);
       context.commit('EMAIL_VERIFICATION_SENT', true);
-      context.commit('SET_LOADING_USER', false);
+      // context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {
       context.commit('SET_USER_ERROR', err);
@@ -159,18 +159,24 @@ export default {
 
   deleteUserAccount: (context: any, userData: any) => {
     console.log(userData)
-    //almost same process for logging out, using the same loading
-    context.commit('SET_USER_LOGGING_OUT', true)
+    axios.defaults.headers.common['X-Parse-Session-Token'] = userData.sessionToken;
+    context.commit('SET_USER_BEIN_DELETED', true)
     axios.delete(`/users/${userData.userId}`)
-    .then((res) => {
+    .then(() => {
       if(userData.roomIds.length !== 0) context.dispatch('deleteUserRooms', userData.roomIds);
       if(userData.notificationIds.length !== 0) context.dispatch('deleteUserOffers', userData.notificationIds);
-      context.dispatch('logout');
-      context.commit('SET_USER_DELETED', true);
+      
+      let user = { loadingType: 'user-bein-deleted' };
+      //changing routes and setting timer on loading
+      context.dispatch('userLoading', user)
+      
+      // context.dispatch('logout');
+      // context.commit('SET_USER_DELETED', true);
       // context.commit('SET_LOADING_USER', false);
     })
     .catch((err) => {
-      context.commit('SET_USER_LOGGING_OUT', false)
+      console.log(err)
+      context.commit('SET_USER_BEIN_DELETED', false)
       context.commit('SET_USER_ERROR', err);
     });
   },
@@ -209,9 +215,7 @@ export default {
   },
 
   logout(context: any) {
-    if(!context.state.loadingState.user.userLoggingOut){
       context.commit('SET_USER_LOGGING_OUT', true)
-    }
       //a loading type for loading component
       let user = {loadingType: 'logging-out'}
       context.dispatch('userLoading', user)
@@ -269,6 +273,14 @@ export default {
           context.commit('SET_USER_UPDATED', true);
           context.commit('CLEAR_USER_ERROR')
         }, 1500);
+        break;
+      case 'user-bein-deleted':
+        setTimeout(() => {
+          context.commit('SET_CLEAR_USER')
+          context.dispatch('logout')
+          context.commit('SET_USER_BEIN_DELETED', false)
+          context.commit('SET_USER_DELETED', true)
+        }, 2500);
         break;
       default:
         console.log(`Sorry, we are out of.`);

@@ -15,7 +15,15 @@
           <img :src="require('../../config.json').imgLinks.logo" alt="logo" width="400">
         </div>
       </v-row>
-        <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" />
+        <Alert 
+          v-model="isUserDeleted"
+          :component="{
+              type: 'success',
+              message: 'User successfully deleted, we are sorry to see you go. Please come back soon!',
+              mutation: 'userDeleted'
+          }" 
+        />
+        <!-- <SuccessAlert v-if="isUserDeleted" msg="User successfully deleted, we are sorry to see you go. Please come back soon!" /> -->
         <v-row no-gutters class="text-center">
           <v-col class="element1">
             <div style="width: 340px;margin: auto;">
@@ -110,7 +118,7 @@
 import Room from '@/components/Room/Room.vue'
 // import store from '@/actions/store'
 import { mapGetters, mapMutations } from 'vuex'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import Alert from '@/components/Alert/Alert.vue'
 import PageLoading from '@/components/Loading/PageLoading.vue';
 import MeetingsCalendar from '@/components/notification/MeetingsCalendar.vue';
 
@@ -119,7 +127,7 @@ export default {
   name: 'Home',
   components: {
     Room,
-    SuccessAlert,
+    Alert,
     PageLoading,
     MeetingsCalendar
   },
@@ -129,6 +137,7 @@ export default {
   computed: {
       ...mapGetters([
         'contentRooms',
+        'isUserDeleted',
         'isUserDeleted'
       ])
   },

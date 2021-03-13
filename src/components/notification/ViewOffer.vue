@@ -182,149 +182,15 @@
             </v-card>
         </v-dialog>
 
-        <!-- <v-dialog
-            v-model="openSurvey"
-            max-width="650"
-            :persistent="!surveySubmitted"
-        >
-            <SuccessAlert v-if="surveySubmitted" :msg="`Your followup has been submitterd, ${surveyData.answer5 === 'Yes' ? 'we are reviewing the information in order to process the payment.' : 'we thank you for using FamilyRoomRentals.'}`" />
-            <v-card v-else>
-                <v-card-title class="headline">Followup Survey</v-card-title>
-                <v-card-text>
-                    This is just a survey to know how things went between you and {{currentOffer.clientName}}.
-                </v-card-text>
-                <v-col cols="12">        
-                    <form>
-                        <v-select
-                            :items="['Excellent', 'Good', 'Ok', 'Bad', 'Terrible']"
-                            label="How was the meeting overall?"
-                            v-model="surveyData.answer1"
-                            outlined
-                            :error-messages="errors.answer1"   
-                        ></v-select>
-                        <v-select
-                            :items="['Yes', 'No']"
-                            :label="`Did you and ${currentOffer.clientName} came to an agreement?`"
-                            v-model="surveyData.answer2"
-                            :error-messages="errors.answer2"   
-                            outlined
-                        ></v-select>
-                        <v-select
-                            v-if="surveyData.answer2 === 'Yes'"
-                            :items="['Yes', 'No', 'Not Sure']"
-                            :label="`Will ${currentOffer.clientName} be moving into the property soon?`"
-                            v-model="surveyData.answer3"
-                            outlined
-                        ></v-select>
-                        <v-select
-                            v-if="surveyData.answer2 === 'No'"
-                            :items="['I did not like the visitor', 'Visitor was unable to follow property rules', 'Meeting never happened', 'The visitor never showed up', 'I was unavailable', 'Other']"
-                            :label="`What went wrong?`"
-                            v-model="surveyData.answer4"
-                            outlined
-                        ></v-select>
-                        <div
-                            v-if="surveyData.answer3 === 'Yes'"
-                        >
-                            <p style="color: teal;">That is good too know!</p>
-                            <v-select
-                                :items="['Yes', 'No']"
-                                :label="`Would you like to request your payment?`"
-                                v-model="surveyData.answer5"
-                                outlined
-                            ></v-select>
-                        </div>
-                        <p 
-                            v-if="surveyData.answer3 === 'No'"
-                            style="color: saddlebrown;"
-                        >
-                            A payment can only be requested if {{currentOffer.clientName}} agrees to move in.
-                        </p>
-                        <p 
-                            v-if="surveyData.answer3 === 'Not Sure'"
-                            style="color: darkblue;"
-                        >
-                            Not a problem, please feel free contact us if {{currentOffer.clientName}} agrees 
-                            to move in. Please do not delete this offer yet. If this offer gets deleted and 
-                            then {{currentOffer.clientName}} decides to move in, there will not be enough evidence 
-                            to process your payment. 
-                        </p>
-                        <div
-                            v-if="surveyData.answer5 === 'Yes'" 
-                        >
-                            <p><strong>To receive your $10 payment, please enter card information:</strong> </p>
-                            <p>Please make sure that the information is correct!</p>
-                            <v-row justify="center" style="border: 2px solid darkgray;border-radius: 45px;margin-bottom: 15px;">
-                                <v-col cols="5">
-                                    <v-text-field
-                                    label="1234 1234 1234 123"
-                                    v-model="surveyData.cardData.cardN"
-                                    :append-icon="cardType(surveyData.cardData.cardN)"
-                                    :error-messages="errors.cardN"   
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="2.3">
-                                    <v-text-field
-                                    label="MM/YY"
-                                    v-model="surveyData.cardData.cardExp"
-                                    :error-messages="errors.cardExp"   
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="2">
-                                    <v-text-field
-                                    label="CVC"
-                                    v-model="surveyData.cardData.cardCvc"
-                                    :error-messages="errors.cardCvc"
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="2.3">
-                                    <v-text-field
-                                    label="Zipcode"
-                                    v-model="surveyData.cardData.cardZip"
-                                    :error-messages="errors.cardZip"
-                                    ></v-text-field>
-                                </v-col>
-                                <p>Allow us two business days to review the information and process the payment.</p>
-                            </v-row>
-                        </div>
-                        <v-textarea
-                            name="input-7-1"
-                            filled
-                            label="Comment: (optional)"
-                            v-model="surveyData.comments"
-                        ></v-textarea> 
-                    </form>
-                </v-col>
-                <v-card-actions>
-                <v-spacer></v-spacer>
-
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="openSurvey = false"
-                >
-                    Cancel
-                </v-btn>
-
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click.stop="submitSurvey"
-                >
-                    Submit
-                </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog> -->
-        <!-- <div>
-            <CancelMeetingWarningOwner 
+        <div>
+            <MeetingCancelation 
                 v-model="openCancelMeetingWarning"
                 :data="{
                     meetingId: currentOffer.objectId,
                     ownerId: currentOffer.receiverId
                 }"
             />        
-        </div> -->
+        </div>
     </div>
 </template>
 
@@ -333,11 +199,15 @@ import {mapActions, mapGetters, mapMutations} from 'vuex'
 import { SendEmailToClientOnOfferRejected } from '../../emailTemplates/emails'
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
+  import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
 
 export default {
     name: "ViewNotification",
     props: {
         value: Boolean,
+    },
+    components: {
+        MeetingCancelation,
     },
     computed: {
         show: {
@@ -363,21 +233,6 @@ export default {
             openCancelMeetingWarning: false,
             showRejectionDialog: false,
             openSurvey: false,
-            surveySubmitted: false,
-            surveyData: {
-                answer1: '',
-                answer2: '',
-                answer3: '',
-                answer4: '',
-                answer5: '',
-                comments: '',
-                cardData: {
-                    cardN: '',
-                    cardCvc: '',
-                    cardExp: '',
-                    cardZip: ''
-                }
-            },
             errors: {}
         }
     },

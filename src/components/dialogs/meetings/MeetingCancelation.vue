@@ -55,7 +55,7 @@
 
 
 <script>
-import {mapActions, mapGetters } from 'vuex'
+import {mapActions, mapGetters, mapMutations } from 'vuex'
 import { 
     SendEmailToClientOnMeetingCanceledByOwner,
     SendEmailToOwnerOnMeetingCanceledByOwner,
@@ -110,6 +110,9 @@ export default {
     },
 
     methods: {
+        ...mapMutations([
+            'SET_OFFER_CANCELED'
+        ]),
         ...mapActions([
             'updateOffer',
             'sendEmail',
@@ -177,6 +180,8 @@ export default {
             await this.sendEmail(clientEmailData);
             await this.sendEmail(ownerEmailData);
 
+            //show Alert
+            this.SET_OFFER_CANCELED(true)
             //add loading when cancelling
             this.show = false
         },
