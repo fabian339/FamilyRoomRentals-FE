@@ -39,9 +39,30 @@
           />
           <!-- viewing user meetings -->
           <div  v-if="meetings.length === 0">
-            <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings will be here!</h2>   
-            <p>Show Something</p>
+            <h2 style="margin-bottom: 20px; margin-top: 10px" >Welcome, Your Meetings will be here:</h2>   
+            <v-container>
+            <div style="padding: 10px 95px">
+              <p class="font" style="color: #50542d">
+                  <strong>
+                    These meetings are samples, once you have real meetings this section will 
+                    disappear and show your actual meetings.
+                  </strong>
+              </p>
+            </div>
+              <v-row no-gutters class="text-center" justify="center">
+                  <SampleMeeting :meetingData="{
+                          mainText: 'This is an example meeting, CLICK HERE for details.',
+                          image: 'https://res.cloudinary.com/dr4l6xat9/image/upload/v1615680635/FamilyRoomRentalsGlobal/sample-room-images/image-1.jpg',
+                        }" 
+                  />
 
+                  <SampleMeeting :meetingData="{
+                          mainText: 'This is another example meeting, CLICK HERE for details.',
+                          image: 'https://res.cloudinary.com/dr4l6xat9/image/upload/v1615680632/FamilyRoomRentalsGlobal/sample-room-images/image-2.jpg',
+                        }" 
+                  />
+              </v-row>
+            </v-container>
           </div>
           <div v-else>
             <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
@@ -88,7 +109,40 @@
           <!-- viewing user rooms -->
           <div v-if="currentUserRooms.length === 0">
             <h2 style="margin-top: 15px; margin-bottom: 20px;" >Welcome, Your Rooms will be here!</h2>       
-            <p>Show Something</p>
+            <v-container>
+              <div style="padding: 10px 95px">
+                <p class="font" style="color: #50542d">
+                    <strong>
+                      These Properties are samples, once you share real properties, this section will 
+                      disappear and show the actual data.
+                    </strong>
+                </p>
+              </div>
+              <v-row no-gutters>
+                <v-col
+                  class="mb-8"
+                  cols="16"
+                >
+                  <SampleRoom :roomData="{
+                      image: 'https://res.cloudinary.com/dr4l6xat9/image/upload/v1615680635/FamilyRoomRentalsGlobal/sample-room-images/image-1.jpg',
+                      title: 'Excellent Property in the area of Raleigh, North Carolina',
+                      location: 'Raleigh, North Carolina'
+                    }" 
+                  />
+                </v-col>
+                <v-col
+                  class="mb-8"
+                  cols="16"
+                >
+                  <SampleRoom :roomData="{
+                      image: 'https://res.cloudinary.com/dr4l6xat9/image/upload/v1615680632/FamilyRoomRentalsGlobal/sample-room-images/image-2.jpg',
+                      title: 'Brand New Room in the area of Wayne, New Jersey',
+                      location: 'Wayne, New Jersey'
+                    }" 
+                  />
+              </v-col>
+              </v-row>
+            </v-container>
           </div>
           <div v-else>
             <h2 style="margin-top: 15px;" >Your Properties:</h2>       
@@ -131,6 +185,8 @@ import Room from '@/components/Room/Room.vue'
 import Profile from '@/components/User/Profile.vue'
 import Alert from '@/components/Alert/Alert.vue'
 import Meeting from '@/components/Meeting/Meeting.vue'
+import SampleMeeting from '@/components/Samples/SampleMeeting.vue'
+import SampleRoom from '@/components/Samples/SampleRoom.vue'
 import PageLoading from '@/components/Loading/PageLoading.vue';
 
 import { mapGetters } from 'vuex'
@@ -142,6 +198,8 @@ export default {
     Alert,
     Profile,
     Meeting,
+    SampleMeeting,
+    SampleRoom,
     PageLoading
   },
   computed: {

@@ -93,6 +93,9 @@
                         indeterminate
                     ></v-progress-circular>
                 </v-btn>
+                <v-btn color="#e9ffd4" to="/about" text>
+                    <span>My Guide</span>
+                </v-btn>
             </template>
 
             <v-btn color="#e9ffd4" v-if="!isUserAuthenticated" to="/signup" text>
@@ -103,7 +106,7 @@
                 <span>Login</span>
             </v-btn>
             
-            <v-btn color="#e9ffd4" to="/about" text>
+            <v-btn color="#e9ffd4" to="/about" v-if="!isUserAuthenticated" text>
                 <span>About US</span>
             </v-btn>
         </v-row>
