@@ -26,21 +26,28 @@ let jwt = require('jsonwebtoken');
 Vue.use(VueRouter)
 
 // decoding user-authorization token set on local storage to identify user access
-const ifAuthorized = (to: any, from: any, next: any) => {
-  const secretKey = localStorage.getItem('user-token');
-  const authToken = localStorage.getItem('AUTHORIZATION')
-  let valid = false;
-  try {
-    var decoded = jwt.verify(authToken, secretKey);
-  } catch(err) {
-    valid = false;
-  }
-  if(decoded){
-    // console.log(decoded)
-    if(decoded.data.userToken === secretKey && decoded.data.emailVerified === true) valid = true;
-  }
+const ifAuthorized = async (to: any, from: any, next: any) => {
+  const store = await import('@/store');
+  const { user } = store.default.state.userState;
+  // console.log(user)
 
-  if (valid) {
+  // console.log("this is my store", store.state)
+  // store.commit("SET_USER_LOGGING_IN", false)
+
+  // const secretKey = localStorage.getItem('user-token');
+  // const authToken = localStorage.getItem('AUTHORIZATION')
+  // let valid = false;
+  // try {
+  //   var decoded = jwt.verify(authToken, secretKey);
+  // } catch(err) {
+  //   valid = false;
+  // }
+  // if(decoded){
+  //   // console.log(decoded)
+  //   if(decoded.data.userToken === secretKey && decoded.data.emailVerified === true) valid = true;
+  // }
+
+  if (user.isAdmin) {
     next()
     return
   }
