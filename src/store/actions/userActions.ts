@@ -8,20 +8,21 @@ let jwt = require('jsonwebtoken');
 // console.log(router.push("/"))
 export default {
 
-  registerUser: (context: any, user: any) => {
+  registerUser: (context: any, currentUser: any) => {
     // console.log("trying to register User", user);
     axios.defaults.headers.common['X-Parse-Revocable-Session'] = 1;
     context.commit('SET_USER_REGISTERING', true);
-    axios.post(`/users`, user)
+    axios.post(`/users`, currentUser)
     .then((res) => {
-      let currentUser = {
-        ...user,
+      let user = {
+        ...currentUser,
         ...res.data,
       };
       delete currentUser.password;
       delete currentUser.confirmPassword;
       context.commit('SET_USER', currentUser)
-      console.log(res, currentUser)
+  
+      // console.log(res, currentUser)
       localStorage.setItem('user-token', currentUser.sessionToken);
       context.commit('SET_TOKEN', currentUser.sessionToken);
       //a loading type for loading component
@@ -49,6 +50,7 @@ export default {
       delete user.confirmPassword;
       delete user.ACL;
       context.commit('SET_USER', user)
+    
       // context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
       // context.dispatch('fetchUserNotifications', user.objectId);
@@ -73,10 +75,11 @@ export default {
       delete user.confirmPassword;
       delete user.ACL;
       context.commit('SET_USER', user)
+
       localStorage.setItem('user-token', token);
 
       // set user authorization token to local storage, helper function
-      context.dispatch('setUserAuthorization', {token, userEmailVerified: user.emailVerified})
+      // context.dispatch('setUserAuthorization', {token, userEmailVerified: user.emailVerified})
 
       context.commit('SET_TOKEN', token);
       context.dispatch('fetchNotifications')
@@ -201,7 +204,7 @@ export default {
           userToken: data.token,
           emailVerified: data.userEmailVerified
         }
-      }, data.token);
+      });
   
     localStorage.setItem('AUTHORIZATION', authToken)
   },

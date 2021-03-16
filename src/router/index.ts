@@ -1,57 +1,61 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-// import About from '../views/About.vue'
-// import HandlingMeetings from '../views/HandlingMeetings.vue'
-// import Career from '../views/Career.vue'
-// import Contact from '../views/Contact.vue'
-// import Qas from '../views/Qas.vue'
-// import PostRoom from '@/components/Room/PostRoom.vue'
-// import ViewAllRooms from '@/components/Room/ViewAllRooms.vue'
-// import ViewRoom from '@/components/Room/ViewRoom.vue'
-// import LoginForm from '@/components/User/LoginForm.vue'
-// import RegistrationForm from '@/components/User/RegistrationForm.vue'
-// import EmailVerification from '@/components/User/EmailVerification.vue'
-// import UserProfile from '@/components/User/UserProfile.vue'
-// import PasswordReset from '@/components/User/PasswordReset.vue'
-// import Schedule from '@/components/notification/Schedule.vue'
-// import SelectMeetingDate from '@/components/Meeting/Client/SelectMeetingDate.vue'
-// import SuccessPayment from '@/components/Meeting/Client/SuccessPayment.vue'
-// import UnsuccessfulPayment from '@/components/Meeting/Client/UnsuccessfulPayment.vue'
-
-// import clientRefund from '@/components/payments/clientRefund.vue'
-// import TermsAndConditions from '@/components/terms/TermsAndConditions.vue'
-let jwt = require('jsonwebtoken');
+import axios from 'axios';
 
 Vue.use(VueRouter)
 
-// decoding user-authorization token set on local storage to identify user access
-const ifAuthorized = async (to: any, from: any, next: any) => {
+const isUSer = async (to: any, from: any, next: any) => {
   const store = await import('@/store');
-  const { user } = store.default.state.userState;
-  // console.log(user)
+  const { currentUser, isUserAuthenticated } = store.default.getters;
 
-  // console.log("this is my store", store.state)
-  // store.commit("SET_USER_LOGGING_IN", false)
+  const token = localStorage.getItem('user-token');
+    if(Object.keys(currentUser).length === 0 && token){
+      console.log("fetch user")
+      let shouldGetUser = true;
+      axios.interceptors.response.use(undefined, function (err) {
+      // eslint-disable-next-line no-unused-vars
+        return new Promise(function (resolve, reject) {
+          if (err.status === 401 && err.config && !err.config.__isRetryRequest) { 
+            console.log('Token expired');
+            store.default.dispatch('logout');
+            shouldGetUser = false;
+          }
+          throw err;
+        });
+      });
+      if(shouldGetUser){
+        console.log("getting current user")
+        await store.default.dispatch('getCurrentUser', token)
+        next()
+        return;
+      }
+    } else if(isUserAuthenticated) {
+      console.log("user logged in")
+      next()
+      return;
+    } else {
+      next('/login')
+      return;
+    }
+}
 
-  // const secretKey = localStorage.getItem('user-token');
-  // const authToken = localStorage.getItem('AUTHORIZATION')
-  // let valid = false;
-  // try {
-  //   var decoded = jwt.verify(authToken, secretKey);
-  // } catch(err) {
-  //   valid = false;
-  // }
-  // if(decoded){
-  //   // console.log(decoded)
-  //   if(decoded.data.userToken === secretKey && decoded.data.emailVerified === true) valid = true;
-  // }
-
-  if (user.isAdmin) {
-    next()
+const isUserVerified = async (to: any, from: any, next: any) => {
+  const store = await import('@/store');
+  const { currentUser, isUserAuthenticated } = store.default.getters;
+  const token = localStorage.getItem('user-token');
+  if(Object.keys(currentUser).length === 0 && token){
+      console.log("getting current user")
+      await store.default.dispatch('getCurrentUser', token)
+  } else if(Object.keys(currentUser).length === 0 && !token){
+    //Send to unauthorize page, needs to be created
+    console.log("unauthorized")
+    next('/unauthorized')
     return
   }
-  next('/login')
+
+    next()
+    return
 }
 
 
@@ -75,7 +79,7 @@ const ifAuthorized = async (to: any, from: any, next: any) => {
     name: 'postRoom',
     component: () => import(/* webpackChunkName: "PostRoom" */ '@/components/Room/PostRoom.vue'),
     // component: PostRoom,
-    beforeEnter: ifAuthorized,
+    beforeEnter:  isUSer,
     // meta: {
     //   requiresAuth: true,
     // }
@@ -87,13 +91,13 @@ const ifAuthorized = async (to: any, from: any, next: any) => {
     // meta: {
     //   requiresAuth: true,
     // }
-    beforeEnter: ifAuthorized,
+    beforeEnter: isUSer,
   },
   {
     path: '/room/:roomId/offer/:offerId/schedule',
     name: 'Schedule',
     component: () => import(/* webpackChunkName: "Schedule" */ '@/components/notification/Schedule.vue'),
-    beforeEnter: ifAuthorized,
+    beforeEnter: isUSer,
   },
   {
     path: '/rooms',
@@ -154,6 +158,7 @@ const ifAuthorized = async (to: any, from: any, next: any) => {
     path: '/email-verification',
     name: 'emailVerification',
     component: () => import(/* webpackChunkName: "EmailVerification" */ '@/components/User/EmailVerification.vue'),
+    beforeEnter: isUserVerified,
   },
   {
     path: '/terms-and-conditions',

@@ -17,7 +17,7 @@ import axios from 'axios';
 
 // import {SendReminderToClient, SendReminderToUser, SendFollowupToClient, SendFollowupToUser} from './globals/emails'
 import './styles.css'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 // let jwt = require('jsonwebtoken');
 
 export default {
@@ -27,34 +27,23 @@ export default {
     Nav,
     Footer
   },  
+    computed: {
+      ...mapGetters([
+          'currentUser'
+      ]),
+  },
 
-  created(){
+  beforeCreate(){
     axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
     axios.defaults.headers.common['X-Parse-Application-Id'] = process.env.VUE_APP_APPLICATION_ID
     axios.defaults.headers.common['X-Parse-REST-API-Key'] = process.env.VUE_APP_REST_API_Key
     axios.defaults.headers.common['Content-Type'] = process.env.VUE_APP_Content_Type
-    this.fetchData();
-    
-    const token = localStorage.getItem('user-token');
-    if(token){
-      let shouldGetUser = true;
-      axios.interceptors.response.use(undefined, function (err) {
-      // eslint-disable-next-line no-unused-vars
-        return new Promise(function (resolve, reject) {
-          if (err.status === 401 && err.config && !err.config.__isRetryRequest) { 
-            console.log('Token expired');
-            this.tokenExpired() 
-            shouldGetUser = false;
-          }
-          throw err;
-        });
-      });
-      if (shouldGetUser) this.fetchCurrentUser(token);
-    }
-
-    // this.sendRemindersAndFollowUps();
   },
-  methods: {                                   // Add this:
+  beforeMount(){
+    this.fetchData();
+    console.log(this.whatIsTheUserMode)
+  },
+  methods: {                             
     ...mapActions([                  // Add this
       'fetchRooms',
       'getCurrentUser',
@@ -63,12 +52,12 @@ export default {
     fetchData: function() {    // Add this
       this.fetchRooms();
     },
-    fetchCurrentUser: function(token) {    // Add this
-      this.getCurrentUser(token);
-    },
-    tokenExpired: function() {
-      this.logout()
-    },
+    // fetchCurrentUser: function(token) {    // Add this
+    //   this.getCurrentUser(token);
+    // },
+    // tokenExpired: function() {
+    //   this.logout()
+    // },
   }
 };
 </script>

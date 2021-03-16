@@ -68,7 +68,7 @@ export default new Vuex.Store({
           contentRoomBeingDeleted: false,
         },
       },
-      maintenance: false
+      maintenance: false,
     }),
     getters: {
       // Content
@@ -80,7 +80,7 @@ export default new Vuex.Store({
       isRoomDeleted: state => state.contentState.roomDeleted,
       shouldUpdatingRoomDialogBeOpen: state => state.contentState.showRoomUpdatingDialog,
       //USER
-      isUserAuthenticated: (state: any) => !!state.userState.token && state.userState.user.emailVerified,
+      isUserAuthenticated: (state: any) => !!state.userState.token && state.userState.user.emailVerified && !state.userState.user.isAdmin,
       currentUser: state => state.userState.user,
       isUserUpdated: state => state.userState.userUpdated,
       isUserDeleted: state => state.userState.userDeleted,
@@ -89,6 +89,7 @@ export default new Vuex.Store({
       shouldUpdatingUserDialogBeOpen: state => state.userState.showUserUpdatingDialog,
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
       userErrors: state => state.userState.errors,
+      // isUserAnAdmin: state => state.userState.user.isAdmin,
       //Notifications/Offers
       currentOffer: state => state.notificationState.offer,
       isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
