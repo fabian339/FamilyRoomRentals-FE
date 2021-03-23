@@ -10,14 +10,16 @@ const isUSer = async (to: any, from: any, next: any) => {
   const { currentUser, isUserAuthenticated } = store.default.getters;
 
   const token = localStorage.getItem('user-token');
+    // if there is no user but there is a token, fetch user
     if(Object.keys(currentUser).length === 0 && token){
-      console.log("fetch user")
+      // console.log("fetch user")
       let shouldGetUser = true;
       axios.interceptors.response.use(undefined, function (err) {
       // eslint-disable-next-line no-unused-vars
         return new Promise(function (resolve, reject) {
+          // check if token expired
           if (err.status === 401 && err.config && !err.config.__isRetryRequest) { 
-            console.log('Token expired');
+            // console.log('Token expired');
             store.default.dispatch('logout');
             shouldGetUser = false;
           }
@@ -31,11 +33,11 @@ const isUSer = async (to: any, from: any, next: any) => {
         return;
       }
     } else if(isUserAuthenticated) {
-      console.log("user logged in")
+      // console.log("user logged in")
       next()
       return;
     } else {
-      next('/login')
+      next('/UNAUTHOTIZED')
       return;
     }
 }
@@ -58,8 +60,45 @@ const isUserVerified = async (to: any, from: any, next: any) => {
     return
 }
 
+const isAdmin = async (to: any, from: any, next: any) => {
+  const store = await import('@/store');
+  const { currentUser, isAdminAuthenticated } = store.default.getters;
 
-  const routes = [
+  const token = localStorage.getItem('user-token');
+    // if there is no user but there is a token, fetch user
+    if(Object.keys(currentUser).length === 0 && token){
+      // console.log("fetch user")
+      let shouldGetUser = true;
+      axios.interceptors.response.use(undefined, function (err) {
+      // eslint-disable-next-line no-unused-vars
+        return new Promise(function (resolve, reject) {
+          // check if token expired
+          if (err.status === 401 && err.config && !err.config.__isRetryRequest) { 
+            // console.log('Token expired');
+            store.default.dispatch('logout');
+            shouldGetUser = false;
+          }
+          throw err;
+        });
+      });
+      if(shouldGetUser){
+        console.log("getting current admin")
+        await store.default.dispatch('getCurrentUser', token)
+        next()
+        return;
+      }
+    } else if(isAdminAuthenticated) {
+      console.log("user logged in")
+      next()
+      return;
+    } else {
+      next('/UNAUTHOTIZED')
+      return;
+    }
+}
+
+
+  const publicRoutes = [
   {
     path: '/',
     name: 'Home',
@@ -72,32 +111,14 @@ const isUserVerified = async (to: any, from: any, next: any) => {
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // component: About
   },
   {
-    path: '/create-room',
-    name: 'postRoom',
-    component: () => import(/* webpackChunkName: "PostRoom" */ '@/components/Room/PostRoom.vue'),
-    // component: PostRoom,
-    beforeEnter:  isUSer,
-    // meta: {
-    //   requiresAuth: true,
-    // }
-  },
-  {
-    path: '/profile',
-    name: 'UserProfile',
-    component: () => import(/* webpackChunkName: "UserProfile" */ '@/components/User/UserProfile.vue'),
-    // meta: {
-    //   requiresAuth: true,
-    // }
-    beforeEnter: isUSer,
-  },
-  {
-    path: '/room/:roomId/offer/:offerId/schedule',
-    name: 'Schedule',
-    component: () => import(/* webpackChunkName: "Schedule" */ '@/components/notification/Schedule.vue'),
-    beforeEnter: isUSer,
+    path: '/UNAUTHOTIZED',
+    name: 'UNAUTHOTIZED',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/UNAUTHOTIZED.vue')
   },
   {
     path: '/rooms',
@@ -155,12 +176,6 @@ const isUserVerified = async (to: any, from: any, next: any) => {
     component: () => import(/* webpackChunkName: "UnsuccessfulPayment" */ '@/components/Meeting/Client/UnsuccessfulPayment.vue'),
   },
   {
-    path: '/email-verification',
-    name: 'emailVerification',
-    component: () => import(/* webpackChunkName: "EmailVerification" */ '@/components/User/EmailVerification.vue'),
-    beforeEnter: isUserVerified,
-  },
-  {
     path: '/terms-and-conditions',
     name: 'termsAndConditions',
     component: () => import(/* webpackChunkName: "TermsAndConditions" */ '@/components/terms/TermsAndConditions.vue'),
@@ -208,6 +223,49 @@ const isUserVerified = async (to: any, from: any, next: any) => {
   },
 ]
 
+const userRoutes = [
+  {
+    path: '/create-room',
+    name: 'postRoom',
+    component: () => import(/* webpackChunkName: "PostRoom" */ '@/components/Room/PostRoom.vue'),
+    // component: PostRoom,
+    beforeEnter:  isUSer,
+  },
+  {
+    path: '/profile',
+    name: 'UserProfile',
+    component: () => import(/* webpackChunkName: "UserProfile" */ '@/components/User/UserProfile.vue'),
+    beforeEnter: isUSer,
+  },
+  {
+    path: '/room/:roomId/offer/:offerId/schedule',
+    name: 'Schedule',
+    component: () => import(/* webpackChunkName: "Schedule" */ '@/components/notification/Schedule.vue'),
+    beforeEnter: isUSer,
+  },
+  {
+    path: '/email-verification',
+    name: 'emailVerification',
+    component: () => import(/* webpackChunkName: "EmailVerification" */ '@/components/User/EmailVerification.vue'),
+    beforeEnter: isUserVerified,
+  },
+]
+
+const adminRoutes = [
+  {
+    path: '/admin-panel',
+    name: 'AdminPanel',
+    component: () => import(/* webpackChunkName: "UserProfile" */ '@/components/User/UserProfile.vue'),
+    // component: PostRoom,
+    beforeEnter:  isAdmin,
+  },
+]
+
+const routes = [
+  ...publicRoutes,
+  ...userRoutes,
+  ...adminRoutes
+]
 
 const router = new VueRouter({
   routes

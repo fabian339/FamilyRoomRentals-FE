@@ -234,8 +234,14 @@ export default {
             context.dispatch('sendEmailVerification', {email: user.email})
             appRouter.push(`/email-verification`)
           } else {
-            if(appRouter.history.current.path !== '/profile'){
-              appRouter.push(`/profile`)
+            if(user.isAdmin){
+              if(appRouter.history.current.path !== '/admin-panel'){
+                appRouter.push(`/admin-panel`)
+              }
+            } else {
+              if(appRouter.history.current.path !== '/profile'){
+                appRouter.push(`/profile`)
+              }
             }
           }
           context.commit('CLEAR_USER_ERROR')

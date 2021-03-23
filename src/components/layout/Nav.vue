@@ -9,13 +9,6 @@
             </div>
             <v-spacer></v-spacer>
 
-            <v-btn color="#e9ffd4" to="/" text>
-                <span>Home</span>
-            </v-btn>
-
-            <v-btn color="#e9ffd4" to="/rooms" text>
-                <span>View Properties</span>
-            </v-btn>
             <!-- auth tabs -->
             <template v-if="isUserAuthenticated">
                 <v-btn color="#e9ffd4" to="/create-room" text>
@@ -97,18 +90,47 @@
                     <span>My Guide</span>
                 </v-btn>
             </template>
+            <template v-else-if="isAdminAuthenticated">
+                <v-btn color="#e9ffd4" to="/" text>
+                    <span>Reports</span>
+                </v-btn>
 
-            <v-btn color="#e9ffd4" v-if="!isUserAuthenticated" to="/signup" text>
-                <span>Signup</span>
-            </v-btn>
+                <v-btn color="#e9ffd4" to="/signup" text>
+                    <span>Emails</span>
+                </v-btn>
 
-            <v-btn color="#e9ffd4" v-if="!isUserAuthenticated" to="/login" text>
-                <span>Login</span>
-            </v-btn>
-            
-            <v-btn color="#e9ffd4" to="/about" v-if="!isUserAuthenticated" text>
-                <span>About US</span>
-            </v-btn>
+                <v-btn color="#e9ffd4" @click="logoutUser" text>
+                    <span v-if="!userLoading.userLoggingOut">Log out</span>
+                    <v-progress-circular
+                        v-else
+                        color="#ffffff"
+                        :size="30"
+                        :width="5"
+                        indeterminate
+                    ></v-progress-circular>
+                </v-btn>
+            </template>
+            <template v-else>
+                <v-btn color="#e9ffd4" to="/" text>
+                    <span>Home</span>
+                </v-btn>
+
+                <v-btn color="#e9ffd4" to="/rooms" text>
+                    <span>View Properties</span>
+                </v-btn>
+
+                <v-btn color="#e9ffd4" to="/signup" text>
+                    <span>Signup</span>
+                </v-btn>
+
+                <v-btn color="#e9ffd4" to="/login" text>
+                    <span>Login</span>
+                </v-btn>
+                
+                <v-btn color="#e9ffd4" to="/about" text>
+                    <span>About US</span>
+                </v-btn>
+            </template>
         </v-row>
     </div>
 </template>
@@ -123,6 +145,7 @@ export default {
     computed: {
         ...mapGetters([
             'isUserAuthenticated',
+            'isAdminAuthenticated',
             'currentUserOffers',
             'userLoading'
         ])
