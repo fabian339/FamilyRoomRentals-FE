@@ -1,133 +1,141 @@
 <template>
-  <v-container>
-    <v-row class="text-center" justify="center">
-        <div class="logo" >
-          <img :src="require('../../../assets/logo.png')" alt="logo" width="400">
-        </div>
-        <h2 v-if="tokenError || !userAuthorized">You are unauthorized to view this page!</h2>
-        <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
-        <v-col v-else lg="12" > 
-            <h2 class="headline font-weight-bold mb-3">
-                {{(showDates && !currentOffer.meetingScheduled) ? `${data.name}, you are a few steps away!` : `${(showTicket || processCanceledByClient) ? '' : `Welcome ${data.name}!`}`}}
-            </h2> 
-            <v-progress-circular
-                v-if="isContentLoading"
-                color="green"
-                :size="100"
-                :width="15"
-                indeterminate
-            >
-            </v-progress-circular>
-            <v-row class="text-center" justify="center" v-if="!isContentLoading && showForm && !isOfferTokenVerified">
-                <v-col cols="10" sm="6" md="5" lg="4">        
-                    <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
-                    <form>
-                        <v-text-field
-                            label="Verification ID"
-                            v-model="id"
-                            append-icon="mdi-account"
-                            type="text"
-                            outlined
-                            :error-messages="errors.id"
-                        ></v-text-field>
-
-                        <v-spacer></v-spacer>
-                        
-                        <v-btn color="#66CDAA" @click.stop="idVerification">Verify</v-btn>
-                        <p style="color: red; margin: 15px 0px -30px 0px">{{offerErrors.error}}</p>
-                    </form>
-                </v-col>
-            </v-row>
-            <div v-if="!isContentLoading && isOfferTokenVerified && showDates && !currentOffer.meetingScheduled">
-                <h3 style="margin: 10px 0px;">Please select an available date: </h3>
-                <v-radio-group 
-                    v-model="dateSelectedIndex" 
-                    style="display: inline-block;"
-                    :rules="[() => isSelectedDateAcceptable() || 'This date is no longer available, please select another date!']"
-                >
-                        <div v-for="(date, index) in currentOffer.meetingDates" :key="index + 60">
-                            <v-radio
-                                style="margin-bottom: 10px"
-                                :label="`
-                                    ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}
-                                    ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)) <= new Date() ? '(Date has passed, unavailable.)': ''}
-                                    `"
-                            ></v-radio>
-                        </div>
-                </v-radio-group>
-
-                <h4>You will be meeting with {{currentOffer.ownerName}} on this date.</h4>
-                <p class="font" style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
-                <p style="color: red">{{selectDateError}}</p>
+    <v-container>
+        <PageLoading  
+            v-model="isPageLoading" 
+            :component="{
+                seconds: 1500,
+                type: 'content',
+                color: ''
+            }"
+        />
+        <v-row v-if="!isPageLoading" class="text-center" justify="center">
+            <div class="logo" >
+            <img :src="require('../../../assets/logo.png')" alt="logo" width="400">
             </div>
-            <v-btn 
-                v-if="isOfferTokenVerified && !paymentCompleted && !confirmedDate && !currentOffer.meetingScheduled" 
-                color="#66CDAA"
-                :disabled="!isSelectedDateAcceptable()"
-                @click.stop="onDateSelect">
-                    {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
-            </v-btn>
-            <div v-if="currentOffer.meetingScheduled || showTicket">
-                <div class="confirmation">                   
-                    <h2 style="margin-bottom: 10px">{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
-                            `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
-                        )}}
-                    </h2>
-                    <Meeting :meetingData="{
-                            ownerName: currentOffer.ownerName,
-                            ownerId: currentOffer.receiverId,
-                            roomId: currentOffer.roomId,
-                            clientName: currentOffer.clientName,
-                            cancelationDate: currentOffer.cancelationDate,
-                            meetingScheduled: currentOffer.meetingScheduled,
-                            meetingId: currentOffer.objectId,
-                            processCanceledByClient: currentOffer.processCanceledByClient,
-                            processCanceledByOwner: currentOffer.processCanceledByOwner,
-                            didClientSubmittedResults: currentOffer.didClientSubmittedResults,
-                            didOwnerSubmittedResults: currentOffer.didOwnerSubmittedResults,
-                            ownerCompletedFollowup: currentOffer.ownerCompletedFollowup,
-                            clientCompletedFollowup: currentOffer.clientCompletedFollowup,
-                            meetingResultsReviewed: currentOffer.meetingResultsReviewed,
-                            ownerShouldGetPay: currentOffer.ownerShouldGetPay,
-                            clientWillMoveIn: currentOffer.clientWillMoveIn,
-                            meetingDeletionDate: currentOffer.meetingDeletionDate,
-                            offerCompleted: currentOffer.offerCompleted,
-                            didMeetingPassed: currentOffer.didMeetingPassed,
-                            ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,
-                            clientCheckedInMeeting: currentOffer.clientCheckedInMeeting,
-                            offerCompletedDate: currentOffer.offerCompletedDate,
-                            image: contentRoom.images[0].source,
-                            meetingDate: {
-                                date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
-                                time: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time,
-                            },
-                            meetingLocation: contentRoom.location
-                        }" 
-                    />
+            <h2 v-if="tokenError || !userAuthorized">You are unauthorized to view this page!</h2>
+            <h2 v-else-if="tokenExpired"> Sorry, it looks like this page has expired.</h2>
+            <v-col v-else lg="12" > 
+                <h2 class="headline font-weight-bold mb-3">
+                    {{(showDates && !currentOffer.meetingScheduled) ? `${data.name}, you are a few steps away!` : `${(showTicket || processCanceledByClient) ? '' : `Welcome ${data.name}!`}`}}
+                </h2> 
+                <v-progress-circular
+                    v-if="clientLoading.gettingOffer"
+                    color="green"
+                    :size="100"
+                    :width="15"
+                    indeterminate
+                >
+                </v-progress-circular>
+                <v-row class="text-center" justify="center" v-if="!clientLoading.gettingOffer && showForm && !isOfferTokenVerified">
+                    <v-col cols="10" sm="6" md="5" lg="4">        
+                        <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
+                        <form>
+                            <v-text-field
+                                label="Verification ID"
+                                v-model="id"
+                                append-icon="mdi-account"
+                                type="text"
+                                outlined
+                                :error-messages="errors.id"
+                            ></v-text-field>
+
+                            <v-spacer></v-spacer>
+                            
+                            <v-btn color="#66CDAA" @click.stop="idVerification">Verify</v-btn>
+                            <p style="color: red; margin: 15px 0px -30px 0px">{{offerErrors.error}}</p>
+                        </form>
+                    </v-col>
+                </v-row>
+                <div v-if="!clientLoading.gettingOffer && isOfferTokenVerified && showDates && !currentOffer.meetingScheduled">
+                    <h3 style="margin: 10px 0px;">Please select an available date: </h3>
+                    <v-radio-group 
+                        v-model="dateSelectedIndex" 
+                        style="display: inline-block;"
+                        :rules="[() => isSelectedDateAcceptable() || 'This date is no longer available, please select another date!']"
+                    >
+                            <div v-for="(date, index) in currentOffer.meetingDates" :key="index + 60">
+                                <v-radio
+                                    style="margin-bottom: 10px"
+                                    :label="`
+                                        ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}
+                                        ${new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)) <= new Date() ? '(Date has passed, unavailable.)': ''}
+                                        `"
+                                ></v-radio>
+                            </div>
+                    </v-radio-group>
+
+                    <h4>You will be meeting with {{currentOffer.ownerName}} on this date.</h4>
+                    <p class="font" style="margin: 10px 0px; color: darkblue">He/she will show you the property, and you will have the time to ask for details.</p>
+                    <p style="color: red">{{selectDateError}}</p>
                 </div>
                 <v-btn 
-                    color="#9acd32"
-                    v-if="showTicket && !confirmedDate" 
-                    @click.stop="confirmedDate = true"
-                > 
-                    Confirm Information 
+                    v-if="isOfferTokenVerified && !paymentCompleted && !confirmedDate && !currentOffer.meetingScheduled" 
+                    color="#66CDAA"
+                    :disabled="!isSelectedDateAcceptable()"
+                    @click.stop="onDateSelect">
+                        {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
                 </v-btn>
-            </div>
-            <div v-if="confirmedDate">
-                <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
-                <PayForMeeting @paymentSucceeded="checkPayment" :offerData="{
-                        officialMeetingDate: {
-                            date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
-                            time: currentOffer.meetingDates[dateSelectedIndex].time,
-                            meetingDeletionDate: this.meetingDeletionDate,
-                        },
-                        roomImage: contentRoom.images[0].source,
-                        status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
-                    }"/>
-            </div>
-        </v-col>
-    </v-row>
-  </v-container>
+                <div v-if="currentOffer.meetingScheduled || showTicket">
+                    <div class="confirmation">                   
+                        <h2 style="margin-bottom: 10px">{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
+                                `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
+                            )}}
+                        </h2>
+                        <Meeting :meetingData="{
+                                ownerName: currentOffer.ownerName,
+                                ownerId: currentOffer.receiverId,
+                                roomId: currentOffer.roomId,
+                                clientName: currentOffer.clientName,
+                                cancelationDate: currentOffer.cancelationDate,
+                                meetingScheduled: currentOffer.meetingScheduled,
+                                meetingId: currentOffer.objectId,
+                                processCanceledByClient: currentOffer.processCanceledByClient,
+                                processCanceledByOwner: currentOffer.processCanceledByOwner,
+                                didClientSubmittedResults: currentOffer.didClientSubmittedResults,
+                                didOwnerSubmittedResults: currentOffer.didOwnerSubmittedResults,
+                                ownerCompletedFollowup: currentOffer.ownerCompletedFollowup,
+                                clientCompletedFollowup: currentOffer.clientCompletedFollowup,
+                                meetingResultsReviewed: currentOffer.meetingResultsReviewed,
+                                ownerShouldGetPay: currentOffer.ownerShouldGetPay,
+                                clientWillMoveIn: currentOffer.clientWillMoveIn,
+                                meetingDeletionDate: currentOffer.meetingDeletionDate,
+                                offerCompleted: currentOffer.offerCompleted,
+                                didMeetingPassed: currentOffer.didMeetingPassed,
+                                ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,
+                                clientCheckedInMeeting: currentOffer.clientCheckedInMeeting,
+                                offerCompletedDate: currentOffer.offerCompletedDate,
+                                image: currentOffer.roomImage,
+                                meetingDate: {
+                                    date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
+                                    time: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time,
+                                },
+                                meetingLocation: currentOffer.meetingLocation
+                            }" 
+                        />
+                    </div>
+                    <v-btn 
+                        color="#9acd32"
+                        v-if="showTicket && !confirmedDate" 
+                        @click.stop="confirmedDate = true"
+                    > 
+                        Confirm Information 
+                    </v-btn>
+                </div>
+                <div v-if="confirmedDate">
+                    <!-- const {location: {street1, street2, city, state, zipCode, country}} = this.contentRoom; -->
+                    <PayForMeeting @paymentSucceeded="checkPayment" :offerData="{
+                            officialMeetingDate: {
+                                date: new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
+                                time: currentOffer.meetingDates[dateSelectedIndex].time,
+                                meetingDeletionDate: this.meetingDeletionDate,
+                            },
+                            roomImage: currentOffer.roomImage,
+                            status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
+                        }"/>
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -136,16 +144,21 @@ import { mapGetters, mapActions } from 'vuex'
 // import { SendEmailToClientOnMeetingCanceledByClient, SendEmailToOwnerOnMeetingCanceledByClient, SendEmailToAdminOnClientMeetingCancelation } from '../../../emailTemplates/emails'
 // import MeetingCheckIn from '@/components/notification/MeetingCheckIn.vue'
 import PayForMeeting from './PayForMeeting'
+import PageLoading from '@/components/Loading/PageLoading.vue';
 import Meeting from '../Meeting'
 // import { delete } from 'vue/types/umd';
 // :label="`${ new Date(new Date(date.date).setDate(new Date(date.date).getDate()+1)).toDateString()} at ${date.time}`"
 
   export default {
     name: 'SelectDateAndPay',
-    components: { PayForMeeting,   Meeting},
+    components: { 
+        PageLoading,
+        PayForMeeting, 
+        Meeting
+    },
     computed: {
       ...mapGetters([
-        'isContentLoading',
+        'clientLoading',
         'currentOffer',
         'contentRoom',
         'offerErrors',
@@ -176,9 +189,12 @@ import Meeting from '../Meeting'
             timerCount : 10,
             // showCountDown: this.$refs.checkoutRef.$data,
             errors: {},
+            isPageLoading: false
         }
     },
-    
+    created(){
+        this.isPageLoading = true
+    },
     beforeMount(){
         //first check if client is authorized, no users should have access to this page
         let userToken = localStorage.getItem('user-token') || '';

@@ -54,7 +54,7 @@
             <div class="meetingInfo">
                 <div style="width: 275px;">
                     <img 
-                        :src="meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.pngs'" 
+                        :src="meetingData.image" 
                         alt="roomPhoto" 
                         width="150" 
                         height="100"
@@ -65,6 +65,12 @@
                         {{meetingData.didMeetingPassed ? 'You met with' : 'You will meet' }}
                         {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} to see this property.
                     </p>
+
+                    <small 
+                        v-if="meetingData.image === 'https://i.ibb.co/t85JhCP/no-Room-Img.png' && !isOwner()" 
+                        style="color: red">
+                        Careful, this property has no images and can be subject of fraud!
+                    </small>
                 </div>
                 <div style="width: 275px;">
                     <h3>When: </h3>

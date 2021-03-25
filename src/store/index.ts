@@ -32,6 +32,9 @@ export default new Vuex.Store({
         showUserUpdatingDialog: false, //used to show dialog to update user
         passwordResetEmailSent: false,
         emailVerificationSent: false,
+        userOffers: [],
+        adminOffers: [],
+        userMeetings: [],
         token: localStorage.getItem('user-token') || '',
         errors: {}
       }, 
@@ -59,7 +62,8 @@ export default new Vuex.Store({
           }
         },
         client: {
-          sendingOffer: false
+          sendingOffer: false,
+          gettingOffer: false,
         },
         content: {
           addingContent: false,
@@ -89,6 +93,9 @@ export default new Vuex.Store({
       isEmailVerificationSent: state => state.userState.emailVerificationSent,
       shouldUpdatingUserDialogBeOpen: state => state.userState.showUserUpdatingDialog,
       currentUserRooms: (state: any) => state.contentState.rooms.filter((room: any) => room.ownerId === state.userState.user.objectId),
+      currentUserOffers: (state: any) => state.userState.userOffers.reverse(),
+      offersForAdmin: (state: any) => state.userState.adminOffers,
+      meetings: (state: any) => state.userState.userMeetings,
       userErrors: state => state.userState.errors,
       //Notifications/Offers
       currentOffer: state => state.notificationState.offer,
@@ -98,8 +105,6 @@ export default new Vuex.Store({
       wasOfferCanceled: state => state.notificationState.offerCanceled,
       wasOfferSentByClient: state => state.notificationState.offerSentByClient,
       shouldDeletingOfferDialogBeOpen: state => state.notificationState.showUserDeletingOfferDialog,
-      currentUserOffers: (state: any) => state.notificationState.notifications.filter((noti: any) => noti.receiverId === state.userState.user.objectId).reverse(),
-      meetings: (state: any) => state.notificationState.notifications.filter((noti: any) => (noti.receiverId === state.userState.user.objectId && noti.meetingScheduled)),
       offerErrors: state => state.notificationState.errors,
       //Loading
       userLoading: state => state.loadingState.user,

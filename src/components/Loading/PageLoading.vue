@@ -25,6 +25,16 @@
         <div class="title-container-user"><p class="app-title-user">FamilyRoomRentals</p></div>
       </div>
     </div>
+    <div v-else>
+      <div v-if="show">
+        <div class="dot-carousel"></div>
+        <div class="small-circle first-left"></div>
+        <div class="small-circle first-right"></div>
+        <div class="circle second-left"></div>
+        <div class="circle second-right"></div>
+        <div class="title-container-user"><p>WELCOME ADMIN</p></div>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -96,7 +106,7 @@ export default {
       didFetchingStop(){
         // console.log("did Fetching stopped?", !this.isContentLoading)
         if(this.component.type === 'content') return !this.contentLoading.loadingRooms;
-        else if(this.component.type === 'user') return !this.userLoading.userRegistering || this.userLoading.userLoggingIn || this.userLoading.retrievingUser;
+        else if(this.component.type === 'user' || this.component.type === 'admin') return !this.userLoading.userRegistering || this.userLoading.userLoggingIn || this.userLoading.retrievingUser;
         else if(this.component.type === '') return true;
       },
       

@@ -115,6 +115,7 @@
           label="Enter Verification Code"
           outlined
           placeholder="******"
+          clearable
           v-model="inputVerificationCode"
           :rules="[() => !isNaN(inputVerificationCode) || 'Must be a number']"
           maxlength="6"
@@ -230,7 +231,7 @@ export default {
     },
     async VerifyAndAddOfferToThisRoom(){
       if(this.inputVerificationCode !== this.offerVerificationCode){
-        this.verificationCodeError = "Codes do not match. Please try again!"
+        this.verificationCodeError = "Code do not match. Please try again!"
         this.codeResentMsg = "";
       } else {
         // console.log("Codes MAtch")
@@ -263,6 +264,10 @@ export default {
           objectId: this.$store.getters.contentRoom.objectId
         }); 
         // adding offer to db
+        let offer = this.$store.getters.currentOffer;
+        offer.roomImage = (this.$store.getters.contentRoom.images && this.$store.getters.contentRoom.images.length > 0) ? (
+          this.$store.getters.contentRoom.images[0].source
+        ) : 'https://i.ibb.co/t85JhCP/no-Room-Img.png';
         await this.sendOffer(this.$store.getters.currentOffer)
         this.loadingFinished()
       }

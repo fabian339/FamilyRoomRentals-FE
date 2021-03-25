@@ -1,15 +1,26 @@
 export default {
     //NOTIFICATIONS
-    SET_NOTIFICATIONS: (state: any, offers: []) => {
-        state.notificationState.notifications = offers;
+    SET_ADMIN_NOTIFICATIONS: (state: any, offers: Array<Object>) => {
+        state.userState.adminOffers = offers;
     },
 
+    SET_USER_NOTIFICATIONS: (state: any, offers: Array<Object>) => {
+        state.userState.userOffers = offers;
+    },
+
+    SET_USER_MEETINGS: (state: any, meetings: Array<Object>) => {
+        state.userState.userMeetings = meetings;
+    },
+    
     ADD_NOTIFICATION: (state: any, offers: any) => {
         state.notificationState.notifications.push(offers);
     },
 
     SET_OFFER_SENDING: (state: any, value: Boolean) => {
         state.loadingState.client.sendingOffer = value;
+    },
+    SET_GEETING_CLIENT_OFFER: (state: any, value: Boolean) => {
+        state.loadingState.client.gettingOffer = value;
     },
     SET_OFFER_CANCELED: (state: any, value: Boolean) => {
         state.notificationState.offerCanceled = value;

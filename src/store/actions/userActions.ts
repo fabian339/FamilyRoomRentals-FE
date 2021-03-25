@@ -51,8 +51,13 @@ export default {
       delete user.ACL;
       context.commit('SET_USER', user)
     
-      // context.commit('SET_TOKEN', token);
-      context.dispatch('fetchNotifications')
+      if(user.isAdmin){
+        // fetch all offers for admin
+        context.dispatch('fetchNotifications', {isAdmin: true, userId: user.objectId})
+      } else {
+        // fetch current user offers 
+        context.dispatch('fetchNotifications', {isAdmin: false, userId: user.objectId})
+      }
       // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
       context.commit('SET_RETRIEVING_USER', false);
@@ -82,7 +87,13 @@ export default {
       // context.dispatch('setUserAuthorization', {token, userEmailVerified: user.emailVerified})
 
       context.commit('SET_TOKEN', token);
-      context.dispatch('fetchNotifications')
+      if(user.isAdmin){
+        // fetch all offers for admin
+        context.dispatch('fetchNotifications', {isAdmin: true, userId: user.objectId})
+      } else {
+        // fetch current user offers 
+        context.dispatch('fetchNotifications', {isAdmin: false, userId: user.objectId})
+      }
       //a loading type for loading component
       user.loadingType = 'logging-in';
       //changing routes and setting timer on loading

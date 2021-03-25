@@ -255,7 +255,7 @@ const adminRoutes = [
   {
     path: '/admin-panel',
     name: 'AdminPanel',
-    component: () => import(/* webpackChunkName: "UserProfile" */ '@/components/User/UserProfile.vue'),
+    component: () => import(/* webpackChunkName: "UserProfile" */ '@/components/User/admin/adminPanel.vue'),
     // component: PostRoom,
     beforeEnter:  isAdmin,
   },

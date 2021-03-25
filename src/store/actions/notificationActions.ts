@@ -31,17 +31,31 @@ export default {
     });
   },
 
-  fetchNotifications: (context: any, id: string) => {
+  fetchNotifications: (context: any, userData: any) => {
     axios.get('/classes/Offers')
     .then((res) => {
-      // let myNotifications:any = [];  
-
+      // let myNotifications:any = [];
+      if(userData.isAdmin){
+        context.commit('SET_ADMIN_NOTIFICATIONS', res.data.results)
+        let meetings = res.data.results.filter((offer: any) => offer.meetingScheduled);
+        if(meetings.length > 0){
+          context.commit('SET_USER_MEETINGS', meetings)
+        }
+      } else {
+        let userOffers = res.data.results.filter((offer: any) => offer.receiverId === userData.userId);
+        let userMeetings = userOffers.filter((offer: any) => offer.meetingScheduled);
+        context.commit('SET_USER_NOTIFICATIONS', userOffers)
+        if(userMeetings.length > 0){
+          context.commit('SET_USER_MEETINGS', userMeetings)
+        }
+      }
+      console.log("user data: ", userData)
       res.data.results.forEach((offer: any)=> {
           if(appRouter.history.current.path.includes(`/offer/${offer.objectId}`)) context.commit('SET_OFFER', offer);
           // if(offer.receiverId === id) myNotifications.push(offer)
       })
 
-      context.commit('SET_NOTIFICATIONS', res.data.results)
+      // context.commit('SET_NOTIFICATIONS', res.data.results)
       // context.commit('SET_USER_NOTIFICATIONS', myNotifications);
       // console.log(appRouter.history)
     })
@@ -52,20 +66,18 @@ export default {
 
   getOfferOnClientUI: (context: any, data: any) => {
     // console.log('this is a Data22', id)
-    context.commit('SET_LOADING_CONTENT', true);
+    context.commit('SET_GEETING_CLIENT_OFFER', true);
     axios.get(`/classes/Offers/${data.id}`)
     .then((res) => {
       if(res.data.offerToken === data.token){
-        context.commit('ADD_NOTIFICATION', res.data)
-        context.commit('SET_OFFER', res.data)
-        context.commit('SET_OFFER_TOKEN_VERIFIED', true)
-        context.commit('CLEAR_NOTIFICATIONS_ERROR')
+        let offer = res.data;
+        offer.loadingType = 'getting-client-offer';
+        context.dispatch('offerLoading', offer)
       } else {
         context.commit('SET_OFFER_ERROR', {
           error: 'Invalid Verification, check parameters!'
         })
       }
-      context.commit('SET_LOADING_CONTENT', false);
     })
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', {
@@ -169,8 +181,13 @@ export default {
           context.commit('SET_OFFER_SENT_BY_CLIENT', true);
         }, 2000);
         break;
-      case 'logging-out':
+      case 'getting-client-offer':
         setTimeout(() => {
+          context.commit('ADD_NOTIFICATION', offer)
+          context.commit('SET_OFFER', offer)
+          context.commit('SET_OFFER_TOKEN_VERIFIED', true)
+          context.commit('CLEAR_NOTIFICATIONS_ERROR')
+          context.commit('SET_GEETING_CLIENT_OFFER', false);
         }, 1500);
         break;
       case 'deleting-offer':

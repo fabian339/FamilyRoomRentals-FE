@@ -68,7 +68,7 @@
             <h2 style="margin-bottom: 20px; margin-top: 10px" >Your Meetings:</h2>   
             <v-row >
               <v-col v-for="meeting in meetings" :key="meeting.createdAt">
-                <div v-if="meeting.offerCompleted">
+                <div v-if="!meeting.offerCompleted">
                   <Meeting :meetingData="{
                       ownerName: meeting.ownerName,
                       ownerId: meeting.receiverId,
@@ -97,9 +97,9 @@
                       didMeetingPassed: meeting.didMeetingPassed,
                       ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
                       clientCheckedInMeeting: meeting.clientCheckedInMeeting,
-                      image: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].images[0].source,
+                      image: meeting.roomImage,
                       meetingDate: meeting.officialMeetingDate,
-                      meetingLocation: currentUserRooms.filter(room => room.objectId === meeting.roomId)[0].location
+                      meetingLocation: meeting.meetingLocation
                     }" 
                   />
                 </div>
