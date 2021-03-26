@@ -11,30 +11,46 @@
     <v-container v-if="!isPageLoading">
       <v-row class="text-center" justify="center" style="margin-top: -20px;">
         <v-col
-          md="8"
+          md="12"
         > 
-          <h1>Meetings</h1>
-          <table v-for="meeting in meetings" :key="meeting.createdAt">
-            <thead>
-                <tr>
-                    <th colspan="2" v-for="propName in Object.getOwnPropertyNames(meeting)" :key="propName">{{propName}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td v-for="value in Object.values(meeting)" :key="value">{{value}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- <div v-for="meeting in meetings" :key="meeting.createdAt"> -->
-            <!-- <v-data-table
-                v-if="meetings && meetings.length > 0"
-                :headers="Object.getOwnPropertyNames(meetings)"
-                :items="meetings"
-                :items-per-page="5"
-                class="elevation-1"
-            ></v-data-table> -->
-        <!-- </div> -->
+          <h1 style="margin: 30px; color: #44716f;">Current Meetings</h1>
+          <v-data-table
+              :headers="headers"
+              :items="meetings"
+              :items-per-page="5"
+              class="elevation-1"
+              dark
+              expand-icon
+          >
+            <template v-slot:item.actions="{ item }">
+              <v-icon
+                small
+                class="mr-2"
+                @click="editItem(item)"
+              >
+                mdi-pencil
+              </v-icon>
+              <v-icon
+                small
+                @click="deleteItem(item)"
+              >
+                mdi-delete
+              </v-icon>
+              <v-icon 
+                small
+                @click="deleteItem(item)"
+              >
+                mdi-email
+              </v-icon>
+            </template>
+            <template v-slot:item.objectId="{ item }">
+              <v-chip
+                :color="getColor(item)"
+              >
+                {{ item.objectId }}
+              </v-chip>
+            </template>
+          </v-data-table>
         </v-col>
       </v-row>
     </v-container>
@@ -78,7 +94,14 @@ export default {
   data(){
     return {
       data: [],
-      heater: [],
+      headers: [
+        {text: 'Actions', value: 'actions', align: 'center'}, 
+        {text: 'objectId', value: 'objectId', align: 'center'}, 
+        {text: 'clientName', value: 'clientName', align: 'center'},
+        {text: 'clientEmail', value: 'clientEmail', align: 'center'},
+        {text: 'ownerEmail', value: 'ownerEmail', align: 'center'},
+        {text: 'ownerName', value: 'ownerName', align: 'center'}
+      ],
       filter: false,
       meetingExpanded: false,
       filterBy: 'All Rooms',
@@ -86,11 +109,28 @@ export default {
       isPageLoading: false
     }
   },
-
   created(){
-    this.isPageLoading = true
+    this.isPageLoading = true;
+      // this.headers = [{text: 'Actions', value: 'actions'}, {text: 'objectId', value: 'objectId'}]
+
   },
   methods:{
+      getColor() {
+        return 'green'
+      },
+      editItem (item) {
+           console.log("editing: ", item)
+        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedItem = Object.assign({}, item)
+        // this.dialog = true
+      },
+
+      deleteItem (item) {
+          console.log("deliting: ", item)
+        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedItem = Object.assign({}, item)
+        // this.dialogDelete = true
+      },
     radioClick(index){
       if(index === 0) this.filter = false
       else {
@@ -100,7 +140,6 @@ export default {
         this.filter = true
       }
     },
-
   }
 }
 </script>
