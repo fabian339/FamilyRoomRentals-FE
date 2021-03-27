@@ -33,7 +33,6 @@ export default new Vuex.Store({
         passwordResetEmailSent: false,
         emailVerificationSent: false,
         userOffers: [],
-        adminOffers: [],
         userMeetings: [],
         token: localStorage.getItem('user-token') || '',
         errors: {}

@@ -145,6 +145,7 @@ export default {
                   objectId: this.offerData.objectId,
                   isOfferAgreementByOwnerAccepted: this.checkbox,
                   offerAcceptedByOwner: this.offerData.offerAcceptedByOwner,
+                  offerAcceptedDate: new Date().toLocaleDateString(),
                   offerToken: token,
                   status: 'Offer accepted, submitted available dates!'
                 };

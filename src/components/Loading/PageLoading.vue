@@ -32,7 +32,7 @@
         <div class="small-circle first-right"></div>
         <div class="circle second-left"></div>
         <div class="circle second-right"></div>
-        <div class="title-container-user"><p>WELCOME ADMIN</p></div>
+        <div class="title-container-user"><p class="app-title-user">*****$$*****</p></div>
       </div>
     </div>
 </template>

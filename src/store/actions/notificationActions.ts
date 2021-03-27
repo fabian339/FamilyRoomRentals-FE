@@ -36,11 +36,11 @@ export default {
     .then((res) => {
       // let myNotifications:any = [];
       if(userData.isAdmin){
-        context.commit('SET_ADMIN_NOTIFICATIONS', res.data.results)
         let meetings = res.data.results.filter((offer: any) => offer.meetingScheduled);
         if(meetings.length > 0){
           context.commit('SET_USER_MEETINGS', meetings)
         }
+        context.commit('SET_USER_NOTIFICATIONS', res.data.results.filter((offer: any) => !offer.meetingScheduled))
       } else {
         let userOffers = res.data.results.filter((offer: any) => offer.receiverId === userData.userId);
         let userMeetings = userOffers.filter((offer: any) => offer.meetingScheduled);

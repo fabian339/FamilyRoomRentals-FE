@@ -1,9 +1,5 @@
 export default {
     //NOTIFICATIONS
-    SET_ADMIN_NOTIFICATIONS: (state: any, offers: Array<Object>) => {
-        state.userState.adminOffers = offers;
-    },
-
     SET_USER_NOTIFICATIONS: (state: any, offers: Array<Object>) => {
         state.userState.userOffers = offers;
     },
