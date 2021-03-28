@@ -136,7 +136,8 @@ export default {
                   iat: Math.floor(new Date()),
                   exp: new Date().setDate(new Date().getDate() + 60),
                   data: { 
-                      name: this.$store.getters.currentOffer.clientName 
+                      name: this.$store.getters.currentOffer.clientName ,
+                      type: 'offer'
                     }
                   }, this.$store.getters.currentOffer.roomId);
               

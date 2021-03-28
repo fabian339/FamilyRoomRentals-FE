@@ -37,9 +37,9 @@ export default new Vuex.Store({
         token: localStorage.getItem('user-token') || '',
         errors: {}
       }, 
-      notificationState: {
+      offerState: {
         offer: {},
-        notifications: [],
+        offers: [],
         offerSentByClient: false,
         offerDeleted: false,
         offerCanceled: false,
@@ -97,14 +97,14 @@ export default new Vuex.Store({
       meetings: (state: any) => state.userState.userMeetings,
       userErrors: state => state.userState.errors,
       //Notifications/Offers
-      currentOffer: state => state.notificationState.offer,
-      isOfferAcceptedByOwner: state => state.notificationState.offerAcceptedByOwner,
-      isOfferDeleted: state => state.notificationState.offerDeleted,
-      isOfferTokenVerified: state => state.notificationState.offerTokenVerified,
-      wasOfferCanceled: state => state.notificationState.offerCanceled,
-      wasOfferSentByClient: state => state.notificationState.offerSentByClient,
-      shouldDeletingOfferDialogBeOpen: state => state.notificationState.showUserDeletingOfferDialog,
-      offerErrors: state => state.notificationState.errors,
+      currentOffer: state => state.offerState.offer,
+      isOfferAcceptedByOwner: state => state.offerState.offerAcceptedByOwner,
+      isOfferDeleted: state => state.offerState.offerDeleted,
+      isOfferTokenVerified: state => state.offerState.offerTokenVerified,
+      wasOfferCanceled: state => state.offerState.offerCanceled,
+      wasOfferSentByClient: state => state.offerState.offerSentByClient,
+      shouldDeletingOfferDialogBeOpen: state => state.offerState.showUserDeletingOfferDialog,
+      offerErrors: state => state.offerState.errors,
       //Loading
       userLoading: state => state.loadingState.user,
       clientLoading: state => state.loadingState.client,

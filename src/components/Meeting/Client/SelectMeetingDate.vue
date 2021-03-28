@@ -105,6 +105,7 @@
                                 clientCheckedInMeeting: currentOffer.clientCheckedInMeeting,
                                 offerCompletedDate: currentOffer.offerCompletedDate,
                                 image: currentOffer.roomImage,
+                                offer: currentOffer.offer,
                                 meetingDate: {
                                     date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
                                     time: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time,
@@ -218,6 +219,7 @@ import Meeting from '../Meeting'
     methods:{
         ...mapActions([
             'getOfferOnClientUI',
+            'getMeetingOnClientUI',
             'sendEmail',
             'updateOffer',
             'updateRoom'
@@ -230,11 +232,19 @@ import Meeting from '../Meeting'
                 this.errors = errors;
             }
             else {
-                this.getOfferOnClientUI({
-                    id :this.id,
-                    token: this.$router.history.current.params.token
-                });
-                this.showDates = true;
+                if(this.data.type === 'offer') {
+                    this.getOfferOnClientUI({
+                        id :this.id,
+                        token: this.$router.history.current.params.token
+                    });
+                    this.showDates = true;
+                } else if (this.data.type === 'meeting') {
+                    this.getMeetingOnClientUI({
+                        id :this.id,
+                        token: this.$router.history.current.params.token
+                    });
+                    // this.showDates = true;
+                }
             }
         },
         checkPayment(value){

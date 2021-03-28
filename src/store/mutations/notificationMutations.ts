@@ -1,6 +1,6 @@
 export default {
-    //NOTIFICATIONS
-    SET_USER_NOTIFICATIONS: (state: any, offers: Array<Object>) => {
+    //offers
+    SET_USER_OFFERS: (state: any, offers: Array<Object>) => {
         state.userState.userOffers = offers;
     },
 
@@ -8,8 +8,8 @@ export default {
         state.userState.userMeetings = meetings;
     },
     
-    ADD_NOTIFICATION: (state: any, offers: any) => {
-        state.notificationState.notifications.push(offers);
+    ADD_OFFER: (state: any, offers: any) => {
+        state.offerState.offers.push(offers);
     },
 
     SET_OFFER_SENDING: (state: any, value: Boolean) => {
@@ -19,55 +19,55 @@ export default {
         state.loadingState.client.gettingOffer = value;
     },
     SET_OFFER_CANCELED: (state: any, value: Boolean) => {
-        state.notificationState.offerCanceled = value;
+        state.offerState.offerCanceled = value;
     },
     SET_OFFER_SENT_BY_CLIENT: (state: any, value: boolean) => {
-        state.notificationState.offerSentByClient = value;
+        state.offerState.offerSentByClient = value;
     },
 
     SET_OFFER_ACCEPTED_BY_OWNER: (state: any, value: Boolean) => {
-        state.notificationState.offerAcceptedByOwner = value;
+        state.offerState.offerAcceptedByOwner = value;
     },
     UPDATE_OFFER: (state: any, updateOfferData: any) => {
-        const index = state.notificationState.notifications.findIndex((offer:any = {} ) => offer.objectId === updateOfferData.objectId);
-        let tempOffer = state.notificationState.notifications[index];
+        const index = state.userState.userOffers.findIndex((offer:any = {} ) => offer.objectId === updateOfferData.objectId);
+        let tempOffer = state.userState.userOffers[index];
         for (const property in updateOfferData) {
           tempOffer[property] = updateOfferData[property]
         }
-        state.notificationState.notifications[index] = tempOffer;
-        state.notificationState.offer = tempOffer;
+        state.userState.userOffers[index] = tempOffer;
+        state.offerState.offer = tempOffer;
     },
     SET_OFFER: (state: any, offerData: any) => {
-        state.notificationState.offer = offerData;
+        state.offerState.offer = offerData;
     },
     SET_OFFER_TOKEN_VERIFIED: (state: any, offerVerified: boolean) => {
-        state.notificationState.offerTokenVerified = offerVerified;
+        state.offerState.offerTokenVerified = offerVerified;
     },
 
     //DELETING OFFER
 
     SHOW_OFFER_DELETING_DIALOG: (state: any, value: any) => {
-        state.notificationState.showUserDeletingOfferDialog = value;
+        state.offerState.showUserDeletingOfferDialog = value;
     },
 
     SET_DELETING_OFFER: (state: any, value: boolean) => {
         state.loadingState.user.userOffer.deletingOffer = value;
     },
 
-    DELETE_NOTIFICATION: (state: any, notificationId: any) => {
-        const index = state.notificationState.notifications.findIndex((item:any = {} ) => item.objectId === notificationId);
-        state.notificationState.notifications.splice(index, 1);
+    DELETE_OFFER: (state: any, notificationId: any) => {
+        const index = state.offerState.offers.findIndex((item:any = {} ) => item.objectId === notificationId);
+        state.offerState.offers.splice(index, 1);
     },
 
     SET_OFFER_DELETED: (state: any, value: boolean) => {
-        state.notificationState.offerDeleted = value;
+        state.offerState.offerDeleted = value;
     },
 
 
     SET_OFFER_ERROR: (state: any, errors: object) => {
-        state.notificationState.errors = errors
+        state.offerState.errors = errors
     },
-    CLEAR_NOTIFICATIONS_ERROR: (state: any) => {
-        state.notificationState.errors = {}
+    CLEAR_OFFER_ERROR: (state: any) => {
+        state.offerState.errors = {}
     },
 }

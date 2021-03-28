@@ -91,7 +91,7 @@
 <script>
 let jwt = require('jsonwebtoken');
 import { mapGetters, mapActions, mapMutations } from 'vuex'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import SuccessAlert from '@/components/Offer/SuccessAlert.vue'
 import {validateClientRefundData} from '../../store/validators'
 import {SendEmailToAdminOnRefundRequested} from '../../emailTemplates/emails'
 

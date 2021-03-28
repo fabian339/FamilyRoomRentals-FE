@@ -69,7 +69,7 @@
   </v-container>
 </template>
 <script>
-import UserAgreementWithClient from '@/components/terms/UserAgreementWithClient.vue'
+import UserAgreementWithClient from './UserAgreementWithClient.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'Schedule',

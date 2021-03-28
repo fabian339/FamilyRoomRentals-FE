@@ -74,32 +74,32 @@
                       ownerId: meeting.receiverId,
                       clientName: meeting.clientName,
                       roomId: meeting.roomId,
-                      meetingId: meeting.objectId,
-                      cancelationDate: meeting.cancelationDate,
-                      meetingScheduled: meeting.meetingScheduled,
-                      offerCompletedDate: meeting.offerCompletedDate,
-                      processCanceledByClient: meeting.processCanceledByClient,
-                      processCanceledByOwner: meeting.processCanceledByOwner,
+                      meetingId: meeting.objectId, //changed to offerId
+                      cancelationDate: meeting.cancelationDate, //changed to object cancelation, canceled, who, & date
+                      meetingScheduled: meeting.meetingScheduled, // not needed
+                      offerCompletedDate: meeting.offerCompletedDate, 
+                      processCanceledByClient: meeting.processCanceledByClient, // not needed
+                      processCanceledByOwner: meeting.processCanceledByOwner, // not needed
                       didClientSubmittedResults: meeting.didClientSubmittedResults,
                       didOwnerSubmittedResults: meeting.didOwnerSubmittedResults,
-                      offerCompleted: meeting.offerCompleted,
-                      ownerCompletedFollowup: meeting.ownerCompletedFollowup,
-                      clientCompletedFollowup: meeting.clientCompletedFollowup,
+                      offerCompleted: meeting.offerCompleted, //changed proccessCompleted
+                      ownerCompletedFollowup: meeting.ownerCompletedFollowup, // not needed
+                      clientCompletedFollowup: meeting.clientCompletedFollowup, // not needed
                       meetingResultsReviewed: meeting.meetingResultsReviewed,
                       ownerShouldReceiveReward: meeting.ownerShouldReceiveReward,
-                      ownerRewarded: meeting.ownerRewarded,
-                      ownerReward: meeting.ownerReward,
-                      rewardSentToOwner: meeting.rewardSentToOwner,
-                      ownerRewardExpirationDate: meeting.ownerRewardExpirationDate,
+                      ownerRewarded: meeting.ownerRewarded, //part of ownerReward
+                      ownerReward: meeting.ownerReward, // object with ownerRewarded, rewardSentToOwner, rewardExpirationDate
+                      rewardSentToOwner: meeting.rewardSentToOwner, //part of ownerReward
+                      ownerRewardExpirationDate: meeting.ownerRewardExpirationDate, //part of ownerReward
                       clientWillMoveIn: meeting.clientWillMoveIn,
-                      ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided,
+                      ownerPaymentInformationProvided: meeting.ownerPaymentInformationProvided, // not needed
                       meetingDeletionDate: meeting.meetingDeletionDate,
                       didMeetingPassed: meeting.didMeetingPassed,
-                      ownerCheckedInMeeting: meeting.ownerCheckedInMeeting,
-                      clientCheckedInMeeting: meeting.clientCheckedInMeeting,
+                      ownerCheckedInMeeting: meeting.ownerCheckedInMeeting, // changed to object checkIn of user, owner - who, checked-in, date
+                      clientCheckedInMeeting: meeting.clientCheckedInMeeting, // changed to object checkIn of user, owner - who, checked-in, date
                       image: meeting.roomImage,
-                      meetingDate: meeting.officialMeetingDate,
-                      meetingLocation: meeting.meetingLocation
+                      meetingDate: meeting.officialMeetingDate, //change to string
+                      meetingLocation: meeting.meetingLocation // //change to string
                     }" 
                   />
                 </div>

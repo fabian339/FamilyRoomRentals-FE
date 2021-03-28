@@ -16,7 +16,7 @@ export default {
         ...notification,
         ...res.data
       }
-      context.commit('ADD_NOTIFICATION', offerData);
+      context.commit('ADD_OFFER', offerData);
       let offer = {loadingType: 'sending-offer'}
       context.dispatch('offerLoading', offer)
 
@@ -31,34 +31,40 @@ export default {
     });
   },
 
-  fetchNotifications: (context: any, userData: any) => {
-    axios.get('/classes/Offers')
-    .then((res) => {
+  fetchOffersAndMeetings: (context: any, userData: any) => {
+    let one = '/classes/Offers';
+    let two = '/classes/Meetings';
+    const requestOne = axios.get(one);
+    const requestTwo = axios.get(two);
+    axios.all([requestOne, requestTwo]).then(axios.spread((...res) => {
       // let myNotifications:any = [];
       if(userData.isAdmin){
-        let meetings = res.data.results.filter((offer: any) => offer.meetingScheduled);
-        if(meetings.length > 0){
-          context.commit('SET_USER_MEETINGS', meetings)
+        // let meetings = res.data.results.filter((offer: any) => offer.meetingScheduled);
+        if(res[1].data.results.length > 0){
+          context.commit('SET_USER_MEETINGS', res[1].data.results)
         }
-        context.commit('SET_USER_NOTIFICATIONS', res.data.results.filter((offer: any) => !offer.meetingScheduled))
+        context.commit('SET_USER_OFFERS', res[0].data.results.filter((offer: any) => !offer.meetingScheduled))
       } else {
-        let userOffers = res.data.results.filter((offer: any) => offer.receiverId === userData.userId);
-        let userMeetings = userOffers.filter((offer: any) => offer.meetingScheduled);
-        context.commit('SET_USER_NOTIFICATIONS', userOffers)
+        let userOffers = res[0].data.results.filter((offer: any) => offer.receiverId === userData.userId);
+        let userMeetings = res[1].data.results.filter((meeting: any) => meeting.ownerId === userData.userId);
+        console.log(userData,userOffers)
+        if(userOffers.length > 0){
+          context.commit('SET_USER_OFFERS', userOffers)
+        }
         if(userMeetings.length > 0){
           context.commit('SET_USER_MEETINGS', userMeetings)
         }
       }
-      console.log("user data: ", userData)
-      res.data.results.forEach((offer: any)=> {
+      console.log("Offer & Meetings: ", res)
+      res[0].data.results.forEach((offer: any)=> {
           if(appRouter.history.current.path.includes(`/offer/${offer.objectId}`)) context.commit('SET_OFFER', offer);
           // if(offer.receiverId === id) myNotifications.push(offer)
       })
 
       // context.commit('SET_NOTIFICATIONS', res.data.results)
-      // context.commit('SET_USER_NOTIFICATIONS', myNotifications);
+      // context.commit('SET_USER_OFFERS', myNotifications);
       // console.log(appRouter.history)
-    })
+    }))
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', err);
     });
@@ -69,21 +75,28 @@ export default {
     context.commit('SET_GEETING_CLIENT_OFFER', true);
     axios.get(`/classes/Offers/${data.id}`)
     .then((res) => {
-      if(res.data.offerToken === data.token){
-        let offer = res.data;
-        offer.loadingType = 'getting-client-offer';
-        context.dispatch('offerLoading', offer)
+      if(!res.data.meetingScheduled) {
+        if(res.data.offerToken === data.token){
+          let offer = res.data;
+          offer.loadingType = 'getting-client-offer';
+          context.dispatch('offerLoading', offer)
+        } else {
+          context.commit('SET_OFFER_ERROR', {
+            error: 'Invalid Verification, check parameters!'
+          })
+        }
       } else {
         context.commit('SET_OFFER_ERROR', {
-          error: 'Invalid Verification, check parameters!'
+          error: 'A meeting is already attached to this offer. Please check a confirmation sent to your email.'
         })
+        context.commit('SET_GEETING_CLIENT_OFFER', false);
       }
     })
     .catch((err) => {
       context.commit('SET_OFFER_ERROR', {
         error: 'Invalid Verification ID!'
       })
-      context.commit('SET_LOADING_CONTENT', false);
+      context.commit('SET_GEETING_CLIENT_OFFER', false);
     })
   },
 
@@ -95,7 +108,7 @@ export default {
       if(res.data.clientRefundToken === data.token){
         context.commit('SET_OFFER', res.data)
         context.commit('SET_OFFER_TOKEN_VERIFIED', true)
-        context.commit('CLEAR_NOTIFICATIONS_ERROR')
+        context.commit('CLEAR_OFFER_ERROR')
       } else {
         context.commit('SET_OFFER_ERROR', {
           error: 'Invalid Verification, check parameters!'
@@ -126,7 +139,7 @@ export default {
       // context.commit('UPDATE_OFFER', offerData);
     })
     .catch((err) => {
-      // console.log(err)
+      console.log(err)
       context.commit('SET_OFFER_ERROR', err);
     });
   },
@@ -135,7 +148,7 @@ export default {
     context.commit('SET_DELETING_OFFER', true);
     await axios.delete(`/classes/Offers/${id}`)
     .then((res) => {
-      context.commit('DELETE_NOTIFICATION', id);
+      context.commit('DELETE_OFFER', id);
       // context.commit('SET_LOADING_CONTENT', false);
       // console.log(appRouter)
 
@@ -151,7 +164,7 @@ export default {
     notificationIds.forEach(id => {
       axios.delete(`/classes/Offers/${id}`)
       .then((res) => {
-        context.commit('DELETE_NOTIFICATION', id);
+        context.commit('DELETE_OFFER', id);
       })
       .catch((err) => {
         context.commit('SET_CONTENT_ERROR', err);
@@ -183,10 +196,10 @@ export default {
         break;
       case 'getting-client-offer':
         setTimeout(() => {
-          context.commit('ADD_NOTIFICATION', offer)
+          context.commit('ADD_OFFER', offer)
           context.commit('SET_OFFER', offer)
           context.commit('SET_OFFER_TOKEN_VERIFIED', true)
-          context.commit('CLEAR_NOTIFICATIONS_ERROR')
+          context.commit('CLEAR_OFFER_ERROR')
           context.commit('SET_GEETING_CLIENT_OFFER', false);
         }, 1500);
         break;

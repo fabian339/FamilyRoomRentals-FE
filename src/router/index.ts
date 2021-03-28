@@ -240,7 +240,7 @@ const userRoutes = [
   {
     path: '/room/:roomId/offer/:offerId/schedule',
     name: 'Schedule',
-    component: () => import(/* webpackChunkName: "Schedule" */ '@/components/notification/Schedule.vue'),
+    component: () => import(/* webpackChunkName: "Schedule" */ '@/components/Offer/Schedule.vue'),
     beforeEnter: isUSer,
   },
   {

@@ -135,7 +135,7 @@
     </div>
 </template>
 <script>
-import ViewOffer from '@/components/notification/ViewOffer.vue'
+import ViewOffer from '@/components/Offer/ViewOffer.vue'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'Nav',
@@ -171,9 +171,9 @@ export default {
             if(this.$router.history.current.path !== '/') this.$router.push('/')
         },
         openNotificationDialog(item){
-            const offerRoom = this.$store.getters.contentRooms.filter(room => room.objectId === item.roomId)[0];
+            // const offerRoom = this.$store.getters.contentRooms.filter(room => room.objectId === item.roomId)[0];
             this.SET_OFFER(item)
-            this.SET_ROOM(offerRoom)
+            // this.SET_ROOM(offerRoom)
             this.openOfferDialog = true;
             let data = {
                 objectId: item.objectId,

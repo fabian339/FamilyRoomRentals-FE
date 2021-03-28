@@ -42,7 +42,7 @@ var stripe = window.Stripe('pk_test_51HapnKJSKBXxCn1NhtSdWf20xtfcBHhY4vdpfsGbcLj
     // elements = stripe.elements();
 // let stripe;
 import axios from 'axios';
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import SuccessAlert from '@/components/Offer/SuccessAlert.vue'
 import { mapActions, mapGetters } from 'vuex'
 // import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../../emailTemplates/emails'
 

@@ -107,7 +107,7 @@
           cols="12"
         >
           <!-- date -->
-          <MeetingsCalendar />
+          <!-- <MeetingsCalendar /> -->
         </v-col>
     </v-container>
   </div>
@@ -120,7 +120,7 @@ import Room from '@/components/Room/Room.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import Alert from '@/components/Alert/Alert.vue'
 import PageLoading from '@/components/Loading/PageLoading.vue';
-import MeetingsCalendar from '@/components/notification/MeetingsCalendar.vue';
+// import MeetingsCalendar from '@/components/notification/MeetingsCalendar.vue';
 
 // const config = require('./config.json')
 export default {
@@ -129,7 +129,7 @@ export default {
     Room,
     Alert,
     PageLoading,
-    MeetingsCalendar
+    // MeetingsCalendar
   },
   data: () => ({
     isPageLoading: false,

@@ -53,10 +53,10 @@ export default {
     
       if(user.isAdmin){
         // fetch all offers for admin
-        context.dispatch('fetchNotifications', {isAdmin: true, userId: user.objectId})
+        context.dispatch('fetchOffersAndMeetings', {isAdmin: true, userId: user.objectId})
       } else {
         // fetch current user offers 
-        context.dispatch('fetchNotifications', {isAdmin: false, userId: user.objectId})
+        context.dispatch('fetchOffersAndMeetings', {isAdmin: false, userId: user.objectId})
       }
       // context.dispatch('fetchUserNotifications', user.objectId);
       // console.log('Getting Current User',user)
@@ -89,10 +89,10 @@ export default {
       context.commit('SET_TOKEN', token);
       if(user.isAdmin){
         // fetch all offers for admin
-        context.dispatch('fetchNotifications', {isAdmin: true, userId: user.objectId})
+        context.dispatch('fetchOffersAndMeetings', {isAdmin: true, userId: user.objectId})
       } else {
         // fetch current user offers 
-        context.dispatch('fetchNotifications', {isAdmin: false, userId: user.objectId})
+        context.dispatch('fetchOffersAndMeetings', {isAdmin: false, userId: user.objectId})
       }
       //a loading type for loading component
       user.loadingType = 'logging-in';

@@ -124,7 +124,7 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import {validateOffer} from '../../store/validators'
-import ClientOfferAgreement from '@/components/terms/ClientOfferAgreement.vue'
+import ClientOfferAgreement from './ClientOfferAgreement.vue'
 import Alert from '@/components/Alert/Alert.vue'
 
   // outside of the component state

@@ -262,7 +262,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import OfferForm from '@/components/notification/OfferForm.vue';
+import OfferForm from '@/components/Offer/OfferForm.vue';
 // import ContentLoading from '@/components/layout/ContentLoading.vue';
 // import SuccessAlert from '@/components/notification/SuccessAlert.vue';
 import EditRoomForm from './EditRoomForm.vue'

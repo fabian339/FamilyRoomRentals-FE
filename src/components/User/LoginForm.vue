@@ -84,7 +84,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import {validateLoginData} from '../../store/validators'
-import SuccessAlert from '@/components/notification/SuccessAlert.vue'
+import SuccessAlert from '@/components/Offer/SuccessAlert.vue'
 import PageLoading from '@/components/Loading/PageLoading.vue';
 
   export default {

@@ -62,7 +62,7 @@
                         class="roomPhoto"
                     />
                     <p class="font">
-                        {{meetingData.didMeetingPassed ? 'You met with' : 'You will meet' }}
+                        {{meetingData.didMeetingPassed ? 'You met with' : `You offered $${meetingData.offer}/month and will meet with` }}
                         {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} to see this property.
                     </p>
 
