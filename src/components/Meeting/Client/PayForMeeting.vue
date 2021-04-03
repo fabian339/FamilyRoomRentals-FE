@@ -45,7 +45,7 @@ import axios from 'axios';
 import SuccessAlert from '@/components/Offer/SuccessAlert.vue'
 import { mapActions, mapGetters } from 'vuex'
 // import {SendEmailToClientOnMeetingScheduled, SendEmailToUserOnMeetingScheduled} from '../../../emailTemplates/emails'
-
+let jwt = require('jsonwebtoken');
 
 
 export default {
@@ -116,7 +116,17 @@ export default {
         async redirectToCheckout(e){
             e.preventDefault()
             this.loadingPayment = true
-            const {secretId, token} = this.$router.history.current.params;
+            const {secretId} = this.$router.history.current.params;
+
+            let token = jwt.sign({
+                iat: Math.floor(new Date()),
+                exp: new Date().setDate(new Date().getDate() + 60),
+                data: { 
+                    name: this.$store.getters.currentOffer.clientName,
+                    type: 'meeting'
+                }
+            }, secretId);
+
             let data = {
                 metadata: {
                     sprite_client_customerId: this.$store.getters.currentOffer.sprite_client_customerId,
@@ -127,15 +137,17 @@ export default {
                     roomId: secretId,
                     countOfOffersScheduled: this.$store.getters.contentRoom.countOfOffersScheduled + 1,
                     meetingsPending: this.$store.getters.contentRoom.meetingsPending + 1,
-                    customerType: "client",
-                    roomImage: this.offerData.roomImage,
+                    roomImage: this.$store.getters.currentOffer.roomImage,
                     status: this.offerData.status,
                     offerId: this.$store.getters.currentOffer.objectId,
                     clientName: this.$store.getters.currentOffer.clientName,
                     clientEmail: this.$store.getters.currentOffer.clientEmail,
                     clientPhone: this.$store.getters.currentOffer.clientPhone,
+                    ownerPhone: this.$store.getters.currentOffer.ownerPhone,
                     ownerName: this.$store.getters.currentOffer.ownerName,
                     ownerEmail: this.$store.getters.currentOffer.ownerEmail,
+                    ownerId: this.$store.getters.currentOffer.receiverId,
+                    meetingLocation: `${this.$store.getters.contentRoom.location.street1}, ${this.$store.getters.contentRoom.location.street2}, ${this.$store.getters.contentRoom.location.city}, ${this.$store.getters.contentRoom.location.state}, ${this.$store.getters.contentRoom.location.zipCode}, ${this.$store.getters.contentRoom.location.country}`,
                 },
                 itemName: `Service: Meeting with ${this.$store.getters.currentOffer.ownerName} on ${`${this.offerData.officialMeetingDate.date} at ${this.offerData.officialMeetingDate.time}.`}`,
                 account: process.env.VUE_APP_STRIPE_CONNECTED_ACCOUNT,
@@ -144,7 +156,9 @@ export default {
             console.log("Data to send", data)
             // await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
             // new heroku url
-            await axios.post('https://my-first-heroku-app-api.herokuapp.com/checkout', data)
+            // await axios.post('https://my-first-heroku-app-api.herokuapp.com/checkout', data)
+            await axios.post('http://localhost:3005/checkout', data)
+
                 .then(res => {
                     // console.log(res.data)
                     stripe.redirectToCheckout({

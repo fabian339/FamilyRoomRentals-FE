@@ -198,6 +198,7 @@ export default {
         setTimeout(() => {
           context.commit('ADD_OFFER', offer)
           context.commit('SET_OFFER', offer)
+          context.commit('SET_ROOM_WITH_ID', offer.roomId)
           context.commit('SET_OFFER_TOKEN_VERIFIED', true)
           context.commit('CLEAR_OFFER_ERROR')
           context.commit('SET_GEETING_CLIENT_OFFER', false);

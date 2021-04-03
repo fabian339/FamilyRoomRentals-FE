@@ -130,7 +130,6 @@
                                 time: currentOffer.meetingDates[dateSelectedIndex].time,
                                 meetingDeletionDate: this.meetingDeletionDate,
                             },
-                            roomImage: currentOffer.roomImage,
                             status: `Meeting Scheduled for ${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()}, at ${currentOffer.meetingDates[dateSelectedIndex].time}!`,
                         }"/>
                 </div>
