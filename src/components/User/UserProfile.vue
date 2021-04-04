@@ -69,7 +69,8 @@
             <v-row >
               <v-col v-for="meeting in meetings" :key="meeting.createdAt">
                 <div v-if="!meeting.offerCompleted">
-                  <Meeting :meetingData="{
+                  <Meeting :meetingData="meeting" />
+                  <!-- <Meeting :meetingData="{
                       ownerName: meeting.ownerName,
                       ownerId: meeting.receiverId,
                       clientName: meeting.clientName,
@@ -101,7 +102,7 @@
                       meetingDate: meeting.officialMeetingDate, //change to string
                       meetingLocation: meeting.meetingLocation // //change to string
                     }" 
-                  />
+                  /> -->
                 </div>
               </v-col>
             </v-row>

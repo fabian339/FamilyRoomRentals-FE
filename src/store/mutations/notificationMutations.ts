@@ -11,12 +11,17 @@ export default {
     ADD_OFFER: (state: any, offers: any) => {
         state.offerState.offers.push(offers);
     },
-
+    SET_CLIENT_MEETING: (state: any, meeting: any) => {
+        state.offerState.clientMeeting = meeting;
+    },
     SET_OFFER_SENDING: (state: any, value: Boolean) => {
         state.loadingState.client.sendingOffer = value;
     },
     SET_GEETING_CLIENT_OFFER: (state: any, value: Boolean) => {
         state.loadingState.client.gettingOffer = value;
+    },
+    SET_GEETING_CLIENT_MEETING: (state: any, value: Boolean) => {
+        state.loadingState.client.gettingMeeting = value;
     },
     SET_OFFER_CANCELED: (state: any, value: Boolean) => {
         state.offerState.offerCanceled = value;

@@ -39,6 +39,7 @@ export default new Vuex.Store({
       }, 
       offerState: {
         offer: {},
+        clientMeeting: {},
         offers: [],
         offerSentByClient: false,
         offerDeleted: false,
@@ -63,6 +64,7 @@ export default new Vuex.Store({
         client: {
           sendingOffer: false,
           gettingOffer: false,
+          gettingMeeting: false,
         },
         content: {
           addingContent: false,
@@ -98,6 +100,7 @@ export default new Vuex.Store({
       userErrors: state => state.userState.errors,
       //Notifications/Offers
       currentOffer: state => state.offerState.offer,
+      clientMeeting: state => state.offerState.clientMeeting,
       isOfferAcceptedByOwner: state => state.offerState.offerAcceptedByOwner,
       isOfferDeleted: state => state.offerState.offerDeleted,
       isOfferTokenVerified: state => state.offerState.offerTokenVerified,

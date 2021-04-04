@@ -10,7 +10,7 @@
             <div class="circle_holder" @click.stop="expanded = !expanded">
                 <div class="top_circle"
                     :style="`
-                        background-image: url(${meetingData.image ? meetingData.image : 'https://i.ibb.co/t85JhCP/no-Room-Img.png'});
+                        background-image: url(${meetingData.roomImage});
                         background-size: cover`"
                 >
                 </div>
@@ -21,7 +21,7 @@
                         style="font-size: 20px; margin: 25px"
                     >
                         <strong>
-                            Comming up on {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}.
+                            Comming up on {{meetingData.meetingDate}}.
                         </strong>
                     </p>
                     <p
@@ -54,7 +54,7 @@
             <div class="meetingInfo">
                 <div style="width: 275px;">
                     <img 
-                        :src="meetingData.image" 
+                        :src="meetingData.roomImage" 
                         alt="roomPhoto" 
                         width="150" 
                         height="100"
@@ -62,7 +62,7 @@
                         class="roomPhoto"
                     />
                     <p class="font">
-                        {{meetingData.didMeetingPassed ? 'You met with' : `You offered $${meetingData.offer}/month and will meet with` }}
+                        {{meetingData.didMeetingPassed ? 'You met with' : `You offered $${meetingData.offerAmount}/month and will meet with` }}
                         {{isOwner() ? `${meetingData.clientName}` : `${meetingData.ownerName}`}} to see this property.
                     </p>
 
@@ -76,7 +76,7 @@
                     <h3>When: </h3>
                     <p class="font"> 
                             {{meetingData.didMeetingPassed ? 'The meeting was scheduled for' : 'Meeting Scheduled for' }}
-                            {{meetingData.meetingDate.date}} at {{meetingData.meetingDate.time}}. 
+                            {{meetingData.meetingDate}}. 
                     </p>
                 </div>
                 <div style="width: 275px;">
@@ -93,12 +93,7 @@
                         </v-icon>
                     </div>
                     <p class="font openAddress" @click.stop="openAddress">
-                        {{meetingData.meetingLocation.street1}}, 
-                        {{meetingData.meetingLocation.street2}},
-                        {{meetingData.meetingLocation.city}},
-                        {{meetingData.meetingLocation.state}},
-                        {{meetingData.meetingLocation.zipCode}},
-                        {{meetingData.meetingLocation.country}}
+                        {{meetingData.meetingLocation}}
                     </p>
                 </div>
             </div>
@@ -138,7 +133,7 @@
                     Delete Meeting
                 </v-btn>
             </div>
-            <div v-if="!isOwner() && meetingData.meetingScheduled && !meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting" class="btn-spacing">
+            <div v-if="!isOwner() && meetingScheduled() && !meetingData.ownerCheckedInMeeting && !meetingData.clientCheckedInMeeting" class="btn-spacing">
             <!-- <div v-if="!meetingData.processCanceled && !meetingData.offerCompleted"> -->
                 <!-- btn is not working yet. Make it cancell the meeting, send email to client, show warning, disable room -->
                 <v-btn 
@@ -165,7 +160,7 @@
                 </v-btn> 
             </div>
             <!-- will only show if is not meeting time, is early -->
-            <p v-if="isItToEarlyForMeeting() && meetingData.meetingScheduled && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
+            <p v-if="isItToEarlyForMeeting() && meetingScheduled() && !meetingData.processCanceledByClient && !meetingData.processCanceledByOwner" class="font earlyMeetingDate">{{daysRemainingBeforeMeeting()}}</p>
             <!-- once meeting is scheduled show helful links btn -->
             <p v-if="!meetingData.offerCompleted" class="helpful-links" @click.stop="showHelfulLinks = !showHelfulLinks">View Helful Links</p>
             <!-- will show helful links to meetings -->
@@ -413,7 +408,7 @@
             </div>
         </div>
         <div>
-            <MeetingCancelation 
+            <!-- <MeetingCancelation 
                 v-model="openMeetingCancelation"
                 :data="{
                     meetingId: meetingData.meetingId,
@@ -444,7 +439,7 @@
                     ownerReward: meetingData.ownerReward,
                     ownerName: meetingData.ownerName
                 }"
-            />
+            /> -->
         </div>
         </v-card>
     </div>
@@ -452,10 +447,10 @@
 
 <script>
   // import store from '../store.js'
-  import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
-  import MeetingCheckIn from '@/components/dialogs/meetings/MeetingCheckIn.vue'
-  import MeetingFollowUp from '@/components/dialogs/meetings/MeetingFollowUp.vue'
-  import OwnerClaimReward from '@/components/dialogs/meetings/OwnerClaimReward.vue'
+//   import MeetingCancelation from '@/components/dialogs/meetings/MeetingCancelation.vue'
+//   import MeetingCheckIn from '@/components/dialogs/meetings/MeetingCheckIn.vue'
+//   import MeetingFollowUp from '@/components/dialogs/meetings/MeetingFollowUp.vue'
+//   import OwnerClaimReward from '@/components/dialogs/meetings/OwnerClaimReward.vue'
 
   import { mapGetters } from 'vuex'
 
@@ -464,10 +459,10 @@
     name: 'Meeting',
     props: ['meetingData'],
     components: {
-        MeetingCancelation,
-        MeetingCheckIn,
-        MeetingFollowUp,
-        OwnerClaimReward
+        // MeetingCancelation,
+        // MeetingCheckIn,
+        // MeetingFollowUp,
+        // OwnerClaimReward
     },
     data: () => ({
         expanded: false,
@@ -487,7 +482,7 @@
     },
     beforeMount() {
         
-        if(this.$router.history.current.name === "SelectDateAndPay" && !this.meetingData.meetingScheduled){
+        if(this.$router.history.current.name === "SelectDateAndPay" && this.meetingScheduled()){
             this.expanded = true;
         }
         // let userToken = localStorage.getItem('user-token');
@@ -496,6 +491,9 @@
   methods: {
     isOwner(){
         return this.isUserAuthenticated && this.currentUser.objectId === this.meetingData.ownerId
+    },
+    meetingScheduled(){
+        return (typeof this.meetingData.meetingScheduled ===  'undefined')
     },
     // testing
     // isItTimeToCheckIn(){
@@ -527,13 +525,15 @@
     //     return false;
     // },
     isItToEarlyForMeeting(){
-        let before15Min = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+        let date = this.meetingData.meetingDate.replace(' at','')
+        let before15Min = new Date(`${date}`)
         before15Min.setMinutes(before15Min.getMinutes() - 15)
         let currentDate = new Date()
         return currentDate < before15Min;
     },
     daysRemainingBeforeMeeting(){
-        let meetingDate = new Date(`${this.meetingData.meetingDate.date}, ${this.meetingData.meetingDate.time}`)
+        let date = this.meetingData.meetingDate.replace(' at','')
+        let meetingDate = new Date(date)
         let currentDate = new Date();
         var diff = meetingDate.valueOf() - currentDate.valueOf();
         var diffInHours = (diff/1000/60/60);
@@ -569,8 +569,15 @@
         return new Date() > new Date(this.meetingData.ownerRewardExpirationDate)
     },
     openAddress(){
-        const {street1, street2, city, state, zipCode, country} = this.meetingData.meetingLocation;
-        this.roomAddress = `https://www.google.com/maps/place/${street1}+${street2}+${city}+${state}+${zipCode}+${country}`;
+        // const locationArr = this.meetingData.meetingLocation.split(',');
+        // let street1 = locationArr[0];
+        // let street2 = locationArr[2];
+        // let city = locationArr[3];
+        // let state = locationArr[4];
+        // let zipCode = locationArr[5];
+        // let country = locationArr[6];
+
+        this.roomAddress = `https://www.google.com/maps/place/${this.meetingData.meetingLocation}`;
         window.open(this.roomAddress, '_blank');
     },
     openRoom(){

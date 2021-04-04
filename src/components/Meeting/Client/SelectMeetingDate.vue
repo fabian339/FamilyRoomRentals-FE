@@ -19,14 +19,14 @@
                     {{(showDates && !currentOffer.meetingScheduled) ? `${data.name}, you are a few steps away!` : `${(showTicket || processCanceledByClient) ? '' : `Welcome ${data.name}!`}`}}
                 </h2> 
                 <v-progress-circular
-                    v-if="clientLoading.gettingOffer"
+                    v-if="clientLoading.gettingOffer || clientLoading.gettingMeeting"
                     color="green"
                     :size="100"
                     :width="15"
                     indeterminate
                 >
                 </v-progress-circular>
-                <v-row class="text-center" justify="center" v-if="!clientLoading.gettingOffer && showForm && !isOfferTokenVerified">
+                <v-row class="text-center" justify="center" v-if="(!clientLoading.gettingOffer && !clientLoading.gettingMeeting) && showForm && !isOfferTokenVerified">
                     <v-col cols="10" sm="6" md="5" lg="4">        
                         <h3 style="margin: -10px 0px 15px 0px;">Please enter your verification ID: </h3>
                         <form>
@@ -75,48 +75,37 @@
                     @click.stop="onDateSelect">
                         {{!showDates ? 'PICK ANOTHER DATE' : 'NEXT'}}
                 </v-btn>
-                <div v-if="currentOffer.meetingScheduled || showTicket">
+                <div v-if="showTicket && (!clientLoading.gettingOffer && !clientLoading.gettingMeeting)">
                     <div class="confirmation">                   
                         <h2 style="margin-bottom: 10px">{{paymentCompleted ? ('Its Done, Meeting Confirmed!!') : (
-                                `${currentOffer.meetingScheduled ? `${data.name}, here is you meeting information:` : 'The Service:'}`
+                                `${data.type === 'meeting' ? `${data.name}, here is you meeting information:` : 'The Service:'}`
                             )}}
                         </h2>
-                        <Meeting :meetingData="{
+                        <Meeting v-if="data.type === 'offer'" :meetingData="{
                                 ownerName: currentOffer.ownerName,
                                 ownerId: currentOffer.receiverId,
                                 roomId: currentOffer.roomId,
                                 clientName: currentOffer.clientName,
                                 cancelationDate: currentOffer.cancelationDate,
-                                meetingScheduled: currentOffer.meetingScheduled,
-                                meetingId: currentOffer.objectId,
-                                processCanceledByClient: currentOffer.processCanceledByClient,
-                                processCanceledByOwner: currentOffer.processCanceledByOwner,
-                                didClientSubmittedResults: currentOffer.didClientSubmittedResults,
-                                didOwnerSubmittedResults: currentOffer.didOwnerSubmittedResults,
-                                ownerCompletedFollowup: currentOffer.ownerCompletedFollowup,
-                                clientCompletedFollowup: currentOffer.clientCompletedFollowup,
-                                meetingResultsReviewed: currentOffer.meetingResultsReviewed,
-                                ownerShouldGetPay: currentOffer.ownerShouldGetPay,
-                                clientWillMoveIn: currentOffer.clientWillMoveIn,
+                                meetingScheduled: false,
                                 meetingDeletionDate: currentOffer.meetingDeletionDate,
-                                offerCompleted: currentOffer.offerCompleted,
-                                didMeetingPassed: currentOffer.didMeetingPassed,
-                                ownerCheckedInMeeting: currentOffer.ownerCheckedInMeeting,
-                                clientCheckedInMeeting: currentOffer.clientCheckedInMeeting,
-                                offerCompletedDate: currentOffer.offerCompletedDate,
-                                image: currentOffer.roomImage,
-                                offer: currentOffer.offer,
-                                meetingDate: {
-                                    date: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.date : new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString(),
-                                    time: currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time,
-                                },
-                                meetingLocation: currentOffer.meetingLocation
+                                roomImage: currentOffer.roomImage,
+                                offerAmount: currentOffer.offer,
+                                meetingDate: `${new Date(new Date(currentOffer.meetingDates[dateSelectedIndex].date).setDate(new Date(currentOffer.meetingDates[dateSelectedIndex].date).getDate()+1)).toDateString()} 
+                                at ${currentOffer.meetingScheduled ? currentOffer.officialMeetingDate.time : currentOffer.meetingDates[dateSelectedIndex].time}`,
+                                meetingLocation: `${currentOffer.meetingLocation.street1}, 
+                                    ${currentOffer.meetingLocation.street2},
+                                    ${currentOffer.meetingLocation.city},
+                                    ${currentOffer.meetingLocation.state},
+                                    ${currentOffer.meetingLocation.zipCode},
+                                    ${currentOffer.meetingLocation.country}`,                              
                             }" 
                         />
+                        <Meeting v-if="data.type === 'meeting'" :meetingData="clientMeeting" />
                     </div>
                     <v-btn 
                         color="#9acd32"
-                        v-if="showTicket && !confirmedDate" 
+                        v-if="showTicket && !confirmedDate && data.type === 'offer'" 
                         @click.stop="confirmedDate = true"
                     > 
                         Confirm Information 
@@ -160,6 +149,7 @@ import Meeting from '../Meeting'
       ...mapGetters([
         'clientLoading',
         'currentOffer',
+        'clientMeeting',
         'contentRoom',
         'offerErrors',
         'isOfferTokenVerified',
@@ -214,6 +204,7 @@ import Meeting from '../Meeting'
             if(new Date() > new Date(decoded.exp)) this.tokenExpired = true;
             else this.data = decoded.data
         }
+        console.log(decoded.data)
     },
     methods:{
         ...mapActions([
@@ -223,7 +214,7 @@ import Meeting from '../Meeting'
             'updateOffer',
             'updateRoom'
         ]),
-        idVerification(){
+        async idVerification(){
             if(this.id === '') {
                 const errors = {
                     id: 'Must not be empty, verification id was send to your email.'
@@ -232,17 +223,18 @@ import Meeting from '../Meeting'
             }
             else {
                 if(this.data.type === 'offer') {
-                    this.getOfferOnClientUI({
+                    await this.getOfferOnClientUI({
                         id :this.id,
                         token: this.$router.history.current.params.token
                     });
                     this.showDates = true;
                 } else if (this.data.type === 'meeting') {
-                    this.getMeetingOnClientUI({
+                    await this.getMeetingOnClientUI({
                         id :this.id,
                         token: this.$router.history.current.params.token
                     });
-                    // this.showDates = true;
+                    this.showForm = false;
+                    this.showTicket = true;
                 }
             }
         },

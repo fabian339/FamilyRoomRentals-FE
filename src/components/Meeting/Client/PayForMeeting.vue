@@ -130,7 +130,7 @@ export default {
             let data = {
                 metadata: {
                     sprite_client_customerId: this.$store.getters.currentOffer.sprite_client_customerId,
-                    meetingUrlPath: `/#/room/${secretId}/meeting/${token}`,
+                    meetingToken: token,
                     meetingDate: this.offerData.officialMeetingDate.date,
                     meetingTime: this.offerData.officialMeetingDate.time,
                     meetingDeletionDate: this.offerData.officialMeetingDate.meetingDeletionDate,
@@ -140,6 +140,7 @@ export default {
                     roomImage: this.$store.getters.currentOffer.roomImage,
                     status: this.offerData.status,
                     offerId: this.$store.getters.currentOffer.objectId,
+                    offerAmount: this.$store.getters.currentOffer.offer,
                     clientName: this.$store.getters.currentOffer.clientName,
                     clientEmail: this.$store.getters.currentOffer.clientEmail,
                     clientPhone: this.$store.getters.currentOffer.clientPhone,
@@ -156,8 +157,8 @@ export default {
             console.log("Data to send", data)
             // await axios.post('https://familyroomrentals-be.herokuapp.com/checkout', data)
             // new heroku url
-            // await axios.post('https://my-first-heroku-app-api.herokuapp.com/checkout', data)
-            await axios.post('http://localhost:3005/checkout', data)
+            await axios.post('https://my-first-heroku-app-api.herokuapp.com/checkout', data)
+            // await axios.post('http://localhost:3005/checkout', data)
 
                 .then(res => {
                     // console.log(res.data)

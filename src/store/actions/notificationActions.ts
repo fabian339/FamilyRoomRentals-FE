@@ -70,10 +70,10 @@ export default {
     });
   },
 
-  getOfferOnClientUI: (context: any, data: any) => {
+  getOfferOnClientUI: async (context: any, data: any) => {
     // console.log('this is a Data22', id)
     context.commit('SET_GEETING_CLIENT_OFFER', true);
-    axios.get(`/classes/Offers/${data.id}`)
+    await axios.get(`/classes/Offers/${data.id}`)
     .then((res) => {
       if(!res.data.meetingScheduled) {
         if(res.data.offerToken === data.token){
@@ -99,6 +99,34 @@ export default {
       context.commit('SET_GEETING_CLIENT_OFFER', false);
     })
   },
+
+
+  getMeetingOnClientUI: async (context: any, data: any) => {
+    // console.log('this is a Data22', id)
+    context.commit('SET_GEETING_CLIENT_MEETING', true);
+    await axios.get(`/classes/Meetings/${data.id}`)
+    .then((res) => {
+        if(res.data.meetingToken === data.token){
+          let meeting = res.data;
+          meeting.loadingType = 'getting-client-meeting';
+          context.dispatch('offerLoading', meeting)
+        } else {
+          context.commit('SET_CLIENT_MEETING_ERROR', {
+            error: 'Invalid Verification, check parameters!'
+          })
+        }
+        // console.log(res)
+        // context.commit('SET_GEETING_CLIENT_MEETING', false);
+
+    })
+    .catch((err) => {
+      context.commit('SET_OFFER_ERROR', {
+        error: 'Invalid Verification ID!'
+      })
+      context.commit('SET_GEETING_CLIENT_MEETING', false);
+    })
+  },
+
 
   getOfferOnClientRefund: (context: any, data: any) => {
     // console.log('this is a Data22', id)
@@ -202,6 +230,16 @@ export default {
           context.commit('SET_OFFER_TOKEN_VERIFIED', true)
           context.commit('CLEAR_OFFER_ERROR')
           context.commit('SET_GEETING_CLIENT_OFFER', false);
+        }, 1500);
+        break;
+      case 'getting-client-meeting':
+        setTimeout(() => {
+          // context.commit('ADD_OFFER', offer)
+          context.commit('SET_CLIENT_MEETING', offer)
+          // context.commit('SET_ROOM_WITH_ID', offer.roomId)
+          // context.commit('SET_OFFER_TOKEN_VERIFIED', true)
+          // context.commit('CLEAR_OFFER_ERROR')
+          context.commit('SET_GEETING_CLIENT_MEETING', false);
         }, 1500);
         break;
       case 'deleting-offer':
