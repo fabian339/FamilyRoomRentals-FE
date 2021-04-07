@@ -50,7 +50,7 @@ import axios from 'axios'
         .then(res => {
           console.log(res)
           this.name = res.data.clientName;
-          this.meetingUrlPath = res.data.meetingUrlPath
+          this.meetingUrlPath = `https://familyroomrentals.com/#/room/${res.data.roomId}/meeting/${res.data.meetingToken}`
         })
         .catch(err => {
           this.thereIsAnError = true;

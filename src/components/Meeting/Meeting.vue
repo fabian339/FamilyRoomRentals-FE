@@ -67,7 +67,7 @@
                     </p>
 
                     <small 
-                        v-if="meetingData.image === 'https://i.ibb.co/t85JhCP/no-Room-Img.png' && !isOwner()" 
+                        v-if="meetingData.roomImage === 'https://i.ibb.co/t85JhCP/no-Room-Img.png' && !isOwner()" 
                         style="color: red">
                         Careful, this property has no images and can be subject of fraud!
                     </small>
@@ -482,7 +482,7 @@
     },
     beforeMount() {
         
-        if(this.$router.history.current.name === "SelectDateAndPay" && this.meetingScheduled()){
+        if(this.$router.history.current.name === "SelectDateAndPay"){
             this.expanded = true;
         }
         // let userToken = localStorage.getItem('user-token');
@@ -493,6 +493,7 @@
         return this.isUserAuthenticated && this.currentUser.objectId === this.meetingData.ownerId
     },
     meetingScheduled(){
+        console.log(typeof this.meetingData.meetingScheduled)
         return (typeof this.meetingData.meetingScheduled ===  'undefined')
     },
     // testing

@@ -102,7 +102,7 @@ export default {
 
 
   getMeetingOnClientUI: async (context: any, data: any) => {
-    // console.log('this is a Data22', id)
+    console.log('this is a Data', data)
     context.commit('SET_GEETING_CLIENT_MEETING', true);
     await axios.get(`/classes/Meetings/${data.id}`)
     .then((res) => {
